@@ -1,0 +1,11 @@
+name: flexwork-k8s
+runtime:
+  name: python
+  options:
+    toolchain: pip
+    virtualenv: venv
+description: K8s for Flexwork
+config:
+  pulumi:tags:
+    value:
+      pulumi:template: kubernetes-python

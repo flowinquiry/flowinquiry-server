@@ -1,0 +1,25 @@
+# This configuration is intended for development purpose, it's **your** responsibility to harden it for production
+name: flexwork
+services:
+  postgresql:
+    extends:
+      file: ./postgresql.yml
+      service: postgresql
+  postgresql-admin:
+    extends:
+      file: ./postgresql-pgadmin.yml
+      service: postgresql-admin
+  caddy:
+    container_name: caddy
+    image: caddy:alpine
+    restart: always
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile
+      - ./caddy/certificate-authority:/data/caddy/pki/authorities/local
+    ports:
+      - '443:443'
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+networks:
+  theflexwork_nw:
+    driver: bridge

@@ -1,14 +1,35 @@
 # This configuration is intended for development purpose, it's **your** responsibility to harden it for production
 name: flexwork
 services:
+  app:
+    image: flexwork-app
+    secrets:
+      - postgres_password  # Add the Docker secret
+    environment:
+      - _JAVA_OPTIONS=-Xmx512m -Xms256m
+      - SPRING_PROFILES_ACTIVE=prod,api-docs
+      - MANAGEMENT_PROMETHEUS_METRICS_EXPORT_ENABLED=true
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgresql:5432/flexwork
+      - SPRING_DATASOURCE_PASSWORD_FILE=/run/secrets/postgres_password  # Point to secret file
+    ports:
+      - 127.0.0.1:8080:8080
+    healthcheck:
+      test:
+        - CMD
+        - curl
+        - -f
+        - http://localhost:8080/management/health
+      interval: 5s
+      timeout: 5s
+      retries: 40
+    depends_on:
+      postgresql:
+        condition: service_healthy
+
   postgresql:
     extends:
       file: ./postgresql.yml
       service: postgresql
-  postgresql-admin:
-    extends:
-      file: ./postgresql-pgadmin.yml
-      service: postgresql-admin
   caddy:
     container_name: caddy
     image: caddy:alpine

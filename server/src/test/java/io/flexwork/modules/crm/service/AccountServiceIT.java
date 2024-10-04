@@ -21,12 +21,12 @@ public class AccountServiceIT {
 
     @Test
     public void testUpdatedAccount() {
-        Account savedAccount = accountRepository.findByAccountName("account_1").orElseThrow();
+        Account savedAccount = accountRepository.findByName("account_1").orElseThrow();
         AccountDTO accountDTO =
                 AccountDTO.builder()
                         .id(savedAccount.getId())
-                        .accountName("account_name2")
-                        .accountType("account_type2")
+                        .name("account_name2")
+                        .type("account_type2")
                         .industry("industry2")
                         .status("status2")
                         .build();
@@ -34,8 +34,8 @@ public class AccountServiceIT {
         Account returnedUpdateAccount =
                 accountService.updateAccount(savedAccount.getId(), updatedAccount);
         assertAll(
-                () -> assertEquals("account_name2", returnedUpdateAccount.getAccountName()),
-                () -> assertEquals("account_type2", returnedUpdateAccount.getAccountType()),
+                () -> assertEquals("account_name2", returnedUpdateAccount.getName()),
+                () -> assertEquals("account_type2", returnedUpdateAccount.getType()),
                 () -> assertEquals("industry2", returnedUpdateAccount.getIndustry()),
                 () -> assertEquals("status2", returnedUpdateAccount.getStatus()),
                 () ->
@@ -48,8 +48,8 @@ public class AccountServiceIT {
     public void testSaveAccountSuccessfully() {
         Account account1 =
                 Account.builder()
-                        .accountName("account_name")
-                        .accountType("account_type")
+                        .name("account_name")
+                        .type("account_type")
                         .industry("industry")
                         .status("status")
                         .build();
@@ -61,8 +61,8 @@ public class AccountServiceIT {
 
         Account returnedAccount = optionalAccount.get();
         assertAll(
-                () -> assertEquals(savedAccount.getAccountName(), returnedAccount.getAccountName()),
-                () -> assertEquals(savedAccount.getAccountType(), returnedAccount.getAccountType()),
+                () -> assertEquals(savedAccount.getName(), returnedAccount.getName()),
+                () -> assertEquals(savedAccount.getType(), returnedAccount.getType()),
                 () -> assertEquals(savedAccount.getIndustry(), returnedAccount.getIndustry()),
                 () -> assertEquals(savedAccount.getStatus(), returnedAccount.getStatus()),
                 () -> assertEquals(savedAccount.getId(), returnedAccount.getId()),

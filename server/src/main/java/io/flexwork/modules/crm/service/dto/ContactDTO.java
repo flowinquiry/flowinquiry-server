@@ -12,6 +12,8 @@ public class ContactDTO {
 
     private Long accountId; // Assuming that you want to reference the Account by its ID in the DTO
 
+    private String accountName;
+
     private String firstName;
 
     private String lastName;

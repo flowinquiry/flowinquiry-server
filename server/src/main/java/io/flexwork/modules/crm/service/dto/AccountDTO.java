@@ -10,9 +10,9 @@ public class AccountDTO {
 
     private Long id; // Unique identifier for the account
 
-    private String accountName; // Name of the account
+    private String name; // Name of the account
 
-    private String accountType; // Type of the account (e.g., customer, vendor)
+    private String type; // Type of the account (e.g., customer, vendor)
 
     private String industry; // Industry in which the account operates
 

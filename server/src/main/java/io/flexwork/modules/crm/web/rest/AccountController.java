@@ -1,9 +1,14 @@
 package io.flexwork.modules.crm.web.rest;
 
+import static io.flexwork.query.QueryUtils.parseFiltersFromParams;
+
 import io.flexwork.modules.crm.domain.Account;
 import io.flexwork.modules.crm.service.AccountService;
 import io.flexwork.modules.crm.service.dto.AccountDTO;
 import io.flexwork.modules.crm.service.mapper.AccountMapper;
+import io.flexwork.query.QueryFilter;
+import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -63,8 +68,10 @@ public class AccountController {
     }
 
     @GetMapping
-    public ResponseEntity<Page<AccountDTO>> getAllAccounts(Pageable pageable) {
-        Page<Account> accounts = accountService.findAllAccounts(pageable);
+    public ResponseEntity<Page<AccountDTO>> getAllAccounts(
+            @RequestParam Map<String, String> params, Pageable pageable) {
+        List<QueryFilter> filters = parseFiltersFromParams(params);
+        Page<Account> accounts = accountService.findAllAccounts(filters, pageable);
         return new ResponseEntity<>(
                 accounts.map(accountMapper::accountToAccountDTO), HttpStatus.OK);
     }

@@ -13,10 +13,10 @@
 			<column name="id" type="bigint" autoIncrement="true">
 				<constraints primaryKey="true" nullable="false" />
 			</column>
-			<column name="account_name" type="VARCHAR(256)">
+			<column name="name" type="VARCHAR(256)">
 				<constraints nullable="false" />
 			</column>
-			<column name="account_type" type="VARCHAR(50)">
+			<column name="type" type="VARCHAR(50)">
 				<constraints nullable="false" />
 			</column>
 			<column name="industry" type="VARCHAR(100)" />
@@ -58,19 +58,20 @@
 			initiallyDeferred="true" />
 
 		<!-- Add indexes -->
-		<createIndex indexName="idx_account_name"
+		<createIndex indexName="idx_crm_account_name"
 			tableName="fw_crm_account">
-			<column name="account_name" />
+			<column name="name" />
 		</createIndex>
-		<createIndex indexName="idx_email"
+		<createIndex indexName="idx_crm_account_email"
 			tableName="fw_crm_account">
 			<column name="email" />
 		</createIndex>
-		<createIndex indexName="idx_phone_number"
+		<createIndex indexName="idx_crm_account_phone_number"
 			tableName="fw_crm_account">
 			<column name="phone_number" />
 		</createIndex>
-		<createIndex indexName="idx_assigned_to_user_id"
+		<createIndex
+			indexName="idx_crm_account_assigned_to_user_id"
 			tableName="fw_crm_account">
 			<column name="assigned_to_user_id" />
 		</createIndex>

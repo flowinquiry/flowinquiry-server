@@ -1,13 +1,18 @@
 package io.flexwork.modules.crm.service;
 
+import static io.flexwork.query.QueryUtils.buildSpecification;
+
 import io.flexwork.modules.crm.domain.Account;
 import io.flexwork.modules.crm.event.ActivityLogEvent;
 import io.flexwork.modules.crm.repository.AccountRepository;
+import io.flexwork.query.QueryFilter;
 import jakarta.persistence.EntityNotFoundException;
+import java.util.List;
 import java.util.Optional;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -48,8 +53,8 @@ public class AccountService {
                                                 "Account not found with id: " + accountId));
 
         // Step 2: Update the fields of the existing account with the new details
-        existingAccount.setAccountName(accountDetails.getAccountName());
-        existingAccount.setAccountType(accountDetails.getAccountType());
+        existingAccount.setName(accountDetails.getName());
+        existingAccount.setType(accountDetails.getType());
         existingAccount.setIndustry(accountDetails.getIndustry());
         existingAccount.setWebsite(accountDetails.getWebsite());
         existingAccount.setPhoneNumber(accountDetails.getPhoneNumber());
@@ -75,8 +80,9 @@ public class AccountService {
         accountRepository.deleteById(accountId);
     }
 
-    public Page<Account> findAllAccounts(Pageable pageable) {
-        return accountRepository.findAll(pageable);
+    public Page<Account> findAllAccounts(List<QueryFilter> filters, Pageable pageable) {
+        Specification<Account> spec = buildSpecification(filters);
+        return accountRepository.findAll(spec, pageable);
     }
 
     public Optional<Account> getNextEntity(Long currentId) {

@@ -4,6 +4,7 @@ plugins {
     id "idea"
     id "com.gorylenko.gradle-git-properties"
     alias(libs.plugins.spring.boot)
+    alias(libs.plugins.openapi)
     id "flexwork.spring-cache-conventions"
     id "flexwork.docker-conventions"
     id "flexwork.code-conventions"

@@ -21,11 +21,11 @@ public class Account {
     @Column(name = "id", nullable = false, updatable = false)
     private Long id;
 
-    @Column(name = "account_name", nullable = false, length = 256)
-    private String accountName;
+    @Column(name = "name", nullable = false, length = 256)
+    private String name;
 
-    @Column(name = "account_type", nullable = false, length = 50)
-    private String accountType;
+    @Column(name = "type", nullable = false, length = 50)
+    private String type;
 
     @Column(name = "industry", length = 100)
     private String industry;

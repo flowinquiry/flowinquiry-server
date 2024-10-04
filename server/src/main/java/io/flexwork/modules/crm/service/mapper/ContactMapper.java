@@ -10,6 +10,7 @@ import org.mapstruct.MappingTarget;
 @Mapper(componentModel = "spring")
 public interface ContactMapper {
     @Mapping(source = "account.id", target = "accountId")
+    @Mapping(source = "account.name", target = "accountName")
     ContactDTO contactToContactDTO(Contact contact);
 
     @Mapping(target = "account", expression = "java(ofAccount(contactDTO.getAccountId()))")

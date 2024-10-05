@@ -2,8 +2,8 @@ INSERT
     INTO
         fw_crm_account(
             id,
-            account_name,
-            account_type,
+            name,
+            TYPE,
             industry,
             website,
             phone_number,

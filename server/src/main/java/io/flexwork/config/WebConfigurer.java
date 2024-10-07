@@ -15,6 +15,7 @@ import org.springframework.boot.web.servlet.server.ConfigurableServletWebServerF
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
+import org.springframework.data.web.config.PageableHandlerMethodArgumentResolverCustomizer;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
@@ -91,5 +92,13 @@ public class WebConfigurer
             source.registerCorsConfiguration("/swagger-ui/**", config);
         }
         return new CorsFilter(source);
+    }
+
+    // Start pageable index from 1
+    @Bean
+    public PageableHandlerMethodArgumentResolverCustomizer paginationCustomizer() {
+        return pageableResolver -> {
+            pageableResolver.setOneIndexedParameters(true); // default is false, starts with 0
+        };
     }
 }

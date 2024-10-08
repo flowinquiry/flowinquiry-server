@@ -1,6 +1,8 @@
 package io.flexwork.security;
 
 import io.flexwork.modules.usermanagement.AuthoritiesConstants;
+import io.flexwork.modules.usermanagement.service.dto.FwUserDetails;
+import io.flexwork.modules.usermanagement.service.dto.UserKey;
 import java.util.Arrays;
 import java.util.Optional;
 import java.util.stream.Stream;
@@ -19,6 +21,8 @@ public final class SecurityUtils {
 
     public static final String AUTHORITIES_KEY = "auth";
 
+    public static final String USER_ID = "userId";
+
     private SecurityUtils() {}
 
     /**
@@ -26,22 +30,30 @@ public final class SecurityUtils {
      *
      * @return the login of the current user.
      */
-    public static Optional<String> getCurrentUserLogin() {
+    public static Optional<UserKey> getCurrentUserLogin() {
         SecurityContext securityContext = SecurityContextHolder.getContext();
         return Optional.ofNullable(extractPrincipal(securityContext.getAuthentication()));
     }
 
-    private static String extractPrincipal(Authentication authentication) {
+    private static UserKey extractPrincipal(Authentication authentication) {
         if (authentication == null) {
             return null;
-        } else if (authentication.getPrincipal() instanceof UserDetails springSecurityUser) {
-            return springSecurityUser.getUsername();
+        } else if (authentication.getPrincipal() instanceof FwUserDetails springSecurityUser) {
+            return new UserKey(springSecurityUser.getUserId(), springSecurityUser.getUsername());
         } else if (authentication.getPrincipal() instanceof Jwt jwt) {
-            return jwt.getSubject();
+            return new UserKey(jwt.getClaim(USER_ID), jwt.getSubject());
+        } else if (authentication.getPrincipal() instanceof UserDetails springSecurityUser) {
+            return new UserKey(-1L, springSecurityUser.getUsername());
         } else if (authentication.getPrincipal() instanceof String s) {
-            return s;
+            return new UserKey(-1L, s);
+        } else {
+            throw new IllegalArgumentException(
+                    "Can not extract principal from "
+                            + authentication
+                            + " because type "
+                            + authentication.getClass()
+                            + " is not supported");
         }
-        return null;
     }
 
     /**

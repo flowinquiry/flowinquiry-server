@@ -4,6 +4,7 @@ import io.flexwork.modules.usermanagement.UserNotActivatedException;
 import io.flexwork.modules.usermanagement.domain.Authority;
 import io.flexwork.modules.usermanagement.domain.User;
 import io.flexwork.modules.usermanagement.repository.UserRepository;
+import io.flexwork.modules.usermanagement.service.dto.FwUserDetails;
 import java.util.List;
 import org.hibernate.validator.internal.constraintvalidators.hv.EmailValidator;
 import org.slf4j.Logger;
@@ -47,8 +48,7 @@ public class DomainUserDetailsService implements UserDetailsService {
         }
     }
 
-    private org.springframework.security.core.userdetails.User createSpringSecurityUser(
-            String lowercaseLogin, User user) {
+    private FwUserDetails createSpringSecurityUser(String lowercaseLogin, User user) {
         if (!user.isActivated()) {
             throw new UserNotActivatedException("User " + lowercaseLogin + " was not activated");
         }
@@ -57,7 +57,6 @@ public class DomainUserDetailsService implements UserDetailsService {
                         .map(Authority::getName)
                         .map(SimpleGrantedAuthority::new)
                         .toList();
-        return new org.springframework.security.core.userdetails.User(
-                user.getEmail(), user.getPassword(), grantedAuthorities);
+        return new FwUserDetails(user);
     }
 }

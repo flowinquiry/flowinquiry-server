@@ -1,6 +1,8 @@
 package io.flexwork.modules.crm.service.mapper;
 
 import io.flexwork.modules.crm.domain.Account;
+import io.flexwork.modules.crm.domain.Action;
+import io.flexwork.modules.crm.domain.ActivityLog;
 import io.flexwork.modules.crm.service.dto.AccountDTO;
 import io.flexwork.modules.usermanagement.domain.User;
 import org.mapstruct.*;
@@ -29,6 +31,11 @@ public interface AccountMapper {
             target = "parentAccount",
             expression = "java(ofParentAccount(accountDTO.getParentAccountId()))")
     void updateAccountFromDTO(AccountDTO accountDTO, @MappingTarget Account account);
+
+    @Mapping(target = "id", ignore = true)
+    @Mapping(target = "entityType", constant = "ACCOUNT")
+    @Mapping(target = "entityId", source = "account.id")
+    ActivityLog accountEntityToActivityLog(Account account, Action action);
 
     default User ofUser(Long userId) {
         return (userId == null) ? null : User.builder().id(userId).build();

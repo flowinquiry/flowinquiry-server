@@ -2,8 +2,10 @@ package io.flexwork.modules.usermanagement.web.rest;
 
 import static io.flexwork.security.SecurityUtils.AUTHORITIES_KEY;
 import static io.flexwork.security.SecurityUtils.JWT_ALGORITHM;
+import static io.flexwork.security.SecurityUtils.USER_ID;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import io.flexwork.modules.usermanagement.service.dto.FwUserDetails;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import java.time.Instant;
@@ -96,6 +98,7 @@ public class AuthenticateController {
                         .expiresAt(validity)
                         .subject(authentication.getName())
                         .claim(AUTHORITIES_KEY, authorities)
+                        .claim(USER_ID, ((FwUserDetails) authentication.getPrincipal()).getUserId())
                         .build();
 
         JwsHeader jwsHeader = JwsHeader.with(JWT_ALGORITHM).build();

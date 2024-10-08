@@ -102,7 +102,7 @@ public class FlexworkApp implements CommandLineRunner {
                         .systemProperties()
                         .ignoreIfMissing()
                         .load();
-        if (dotEnv.entries().size() > 0) {
+        if (!dotEnv.entries().isEmpty()) {
             log.info("Loaded env variables from {}", path + "/.env.local");
         }
     }

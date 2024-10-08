@@ -6,6 +6,7 @@ import io.flexwork.modules.usermanagement.service.MailService;
 import io.flexwork.modules.usermanagement.service.UserService;
 import io.flexwork.modules.usermanagement.service.dto.PasswordChangeDTO;
 import io.flexwork.modules.usermanagement.service.dto.UserDTO;
+import io.flexwork.modules.usermanagement.service.dto.UserKey;
 import io.flexwork.modules.usermanagement.service.mapper.UserMapper;
 import io.flexwork.modules.usermanagement.web.rest.errors.EmailAlreadyUsedException;
 import io.flexwork.modules.usermanagement.web.rest.errors.InvalidPasswordException;
@@ -110,6 +111,7 @@ public class AccountResource {
     public void saveAccount(@Valid @RequestBody UserDTO userDTO) {
         String userLogin =
                 SecurityUtils.getCurrentUserLogin()
+                        .map(UserKey::getEmail)
                         .orElseThrow(
                                 () -> new AccountResourceException("Current user login not found"));
         Optional<User> user = userRepository.findOneByEmailIgnoreCase(userLogin);

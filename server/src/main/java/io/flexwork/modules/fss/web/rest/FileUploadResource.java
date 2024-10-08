@@ -2,6 +2,7 @@ package io.flexwork.modules.fss.web.rest;
 
 import io.flexwork.modules.fss.service.FsObjectService;
 import io.flexwork.modules.fss.service.IStorageService;
+import io.flexwork.modules.usermanagement.service.dto.UserKey;
 import io.flexwork.security.SecurityUtils;
 import jakarta.json.Json;
 import java.net.URLEncoder;
@@ -48,7 +49,7 @@ public class FileUploadResource {
             @RequestParam String type,
             @RequestParam Optional<String> parentPath)
             throws Exception {
-        String currentUser = SecurityUtils.getCurrentUserLogin().orElse("");
+        String currentUser = SecurityUtils.getCurrentUserLogin().map(UserKey::getEmail).orElse("");
         log.debug(
                 "User {} saves file {} into the storage with options {}",
                 currentUser,

@@ -6,6 +6,7 @@ import io.flexwork.modules.usermanagement.domain.User;
 import io.flexwork.modules.usermanagement.repository.AuthorityRepository;
 import io.flexwork.modules.usermanagement.repository.UserRepository;
 import io.flexwork.modules.usermanagement.service.dto.UserDTO;
+import io.flexwork.modules.usermanagement.service.dto.UserKey;
 import io.flexwork.modules.usermanagement.service.mapper.UserMapper;
 import io.flexwork.security.Constants;
 import io.flexwork.security.SecurityUtils;
@@ -238,6 +239,7 @@ public class UserService {
     public void updateUser(
             String firstName, String lastName, String email, String langKey, String imageUrl) {
         SecurityUtils.getCurrentUserLogin()
+                .map(UserKey::getEmail)
                 .flatMap(userRepository::findOneByEmailIgnoreCase)
                 .ifPresent(
                         user -> {
@@ -256,6 +258,7 @@ public class UserService {
     @Transactional
     public void changePassword(String currentClearTextPassword, String newPassword) {
         SecurityUtils.getCurrentUserLogin()
+                .map(UserKey::getEmail)
                 .flatMap(userRepository::findOneByEmailIgnoreCase)
                 .ifPresent(
                         user -> {
@@ -290,6 +293,7 @@ public class UserService {
     @Transactional(readOnly = true)
     public Optional<User> getUserWithAuthorities() {
         return SecurityUtils.getCurrentUserLogin()
+                .map(UserKey::getEmail)
                 .flatMap(userRepository::findOneWithAuthoritiesByEmailIgnoreCase);
     }
 

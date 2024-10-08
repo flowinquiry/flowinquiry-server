@@ -1,11 +1,11 @@
 package io.flexwork.modules.usermanagement.web.rest;
 
-import static io.flexwork.security.SecurityUtils.AUTHORITIES_KEY;
-import static io.flexwork.security.SecurityUtils.JWT_ALGORITHM;
+import static io.flexwork.security.SecurityUtils.*;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.flexwork.modules.usermanagement.repository.UserRepository;
 import io.flexwork.modules.usermanagement.service.UserService;
+import io.flexwork.modules.usermanagement.service.dto.FwUserDetails;
 import io.flexwork.modules.usermanagement.service.dto.UserDTO;
 import io.flexwork.modules.usermanagement.service.mapper.UserMapper;
 import io.flexwork.modules.usermanagement.web.rest.errors.InvalidLoginException;
@@ -111,6 +111,7 @@ public class LoginController {
                         .expiresAt(validity)
                         .subject(authentication.getName())
                         .claim(AUTHORITIES_KEY, authorities)
+                        .claim(USER_ID, ((FwUserDetails) authentication.getPrincipal()).getUserId())
                         .build();
 
         JwsHeader jwsHeader = JwsHeader.with(JWT_ALGORITHM).build();

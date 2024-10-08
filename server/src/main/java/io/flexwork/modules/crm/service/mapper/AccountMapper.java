@@ -35,7 +35,8 @@ public interface AccountMapper {
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "entityType", constant = "ACCOUNT")
     @Mapping(target = "entityId", source = "account.id")
-    ActivityLog accountEntityToActivityLog(Account account, Action action);
+    @Mapping(target = "user", expression = "java(ofUser(updatedUserId))")
+    ActivityLog accountEntityToActivityLog(Account account, Action action, Long updatedUserId);
 
     default User ofUser(Long userId) {
         return (userId == null) ? null : User.builder().id(userId).build();

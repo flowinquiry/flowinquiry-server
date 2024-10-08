@@ -7,7 +7,9 @@ import io.flexwork.modules.crm.domain.Action;
 import io.flexwork.modules.crm.event.ActivityLogEvent;
 import io.flexwork.modules.crm.repository.AccountRepository;
 import io.flexwork.modules.crm.service.mapper.AccountMapper;
+import io.flexwork.modules.usermanagement.service.dto.UserKey;
 import io.flexwork.query.QueryFilter;
+import io.flexwork.security.SecurityUtils;
 import jakarta.persistence.EntityNotFoundException;
 import java.util.List;
 import java.util.Optional;
@@ -48,11 +50,14 @@ public class AccountService {
                         new ActivityLogEvent(
                                 this,
                                 accountMapper.accountEntityToActivityLog(
-                                        savedAccount, Action.CREATE)));
+                                        savedAccount,
+                                        Action.CREATE,
+                                        SecurityUtils.getCurrentUserLogin()
+                                                .map(UserKey::getId)
+                                                .orElse(null))));
     }
 
     public Account updateAccount(Long accountId, Account accountDetails) {
-
         Account existingAccount =
                 accountRepository
                         .findById(accountId)

@@ -180,8 +180,7 @@ public class UserController {
      */
     @GetMapping("/users")
     @PreAuthorize("hasAuthority(\"" + AuthoritiesConstants.ADMIN + "\")")
-    public ResponseEntity<List<UserDTO>> getAllUsers(
-            @org.springdoc.core.annotations.ParameterObject Pageable pageable) {
+    public ResponseEntity<List<UserDTO>> getAllUsers(Pageable pageable) {
         log.debug("REST request to get all User for an admin");
         if (!onlyContainsAllowedProperties(pageable)) {
             return ResponseEntity.badRequest().build();

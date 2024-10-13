@@ -1,9 +1,9 @@
 [versions]
-mapstructVersion = "1.5.5.Final"
+mapstructVersion = "1.6.2"
 archunitJunit5Version = "1.3.0"
 springStateMachineVersion = "4.0.0"
 lombokVersion = "1.18.34"
-liquibaseVersion = "4.29.1"
+liquibaseVersion = "4.29.2"
 assertJVersion = "3.26.3"
 jcloudsVersion = "2.6.0"
 dotEnvVersion = "3.0.0"
@@ -11,11 +11,12 @@ logbackVersion = "1.5.9"
 junitVersion = "5.11.2"
 mockitoVersion = "5.2.0"
 mockitoJunitVersion = "5.14.1"
-jsonApiVersion="2.1.3"
+jsonApiVersion = "2.1.3"
+springbootVerion = "3.3.4"
+jhisterVersion = "8.7.1"
 
 [libraries]
-jhipster-framework = { module = "tech.jhipster:jhipster-framework", version = "8.6.0" }
-springdoc-openapi-starter-webmvc-api = { module = "org.springdoc:springdoc-openapi-starter-webmvc-api", version = "2.6.0" }
+jhipster-framework = { module = "tech.jhipster:jhipster-framework", version.ref = "jhisterVersion" }
 lombok = { module = "org.projectlombok:lombok", version.ref = "lombokVersion" }
 spring-statemachine-starter = { module = "org.springframework.statemachine:spring-statemachine-starter", version.ref = "springStateMachineVersion" }
 spring-statemachine-jpa = { module = "org.springframework.statemachine:spring-statemachine-data-jpa", version.ref = "springStateMachineVersion" }
@@ -32,11 +33,10 @@ junit-jupiter-api = { module = "org.junit.jupiter:junit-jupiter-api" }
 junit-jupiter-engine = { module = "org.junit.jupiter:junit-jupiter-engine" }
 mockito = { module = "org.mockito:mockito-inline", version.ref = "mockitoVersion" }
 mockito-junit = { module = "org.mockito:mockito-junit-jupiter", version.ref = "mockitoJunitVersion" }
-json-api = {module="jakarta.json:jakarta.json-api", version.ref="jsonApiVersion"}
+json-api = { module = "jakarta.json:jakarta.json-api", version.ref = "jsonApiVersion" }
 
 [plugins]
-spring-boot = { id = "org.springframework.boot", version = "3.3.4" }
-openapi = { id = "org.springdoc.openapi-gradle-plugin", version = "1.9.0" }
+spring-boot = { id = "org.springframework.boot", version.ref = "springbootVerion" }
 
 [bundles]
 spring-statemachine = ["spring-statemachine-starter", "spring-statemachine-jpa"]

@@ -4,7 +4,6 @@ plugins {
     id "idea"
     id "com.gorylenko.gradle-git-properties"
     alias(libs.plugins.spring.boot)
-    alias(libs.plugins.openapi)
     id "flexwork.spring-cache-conventions"
     id "flexwork.docker-conventions"
     id "flexwork.code-conventions"
@@ -94,7 +93,6 @@ dependencies {
 
     implementation("jakarta.annotation:jakarta.annotation-api")
     implementation(libs.jhipster.framework)
-    implementation(libs.springdoc.openapi.starter.webmvc.api)
     implementation("org.apache.commons:commons-lang3")
     implementation(libs.jclouds) {
         exclude group: "com.sun.xml.bind"

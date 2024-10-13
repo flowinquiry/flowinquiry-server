@@ -5,7 +5,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import io.flexwork.IntegrationTest;
-import io.flexwork.modules.usermanagement.AuthoritiesConstants;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -27,14 +26,6 @@ class SpaWebFilterIT {
     @Test
     void testFilterDoesNotForwardToIndexForApi() throws Exception {
         mockMvc.perform(get("/api/authenticate"))
-                .andExpect(status().isOk())
-                .andExpect(forwardedUrl(null));
-    }
-
-    @Test
-    @WithMockUser(authorities = AuthoritiesConstants.ADMIN)
-    void testFilterDoesNotForwardToIndexForV3ApiDocs() throws Exception {
-        mockMvc.perform(get("/v3/api-docs"))
                 .andExpect(status().isOk())
                 .andExpect(forwardedUrl(null));
     }

@@ -61,7 +61,7 @@ import tech.jhipster.web.util.ResponseUtil;
  */
 @RestController
 @RequestMapping("/api/admin")
-public class UserResource {
+public class UserController {
 
     private static final List<String> ALLOWED_ORDERED_PROPERTIES =
             List.of(
@@ -77,7 +77,7 @@ public class UserResource {
                     "lastModifiedBy",
                     "lastModifiedDate");
 
-    private static final Logger log = LoggerFactory.getLogger(UserResource.class);
+    private static final Logger log = LoggerFactory.getLogger(UserController.class);
 
     @Value("${spring.application.name}")
     private String applicationName;
@@ -90,7 +90,7 @@ public class UserResource {
 
     private final MailService mailService;
 
-    public UserResource(
+    public UserController(
             UserService userService,
             UserRepository userRepository,
             UserMapper userMapper,

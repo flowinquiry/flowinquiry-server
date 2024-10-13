@@ -16,15 +16,15 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/api")
-public class TenantResource {
+public class TenantController {
 
-    private static final Logger log = LoggerFactory.getLogger(TenantResource.class);
+    private static final Logger log = LoggerFactory.getLogger(TenantController.class);
 
     private final TenantService tenantService;
 
     private final TenantMapper tenantMapper;
 
-    public TenantResource(TenantService tenantService, TenantMapper tenantMapper) {
+    public TenantController(TenantService tenantService, TenantMapper tenantMapper) {
         this.tenantService = tenantService;
         this.tenantMapper = tenantMapper;
     }

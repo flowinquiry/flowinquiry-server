@@ -5,8 +5,7 @@ import lombok.*;
 
 @Entity
 @Table(name = "fw_authority_resource_permission")
-@Getter
-@Setter
+@Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor

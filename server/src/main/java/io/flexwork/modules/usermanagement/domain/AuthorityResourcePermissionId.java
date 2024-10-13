@@ -6,8 +6,7 @@ import jakarta.persistence.Enumerated;
 import java.io.Serializable;
 import lombok.*;
 
-@Getter
-@Setter
+@Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor

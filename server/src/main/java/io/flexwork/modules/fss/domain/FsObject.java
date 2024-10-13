@@ -9,8 +9,7 @@ import lombok.*;
 
 @Entity
 @Table(name = "fw_fss_object")
-@Getter
-@Setter
+@Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor

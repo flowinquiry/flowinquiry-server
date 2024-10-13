@@ -7,8 +7,7 @@ import lombok.*;
 
 @Entity
 @Table(name = "fw_resource")
-@Getter
-@Setter
+@Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor

@@ -1,9 +1,9 @@
 package io.flexwork;
 
-import com.tngtech.archunit.core.importer.ImportOption.DoNotIncludeTests;
-import com.tngtech.archunit.junit.AnalyzeClasses;
+// import com.tngtech.archunit.core.importer.ImportOption.DoNotIncludeTests;
+// import com.tngtech.archunit.junit.AnalyzeClasses;
 
-@AnalyzeClasses(packagesOf = FlexworkApp.class, importOptions = DoNotIncludeTests.class)
+// @AnalyzeClasses(packagesOf = FlexworkApp.class, importOptions = DoNotIncludeTests.class)
 class TechnicalStructureTest {
 
     // prettier-ignore

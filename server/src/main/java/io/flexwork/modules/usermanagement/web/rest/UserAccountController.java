@@ -22,7 +22,7 @@ import org.springframework.web.bind.annotation.*;
 /** REST controller for managing the current user's account. */
 @RestController
 @RequestMapping("/api")
-public class AccountResource {
+public class UserAccountController {
 
     private static class AccountResourceException extends RuntimeException {
 
@@ -31,7 +31,7 @@ public class AccountResource {
         }
     }
 
-    private static final Logger log = LoggerFactory.getLogger(AccountResource.class);
+    private static final Logger log = LoggerFactory.getLogger(UserAccountController.class);
 
     private final UserRepository userRepository;
 
@@ -41,7 +41,7 @@ public class AccountResource {
 
     private final MailService mailService;
 
-    public AccountResource(
+    public UserAccountController(
             UserRepository userRepository,
             UserService userService,
             UserMapper userMapper,

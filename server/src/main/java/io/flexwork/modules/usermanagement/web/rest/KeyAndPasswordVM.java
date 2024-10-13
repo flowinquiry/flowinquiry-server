@@ -1,11 +1,9 @@
 package io.flexwork.modules.usermanagement.web.rest;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
 
 /** View Model object for storing the user's key and password. */
-@Setter
-@Getter
+@Data
 public class KeyAndPasswordVM {
 
     private String key;

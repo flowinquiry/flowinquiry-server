@@ -21,9 +21,9 @@ import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequestMapping("/api/files")
-public class FileUploadResource {
+public class FileUploadController {
 
-    private static final Logger log = LoggerFactory.getLogger(FileUploadResource.class);
+    private static final Logger log = LoggerFactory.getLogger(FileUploadController.class);
 
     private static final String AVATAR_TYPE = "avatar";
 
@@ -38,7 +38,7 @@ public class FileUploadResource {
 
     private final IStorageService storageService;
 
-    public FileUploadResource(FsObjectService fsObjectService, IStorageService storageService) {
+    public FileUploadController(FsObjectService fsObjectService, IStorageService storageService) {
         this.fsObjectService = fsObjectService;
         this.storageService = storageService;
     }

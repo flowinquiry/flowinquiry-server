@@ -79,9 +79,9 @@ configurations {
 
 dependencies {
     api project(":tools:liquibase")
+    api project(":tools:logging")
 
-    compileOnly("org.projectlombok:lombok:${lombokVersion}")
-
+    compileOnly(libs.lombok)
 
     implementation("com.fasterxml.jackson.module:jackson-module-jaxb-annotations")
     implementation("com.fasterxml.jackson.datatype:jackson-datatype-hppc")
@@ -89,15 +89,14 @@ dependencies {
     implementation("com.fasterxml.jackson.datatype:jackson-datatype-jsr310")
     implementation("com.github.ben-manes.caffeine:caffeine")
     implementation("com.zaxxer:HikariCP")
-    implementation("io.github.cdimascio:dotenv-java:3.0.0")
-    implementation("jakarta.json:jakarta.json-api:2.1.3")
-    implementation("org.eclipse.parsson:parsson:1.1.7")
+    implementation(libs.dot.env)
+    implementation(libs.json.api)
 
     implementation("jakarta.annotation:jakarta.annotation-api")
     implementation(libs.jhipster.framework)
     implementation(libs.springdoc.openapi.starter.webmvc.api)
     implementation("org.apache.commons:commons-lang3")
-    implementation("org.apache.jclouds:jclouds-all:2.6.0") {
+    implementation(libs.jclouds) {
         exclude group: "com.sun.xml.bind"
     }
     implementation("org.springframework.boot:spring-boot-loader-tools")
@@ -121,37 +120,34 @@ dependencies {
 
     implementation("org.hibernate.orm:hibernate-core")
     implementation("org.hibernate.validator:hibernate-validator")
-    implementation("org.springframework.statemachine:spring-statemachine-starter:${springStateMachineVersion}")
-    implementation("org.springframework.statemachine:spring-statemachine-data-jpa:${springStateMachineVersion}")
-    implementation("org.liquibase:liquibase-core:${liquibaseVersion}")
+    implementation(libs.bundles.spring.statemachine)
+    implementation(libs.liquibase)
 
-    testImplementation("com.tngtech.archunit:archunit-junit5-api:${archunitJunit5Version}") {
-        exclude group: "org.slf4j", module: "slf4j-api"
-    }
-    testRuntimeOnly("com.tngtech.archunit:archunit-junit5-engine:${archunitJunit5Version}") {
-        exclude group: "org.slf4j", module: "slf4j-api"
-    }
+//    testImplementation("com.tngtech.archunit:archunit-junit5-api:${archunitJunit5Version}") {
+//        exclude group: "org.slf4j", module: "slf4j-api"
+//    }
+//    testRuntimeOnly("com.tngtech.archunit:archunit-junit5-engine:${archunitJunit5Version}") {
+//        exclude group: "org.slf4j", module: "slf4j-api"
+//    }
     testImplementation("org.testcontainers:jdbc")
     testImplementation("org.testcontainers:junit-jupiter")
     testImplementation("org.testcontainers:testcontainers")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("org.springframework.boot:spring-boot-test")
     testImplementation("org.springframework.security:spring-security-test")
-    testImplementation("org.springframework.statemachine:spring-statemachine-test:${springStateMachineVersion}")
-    testCompileOnly("org.projectlombok:lombok:${lombokVersion}")
-    testAnnotationProcessor("org.projectlombok:lombok:${lombokVersion}")
+    testImplementation(libs.spring.statemachine.test)
+    testCompileOnly(libs.lombok)
+    testAnnotationProcessor(libs.lombok)
     testImplementation("org.jetbrains.kotlin:kotlin-test")
-    testImplementation("com.icegreen:greenmail:${greenmailVersion}")
-    testImplementation("com.icegreen:greenmail-junit5:${greenmailVersion}")
-    testImplementation("org.assertj:assertj-core:${assertJVersion}")
+    testImplementation(libs.assertJ)
 
     annotationProcessor("org.springframework.boot:spring-boot-configuration-processor")
     annotationProcessor("org.hibernate.orm:hibernate-jpamodelgen")
     annotationProcessor("org.glassfish.jaxb:jaxb-runtime")
-    annotationProcessor("org.projectlombok:lombok:${lombokVersion}")
+    annotationProcessor(libs.lombok)
     // Keep mapstruct dependency below the lombok
-    implementation("org.mapstruct:mapstruct:${mapstructVersion}")
-    annotationProcessor("org.mapstruct:mapstruct-processor:${mapstructVersion}")
+    implementation(libs.mapstruct)
+    annotationProcessor(libs.mapstruct.processor)
 }
 
 task cleanResources(type: Delete) {

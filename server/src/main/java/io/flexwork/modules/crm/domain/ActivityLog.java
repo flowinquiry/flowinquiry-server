@@ -19,8 +19,7 @@ import org.hibernate.annotations.UpdateTimestamp;
 
 @Entity
 @Table(name = "fw_crm_activity_log")
-@Getter
-@Setter
+@Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
@@ -60,9 +59,6 @@ public class ActivityLog {
 
     @Column(name = "changes")
     private String changes;
-
-    @Column(name = "notes")
-    private String notes;
 
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)

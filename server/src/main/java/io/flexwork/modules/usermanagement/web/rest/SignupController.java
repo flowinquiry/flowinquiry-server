@@ -9,13 +9,13 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api")
-public class SignupResource {
+public class SignupController {
 
     private static final Logger log = LoggerFactory.getLogger(UserService.class);
 
     private SignupService signupService;
 
-    public SignupResource(SignupService signupService) {
+    public SignupController(SignupService signupService) {
         this.signupService = signupService;
     }
 

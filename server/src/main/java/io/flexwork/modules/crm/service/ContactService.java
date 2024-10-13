@@ -2,10 +2,12 @@ package io.flexwork.modules.crm.service;
 
 import io.flexwork.modules.crm.domain.Contact;
 import io.flexwork.modules.crm.repository.ContactRepository;
+import java.util.List;
 import java.util.Optional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class ContactService {
@@ -50,5 +52,10 @@ public class ContactService {
 
     public void deleteContact(Long id) {
         contactRepository.deleteById(id);
+    }
+
+    @Transactional
+    public void deleteContacts(List<Long> ids) {
+        contactRepository.deleteAllByIdInBatch(ids);
     }
 }

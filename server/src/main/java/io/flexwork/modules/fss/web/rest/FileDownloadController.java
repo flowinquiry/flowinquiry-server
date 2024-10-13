@@ -10,11 +10,11 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/api/files")
-public class FileDownloadResource {
+public class FileDownloadController {
 
     private final IStorageService storageService;
 
-    public FileDownloadResource(IStorageService storageService) {
+    public FileDownloadController(IStorageService storageService) {
         this.storageService = storageService;
     }
 

@@ -12,7 +12,7 @@
 			minValue="1" startValue="3" incrementBy="3" />
 		<createTable tableName="fw_user">
 			<column name="id" type="bigint" autoIncrement="true">
-				<constraints primaryKey="true" nullable="false" />
+				<constraints primaryKey="true" />
 			</column>
 			<column name="password_hash" type="varchar(60)" />
 			<column name="first_name" type="varchar(50)" />
@@ -27,6 +27,10 @@
 			</column>
 			<column name="last_login_time" type="TIMESTAMP" />
 			<column name="image_url" type="varchar(256)" />
+			<column name="role" type="VARCHAR(50)" />
+			<column name="title" type="VARCHAR(100)" />
+			<column name="manager_id" type="BIGINT" />
+			<column name="organization_id" type="BIGINT" />
 			<column name="activated" type="boolean" valueBoolean="false">
 				<constraints nullable="false" />
 			</column>
@@ -111,7 +115,54 @@
 			referencedColumnNames="name" onDelete="CASCADE"
 			constraintName="fk_authority_resource_permissions_resource" />
 
+		<!-- Create Team Table -->
+		<createTable tableName="fw_team">
+			<column name="id" type="BIGINT" autoIncrement="true">
+				<constraints primaryKey="true" />
+			</column>
+			<column name="name" type="VARCHAR(255)" />
+			<column name="team_logo_url" type="VARCHAR(500)" />
+			<column name="slogan" type="VARCHAR(255)" />
+			<column name="description" type="TEXT" />
+			<column name="organization_id" type="BIGINT" />
+		</createTable>
 
+		<!-- Create Organization Table -->
+		<createTable tableName="fw_organization">
+			<column name="id" type="BIGINT" autoIncrement="true">
+				<constraints primaryKey="true" />
+			</column>
+			<column name="name" type="VARCHAR(255)" />
+			<column name="title" type="VARCHAR(255)" />
+			<column name="slogan" type="VARCHAR(255)" />
+			<column name="description" type="TEXT" />
+		</createTable>
+
+		<addForeignKeyConstraint
+			baseTableName="fw_team" baseColumnNames="organization_id"
+			referencedTableName="fw_organization" referencedColumnNames="id"
+			onDelete="CASCADE" constraintName="fk_teams_organization" />
+
+
+		<!-- Create User_Team Join Table -->
+		<createTable tableName="fw_user_team">
+			<column name="user_id" type="BIGINT">
+				<constraints nullable="false" primaryKey="true"
+					primaryKeyName="pk_fw_user_team" />
+			</column>
+			<column name="team_id" type="BIGINT">
+				<constraints nullable="false" primaryKey="true"
+					primaryKeyName="pk_fw_user_team" />
+			</column>
+		</createTable>
+		<addForeignKeyConstraint
+			baseTableName="fw_user_team" baseColumnNames="user_id"
+			referencedTableName="fw_user" referencedColumnNames="id"
+			onDelete="CASCADE" constraintName="fk_user_team_user" />
+		<addForeignKeyConstraint
+			baseTableName="fw_user_team" baseColumnNames="team_id"
+			referencedTableName="fw_team" referencedColumnNames="id"
+			onDelete="CASCADE" constraintName="fk_user_team_team" />
 	</changeSet>
 
 	<changeSet author="flexapp"

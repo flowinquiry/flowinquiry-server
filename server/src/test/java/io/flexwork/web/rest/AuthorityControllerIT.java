@@ -11,7 +11,7 @@ import io.flexwork.DefaultTenantContext;
 import io.flexwork.IntegrationTest;
 import io.flexwork.modules.usermanagement.domain.Authority;
 import io.flexwork.modules.usermanagement.repository.AuthorityRepository;
-import io.flexwork.modules.usermanagement.web.rest.AuthorityResource;
+import io.flexwork.modules.usermanagement.web.rest.AuthorityController;
 import jakarta.persistence.EntityManager;
 import java.util.UUID;
 import org.junit.jupiter.api.AfterEach;
@@ -24,12 +24,12 @@ import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
 
-/** Integration tests for the {@link AuthorityResource} REST controller. */
+/** Integration tests for the {@link AuthorityController} REST controller. */
 @IntegrationTest
 @AutoConfigureMockMvc
 @WithMockUser(authorities = {"ROLE_ADMIN"})
 @DefaultTenantContext
-class AuthorityResourceIT {
+class AuthorityControllerIT {
 
     private static final String ENTITY_API_URL = "/api/authorities";
     private static final String ENTITY_API_URL_ID = ENTITY_API_URL + "/{name}";

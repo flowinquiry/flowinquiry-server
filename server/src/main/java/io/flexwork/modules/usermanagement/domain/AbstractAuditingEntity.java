@@ -6,8 +6,7 @@ import jakarta.persistence.EntityListeners;
 import jakarta.persistence.MappedSuperclass;
 import java.io.Serializable;
 import java.time.Instant;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
 import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedBy;
@@ -23,8 +22,7 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 @JsonIgnoreProperties(
         value = {"createdBy", "createdDate", "lastModifiedBy", "lastModifiedDate"},
         allowGetters = true)
-@Getter
-@Setter
+@Data
 public abstract class AbstractAuditingEntity<T> implements Serializable {
 
     private static final long serialVersionUID = 1L;

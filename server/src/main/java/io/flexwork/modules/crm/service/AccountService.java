@@ -17,6 +17,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class AccountService {
@@ -92,6 +93,11 @@ public class AccountService {
     // Delete an account by its ID
     public void deleteAccountById(Long accountId) {
         accountRepository.deleteById(accountId);
+    }
+
+    @Transactional
+    public void deleteAccounts(List<Long> ids) {
+        accountRepository.deleteAllByIdInBatch(ids);
     }
 
     public Page<Account> findAllAccounts(List<QueryFilter> filters, Pageable pageable) {

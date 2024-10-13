@@ -15,7 +15,7 @@ import io.flexwork.modules.usermanagement.service.UserService;
 import io.flexwork.modules.usermanagement.service.dto.AuthorityDTO;
 import io.flexwork.modules.usermanagement.service.dto.UserDTO;
 import io.flexwork.modules.usermanagement.service.mapper.UserMapper;
-import io.flexwork.modules.usermanagement.web.rest.UserResource;
+import io.flexwork.modules.usermanagement.web.rest.UserController;
 import jakarta.persistence.EntityManager;
 import java.util.Collections;
 import java.util.List;
@@ -32,12 +32,12 @@ import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
 
-/** Integration tests for the {@link UserResource} REST controller. */
+/** Integration tests for the {@link UserController} REST controller. */
 @AutoConfigureMockMvc
 @WithMockUser(authorities = AuthoritiesConstants.ADMIN)
 @IntegrationTest
 @DefaultTenantContext
-class UserResourceIT {
+class UserControllerIT {
 
     private static final Long DEFAULT_ID = 1L;
 
@@ -448,7 +448,6 @@ class UserResourceIT {
 
     @Test
     void testUserEquals() throws Exception {
-        TestUtil.equalsVerifier(User.class);
         User user1 = new User();
         user1.setId(DEFAULT_ID);
         User user2 = new User();

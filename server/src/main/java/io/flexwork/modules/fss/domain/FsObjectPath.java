@@ -6,8 +6,7 @@ import lombok.*;
 
 @Entity
 @Table(name = "fw_fss_object_paths")
-@Getter
-@Setter
+@Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor

@@ -11,13 +11,13 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/tenants")
-public class TenantUserResource {
+public class TenantUserController {
 
-    private static final Logger log = LoggerFactory.getLogger(TenantUserResource.class);
+    private static final Logger log = LoggerFactory.getLogger(TenantUserController.class);
 
     private final UserService userService;
 
-    public TenantUserResource(UserService userService) {
+    public TenantUserController(UserService userService) {
         this.userService = userService;
     }
 

@@ -21,9 +21,9 @@ import io.flexwork.modules.usermanagement.service.dto.AuthorityDTO;
 import io.flexwork.modules.usermanagement.service.dto.PasswordChangeDTO;
 import io.flexwork.modules.usermanagement.service.dto.UserDTO;
 import io.flexwork.modules.usermanagement.service.mapper.UserMapper;
-import io.flexwork.modules.usermanagement.web.rest.AccountResource;
 import io.flexwork.modules.usermanagement.web.rest.KeyAndPasswordVM;
 import io.flexwork.modules.usermanagement.web.rest.ManagedUserVM;
+import io.flexwork.modules.usermanagement.web.rest.UserAccountController;
 import io.flexwork.security.Constants;
 import java.time.Instant;
 import java.util.Collections;
@@ -45,11 +45,11 @@ import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
 
-/** Integration tests for the {@link AccountResource} REST controller. */
+/** Integration tests for the {@link UserAccountController} REST controller. */
 @AutoConfigureMockMvc
 @IntegrationTest
 @DefaultTenantContext
-class AccountResourceIT {
+class UserAccountControllerIT {
 
     static final String TEST_USER_LOGIN_EMAIL = "test@localhost.io";
 

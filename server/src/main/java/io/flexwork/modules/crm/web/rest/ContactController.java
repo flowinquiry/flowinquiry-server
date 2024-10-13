@@ -4,6 +4,7 @@ import io.flexwork.modules.crm.domain.Contact;
 import io.flexwork.modules.crm.service.ContactService;
 import io.flexwork.modules.crm.service.dto.ContactDTO;
 import io.flexwork.modules.crm.service.mapper.ContactMapper;
+import java.util.List;
 import java.util.Optional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -54,6 +55,12 @@ public class ContactController {
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteContact(@PathVariable Long id) {
         contactService.deleteContact(id);
+        return ResponseEntity.noContent().build();
+    }
+
+    @DeleteMapping("/contacts")
+    public ResponseEntity<Void> deleteContacts(@RequestBody List<Long> ids) {
+        contactService.deleteContacts(ids);
         return ResponseEntity.noContent().build();
     }
 }

@@ -14,8 +14,7 @@ import lombok.*;
 @Table(
         name = "fw_crm_value_definitions",
         indexes = {@Index(name = "idx_entity_type_key", columnList = "entity_type, value_key")})
-@Getter
-@Setter
+@Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor

@@ -1,0 +1,22 @@
+plugins {
+    id 'java'
+}
+
+group = 'io.flexwork'
+version = '0.0.1-SNAPSHOT'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation(libs.bundles.logback)
+
+    testImplementation platform(libs.junit.bom)
+    testImplementation(libs.bundles.junit)
+    testImplementation(libs.bundles.mockito)
+}
+
+test {
+    useJUnitPlatform()
+}

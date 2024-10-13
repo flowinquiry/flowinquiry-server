@@ -10,7 +10,7 @@ import io.flexwork.modules.usermanagement.AuthoritiesConstants;
 import io.flexwork.modules.usermanagement.domain.User;
 import io.flexwork.modules.usermanagement.repository.UserRepository;
 import io.flexwork.modules.usermanagement.service.UserService;
-import io.flexwork.modules.usermanagement.web.rest.PublicUserResource;
+import io.flexwork.modules.usermanagement.web.rest.PublicUserController;
 import jakarta.persistence.EntityManager;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -22,12 +22,12 @@ import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
 
-/** Integration tests for the {@link PublicUserResource} REST controller. */
+/** Integration tests for the {@link PublicUserController} REST controller. */
 @AutoConfigureMockMvc
 @WithMockUser(authorities = AuthoritiesConstants.ADMIN)
 @IntegrationTest
 @DefaultTenantContext
-class PublicUserResourceIT {
+class PublicUserControllerIT {
 
     @Autowired private UserRepository userRepository;
 
@@ -47,7 +47,7 @@ class PublicUserResourceIT {
 
     @BeforeEach
     public void initTest() {
-        user = UserResourceIT.initTestUser(em);
+        user = UserControllerIT.initTestUser(em);
     }
 
     @AfterEach

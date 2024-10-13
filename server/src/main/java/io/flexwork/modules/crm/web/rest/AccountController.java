@@ -58,13 +58,14 @@ public class AccountController {
     // Delete an account by ID
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteAccount(@PathVariable Long id) {
-        Optional<Account> account = accountService.findAccountById(id);
-        if (account.isPresent()) {
-            accountService.deleteAccountById(id);
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        } else {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
+        accountService.deleteAccountById(id);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    @DeleteMapping("/accounts")
+    public ResponseEntity<Void> deleteAccounts(@RequestBody List<Long> ids) {
+        accountService.deleteAccounts(ids);
+        return ResponseEntity.noContent().build();
     }
 
     @GetMapping

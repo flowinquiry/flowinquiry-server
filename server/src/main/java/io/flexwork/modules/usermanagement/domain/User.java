@@ -18,8 +18,7 @@ import org.hibernate.annotations.BatchSize;
 /** A user. */
 @Entity
 @Table(name = "fw_user")
-@Getter
-@Setter
+@Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
@@ -30,11 +29,13 @@ public class User extends AbstractAuditingEntity<Long> implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "sequenceGenerator")
     @SequenceGenerator(name = "sequenceGenerator")
+    @EqualsAndHashCode.Include
     private Long id;
 
     @JsonIgnore
     @NotNull @Size(min = 60, max = 60)
     @Column(name = "password_hash", length = 60, nullable = false)
+    @ToString.Exclude
     private String password;
 
     @Size(max = 50)
@@ -60,6 +61,29 @@ public class User extends AbstractAuditingEntity<Long> implements Serializable {
     @Size(max = 256)
     @Column(name = "image_url", length = 256)
     private String imageUrl;
+
+    @Size(max = 50)
+    @Column(name = "role", length = 50)
+    private String role;
+
+    @Size(max = 100)
+    @Column(name = "title", length = 100)
+    private String title;
+
+    @ManyToOne
+    @JoinColumn(name = "manager_id")
+    private User manager;
+
+    @ManyToOne
+    @JoinColumn(name = "organization_id")
+    private Organization organization;
+
+    @ManyToMany
+    @JoinTable(
+            name = "fw_user_team",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "team_id"))
+    private Set<Team> teams;
 
     @Size(max = 20)
     @Column(name = "activation_key", length = 20)
@@ -95,51 +119,5 @@ public class User extends AbstractAuditingEntity<Long> implements Serializable {
         if (lastLoginTime == null) return null;
         ZoneId userZone = ZoneId.of(timezone);
         return lastLoginTime.atZone(ZoneOffset.UTC).withZoneSameInstant(userZone).toLocalDateTime();
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (!(o instanceof User)) {
-            return false;
-        }
-        return id != null && id.equals(((User) o).id);
-    }
-
-    @Override
-    public int hashCode() {
-        // see
-        // https://vladmihalcea.com/how-to-implement-equals-and-hashcode-using-the-jpa-entity-identifier/
-        return getClass().hashCode();
-    }
-
-    // prettier-ignore
-    @Override
-    public String toString() {
-        return "User{"
-                + "firstName='"
-                + firstName
-                + '\''
-                + ", lastName='"
-                + lastName
-                + '\''
-                + ", email='"
-                + email
-                + '\''
-                + ", imageUrl='"
-                + imageUrl
-                + '\''
-                + ", activated='"
-                + activated
-                + '\''
-                + ", langKey='"
-                + langKey
-                + '\''
-                + ", activationKey='"
-                + activationKey
-                + '\''
-                + "}";
     }
 }

@@ -2,28 +2,47 @@
 <!DOCTYPE configuration>
 
 <configuration scan="true">
+
+	<!-- Register the custom masking converter -->
+	<conversionRule conversionWord="mask"
+		converterClass="io.flexwork.logback.MaskingMessageConverter" />
+
 	<!-- Patterns based on https://github.com/spring-projects/spring-boot/blob/v3.0.0/spring-boot-project/spring-boot/src/main/resources/org/springframework/boot/logging/logback/defaults.xml -->
 	<property name="CONSOLE_LOG_PATTERN"
 		value="${CONSOLE_LOG_PATTERN:-%clr(%d{${LOG_DATEFORMAT_PATTERN:-yyyy-MM-dd'T'HH:mm:ss.SSSXXX}}){faint} %clr(${LOG_LEVEL_PATTERN:-%5p}) %clr(${PID:- }){magenta} %clr(---){faint} %clr([%15.15t]){faint} %clr(%logger{}.%method:%line){cyan} %clr(:){faint} %clr(%replace(%m){'[\r\n]', ''}){red} %n${LOG_EXCEPTION_CONVERSION_WORD:-%wEx}}" />
-	<!-- The FILE and ASYNC appenders are here as examples for a production 
-		configuration -->
-	<!-- <property name="FILE_LOG_PATTERN" value="${FILE_LOG_PATTERN:-%d{${LOG_DATEFORMAT_PATTERN:-yyyy-MM-dd'T'HH:mm:ss.SSSXXX}} 
-		${LOG_LEVEL_PATTERN:-%5p} ${PID:- } &#45;&#45;&#45; [%t] %-40.40logger{39} 
-		: %crlf(%m) %n${LOG_EXCEPTION_CONVERSION_WORD:-%wEx}}"/> -->
+
+	<!-- Console Appender for standard logging -->
+	<appender name="CONSOLE"
+		class="ch.qos.logback.core.ConsoleAppender">
+		<encoder>
+			<pattern>${CONSOLE_LOG_PATTERN}</pattern>
+		</encoder>
+	</appender>
+
+	<!-- File appender with masking for error and custom logs only -->
+	<appender name="MASKED_FILE"
+		class="ch.qos.logback.core.FileAppender">
+		<file>logs/masked-log.log</file>
+		<encoder>
+			<pattern>%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} -
+				%mask{%msg}%n</pattern>
+		</encoder>
+
+		<!-- Filter to include only ERROR level logs -->
+		<filter class="ch.qos.logback.classic.filter.LevelFilter">
+			<level>ERROR</level>
+			<onMatch>ACCEPT</onMatch>
+			<onMismatch>DENY</onMismatch>
+		</filter>
+	</appender>
 
 	<include
 		resource="org/springframework/boot/logging/logback/defaults.xml" />
 	<include
 		resource="org/springframework/boot/logging/logback/console-appender.xml" />
 
-	<!-- The FILE and ASYNC appenders are here as examples for a production 
-		configuration -->
-	<!-- <include resource="org/springframework/boot/logging/logback/file-appender.xml" 
-		/> <appender name="ASYNC" class="ch.qos.logback.classic.AsyncAppender"> <queueSize>512</queueSize> 
-		<appender-ref ref="FILE"/> </appender> <root level="${logging.level.root}"> 
-		<appender-ref ref="ASYNC"/> </root> -->
-	<logger name="io.flexwork" level="DEBUG" />
 
+	<logger name="io.flexwork" level="DEBUG" />
 	<logger name="angus.activation" level="WARN" />
 	<logger name="jakarta.activation" level="WARN" />
 	<logger name="jakarta.mail" level="WARN" />
@@ -68,6 +87,7 @@
 		source="logging.level.root" defaultValue="INFO" />
 	<root level="${log.level}">
 		<appender-ref ref="CONSOLE" />
+		<appender-ref ref="MASKED_FILE" />
 	</root>
 
 	<contextListener

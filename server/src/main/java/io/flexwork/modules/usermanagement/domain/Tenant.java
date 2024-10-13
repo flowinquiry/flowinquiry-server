@@ -10,8 +10,7 @@ import lombok.*;
 
 @Entity
 @Table(name = "fw_tenant", schema = MASTER_SCHEMA)
-@Getter
-@Setter
+@Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor

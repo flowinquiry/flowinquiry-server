@@ -21,9 +21,9 @@ import tech.jhipster.web.util.ResponseUtil;
 @RestController
 @RequestMapping("/api/authorities")
 @Transactional
-public class AuthorityResource {
+public class AuthorityController {
 
-    private static final Logger log = LoggerFactory.getLogger(AuthorityResource.class);
+    private static final Logger log = LoggerFactory.getLogger(AuthorityController.class);
 
     private static final String ENTITY_NAME = "adminAuthority";
 
@@ -32,7 +32,7 @@ public class AuthorityResource {
 
     private final AuthorityRepository authorityRepository;
 
-    public AuthorityResource(AuthorityRepository authorityRepository) {
+    public AuthorityController(AuthorityRepository authorityRepository) {
         this.authorityRepository = authorityRepository;
     }
 

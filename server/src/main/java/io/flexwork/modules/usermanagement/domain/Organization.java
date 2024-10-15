@@ -16,8 +16,12 @@ public class Organization {
     private Long id;
 
     private String name;
-    private String title;
+
+    @Column(name = "logo_url")
+    private String logoUrl;
+
     private String slogan;
+
     private String description;
 
     @OneToMany(mappedBy = "organization")

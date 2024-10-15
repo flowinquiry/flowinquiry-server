@@ -17,8 +17,12 @@ public class Team {
     private Long id;
 
     private String name;
-    private String teamLogoUrl;
+
+    @Column(name = "logo_url")
+    private String logoUrl;
+
     private String slogan;
+
     private String description;
 
     @ManyToOne

@@ -8,7 +8,7 @@ pluginManagement {
     }
 }
 
-rootProject.name = "flexwork"
+rootProject.name = "flexwork-server"
 include 'server'
 include 'tools'
 include 'tools:liquibase'

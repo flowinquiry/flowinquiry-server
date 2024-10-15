@@ -31,7 +31,7 @@ public class TeamService {
         existingTeam.setName(updatedTeam.getName());
         existingTeam.setSlogan(updatedTeam.getSlogan());
         existingTeam.setDescription(updatedTeam.getDescription());
-        existingTeam.setTeamLogoUrl(updatedTeam.getTeamLogoUrl());
+        existingTeam.setLogoUrl(updatedTeam.getLogoUrl());
 
         // Save updated team
         return teamRepository.save(existingTeam);

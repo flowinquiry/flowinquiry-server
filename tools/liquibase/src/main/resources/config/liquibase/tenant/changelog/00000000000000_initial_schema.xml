@@ -121,7 +121,7 @@
 				<constraints primaryKey="true" />
 			</column>
 			<column name="name" type="VARCHAR(255)" />
-			<column name="team_logo_url" type="VARCHAR(500)" />
+			<column name="logo_url" type="VARCHAR(500)" />
 			<column name="slogan" type="VARCHAR(255)" />
 			<column name="description" type="TEXT" />
 			<column name="organization_id" type="BIGINT" />
@@ -133,7 +133,7 @@
 				<constraints primaryKey="true" />
 			</column>
 			<column name="name" type="VARCHAR(255)" />
-			<column name="title" type="VARCHAR(255)" />
+			<column name="logo_url" type="VARCHAR(255)" />
 			<column name="slogan" type="VARCHAR(255)" />
 			<column name="description" type="TEXT" />
 		</createTable>

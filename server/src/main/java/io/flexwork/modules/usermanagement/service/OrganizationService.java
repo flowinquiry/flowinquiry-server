@@ -31,7 +31,7 @@ public class OrganizationService {
 
         // Update organization details
         existingOrganization.setName(updatedOrganization.getName());
-        existingOrganization.setTitle(updatedOrganization.getTitle());
+        existingOrganization.setLogoUrl(updatedOrganization.getLogoUrl());
         existingOrganization.setSlogan(updatedOrganization.getSlogan());
         existingOrganization.setDescription(updatedOrganization.getDescription());
 

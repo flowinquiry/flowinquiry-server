@@ -1,8 +1,16 @@
 package io.flexwork.modules.usermanagement.web.rest;
 
+import static io.flexwork.query.QueryUtils.parseFiltersFromParams;
+
 import io.flexwork.modules.usermanagement.domain.Organization;
 import io.flexwork.modules.usermanagement.service.OrganizationService;
+import io.flexwork.modules.usermanagement.service.dto.OrganizationDTO;
+import io.flexwork.modules.usermanagement.service.mapper.OrganizationMapper;
+import io.flexwork.query.QueryFilter;
 import java.util.List;
+import java.util.Map;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -13,7 +21,11 @@ public class OrganizationController {
 
     private OrganizationService organizationService;
 
-    public OrganizationController(OrganizationService organizationService) {
+    private OrganizationMapper organizationMapper;
+
+    public OrganizationController(
+            OrganizationMapper organizationMapper, OrganizationService organizationService) {
+        this.organizationMapper = organizationMapper;
         this.organizationService = organizationService;
     }
 
@@ -46,10 +58,13 @@ public class OrganizationController {
         return ResponseEntity.ok(organization);
     }
 
-    // Find all organizations
+    // Find organizations
     @GetMapping
-    public ResponseEntity<List<Organization>> findAllOrganizations() {
-        List<Organization> organizations = organizationService.findAllOrganizations();
-        return ResponseEntity.ok(organizations);
+    public ResponseEntity<Page<OrganizationDTO>> findOrganizations(
+            @RequestParam Map<String, String> params, Pageable pageable) {
+        List<QueryFilter> filters = parseFiltersFromParams(params);
+        Page<Organization> teams = organizationService.findOrganizations(filters, pageable);
+        return new ResponseEntity<>(
+                teams.map(organizationMapper::organizationToOrganizationDTO), HttpStatus.OK);
     }
 }

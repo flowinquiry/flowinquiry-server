@@ -1,9 +1,15 @@
 package io.flexwork.modules.usermanagement.service;
 
+import static io.flexwork.query.QueryUtils.buildSpecification;
+
 import io.flexwork.modules.usermanagement.domain.Organization;
 import io.flexwork.modules.usermanagement.repository.OrganizationRepository;
+import io.flexwork.query.QueryFilter;
 import jakarta.persistence.EntityNotFoundException;
 import java.util.List;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -60,7 +66,8 @@ public class OrganizationService {
                         () -> new EntityNotFoundException("Organization not found with id: " + id));
     }
 
-    public List<Organization> findAllOrganizations() {
-        return organizationRepository.findAll();
+    public Page<Organization> findOrganizations(List<QueryFilter> filters, Pageable pageable) {
+        Specification<Organization> spec = buildSpecification(filters);
+        return organizationRepository.findAll(spec, pageable);
     }
 }

@@ -56,9 +56,9 @@ public class TeamController {
         return ResponseEntity.ok(team);
     }
 
-    // Find all teams
+    // Find teams
     @GetMapping
-    public ResponseEntity<Page<TeamDTO>> findAllTeams(
+    public ResponseEntity<Page<TeamDTO>> findTeams(
             @RequestParam Map<String, String> params, Pageable pageable) {
         List<QueryFilter> filters = parseFiltersFromParams(params);
         Page<Team> teams = teamService.findTeams(filters, pageable);

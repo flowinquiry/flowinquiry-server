@@ -100,7 +100,7 @@ public class AccountService {
         accountRepository.deleteAllByIdInBatch(ids);
     }
 
-    public Page<Account> findAllAccounts(List<QueryFilter> filters, Pageable pageable) {
+    public Page<Account> findAccounts(List<QueryFilter> filters, Pageable pageable) {
         Specification<Account> spec = buildSpecification(filters);
         return accountRepository.findAll(spec, pageable);
     }

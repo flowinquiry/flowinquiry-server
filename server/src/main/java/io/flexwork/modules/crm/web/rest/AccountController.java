@@ -69,10 +69,10 @@ public class AccountController {
     }
 
     @GetMapping
-    public ResponseEntity<Page<AccountDTO>> getAllAccounts(
+    public ResponseEntity<Page<AccountDTO>> findAccounts(
             @RequestParam Map<String, String> params, Pageable pageable) {
         List<QueryFilter> filters = parseFiltersFromParams(params);
-        Page<Account> accounts = accountService.findAllAccounts(filters, pageable);
+        Page<Account> accounts = accountService.findAccounts(filters, pageable);
         return new ResponseEntity<>(
                 accounts.map(accountMapper::accountToAccountDTO), HttpStatus.OK);
     }

@@ -10,7 +10,6 @@ import java.util.List;
 import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
-import java.util.stream.Collectors;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -39,7 +38,7 @@ public class FwUserDetails implements UserDetails {
                 user.getAuthorities().stream()
                         .map(Authority::getName)
                         .map(SimpleGrantedAuthority::new)
-                        .collect(Collectors.toList());
+                        .toList();
 
         for (GrantedAuthority grantedAuthority : grantedAuthorities) {
             Assert.notNull(

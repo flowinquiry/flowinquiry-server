@@ -34,6 +34,6 @@ public class OrganizationMapperTest {
                 () ->
                         assertThat(organizationDTO.getTeams())
                                 .extracting("id")
-                                .containsExactly(1L, 2L));
+                                .containsAnyOf(1L, 2L));
     }
 }

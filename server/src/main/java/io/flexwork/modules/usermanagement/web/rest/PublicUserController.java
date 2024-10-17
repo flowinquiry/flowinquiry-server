@@ -2,6 +2,7 @@ package io.flexwork.modules.usermanagement.web.rest;
 
 import io.flexwork.modules.usermanagement.service.UserService;
 import io.flexwork.modules.usermanagement.service.dto.UserDTO;
+import io.flexwork.modules.usermanagement.service.mapper.UserMapper;
 import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,9 +27,12 @@ public class PublicUserController {
 
     private static final Logger log = LoggerFactory.getLogger(PublicUserController.class);
 
+    private final UserMapper userMapper;
+
     private final UserService userService;
 
-    public PublicUserController(UserService userService) {
+    public PublicUserController(UserMapper userMapper, UserService userService) {
+        this.userMapper = userMapper;
         this.userService = userService;
     }
 

@@ -1,5 +1,7 @@
 package io.flexwork.modules.usermanagement.web.rest;
 
+import static io.flexwork.query.QueryUtils.parseFiltersFromParams;
+
 import io.flexwork.modules.usermanagement.AuthoritiesConstants;
 import io.flexwork.modules.usermanagement.domain.User;
 import io.flexwork.modules.usermanagement.repository.UserRepository;
@@ -10,12 +12,14 @@ import io.flexwork.modules.usermanagement.service.mapper.UserMapper;
 import io.flexwork.modules.usermanagement.web.rest.errors.BadRequestAlertException;
 import io.flexwork.modules.usermanagement.web.rest.errors.EmailAlreadyUsedException;
 import io.flexwork.modules.usermanagement.web.rest.errors.LoginAlreadyUsedException;
+import io.flexwork.query.QueryFilter;
 import io.flexwork.security.Constants;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Pattern;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -163,7 +167,8 @@ public class UserController {
                 && (!existingUser.orElseThrow().getId().equals(userDTO.getId()))) {
             throw new LoginAlreadyUsedException();
         }
-        Optional<UserDTO> updatedUser = userService.updateUser(userDTO);
+        Optional<UserDTO> updatedUser =
+                userService.updateUser(userDTO).map(userMapper::userToUserDTO);
 
         return ResponseUtil.wrapOrNotFound(
                 updatedUser,
@@ -180,13 +185,16 @@ public class UserController {
      */
     @GetMapping("/users")
     @PreAuthorize("hasAuthority(\"" + AuthoritiesConstants.ADMIN + "\")")
-    public ResponseEntity<List<UserDTO>> getAllUsers(Pageable pageable) {
+    public ResponseEntity<List<UserDTO>> getAllUsers(
+            @RequestParam Map<String, String> params, Pageable pageable) {
         log.debug("REST request to get all User for an admin");
+        List<QueryFilter> filters = parseFiltersFromParams(params);
         if (!onlyContainsAllowedProperties(pageable)) {
             return ResponseEntity.badRequest().build();
         }
 
-        final Page<UserDTO> page = userService.getAllManagedUsers(pageable);
+        final Page<UserDTO> page =
+                userService.getAllManagedUsers(filters, pageable).map(userMapper::userToUserDTO);
         HttpHeaders headers =
                 PaginationUtil.generatePaginationHttpHeaders(
                         ServletUriComponentsBuilder.fromCurrentRequest(), page);

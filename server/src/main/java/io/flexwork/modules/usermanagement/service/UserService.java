@@ -1,5 +1,7 @@
 package io.flexwork.modules.usermanagement.service;
 
+import static io.flexwork.query.QueryUtils.buildSpecification;
+
 import io.flexwork.modules.usermanagement.AuthoritiesConstants;
 import io.flexwork.modules.usermanagement.domain.Authority;
 import io.flexwork.modules.usermanagement.domain.User;
@@ -8,6 +10,7 @@ import io.flexwork.modules.usermanagement.repository.UserRepository;
 import io.flexwork.modules.usermanagement.service.dto.UserDTO;
 import io.flexwork.modules.usermanagement.service.dto.UserKey;
 import io.flexwork.modules.usermanagement.service.mapper.UserMapper;
+import io.flexwork.query.QueryFilter;
 import io.flexwork.security.Constants;
 import io.flexwork.security.SecurityUtils;
 import java.time.Instant;
@@ -21,6 +24,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -39,7 +43,7 @@ public class UserService {
 
     private final AuthorityRepository authorityRepository;
 
-    private UserMapper userMapper;
+    private final UserMapper userMapper;
 
     public UserService(
             UserRepository userRepository,
@@ -186,7 +190,7 @@ public class UserService {
      * @param userDTO user to update.
      * @return updated user.
      */
-    public Optional<UserDTO> updateUser(UserDTO userDTO) {
+    public Optional<User> updateUser(UserDTO userDTO) {
         return Optional.of(userRepository.findById(userDTO.getId()))
                 .filter(Optional::isPresent)
                 .map(Optional::get)
@@ -213,8 +217,7 @@ public class UserService {
                             userRepository.save(user);
                             log.debug("Changed Information for User: {}", user);
                             return user;
-                        })
-                .map(userMapper::userToUserDTO);
+                        });
     }
 
     public void deleteUserByEmail(String email) {
@@ -274,8 +277,9 @@ public class UserService {
     }
 
     @Transactional(readOnly = true)
-    public Page<UserDTO> getAllManagedUsers(Pageable pageable) {
-        return userRepository.findAll(pageable).map(value -> userMapper.userToUserDTO(value));
+    public Page<User> getAllManagedUsers(List<QueryFilter> filters, Pageable pageable) {
+        Specification<User> spec = buildSpecification(filters);
+        return userRepository.findAll(spec, pageable);
     }
 
     @Transactional(readOnly = true)

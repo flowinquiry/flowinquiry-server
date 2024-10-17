@@ -26,7 +26,4 @@ public class Organization {
 
     @OneToMany(mappedBy = "organization")
     private Set<Team> teams;
-
-    @OneToMany(mappedBy = "organization")
-    private Set<User> employees;
 }

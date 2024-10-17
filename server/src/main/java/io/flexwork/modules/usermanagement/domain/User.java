@@ -74,10 +74,6 @@ public class User extends AbstractAuditingEntity<Long> implements Serializable {
     @JoinColumn(name = "manager_id")
     private User manager;
 
-    @ManyToOne
-    @JoinColumn(name = "organization_id")
-    private Organization organization;
-
     @ManyToMany
     @JoinTable(
             name = "fw_user_team",

@@ -8,6 +8,8 @@ import jakarta.servlet.http.HttpServletRequest;
 import java.net.URI;
 import java.util.*;
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.env.Environment;
 import org.springframework.dao.ConcurrencyFailureException;
@@ -41,6 +43,8 @@ import tech.jhipster.web.util.HeaderUtil;
 @ControllerAdvice
 public class ExceptionTranslator extends ResponseEntityExceptionHandler {
 
+    private static final Logger LOG = LoggerFactory.getLogger(ExceptionTranslator.class);
+
     private static final String FIELD_ERRORS_KEY = "fieldErrors";
     private static final String MESSAGE_KEY = "message";
     private static final String PATH_KEY = "path";
@@ -58,6 +62,7 @@ public class ExceptionTranslator extends ResponseEntityExceptionHandler {
     @ExceptionHandler
     public ResponseEntity<Object> handleAnyException(Throwable ex, NativeWebRequest request) {
         ProblemDetailWithCause pdCause = wrapAndCustomizeProblem(ex, request);
+        LOG.error("Error", ex);
         return handleExceptionInternal(
                 (Exception) ex,
                 pdCause,

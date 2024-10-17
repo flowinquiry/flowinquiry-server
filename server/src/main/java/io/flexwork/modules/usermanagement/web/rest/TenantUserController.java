@@ -3,6 +3,7 @@ package io.flexwork.modules.usermanagement.web.rest;
 import io.flexwork.db.TenantConstants;
 import io.flexwork.modules.usermanagement.service.UserService;
 import io.flexwork.modules.usermanagement.service.dto.UserDTO;
+import io.flexwork.modules.usermanagement.service.mapper.UserMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -15,9 +16,12 @@ public class TenantUserController {
 
     private static final Logger log = LoggerFactory.getLogger(TenantUserController.class);
 
+    private final UserMapper userMapper;
+
     private final UserService userService;
 
-    public TenantUserController(UserService userService) {
+    public TenantUserController(UserMapper userMapper, UserService userService) {
+        this.userMapper = userMapper;
         this.userService = userService;
     }
 

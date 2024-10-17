@@ -30,7 +30,6 @@
 			<column name="role" type="VARCHAR(50)" />
 			<column name="title" type="VARCHAR(100)" />
 			<column name="manager_id" type="BIGINT" />
-			<column name="organization_id" type="BIGINT" />
 			<column name="activated" type="boolean" valueBoolean="false">
 				<constraints nullable="false" />
 			</column>

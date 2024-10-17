@@ -12,6 +12,5 @@ public class OrganizationDTO {
     private String logoUrl; // Logo URL
     private String slogan; // Organization slogan
     private String description; // Description of the organization
-    private Set<TeamDTO> teamIds; // Set of team IDs
-    private Set<UserDTO> employeeIds; // Set of employee (User) IDs
+    private Set<TeamDTO> teams; // Set of team IDs
 }

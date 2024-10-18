@@ -289,6 +289,10 @@ public class UserService {
                 .map(userMapper::userToUserDTO);
     }
 
+    public Page<UserDTO> getUsersByTeam(Long teamId, Pageable pageable) {
+        return userRepository.findAllByTeamId(teamId, pageable).map(userMapper::userToUserDTO);
+    }
+
     @Transactional(readOnly = true)
     public Optional<User> getUserWithAuthoritiesByEmail(String email) {
         return userRepository.findOneWithAuthoritiesByEmailIgnoreCase(email);

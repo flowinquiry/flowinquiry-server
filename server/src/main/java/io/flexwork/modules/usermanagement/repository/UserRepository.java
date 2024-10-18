@@ -10,6 +10,7 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.*;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 /** Spring Data JPA repository for the {@link User} entity. */
@@ -37,4 +38,7 @@ public interface UserRepository extends JpaRepository<User, Long>, JpaSpecificat
     @Transactional
     @Query("UPDATE User u SET u.lastLoginTime = :lastLoginTime WHERE u.email = :userEmail")
     void updateLastLoginTime(String userEmail, LocalDateTime lastLoginTime);
+
+    @Query("SELECT u FROM User u JOIN u.teams t WHERE t.id = :teamId")
+    Page<User> findAllByTeamId(@Param("teamId") Long teamId, Pageable pageable);
 }

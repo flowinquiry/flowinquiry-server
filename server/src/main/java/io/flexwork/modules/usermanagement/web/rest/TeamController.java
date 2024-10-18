@@ -4,7 +4,9 @@ import static io.flexwork.query.QueryUtils.parseFiltersFromParams;
 
 import io.flexwork.modules.usermanagement.domain.Team;
 import io.flexwork.modules.usermanagement.service.TeamService;
+import io.flexwork.modules.usermanagement.service.UserService;
 import io.flexwork.modules.usermanagement.service.dto.TeamDTO;
+import io.flexwork.modules.usermanagement.service.dto.UserDTO;
 import io.flexwork.modules.usermanagement.service.mapper.TeamMapper;
 import io.flexwork.query.QueryFilter;
 import java.util.List;
@@ -21,11 +23,13 @@ public class TeamController {
 
     private final TeamMapper teamMapper;
 
-    private TeamService teamService;
+    private final UserService userService;
+    private final TeamService teamService;
 
-    public TeamController(TeamMapper teamMapper, TeamService teamService) {
+    public TeamController(TeamMapper teamMapper, TeamService teamService, UserService userService) {
         this.teamMapper = teamMapper;
         this.teamService = teamService;
+        this.userService = userService;
     }
 
     // Create a new team
@@ -63,5 +67,11 @@ public class TeamController {
         List<QueryFilter> filters = parseFiltersFromParams(params);
         Page<Team> teams = teamService.findTeams(filters, pageable);
         return new ResponseEntity<>(teams.map(teamMapper::teamToTeamDTO), HttpStatus.OK);
+    }
+
+    @GetMapping("/{teamId}/members")
+    public ResponseEntity<Page<UserDTO>> findUsersByTeamId(
+            @PathVariable Long teamId, Pageable pageable) {
+        return new ResponseEntity<>(userService.getUsersByTeam(teamId, pageable), HttpStatus.OK);
     }
 }

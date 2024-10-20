@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+	xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+	<changeSet id="00000000000004_request_workflow"
+		author="flexapp">
+		<createTable tableName="fw_workflow">
+			<column name="id" type="BIGINT" autoIncrement="true">
+				<constraints primaryKey="true" nullable="false" />
+			</column>
+			<column name="name" type="VARCHAR(255)">
+				<constraints nullable="false" />
+			</column>
+			<column name="description" type="TEXT" />
+			<column name="created_by" type="BIGINT">
+				<constraints nullable="false"
+					foreignKeyName="fk_workflows_created_by" references="fw_user(id)" />
+			</column>
+			<column name="created_at" type="TIMESTAMP"
+				defaultValueDate="CURRENT_TIMESTAMP" />
+			<column name="updated_by" type="BIGINT">
+				<constraints foreignKeyName="fk_workflows_updated_by"
+					references="fw_user(id)" />
+			</column>
+			<column name="updated_at" type="TIMESTAMP"
+				defaultValueDate="CURRENT_TIMESTAMP" />
+		</createTable>
+
+		<createTable tableName="fw_workflow_status">
+			<column name="id" type="BIGINT" autoIncrement="true">
+				<constraints primaryKey="true" nullable="false" />
+			</column>
+			<column name="name" type="VARCHAR(100)">
+				<constraints nullable="false" />
+			</column>
+			<column name="description" type="TEXT" />
+			<column name="workflow_id" type="BIGINT">
+				<constraints
+					foreignKeyName="fk_workflow_status_workflow"
+					references="fw_workflow(id)" nullable="false" />
+			</column>
+			<column name="order_in_workflow" type="INTEGER" />
+			<column name="status_phase" type="VARCHAR(10)">
+				<constraints nullable="false" /> <!-- START, MIDDLE, TERMINAL -->
+			</column>
+			<column name="created_by" type="BIGINT">
+				<constraints
+					foreignKeyName="fk_workflow_status_created_by"
+					references="fw_user(id)" nullable="false" />
+			</column>
+			<column name="created_at" type="TIMESTAMP"
+				defaultValueDate="CURRENT_TIMESTAMP" />
+			<column name="updated_by" type="BIGINT">
+				<constraints
+					foreignKeyName="fk_workflow_status_updated_by"
+					references="fw_user(id)" />
+			</column>
+			<column name="updated_at" type="TIMESTAMP"
+				defaultValueDate="CURRENT_TIMESTAMP" />
+		</createTable>
+
+		<createTable tableName="fw_team_request">
+			<column name="id" type="BIGINT" autoIncrement="true">
+				<constraints primaryKey="true" nullable="false" />
+			</column>
+			<column name="workflow_id" type="BIGINT">
+				<constraints nullable="false"
+					foreignKeyName="fk_requests_workflow" references="fw_workflow(id)" />
+			</column>
+			<column name="current_status_id" type="BIGINT">
+				<constraints nullable="false"
+					foreignKeyName="fk_requests_status"
+					references="fw_workflow_status(id)" />
+			</column>
+			<column name="created_at" type="TIMESTAMP"
+				defaultValueDate="CURRENT_TIMESTAMP" />
+			<column name="updated_at" type="TIMESTAMP"
+				defaultValueDate="CURRENT_TIMESTAMP" />
+			<column name="created_by" type="BIGINT">
+				<constraints nullable="false"
+					foreignKeyName="fk_requests_created_by" references="fw_user(id)" />
+			</column>
+			<column name="updated_by" type="BIGINT">
+				<constraints foreignKeyName="fk_requests_updated_by"
+					references="fw_user(id)" />
+			</column>
+		</createTable>
+
+		<createTable tableName="fw_workflow_transition">
+			<column name="id" type="BIGINT" autoIncrement="true">
+				<constraints primaryKey="true" nullable="false" />
+			</column>
+			<column name="workflow_id" type="BIGINT">
+				<constraints nullable="false"
+					foreignKeyName="fk_transitions_workflow"
+					references="fw_workflow(id)" />
+			</column>
+			<column name="from_status_id" type="BIGINT">
+				<constraints nullable="false"
+					foreignKeyName="fk_transitions_from_status"
+					references="fw_workflow_status(id)" />
+			</column>
+			<column name="to_status_id" type="BIGINT">
+				<constraints nullable="false"
+					foreignKeyName="fk_transitions_to_status"
+					references="fw_workflow_status(id)" />
+			</column>
+			<column name="created_by" type="BIGINT">
+				<constraints nullable="false"
+					foreignKeyName="fk_transitions_created_by" references="fw_user(id)" />
+			</column>
+			<column name="created_at" type="TIMESTAMP"
+				defaultValueDate="CURRENT_TIMESTAMP" />
+			<column name="updated_by" type="BIGINT">
+				<constraints foreignKeyName="fk_transitions_updated_by"
+					references="fw_user(id)" />
+			</column>
+			<column name="updated_at" type="TIMESTAMP"
+				defaultValueDate="CURRENT_TIMESTAMP" />
+		</createTable>
+
+		<createTable tableName="fw_team_request_status">
+			<column name="id" type="BIGINT" autoIncrement="true">
+				<constraints primaryKey="true" nullable="false" />
+			</column>
+			<column name="request_id" type="BIGINT">
+				<constraints
+					foreignKeyName="fk_request_statuses_request"
+					references="fw_team_request(id)" nullable="false" />
+			</column>
+			<column name="status_id" type="BIGINT">
+				<constraints foreignKeyName="fk_request_statuses_status"
+					references="fw_workflow_status(id)" nullable="false" />
+			</column>
+			<column name="updated_at" type="TIMESTAMP"
+				defaultValueDate="CURRENT_TIMESTAMP" />
+			<column name="updated_by" type="BIGINT">
+				<constraints
+					foreignKeyName="fk_request_statuses_updated_by"
+					references="fw_user(id)" nullable="false" />
+			</column>
+			<column name="comments" type="TEXT" />
+		</createTable>
+	</changeSet>
+</databaseChangeLog>

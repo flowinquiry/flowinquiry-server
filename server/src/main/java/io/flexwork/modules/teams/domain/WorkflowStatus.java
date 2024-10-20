@@ -1,4 +1,4 @@
-package io.flexwork.modules.crm.domain;
+package io.flexwork.modules.teams.domain;
 
 import io.flexwork.modules.usermanagement.domain.User;
 import jakarta.persistence.Column;
@@ -16,46 +16,51 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.UpdateTimestamp;
 
 @Entity
-@Table(name = "fw_crm_comments")
+@Table(name = "fw_workflow_status")
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class Comment {
+public class WorkflowStatus {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "content", nullable = false)
-    private String content;
+    private String name;
+
+    private String description;
+
+    @ManyToOne
+    @JoinColumn(name = "workflow_id", nullable = false)
+    private Workflow workflow;
+
+    @Column(name = "order_in_workflow")
+    private Integer orderInWorkflow;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "status_phase", nullable = false)
+    private StatusPhase statusPhase;
 
     @ManyToOne
     @JoinColumn(name = "created_by", nullable = false)
     private User createdBy;
 
-    @Column(name = "created_at", updatable = false)
-    @CreationTimestamp
     private LocalDateTime createdAt;
 
-    @Column(name = "updated_at")
-    @UpdateTimestamp
+    @ManyToOne
+    @JoinColumn(name = "updated_by")
+    private User updatedBy;
+
     private LocalDateTime updatedAt;
 
-    @Enumerated(EnumType.STRING)
-    @Column(name = "entity_type", nullable = false)
-    private EntityType entityType;
-
-    @Column(name = "entity_id", nullable = false)
-    private Long entityId;
-
-    public enum EntityType {
-        ACCOUNT,
-        CONTACT,
-        CASE
+    public enum StatusPhase {
+        START,
+        MIDDLE,
+        TERMINAL
     }
+
+    // Getters and Setters
 }

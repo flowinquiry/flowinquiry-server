@@ -1,59 +1,46 @@
 package io.flexwork.query;
 
+import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.Predicate;
-import java.util.ArrayList;
-import java.util.Arrays;
+import jakarta.persistence.criteria.Root;
 import java.util.List;
-import java.util.Map;
+import java.util.Optional;
+import java.util.stream.Collectors;
 import org.springframework.data.jpa.domain.Specification;
 
 public class QueryUtils {
-    public static List<QueryFilter> parseFiltersFromParams(Map<String, String> params) {
-        List<QueryFilter> filters = new ArrayList<>();
-        int i = 0;
-        while (params.containsKey("filters[" + i + "][field]")) {
-            String field = params.get("filters[" + i + "][field]");
-            String operator = params.get("filters[" + i + "][operator]");
-            String value = params.get("filters[" + i + "][value]");
-            filters.add(new QueryFilter(field, operator, value));
-            i++;
-        }
-        return filters;
+
+    public static <Entity> Specification<Entity> createSpecification(Optional<QueryDTO> queryDTO) {
+        return queryDTO.map(
+                        dto ->
+                                (Specification<Entity>)
+                                        (root, query, cb) -> {
+                                            List<Predicate> predicates =
+                                                    dto.getFilters().stream()
+                                                            .map(
+                                                                    filter ->
+                                                                            createPredicate(
+                                                                                    filter, root,
+                                                                                    cb))
+                                                            .collect(Collectors.toList());
+                                            return cb.and(predicates.toArray(new Predicate[0]));
+                                        })
+                .orElse(null); // Return null if queryDTO is not present
     }
 
-    // Build dynamic Specification for the filters
-    public static <Entity> Specification<Entity> buildSpecification(List<QueryFilter> filters) {
-        return (root, query, criteriaBuilder) -> {
-            List<Predicate> predicates = new ArrayList<>();
-
-            for (QueryFilter filter : filters) {
-                switch (filter.getOperator()) {
-                    case "equals":
-                        predicates.add(
-                                criteriaBuilder.equal(
-                                        root.get(filter.getField()), filter.getValue()));
-                        break;
-                    case "lt":
-                        predicates.add(
-                                criteriaBuilder.lessThan(
-                                        root.get(filter.getField()),
-                                        (Comparable) filter.getValue()));
-                        break;
-                    case "gt":
-                        predicates.add(
-                                criteriaBuilder.greaterThan(
-                                        root.get(filter.getField()),
-                                        (Comparable) filter.getValue()));
-                        break;
-                    case "in":
-                        // Split the string value into a list (assuming values are comma-separated)
-                        List<String> values = Arrays.asList(filter.getValue().split(","));
-                        predicates.add(root.get(filter.getField()).in(values));
-                        break;
-                }
-            }
-
-            return criteriaBuilder.and(predicates.toArray(new Predicate[0]));
-        };
+    private static <Entity> Predicate createPredicate(
+            Filter filter, Root<Entity> root, CriteriaBuilder cb) {
+        switch (filter.getOperator()) {
+            case "gt":
+                return cb.greaterThan(root.get(filter.getField()), (Comparable) filter.getValue());
+            case "lt":
+                return cb.lessThan(root.get(filter.getField()), (Comparable) filter.getValue());
+            case "eq":
+                return cb.equal(root.get(filter.getField()), filter.getValue());
+            case "in":
+                return root.get(filter.getField()).in((List<?>) filter.getValue());
+            default:
+                throw new IllegalArgumentException("Invalid operator: " + filter.getOperator());
+        }
     }
 }

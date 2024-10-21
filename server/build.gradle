@@ -4,6 +4,7 @@ plugins {
     id "idea"
     id "com.gorylenko.gradle-git-properties"
     alias(libs.plugins.spring.boot)
+    alias(libs.plugins.spring.dependency.management)
     id "flexwork.spring-cache-conventions"
     id "flexwork.docker-conventions"
     id "flexwork.code-conventions"
@@ -26,8 +27,6 @@ ext {
     }
 }
 
-
-apply plugin: 'io.spring.dependency-management'
 
 
 if (project.hasProperty("prod")) {
@@ -78,7 +77,7 @@ configurations {
 
 dependencies {
     api project(":tools:liquibase")
-    api project(":tools:logging")
+    api project(":tools:platform")
 
     compileOnly(libs.lombok)
 

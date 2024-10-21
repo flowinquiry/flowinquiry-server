@@ -20,7 +20,7 @@ import reactor.core.publisher.Mono;
 @WithStateMachine
 public class SignupService {
 
-    private static final Logger log = LoggerFactory.getLogger(SignupService.class);
+    private static final Logger LOG = LoggerFactory.getLogger(SignupService.class);
 
     private final UserRepository userRepository;
 
@@ -39,7 +39,7 @@ public class SignupService {
 
     @SneakyThrows
     public void signup(User user) {
-        log.debug("Start signup workflow {}", user);
+        LOG.debug("Start signup workflow {}", user);
         Optional<User> existingUser = userRepository.findById(user.getId());
         if (existingUser.isPresent()) {
             throw new IllegalArgumentException("User " + user.getId() + " existed");
@@ -54,7 +54,7 @@ public class SignupService {
                             Mono.just(MessageBuilder.withPayload(SignupEvents.NEW_SIGNUP).build()))
                     .subscribe(
                             signupStatesSignupEventsStateMachineEventResult ->
-                                    log.debug(
+                                    LOG.debug(
                                             "Result {}",
                                             signupStatesSignupEventsStateMachineEventResult
                                                     .getResultType()));

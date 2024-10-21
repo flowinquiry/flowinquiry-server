@@ -20,7 +20,7 @@ import org.springframework.security.oauth2.jwt.NimbusJwtEncoder;
 @Configuration
 public class SecurityJwtConfiguration {
 
-    private static final Logger log = LoggerFactory.getLogger(SecurityJwtConfiguration.class);
+    private static final Logger LOG = LoggerFactory.getLogger(SecurityJwtConfiguration.class);
 
     @Value("${flexwork.security.authentication.jwt.base64-secret}")
     private String jwtKey;
@@ -42,7 +42,7 @@ public class SecurityJwtConfiguration {
                         || e.getMessage().contains("Invalid unsecured/JWS/JWE")) {
                     metersService.trackTokenMalformed();
                 } else {
-                    log.error("Unknown JWT error {}", e.getMessage());
+                    LOG.error("Unknown JWT error {}", e.getMessage());
                 }
                 throw e;
             }

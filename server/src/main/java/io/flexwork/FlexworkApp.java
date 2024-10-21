@@ -42,7 +42,7 @@ import tech.jhipster.config.DefaultProfileUtil;
 @Order(1)
 public class FlexworkApp implements CommandLineRunner {
 
-    private static final Logger log = LoggerFactory.getLogger(FlexworkApp.class);
+    private static final Logger LOG = LoggerFactory.getLogger(FlexworkApp.class);
 
     private TenantService tenantService;
 
@@ -68,13 +68,13 @@ public class FlexworkApp implements CommandLineRunner {
         Collection<String> activeProfiles = Arrays.asList(env.getActiveProfiles());
         if (activeProfiles.contains(FlexworkProfiles.SPRING_PROFILE_DEVELOPMENT)
                 && activeProfiles.contains(FlexworkProfiles.SPRING_PROFILE_PRODUCTION)) {
-            log.error(
+            LOG.error(
                     "You have misconfigured your application! It should not run "
                             + "with both the 'dev' and 'prod' profiles at the same time.");
         }
         if (activeProfiles.contains(FlexworkProfiles.SPRING_PROFILE_DEVELOPMENT)
                 && activeProfiles.contains(FlexworkProfiles.SPRING_PROFILE_CLOUD)) {
-            log.error(
+            LOG.error(
                     "You have misconfigured your application! It should not "
                             + "run with both the 'dev' and 'cloud' profiles at the same time.");
         }
@@ -105,7 +105,7 @@ public class FlexworkApp implements CommandLineRunner {
                         .ignoreIfMissing()
                         .load();
         if (!dotEnv.entries().isEmpty()) {
-            log.info("Loaded env variables from {}", path + "/.env.local");
+            LOG.info("Loaded env variables from {}", path + "/.env.local");
         }
     }
 
@@ -124,13 +124,13 @@ public class FlexworkApp implements CommandLineRunner {
         try {
             hostAddress = InetAddress.getLocalHost().getHostAddress();
         } catch (UnknownHostException e) {
-            log.warn("The host name could not be determined, using `localhost` as fallback");
+            LOG.warn("The host name could not be determined, using `localhost` as fallback");
         }
-        log.info("----------------------------------------------------------");
-        log.info("\tApplication '{}' is running! Access URLs:", applicationName);
-        log.info("\tLocal: \t\t{}://localhost:{}{}", protocol, serverPort, contextPath);
-        log.info("\tExternal: \t{}://{}:{}{}", protocol, hostAddress, serverPort, contextPath);
-        log.info(
+        LOG.info("----------------------------------------------------------");
+        LOG.info("\tApplication '{}' is running! Access URLs:", applicationName);
+        LOG.info("\tLocal: \t\t{}://localhost:{}{}", protocol, serverPort, contextPath);
+        LOG.info("\tExternal: \t{}://{}:{}{}", protocol, hostAddress, serverPort, contextPath);
+        LOG.info(
                 "\tProfile(s): \t{}",
                 env.getActiveProfiles().length == 0
                         ? env.getDefaultProfiles()
@@ -142,7 +142,7 @@ public class FlexworkApp implements CommandLineRunner {
     public void run(String... args) throws Exception {
         liquibaseService.updateMasterDbSchema(MASTER_SCHEMA);
         Tenant defaultTenant = tenantService.getDefaultTenant();
-        log.debug("Default tenant: {}", defaultTenant);
+        LOG.debug("Default tenant: {}", defaultTenant);
         liquibaseService.createTenantDbSchema(defaultTenant.getName());
         TenantContext.setCurrentTenant(defaultTenant.getName());
     }

@@ -1,20 +1,25 @@
 package io.flexwork.modules.crm.web.rest;
 
-import static io.flexwork.query.QueryUtils.parseFiltersFromParams;
-
 import io.flexwork.modules.crm.domain.Account;
 import io.flexwork.modules.crm.service.AccountService;
 import io.flexwork.modules.crm.service.dto.AccountDTO;
 import io.flexwork.modules.crm.service.mapper.AccountMapper;
-import io.flexwork.query.QueryFilter;
+import io.flexwork.query.QueryDTO;
+import jakarta.validation.Valid;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/api/crm/accounts")
@@ -68,11 +73,10 @@ public class AccountController {
         return ResponseEntity.noContent().build();
     }
 
-    @GetMapping
+    @PostMapping("/search")
     public ResponseEntity<Page<AccountDTO>> findAccounts(
-            @RequestParam Map<String, String> params, Pageable pageable) {
-        List<QueryFilter> filters = parseFiltersFromParams(params);
-        Page<Account> accounts = accountService.findAccounts(filters, pageable);
+            @Valid @RequestBody Optional<QueryDTO> queryDTO, Pageable pageable) {
+        Page<Account> accounts = accountService.findAccounts(queryDTO, pageable);
         return new ResponseEntity<>(
                 accounts.map(accountMapper::accountToAccountDTO), HttpStatus.OK);
     }

@@ -19,7 +19,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class TenantService {
 
-    private static final Logger log = LoggerFactory.getLogger(TenantService.class);
+    private static final Logger LOG = LoggerFactory.getLogger(TenantService.class);
 
     private TenantRepository tenantRepository;
 
@@ -37,7 +37,7 @@ public class TenantService {
     @SneakyThrows
     @Transactional
     public Tenant registerNewTenant(Tenant tenant) {
-        log.info("Registering new tenant: {}", tenant);
+        LOG.info("Registering new tenant: {}", tenant);
 
         Optional<Tenant> existingTenant = tenantRepository.findByNameIgnoreCase(tenant.getName());
         if (existingTenant.isPresent()) {
@@ -49,7 +49,7 @@ public class TenantService {
             throw new IllegalArgumentException("Domain already exists: " + tenant.getDomain());
         }
 
-        log.debug("Registering new tenant: {}", tenant.getName());
+        LOG.debug("Registering new tenant: {}", tenant.getName());
 
         // database does not accept the first character is numeric, so create a random alphabet
         // character

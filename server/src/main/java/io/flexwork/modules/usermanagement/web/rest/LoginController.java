@@ -35,7 +35,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/api")
 public class LoginController {
-    private static final Logger log = LoggerFactory.getLogger(LoginController.class);
+    private static final Logger LOG = LoggerFactory.getLogger(LoginController.class);
 
     private final JwtEncoder jwtEncoder;
 

@@ -2,7 +2,6 @@ package io.flexwork.modules.usermanagement.web.rest;
 
 import io.flexwork.modules.usermanagement.domain.User;
 import io.flexwork.modules.usermanagement.service.SignupService;
-import io.flexwork.modules.usermanagement.service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.*;
@@ -11,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api")
 public class SignupController {
 
-    private static final Logger log = LoggerFactory.getLogger(UserService.class);
+    private static final Logger LOG = LoggerFactory.getLogger(SignupController.class);
 
     private SignupService signupService;
 
@@ -29,6 +28,6 @@ public class SignupController {
 
     @GetMapping("/forgotPassword")
     public void forgotPassword(String userEmail) {
-        log.debug("Forgot password for user {}", userEmail);
+        LOG.debug("Forgot password for user {}", userEmail);
     }
 }

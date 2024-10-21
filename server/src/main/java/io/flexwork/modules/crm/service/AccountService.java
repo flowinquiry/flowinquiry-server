@@ -1,6 +1,6 @@
 package io.flexwork.modules.crm.service;
 
-import static io.flexwork.query.QueryUtils.buildSpecification;
+import static io.flexwork.query.QueryUtils.createSpecification;
 
 import io.flexwork.modules.crm.domain.Account;
 import io.flexwork.modules.crm.domain.Action;
@@ -8,7 +8,7 @@ import io.flexwork.modules.crm.event.ActivityLogEvent;
 import io.flexwork.modules.crm.repository.AccountRepository;
 import io.flexwork.modules.crm.service.mapper.AccountMapper;
 import io.flexwork.modules.usermanagement.service.dto.UserKey;
-import io.flexwork.query.QueryFilter;
+import io.flexwork.query.QueryDTO;
 import io.flexwork.security.SecurityUtils;
 import jakarta.persistence.EntityNotFoundException;
 import java.util.List;
@@ -100,8 +100,8 @@ public class AccountService {
         accountRepository.deleteAllByIdInBatch(ids);
     }
 
-    public Page<Account> findAccounts(List<QueryFilter> filters, Pageable pageable) {
-        Specification<Account> spec = buildSpecification(filters);
+    public Page<Account> findAccounts(Optional<QueryDTO> queryDTO, Pageable pageable) {
+        Specification<Account> spec = createSpecification(queryDTO);
         return accountRepository.findAll(spec, pageable);
     }
 

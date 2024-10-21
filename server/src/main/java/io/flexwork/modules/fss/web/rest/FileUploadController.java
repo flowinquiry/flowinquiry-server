@@ -23,7 +23,7 @@ import org.springframework.web.multipart.MultipartFile;
 @RequestMapping("/api/files")
 public class FileUploadController {
 
-    private static final Logger log = LoggerFactory.getLogger(FileUploadController.class);
+    private static final Logger LOG = LoggerFactory.getLogger(FileUploadController.class);
 
     private static final String AVATAR_TYPE = "avatar";
 
@@ -50,7 +50,7 @@ public class FileUploadController {
             @RequestParam Optional<String> parentPath)
             throws Exception {
         String currentUser = SecurityUtils.getCurrentUserLogin().map(UserKey::getEmail).orElse("");
-        log.debug(
+        LOG.debug(
                 "User {} saves file {} into the storage with options {}",
                 currentUser,
                 file.getOriginalFilename(),

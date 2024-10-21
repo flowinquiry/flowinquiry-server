@@ -243,13 +243,15 @@ class UserControllerIT {
 
     @Test
     @Transactional
-    void getAllUsers() throws Exception {
+    void searchAllUsers() throws Exception {
         // Initialize the database
         userRepository.saveAndFlush(user);
 
         // Get all the users
         restUserMockMvc
-                .perform(get("/api/admin/users?sort=id,desc").accept(MediaType.APPLICATION_JSON))
+                .perform(
+                        post("/api/admin/users/search?sort=id,desc")
+                                .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
                 .andExpect(jsonPath("$.[*].firstName").value(hasItem(DEFAULT_FIRSTNAME)))

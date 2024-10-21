@@ -1,19 +1,23 @@
 package io.flexwork.modules.usermanagement.web.rest;
 
-import static io.flexwork.query.QueryUtils.parseFiltersFromParams;
-
 import io.flexwork.modules.usermanagement.domain.Organization;
 import io.flexwork.modules.usermanagement.service.OrganizationService;
 import io.flexwork.modules.usermanagement.service.dto.OrganizationDTO;
 import io.flexwork.modules.usermanagement.service.mapper.OrganizationMapper;
-import io.flexwork.query.QueryFilter;
-import java.util.List;
-import java.util.Map;
+import io.flexwork.query.QueryDTO;
+import java.util.Optional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/api/organizations")
@@ -59,11 +63,10 @@ public class OrganizationController {
     }
 
     // Find organizations
-    @GetMapping
+    @PostMapping("/search")
     public ResponseEntity<Page<OrganizationDTO>> findOrganizations(
-            @RequestParam Map<String, String> params, Pageable pageable) {
-        List<QueryFilter> filters = parseFiltersFromParams(params);
-        Page<Organization> teams = organizationService.findOrganizations(filters, pageable);
+            @RequestBody Optional<QueryDTO> queryDTO, Pageable pageable) {
+        Page<Organization> teams = organizationService.findOrganizations(queryDTO, pageable);
         return new ResponseEntity<>(
                 teams.map(organizationMapper::organizationToOrganizationDTO), HttpStatus.OK);
     }

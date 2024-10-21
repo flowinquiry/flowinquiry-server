@@ -16,7 +16,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class LocalFileStorageService implements IStorageService {
 
-    private static final Logger log = LoggerFactory.getLogger(LocalFileStorageService.class);
+    private static final Logger LOG = LoggerFactory.getLogger(LocalFileStorageService.class);
 
     private final String rootDirectory;
 
@@ -42,7 +42,7 @@ public class LocalFileStorageService implements IStorageService {
                 outputStream.write(buffer, 0, bytesRead);
             }
         }
-        log.debug(
+        LOG.debug(
                 "Save container {} blob {} to file {} successfully",
                 containerName,
                 blobName,

@@ -1,12 +1,12 @@
 package io.flexwork.modules.usermanagement.service;
 
-import static io.flexwork.query.QueryUtils.buildSpecification;
+import static io.flexwork.query.QueryUtils.createSpecification;
 
 import io.flexwork.modules.usermanagement.domain.Team;
 import io.flexwork.modules.usermanagement.repository.TeamRepository;
-import io.flexwork.query.QueryFilter;
+import io.flexwork.query.QueryDTO;
 import jakarta.persistence.EntityNotFoundException;
-import java.util.List;
+import java.util.Optional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -61,8 +61,8 @@ public class TeamService {
                 .orElseThrow(() -> new EntityNotFoundException("Team not found with id: " + id));
     }
 
-    public Page<Team> findTeams(List<QueryFilter> filters, Pageable pageable) {
-        Specification<Team> spec = buildSpecification(filters);
+    public Page<Team> findTeams(Optional<QueryDTO> queryDTO, Pageable pageable) {
+        Specification<Team> spec = createSpecification(queryDTO);
         return teamRepository.findAll(spec, pageable);
     }
 }

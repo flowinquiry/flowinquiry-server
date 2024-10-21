@@ -1,16 +1,17 @@
 package io.flexwork.modules.usermanagement.service;
 
-import static io.flexwork.query.QueryUtils.buildSpecification;
+import static io.flexwork.query.QueryUtils.createSpecification;
 
 import io.flexwork.modules.usermanagement.AuthoritiesConstants;
 import io.flexwork.modules.usermanagement.domain.Authority;
 import io.flexwork.modules.usermanagement.domain.User;
+import io.flexwork.modules.usermanagement.domain.User_;
 import io.flexwork.modules.usermanagement.repository.AuthorityRepository;
 import io.flexwork.modules.usermanagement.repository.UserRepository;
 import io.flexwork.modules.usermanagement.service.dto.UserDTO;
 import io.flexwork.modules.usermanagement.service.dto.UserKey;
 import io.flexwork.modules.usermanagement.service.mapper.UserMapper;
-import io.flexwork.query.QueryFilter;
+import io.flexwork.query.QueryDTO;
 import io.flexwork.security.Constants;
 import io.flexwork.security.SecurityUtils;
 import java.time.Instant;
@@ -35,7 +36,7 @@ import tech.jhipster.security.RandomUtil;
 @Transactional
 public class UserService {
 
-    private static final Logger log = LoggerFactory.getLogger(UserService.class);
+    private static final Logger LOG = LoggerFactory.getLogger(UserService.class);
 
     private final UserRepository userRepository;
 
@@ -57,7 +58,7 @@ public class UserService {
     }
 
     public Optional<User> activateRegistration(String key) {
-        log.debug("Activating user for activation key {}", key);
+        LOG.debug("Activating user for activation key {}", key);
         return userRepository
                 .findOneByActivationKey(key)
                 .map(
@@ -65,13 +66,13 @@ public class UserService {
                             // activate given user for the registration key.
                             user.setActivated(true);
                             user.setActivationKey(null);
-                            log.debug("Activated user: {}", user);
+                            LOG.debug("Activated user: {}", user);
                             return user;
                         });
     }
 
     public Optional<User> completePasswordReset(String newPassword, String key) {
-        log.debug("Reset user password for reset key {}", key);
+        LOG.debug("Reset user password for reset key {}", key);
         return userRepository
                 .findOneByResetKey(key)
                 .filter(
@@ -137,7 +138,7 @@ public class UserService {
         authorityRepository.findById(AuthoritiesConstants.USER).ifPresent(authorities::add);
         newUser.setAuthorities(authorities);
         userRepository.save(newUser);
-        log.debug("Created Information for User: {}", newUser);
+        LOG.debug("Created Information for User: {}", newUser);
         return newUser;
     }
 
@@ -180,7 +181,7 @@ public class UserService {
             user.setAuthorities(authorities);
         }
         userRepository.save(user);
-        log.debug("Created Information for User: {}", user);
+        LOG.debug("Created Information for User: {}", user);
         return user;
     }
 
@@ -215,7 +216,7 @@ public class UserService {
                                     .map(Optional::get)
                                     .forEach(managedAuthorities::add);
                             userRepository.save(user);
-                            log.debug("Changed Information for User: {}", user);
+                            LOG.debug("Changed Information for User: {}", user);
                             return user;
                         });
     }
@@ -226,7 +227,7 @@ public class UserService {
                 .ifPresent(
                         user -> {
                             userRepository.delete(user);
-                            log.debug("Deleted User: {}", user);
+                            LOG.debug("Deleted User: {}", user);
                         });
     }
 
@@ -254,7 +255,7 @@ public class UserService {
                             user.setLangKey(langKey);
                             user.setImageUrl(imageUrl);
                             userRepository.save(user);
-                            log.debug("Changed Information for User: {}", user);
+                            LOG.debug("Changed Information for User: {}", user);
                         });
     }
 
@@ -272,21 +273,27 @@ public class UserService {
                             }
                             String encryptedPassword = passwordEncoder.encode(newPassword);
                             user.setPassword(encryptedPassword);
-                            log.debug("Changed password for User: {}", user);
+                            LOG.debug("Changed password for User: {}", user);
                         });
     }
 
     @Transactional(readOnly = true)
-    public Page<User> getAllManagedUsers(List<QueryFilter> filters, Pageable pageable) {
-        Specification<User> spec = buildSpecification(filters);
+    public Page<User> findAllManagedUsers(Optional<QueryDTO> queryDTO, Pageable pageable) {
+        Specification<User> spec = createSpecification(queryDTO);
         return userRepository.findAll(spec, pageable);
     }
 
     @Transactional(readOnly = true)
-    public Page<UserDTO> getAllPublicUsers(Pageable pageable) {
-        return userRepository
-                .findAllByIdNotNullAndActivatedIsTrue(pageable)
-                .map(userMapper::userToUserDTO);
+    public Page<UserDTO> findAllPublicUsers(Optional<QueryDTO> queryDTO, Pageable pageable) {
+        Specification<User> spec = createSpecification(queryDTO);
+        if (spec == null) {
+            spec = Specification.where(null);
+        }
+        spec.and(((root, query, criteriaBuilder) -> criteriaBuilder.isNotNull(root.get(User_.ID))))
+                .and(
+                        ((root, query, criteriaBuilder) ->
+                                criteriaBuilder.isTrue(root.get(User_.ACTIVATED))));
+        return userRepository.findAll(spec, pageable).map(userMapper::userToUserDTO);
     }
 
     public Page<UserDTO> getUsersByTeam(Long teamId, Pageable pageable) {

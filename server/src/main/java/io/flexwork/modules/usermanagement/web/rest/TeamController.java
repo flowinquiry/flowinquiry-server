@@ -1,21 +1,26 @@
 package io.flexwork.modules.usermanagement.web.rest;
 
-import static io.flexwork.query.QueryUtils.parseFiltersFromParams;
-
 import io.flexwork.modules.usermanagement.domain.Team;
 import io.flexwork.modules.usermanagement.service.TeamService;
 import io.flexwork.modules.usermanagement.service.UserService;
 import io.flexwork.modules.usermanagement.service.dto.TeamDTO;
 import io.flexwork.modules.usermanagement.service.dto.UserDTO;
 import io.flexwork.modules.usermanagement.service.mapper.TeamMapper;
-import io.flexwork.query.QueryFilter;
-import java.util.List;
-import java.util.Map;
+import io.flexwork.query.QueryDTO;
+import jakarta.validation.Valid;
+import java.util.Optional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/api/teams")
@@ -61,11 +66,10 @@ public class TeamController {
     }
 
     // Find teams
-    @GetMapping
+    @PostMapping("/search")
     public ResponseEntity<Page<TeamDTO>> findTeams(
-            @RequestParam Map<String, String> params, Pageable pageable) {
-        List<QueryFilter> filters = parseFiltersFromParams(params);
-        Page<Team> teams = teamService.findTeams(filters, pageable);
+            @Valid @RequestBody Optional<QueryDTO> queryDTO, Pageable pageable) {
+        Page<Team> teams = teamService.findTeams(queryDTO, pageable);
         return new ResponseEntity<>(teams.map(teamMapper::teamToTeamDTO), HttpStatus.OK);
     }
 

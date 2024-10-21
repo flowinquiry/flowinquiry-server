@@ -15,14 +15,14 @@ import org.springframework.web.servlet.ModelAndView;
 @Component
 public class TenantInjectInterceptor implements HandlerInterceptor {
 
-    private static final Logger log = LoggerFactory.getLogger(TenantInjectInterceptor.class);
+    private static final Logger LOG = LoggerFactory.getLogger(TenantInjectInterceptor.class);
 
     @Override
     public boolean preHandle(
             HttpServletRequest request, HttpServletResponse response, Object handler) {
         String tenantId = request.getHeader(HEADER_TENANT_ID);
         if (tenantId != null) {
-            log.debug(
+            LOG.debug(
                     "Find the header {} in request. Inject the tenant id into the current thread",
                     HEADER_TENANT_ID);
             TenantContext.setCurrentTenant(tenantId);

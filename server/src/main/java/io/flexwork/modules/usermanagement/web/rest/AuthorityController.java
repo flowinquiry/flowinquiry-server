@@ -23,7 +23,7 @@ import tech.jhipster.web.util.ResponseUtil;
 @Transactional
 public class AuthorityController {
 
-    private static final Logger log = LoggerFactory.getLogger(AuthorityController.class);
+    private static final Logger LOG = LoggerFactory.getLogger(AuthorityController.class);
 
     private static final String ENTITY_NAME = "adminAuthority";
 
@@ -48,7 +48,7 @@ public class AuthorityController {
     @PreAuthorize("hasAnyAuthority('ROLE_ADMIN')")
     public ResponseEntity<Authority> createAuthority(@Valid @RequestBody Authority authority)
             throws URISyntaxException {
-        log.debug("REST request to save Authority : {}", authority);
+        LOG.debug("REST request to save Authority : {}", authority);
         if (authorityRepository.existsById(authority.getName())) {
             throw new BadRequestAlertException("authority already exists", ENTITY_NAME, "idexists");
         }
@@ -69,7 +69,7 @@ public class AuthorityController {
     @GetMapping("")
     @PreAuthorize("hasAnyAuthority('ROLE_ADMIN')")
     public List<Authority> getAllAuthorities() {
-        log.debug("REST request to get all Authorities");
+        LOG.debug("REST request to get all Authorities");
         return authorityRepository.findAll();
     }
 
@@ -83,7 +83,7 @@ public class AuthorityController {
     @GetMapping("/{id}")
     @PreAuthorize("hasAnyAuthority('ROLE_ADMIN')")
     public ResponseEntity<Authority> getAuthority(@PathVariable("id") String id) {
-        log.debug("REST request to get Authority : {}", id);
+        LOG.debug("REST request to get Authority : {}", id);
         Optional<Authority> authority = authorityRepository.findById(id);
         return ResponseUtil.wrapOrNotFound(authority);
     }
@@ -97,7 +97,7 @@ public class AuthorityController {
     @DeleteMapping("/{id}")
     @PreAuthorize("hasAnyAuthority('ROLE_ADMIN')")
     public ResponseEntity<Void> deleteAuthority(@PathVariable("id") String id) {
-        log.debug("REST request to delete Authority : {}", id);
+        LOG.debug("REST request to delete Authority : {}", id);
         authorityRepository.deleteById(id);
         return ResponseEntity.noContent()
                 .headers(

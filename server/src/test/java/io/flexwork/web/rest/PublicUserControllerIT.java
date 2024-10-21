@@ -1,7 +1,7 @@
 package io.flexwork.web.rest;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 import io.flexwork.DefaultTenantContext;
@@ -59,13 +59,13 @@ class PublicUserControllerIT {
 
     @Test
     @Transactional
-    void getAllPublicUsers() throws Exception {
+    void searchAllPublicUsers() throws Exception {
         // Initialize the database
         userRepository.saveAndFlush(user);
 
         // Get all the users
         restUserMockMvc
-                .perform(get("/api/users?sort=id,desc").accept(MediaType.APPLICATION_JSON))
+                .perform(post("/api/users/search?sort=id,desc").accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
                 .andExpect(
@@ -75,23 +75,27 @@ class PublicUserControllerIT {
 
     @Test
     @Transactional
-    void getAllUsersSortedByParameters() throws Exception {
+    void searchAllUsersSortedByParameters() throws Exception {
         // Initialize the database
         userRepository.saveAndFlush(user);
 
         restUserMockMvc
-                .perform(get("/api/users?sort=resetKey,desc").accept(MediaType.APPLICATION_JSON))
-                .andExpect(status().isBadRequest());
-        restUserMockMvc
-                .perform(get("/api/users?sort=password,desc").accept(MediaType.APPLICATION_JSON))
-                .andExpect(status().isBadRequest());
-        restUserMockMvc
                 .perform(
-                        get("/api/users?sort=resetKey,desc&sort=id,desc")
+                        post("/api/users/search?sort=resetKey,desc")
                                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest());
         restUserMockMvc
-                .perform(get("/api/users?sort=id,desc").accept(MediaType.APPLICATION_JSON))
+                .perform(
+                        post("/api/users/search?sort=password,desc")
+                                .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest());
+        restUserMockMvc
+                .perform(
+                        post("/api/users/search?sort=resetKey,desc&sort=id,desc")
+                                .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest());
+        restUserMockMvc
+                .perform(post("/api/users/search?sort=id,desc").accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
     }
 }

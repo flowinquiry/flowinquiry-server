@@ -18,7 +18,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class LiquibaseService {
 
-    private static final Logger log = LoggerFactory.getLogger(LiquibaseService.class);
+    private static final Logger LOG = LoggerFactory.getLogger(LiquibaseService.class);
 
     private static final String MASTER_CHANGESET = "config/liquibase/master/master.xml";
 
@@ -33,7 +33,7 @@ public class LiquibaseService {
     @SneakyThrows
     private void updateLiquibaseSchema(String classpathChangeset, String schema) {
         try (Connection connection = dataSource.getConnection()) {
-            log.info("Going to create a schema {}", schema);
+            LOG.info("Going to create a schema {}", schema);
             connection.prepareCall("CREATE SCHEMA IF NOT EXISTS " + schema).execute();
             // Create the database for the default tenant
             Database database =

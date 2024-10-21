@@ -19,7 +19,7 @@ public class TenantConnectionProvider<T>
 
     private DataSource dataSource;
 
-    private static final Logger log = LoggerFactory.getLogger(TenantConnectionProvider.class);
+    private static final Logger LOG = LoggerFactory.getLogger(TenantConnectionProvider.class);
 
     public TenantConnectionProvider(DataSource dataSource) {
         this.dataSource = dataSource;
@@ -37,7 +37,7 @@ public class TenantConnectionProvider<T>
 
     @Override
     public Connection getConnection(String tenantIdentifier) throws SQLException {
-        log.debug("Get connection for tenant {}", tenantIdentifier);
+        LOG.debug("Get connection for tenant {}", tenantIdentifier);
         Connection connection = dataSource.getConnection();
         connection.setSchema(tenantIdentifier);
         return connection;
@@ -46,7 +46,7 @@ public class TenantConnectionProvider<T>
     @Override
     public void releaseConnection(String tenantIdentifier, Connection connection)
             throws SQLException {
-        log.debug("Release connection for tenant {}", tenantIdentifier);
+        LOG.debug("Release connection for tenant {}", tenantIdentifier);
         connection.setSchema(MASTER_SCHEMA);
         releaseAnyConnection(connection);
     }

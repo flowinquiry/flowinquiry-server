@@ -7,11 +7,11 @@ import org.springframework.statemachine.action.Action;
 
 public class ErrorHandlingAction<S, E> implements Action<S, E> {
 
-    private static Logger log = LoggerFactory.getLogger(ErrorHandlingAction.class);
+    private static final Logger LOG = LoggerFactory.getLogger(ErrorHandlingAction.class);
 
     @Override
     public void execute(StateContext<S, E> context) {
-        log.error(
+        LOG.error(
                 "State machine {} has a error while executing at state {}",
                 context.getStateMachine().getId(),
                 context.getStateMachine().getState().getId(),

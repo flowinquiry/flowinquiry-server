@@ -1,12 +1,12 @@
 package io.flexwork.modules.usermanagement.service;
 
-import static io.flexwork.query.QueryUtils.buildSpecification;
+import static io.flexwork.query.QueryUtils.createSpecification;
 
 import io.flexwork.modules.usermanagement.domain.Organization;
 import io.flexwork.modules.usermanagement.repository.OrganizationRepository;
-import io.flexwork.query.QueryFilter;
+import io.flexwork.query.QueryDTO;
 import jakarta.persistence.EntityNotFoundException;
-import java.util.List;
+import java.util.Optional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -66,8 +66,8 @@ public class OrganizationService {
                         () -> new EntityNotFoundException("Organization not found with id: " + id));
     }
 
-    public Page<Organization> findOrganizations(List<QueryFilter> filters, Pageable pageable) {
-        Specification<Organization> spec = buildSpecification(filters);
+    public Page<Organization> findOrganizations(Optional<QueryDTO> queryDTO, Pageable pageable) {
+        Specification<Organization> spec = createSpecification(queryDTO);
         return organizationRepository.findAll(spec, pageable);
     }
 }

@@ -26,7 +26,7 @@ import org.springframework.web.filter.CorsFilter;
 public class WebConfigurer
         implements ServletContextInitializer, WebServerFactoryCustomizer<WebServerFactory> {
 
-    private static final Logger log = LoggerFactory.getLogger(WebConfigurer.class);
+    private static final Logger LOG = LoggerFactory.getLogger(WebConfigurer.class);
 
     private final Environment env;
 
@@ -40,12 +40,12 @@ public class WebConfigurer
     @Override
     public void onStartup(ServletContext servletContext) {
         if (env.getActiveProfiles().length != 0) {
-            log.info(
+            LOG.info(
                     "Web application configuration, using profiles: {}",
                     (Object[]) env.getActiveProfiles());
         }
 
-        log.info("Web application fully configured");
+        LOG.info("Web application fully configured");
     }
 
     /** Customize the Servlet engine: Mime types, the document root, the cache. */
@@ -85,7 +85,7 @@ public class WebConfigurer
         CorsConfiguration config = flexworkProperties.getCors();
         if (!CollectionUtils.isEmpty(config.getAllowedOrigins())
                 || !CollectionUtils.isEmpty(config.getAllowedOriginPatterns())) {
-            log.debug("Registering CORS filter");
+            LOG.debug("Registering CORS filter");
             source.registerCorsConfiguration("/api/**", config);
             source.registerCorsConfiguration("/management/**", config);
             source.registerCorsConfiguration("/v3/api-docs", config);

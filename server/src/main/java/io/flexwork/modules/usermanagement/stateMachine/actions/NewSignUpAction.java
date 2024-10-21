@@ -16,7 +16,7 @@ import org.thymeleaf.spring6.SpringTemplateEngine;
 @Component
 public class NewSignUpAction implements Action<SignupStates, SignupEvents> {
 
-    private static final Logger log = LoggerFactory.getLogger(NewSignUpAction.class);
+    private static final Logger LOG = LoggerFactory.getLogger(NewSignUpAction.class);
 
     private final JavaMailSender mailSender;
 
@@ -31,7 +31,7 @@ public class NewSignUpAction implements Action<SignupStates, SignupEvents> {
     public void execute(StateContext<SignupStates, SignupEvents> context) {
         User user = (User) context.getExtendedState().getVariables().get("user");
 
-        log.debug("Send email to the new user");
+        LOG.debug("Send email to the new user");
         SimpleMailMessage message = new SimpleMailMessage();
         message.setTo("haiphucnguyen@gmail.com");
         message.setSubject("Sign up");

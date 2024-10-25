@@ -4,10 +4,13 @@ import io.flexwork.modules.crm.domain.Contact;
 import io.flexwork.modules.crm.service.ContactService;
 import io.flexwork.modules.crm.service.dto.ContactDTO;
 import io.flexwork.modules.crm.service.mapper.ContactMapper;
+import io.flexwork.query.QueryDTO;
+import jakarta.validation.Valid;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -22,6 +25,13 @@ public class ContactController {
     public ContactController(ContactService contactService, ContactMapper contactMapper) {
         this.contactService = contactService;
         this.contactMapper = contactMapper;
+    }
+
+    @PostMapping("/search")
+    public ResponseEntity<Page<ContactDTO>> findContacts(
+            @Valid @RequestBody Optional<QueryDTO> queryDTO, Pageable pageable) {
+        Page<ContactDTO> contacts = contactService.findContacts(queryDTO, pageable);
+        return new ResponseEntity<>(contacts, HttpStatus.OK);
     }
 
     @GetMapping("/account/{accountId}")

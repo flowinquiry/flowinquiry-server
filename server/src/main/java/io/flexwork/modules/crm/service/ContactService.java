@@ -1,11 +1,17 @@
 package io.flexwork.modules.crm.service;
 
+import static io.flexwork.query.QueryUtils.createSpecification;
+
 import io.flexwork.modules.crm.domain.Contact;
 import io.flexwork.modules.crm.repository.ContactRepository;
+import io.flexwork.modules.crm.service.dto.ContactDTO;
+import io.flexwork.modules.crm.service.mapper.ContactMapper;
+import io.flexwork.query.QueryDTO;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -14,16 +20,15 @@ public class ContactService {
 
     private ContactRepository contactRepository;
 
-    public ContactService(ContactRepository contactRepository) {
+    private ContactMapper contactMapper;
+
+    public ContactService(ContactRepository contactRepository, ContactMapper contactMapper) {
         this.contactRepository = contactRepository;
+        this.contactMapper = contactMapper;
     }
 
     public Page<Contact> findByAccountId(Long accountId, Pageable pageable) {
         return contactRepository.findByAccountId(accountId, pageable);
-    }
-
-    public Page<Contact> getAllContacts(Pageable pageable) {
-        return contactRepository.findAll(pageable);
     }
 
     public Optional<Contact> getContactById(Long id) {
@@ -57,5 +62,11 @@ public class ContactService {
     @Transactional
     public void deleteContacts(List<Long> ids) {
         contactRepository.deleteAllByIdInBatch(ids);
+    }
+
+    @Transactional(readOnly = true)
+    public Page<ContactDTO> findContacts(Optional<QueryDTO> queryDTO, Pageable pageable) {
+        Specification<Contact> spec = createSpecification(queryDTO);
+        return contactRepository.findAll(spec, pageable).map(contactMapper::contactToContactDTO);
     }
 }

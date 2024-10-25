@@ -8,6 +8,7 @@ import lombok.Setter;
 @Getter
 @Setter
 public class Filter {
+
     @NotEmpty private String field;
 
     @NotNull private String operator;

@@ -7,5 +7,6 @@ import lombok.Setter;
 @Getter
 @Setter
 public class QueryDTO {
+
     private List<Filter> filters;
 }

@@ -40,7 +40,7 @@ server:
 flexwork:
   mail:
     from: flexwork-app@localhost.com
-    base-url: http://127.0.0.1:8080
+    base-url: http://127.0.0.1:3000
   # CORS is only enabled by default with the "dev" profile
   cors:
     # Allow Ionic for JHipster by default (* no longer allowed in Spring Boot 2.4+)

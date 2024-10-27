@@ -13,7 +13,13 @@ public class AuthorityDTO {
 
     private String descriptiveName;
 
+    private boolean systemRole;
+
     public AuthorityDTO(String name) {
-        this(name, name);
+        this(name, name, false);
+    }
+
+    public AuthorityDTO(String name, String descriptiveName) {
+        this(name, descriptiveName, false);
     }
 }

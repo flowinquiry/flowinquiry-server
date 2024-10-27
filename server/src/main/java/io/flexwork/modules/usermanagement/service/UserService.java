@@ -169,12 +169,18 @@ public class UserService {
         user.setResetKey(RandomUtil.generateResetKey());
         user.setResetDate(Instant.now());
         user.setActivated(true);
+
+        // Due to client when construct the authority, it passes the Authority object with the name
+        // and descriptiveName have both actual value
+        // is descriptiveName, so we must mapping the authority by search authority by descriptive
+        // name
         if (userDTO.getAuthorities() != null) {
             Set<Authority> authorities =
                     userDTO.getAuthorities().stream()
                             .map(
                                     authorityDTO ->
-                                            authorityRepository.findById(authorityDTO.getName()))
+                                            authorityRepository.findByDescriptiveName(
+                                                    authorityDTO.getDescriptiveName()))
                             .filter(Optional::isPresent)
                             .map(Optional::get)
                             .collect(Collectors.toSet());

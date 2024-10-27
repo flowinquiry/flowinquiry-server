@@ -109,7 +109,7 @@ class UserAccountControllerIT {
     @WithMockUser(TEST_USER_LOGIN_EMAIL)
     void testGetExistingAccount() throws Exception {
         Set<AuthorityDTO> authorities = new HashSet<>();
-        authorities.add(new AuthorityDTO(AuthoritiesConstants.ADMIN));
+        authorities.add(new AuthorityDTO(AuthoritiesConstants.ADMIN, "Administrator"));
 
         UserDTO user = new UserDTO();
         user.setFirstName("john");

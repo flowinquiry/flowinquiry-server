@@ -1,13 +1,18 @@
 package io.flexwork.modules.usermanagement.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import java.io.Serializable;
 import java.util.Objects;
-import lombok.*;
-import org.springframework.data.domain.Persistable;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 /** A Authority. */
 @Entity
@@ -18,7 +23,7 @@ import org.springframework.data.domain.Persistable;
 @NoArgsConstructor
 @AllArgsConstructor
 @SuppressWarnings("common-java:DuplicatedBlocks")
-public class Authority implements Serializable, Persistable<String> {
+public class Authority implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
@@ -31,29 +36,8 @@ public class Authority implements Serializable, Persistable<String> {
     @Column(name = "descriptive_name", length = 50, nullable = false, unique = true)
     private String descriptiveName;
 
-    @Transient private boolean isPersisted;
-
-    @PostLoad
-    @PostPersist
-    public void updateEntityState() {
-        this.setIsPersisted();
-    }
-
-    @Override
-    public String getId() {
-        return this.name;
-    }
-
-    @Transient
-    @Override
-    public boolean isNew() {
-        return !this.isPersisted;
-    }
-
-    public Authority setIsPersisted() {
-        this.isPersisted = true;
-        return this;
-    }
+    @Column(name = "system_role")
+    private boolean systemRole;
 
     @Override
     public boolean equals(Object o) {

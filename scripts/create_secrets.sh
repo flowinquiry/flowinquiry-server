@@ -24,9 +24,9 @@ update_or_add() {
 }
 
 # Create the file if it doesn't exist
-#if [ ! -f "$output_script" ]; then
-#  echo "#!/bin/bash" > "$output_script"
-#fi
+if [ ! -f "$output_script" ]; then
+  echo "#!/bin/bash" > "$output_script"
+fi
 
 # Write the sensitive data to the output script
 update_or_add "POSTGRES_PASSWORD" "$db_password" "$output_script"

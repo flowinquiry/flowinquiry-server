@@ -9,7 +9,7 @@
 
 	<changeSet id="00000000000000:1-core-tables" author="flexapp">
 		<createSequence sequenceName="sequence_generator"
-			minValue="1" startValue="3" incrementBy="3" />
+			minValue="100" startValue="100" incrementBy="1" />
 		<createTable tableName="fw_user">
 			<column name="id" type="bigint" autoIncrement="true">
 				<constraints primaryKey="true" />
@@ -54,7 +54,7 @@
 			<column name="descriptive_name" type="varchar(50)">
 				<constraints unique="true" nullable="false" />
 			</column>
-			<column name="systemRole" type="BOOLEAN"
+			<column name="system_role" type="BOOLEAN"
 				defaultValueBoolean="false" />
 			<column name="description" type="VARCHAR(256)" />
 		</createTable>
@@ -79,7 +79,7 @@
 		<addForeignKeyConstraint
 			baseColumnNames="user_id" baseTableName="fw_user_authority"
 			constraintName="fk_user_id" referencedColumnNames="id"
-			referencedTableName="fw_user" />
+			referencedTableName="fw_user" onDelete="CASCADE" />
 
 		<addNotNullConstraint columnName="password_hash"
 			columnDataType="varchar(60)" tableName="fw_user" />

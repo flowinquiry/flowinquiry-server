@@ -1,6 +1,8 @@
-name
-user
-file
-account
-contact
-case
+name;description
+User;
+File;
+Account;
+Contact;
+Case;
+Team;
+Organization;

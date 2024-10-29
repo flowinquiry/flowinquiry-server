@@ -147,7 +147,7 @@ class AuthorityControllerIT {
                 .perform(get(ENTITY_API_URL + "?sort=name,desc"))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
-                .andExpect(jsonPath("$.[*].name").value(hasItem(authority.getName())));
+                .andExpect(jsonPath("$.content.[*].name").value(hasItem(authority.getName())));
     }
 
     @Test

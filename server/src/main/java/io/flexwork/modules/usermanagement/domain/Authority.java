@@ -39,6 +39,9 @@ public class Authority implements Serializable {
     @Column(name = "system_role")
     private boolean systemRole;
 
+    @Column(name = "description")
+    private String description;
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {

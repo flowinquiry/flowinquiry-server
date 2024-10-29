@@ -113,7 +113,8 @@ public class User extends AbstractAuditingEntity<Long> implements Serializable {
 
     public LocalDateTime getLastLoginTime() {
         if (lastLoginTime == null) return null;
-        ZoneId userZone = (timezone != null) ? ZoneId.of(timezone) : ZoneId.of("America/Los_Angeles");
+        ZoneId userZone =
+                (timezone != null) ? ZoneId.of(timezone) : ZoneId.of("America/Los_Angeles");
         return lastLoginTime.atZone(ZoneOffset.UTC).withZoneSameInstant(userZone).toLocalDateTime();
     }
 }

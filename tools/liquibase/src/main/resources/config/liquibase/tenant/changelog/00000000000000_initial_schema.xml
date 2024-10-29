@@ -56,7 +56,7 @@
 			</column>
 			<column name="system_role" type="BOOLEAN"
 				defaultValueBoolean="false" />
-			<column name="description" type="VARCHAR(256)" />
+			<column name="description" type="TEXT" />
 		</createTable>
 
 		<createTable tableName="fw_user_authority">
@@ -88,7 +88,7 @@
 			<column name="name" type="VARCHAR(50)">
 				<constraints nullable="false" primaryKey="true" />
 			</column>
-			<column name="description" type="VARCHAR(256)" />
+			<column name="description" type="TEXT" />
 		</createTable>
 
 		<createTable tableName="fw_authority_resource_permission">

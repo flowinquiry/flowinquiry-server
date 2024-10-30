@@ -1,5 +1,7 @@
 #!/bin/bash
 
+git config core.hooksPath .git/hooks
+
 # Define the .git/hooks/pre-commit path
 HOOKS_DIR=".git/hooks"
 PRE_COMMIT_FILE="$HOOKS_DIR/pre-commit"

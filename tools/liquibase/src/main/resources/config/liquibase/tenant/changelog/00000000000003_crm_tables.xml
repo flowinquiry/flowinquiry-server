@@ -31,11 +31,11 @@
 			<column name="country" type="VARCHAR(100)" />
 			<column name="annual_revenue" type="VARCHAR(100)" />
 			<column name="parent_account_id" type="bigint" />
-			<column name="created_at" type="TIMESTAMP"
+			<column name="created_at" type="timestamptz"
 				defaultValueComputed="CURRENT_TIMESTAMP">
 				<constraints nullable="false" />
 			</column>
-			<column name="updated_at" type="TIMESTAMP"
+			<column name="updated_at" type="timestamptz"
 				defaultValueComputed="CURRENT_TIMESTAMP" />
 			<column name="status" type="VARCHAR(50)">
 				<constraints nullable="false" />
@@ -99,14 +99,15 @@
 			<column name="postal_code" type="VARCHAR(20)" />
 			<column name="country" type="VARCHAR(100)" />
 			<column name="position" type="VARCHAR(100)" />
-			<column name="created_at" type="TIMESTAMP"
+			<column name="created_at" type="timestamptz"
 				defaultValueComputed="CURRENT_TIMESTAMP">
 				<constraints nullable="false" />
 			</column>
-			<column name="updated_at" type="TIMESTAMP"
+			<column name="updated_at" type="timestamptz"
 				defaultValueComputed="CURRENT_TIMESTAMP" />
 			<column name="notes" type="TEXT" />
 			<column name="status" type="VARCHAR(50)" />
+			<column name="lead_source" type="VARCHAR(50)" />
 		</createTable>
 
 		<!-- Add foreign key constraint -->
@@ -136,10 +137,10 @@
 			</column>
 			<column name="changes" type="TEXT" />
 			<column name="notes" type="TEXT" />
-			<column name="created_at" type="TIMESTAMP">
+			<column name="created_at" type="timestamptz">
 				<constraints nullable="false" />
 			</column>
-			<column name="updated_at" type="TIMESTAMP">
+			<column name="updated_at" type="timestamptz">
 				<constraints nullable="false" />
 			</column>
 		</createTable>
@@ -156,10 +157,10 @@
 			<column name="duration" type="INT" />
 			<column name="call_result" type="VARCHAR(20)" />
 			<column name="phone_number" type="VARCHAR(20)" />
-			<column name="created_at" type="TIMESTAMP">
+			<column name="created_at" type="timestamptz">
 				<constraints nullable="false" />
 			</column>
-			<column name="updated_at" type="TIMESTAMP">
+			<column name="updated_at" type="timestamptz">
 				<constraints nullable="false" />
 			</column>
 		</createTable>
@@ -174,10 +175,10 @@
 			<column name="bcc" type="TEXT" />
 			<column name="email_body" type="TEXT" />
 			<column name="attachment" type="BOOLEAN" defaultValue="FALSE" />
-			<column name="created_at" type="TIMESTAMP">
+			<column name="created_at" type="timestamptz">
 				<constraints nullable="false" />
 			</column>
-			<column name="updated_at" type="TIMESTAMP">
+			<column name="updated_at" type="timestamptz">
 				<constraints nullable="false" />
 			</column>
 		</createTable>
@@ -192,10 +193,10 @@
 			<column name="end_time" type="TIME" />
 			<column name="agenda" type="TEXT" />
 			<column name="participants" type="TEXT" />
-			<column name="created_at" type="TIMESTAMP">
+			<column name="created_at" type="timestamptz">
 				<constraints nullable="false" />
 			</column>
-			<column name="updated_at" type="TIMESTAMP">
+			<column name="updated_at" type="timestamptz">
 				<constraints nullable="false" />
 			</column>
 		</createTable>
@@ -208,10 +209,10 @@
 			<column name="priority" type="VARCHAR(20)" />
 			<column name="status" type="VARCHAR(20)" />
 			<column name="description" type="TEXT" />
-			<column name="created_at" type="TIMESTAMP">
+			<column name="created_at" type="timestamptz">
 				<constraints nullable="false" />
 			</column>
-			<column name="updated_at" type="TIMESTAMP">
+			<column name="updated_at" type="timestamptz">
 				<constraints nullable="false" />
 			</column>
 		</createTable>
@@ -235,9 +236,9 @@
 			</column>
 			<column name="account_id" type="BIGINT" />
 			<column name="contact_id" type="BIGINT" />
-			<column name="created_at" type="TIMESTAMP"
+			<column name="created_at" type="timestamptz"
 				defaultValueComputed="CURRENT_TIMESTAMP" />
-			<column name="updated_at" type="TIMESTAMP"
+			<column name="updated_at" type="timestamptz"
 				defaultValueComputed="CURRENT_TIMESTAMP" />
 		</createTable>
 
@@ -260,9 +261,9 @@
 			<column name="created_by" type="BIGINT">
 				<constraints nullable="false" />
 			</column>
-			<column name="created_at" type="TIMESTAMP"
+			<column name="created_at" type="timestamptz"
 				defaultValueComputed="CURRENT_TIMESTAMP" />
-			<column name="updated_at" type="TIMESTAMP"
+			<column name="updated_at" type="timestamptz"
 				defaultValueComputed="CURRENT_TIMESTAMP" />
 			<column name="entity_type" type="VARCHAR(20)">
 				<constraints nullable="false" />
@@ -300,9 +301,9 @@
 				<constraints nullable="true" />
 			</column>
 			<column name="changes" type="TEXT" />
-			<column name="created_at" type="TIMESTAMP"
+			<column name="created_at" type="timestamptz"
 				defaultValueComputed="CURRENT_TIMESTAMP" />
-			<column name="updated_at" type="TIMESTAMP"
+			<column name="updated_at" type="timestamptz"
 				defaultValueComputed="CURRENT_TIMESTAMP" />
 		</createTable>
 
@@ -331,7 +332,7 @@
 				defaultValueBoolean="false">
 				<constraints nullable="false" />
 			</column>
-			<column name="created_at" type="TIMESTAMP"
+			<column name="created_at" type="timestamptz"
 				defaultValueComputed="CURRENT_TIMESTAMP">
 				<constraints nullable="false" />
 			</column>
@@ -352,6 +353,53 @@
 			<column name="value" type="text" />
 			<column name="description" type="text" />
 			<column name="is_default" type="boolean" />
+		</loadData>
+
+		<loadData
+			file="config/liquibase/tenant/data/fw_crm_account.csv" separator=";"
+			tableName="fw_crm_account" dateFormat="yyyy-MM-dd HH:mm:ss">
+			<column name="id" type="NUMERIC" />
+			<column name="name" type="STRING" />
+			<column name="type" type="STRING" />
+			<column name="industry" type="STRING" />
+			<column name="website" type="STRING" />
+			<column name="phone_number" type="STRING" />
+			<column name="email" type="STRING" />
+			<column name="address_line1" type="STRING" />
+			<column name="address_line2" type="STRING" />
+			<column name="city" type="STRING" />
+			<column name="state" type="STRING" />
+			<column name="postal_code" type="STRING" />
+			<column name="country" type="STRING" />
+			<column name="annual_revenue" type="STRING" />
+			<column name="parent_account_id" type="NUMERIC" />
+			<column name="created_at" type="DATE" />
+			<column name="updated_at" type="DATE" />
+			<column name="status" type="STRING" />
+			<column name="assigned_to_user_id" type="NUMERIC" />
+			<column name="notes" type="STRING" />
+		</loadData>
+
+		<loadData
+			file="config/liquibase/tenant/data/fw_crm_contact.csv" separator=";"
+			tableName="fw_crm_contact" dateFormat="yyyy-MM-dd HH:mm:ss">
+			<column name="id" type="NUMERIC" />
+			<column name="account_id" type="NUMERIC" />
+			<column name="first_name" type="STRING" />
+			<column name="last_name" type="STRING" />
+			<column name="email" type="STRING" />
+			<column name="phone" type="STRING" />
+			<column name="address" type="STRING" />
+			<column name="city" type="STRING" />
+			<column name="state" type="STRING" />
+			<column name="postal_code" type="STRING" />
+			<column name="country" type="STRING" />
+			<column name="position" type="STRING" />
+			<column name="created_at" type="timestamptz" />
+			<column name="updated_at" type="timestamptz" />
+			<column name="notes" type="STRING" />
+			<column name="status" type="STRING" />
+			<column name="lead_source" type="STRING" />
 		</loadData>
 	</changeSet>
 

@@ -67,7 +67,7 @@ public class AccountController {
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
-    @DeleteMapping("/accounts")
+    @DeleteMapping
     public ResponseEntity<Void> deleteAccounts(@RequestBody List<Long> ids) {
         accountService.deleteAccounts(ids);
         return ResponseEntity.noContent().build();

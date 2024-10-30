@@ -1,0 +1,21 @@
+id;name;logo_url;slogan;description;organization_id
+1;Development Team;https://example.com/logos/dev-team.png;Building the Future;Focused on developing new products and features.;1
+2;Marketing Team;https://example.com/logos/marketing-team.png;Spreading the Word;Handles all marketing and outreach efforts.;2
+3;Sales Team;https://example.com/logos/sales-team.png;Drive the Growth;Dedicated to driving sales and expanding market share.;3
+4;Customer Support;https://example.com/logos/support-team.png;Always Here for You;Provides support to customers for any issues.;4
+5;Research & Development;https://example.com/logos/rnd-team.png;Innovating Constantly;Focused on research and innovation.;5
+6;Finance Team;https://example.com/logos/finance-team.png;Managing Resources;Handles financial planning and resource allocation.;1
+7;Human Resources;https://example.com/logos/hr-team.png;People First;Manages hiring, training, and employee relations.;2
+8;Operations Team;https://example.com/logos/ops-team.png;Keeping it Running;Ensures smooth daily operations of the company.;3
+9;Quality Assurance;https://example.com/logos/qa-team.png;Ensuring Quality;Dedicated to product testing and quality control.;4
+10;IT Support;https://example.com/logos/it-support-team.png;Here to Help;Provides internal technical support for staff.;5
+11;Legal Team;https://example.com/logos/legal-team.png;Ensuring Compliance;Manages all legal aspects and compliance.;1
+12;Design Team;https://example.com/logos/design-team.png;Creativity Unleashed;Focused on UI/UX and product design.;2
+13;Content Creation;https://example.com/logos/content-team.png;Crafting Stories;Responsible for creating content and storytelling.;3
+14;Data Science Team;https://example.com/logos/data-team.png;Data-Driven Decisions;Analyzes data for business insights.;4
+15;Supply Chain Team;https://example.com/logos/supply-chain-team.png;Efficient Logistics;Manages logistics and supply chain.;5
+16;Product Management;https://example.com/logos/product-team.png;Building Vision;Leads product strategy and roadmap.;1
+17;Engineering Team;https://example.com/logos/engineering-team.png;Solving Problems;Works on core technical challenges.;2
+18;Security Team;https://example.com/logos/security-team.png;Protecting Data;Ensures data security and privacy.;3
+19;Public Relations;https://example.com/logos/pr-team.png;Building Trust;Manages the company’s public image.;4
+20;Customer Success;https://example.com/logos/customer-success-team.png;Helping Customers Thrive;Focuses on helping customers achieve success.;5

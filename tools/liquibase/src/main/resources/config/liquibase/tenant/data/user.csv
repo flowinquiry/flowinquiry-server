@@ -1,3 +1,19 @@
-id;password_hash;first_name;last_name;email;image_url;activated;lang_key;timezone;last_login_time;created_by;last_modified_by
-1;$2a$10$gSAhZrxMllrbgj/kkK9UceBPpChGWJA7SYIb1Mqo.n5aNLq1/oRrC;Administrator;Administrator;admin@localhost.io;;true;en;America/New_York;;system;system
-2;$2a$10$VEjxo0jq2YG9Rbk2HmX9S.k1uZBGYUHdUcid3g/vfiEl7lwWgOH/K;User;User;user@localhost.io;;true;en;America/New_York;;system;system
+id;password_hash;first_name;last_name;email;timezone;last_login_time;image_url;role;title;manager_id;activated;lang_key;activation_key;reset_key;created_by;created_date;reset_date;last_modified_by;last_modified_date
+1;$2a$10$gSAhZrxMllrbgj/kkK9UceBPpChGWJA7SYIb1Mqo.n5aNLq1/oRrC;John;Doe;admin@theflexwork.io;America/Los_Angeles;;https://example.com/image1.jpg;USER;Software Engineer;NULL;true;en;ACT123;RST123;system;;;system;
+2;$2a$10$VEjxo0jq2YG9Rbk2HmX9S.k1uZBGYUHdUcid3g/vfiEl7lwWgOH/K.;Jane;Smith;user@theflexwork.io;America/New_York;;https://example.com/image2.jpg;ADMIN;Product Manager;1;true;en;ACT456;RST456;system;;;system;
+3;$2a$10$VEjxo0jq2YG9Rbk2HmX9S.k1uZBGYUHdUcid3g/vfiEl7lwWgOH/K.;Alice;Johnson;alice.johnson@theflexwork.io;America/Chicago;;https://example.com/image3.jpg;USER;UX Designer;2;false;en;ACT789;RST789;system;;;system;
+4;$2a$10$VEjxo0jq2YG9Rbk2HmX9S.k1uZBGYUHdUcid3g/vfiEl7lwWgOH/K.;Bob;Brown;bob.brown@theflexwork.io;America/Los_Angeles;;https://example.com/image4.jpg;MANAGER;Team Lead;1;true;en;ACT321;RST321;system;;;system;
+5;$2a$10$VEjxo0jq2YG9Rbk2HmX9S.k1uZBGYUHdUcid3g/vfiEl7lwWgOH/K.;Charlie;Green;charlie.green@theflexwork.io;America/New_York;;https://example.com/image5.jpg;USER;QA Engineer;2;true;es;ACT654;RST654;system;;;system;
+6;$2a$10$VEjxo0jq2YG9Rbk2HmX9S.k1uZBGYUHdUcid3g/vfiEl7lwWgOH/K.;Diana;Prince;diana.prince@theflexwork.io;America/Denver;;https://example.com/image6.jpg;USER;Project Coordinator;3;false;en;ACT987;RST987;system;;;system;
+7;$2a$10$VEjxo0jq2YG9Rbk2HmX9S.k1uZBGYUHdUcid3g/vfiEl7lwWgOH/K.;Edward;Nash;edward.nash@theflexwork.io;America/Los_Angeles;;https://example.com/image7.jpg;USER;Data Analyst;3;true;fr;ACT741;RST741;system;;;system;
+8;$2a$10$VEjxo0jq2YG9Rbk2HmX9S.k1uZBGYUHdUcid3g/vfiEl7lwWgOH/K.;Fiona;White;fiona.white@theflexwork.io;America/Chicago;;https://example.com/image8.jpg;USER;Marketing Specialist;4;true;en;ACT852;RST852;system;;;system;
+9;$2a$10$VEjxo0jq2YG9Rbk2HmX9S.k1uZBGYUHdUcid3g/vfiEl7lwWgOH/K.;George;King;george.king@theflexwork.io;America/New_York;;https://example.com/image9.jpg;ADMIN;IT Manager;NULL;false;en;ACT963;RST963;system;;;system;
+10;$2a$10$VEjxo0jq2YG9Rbk2HmX9S.k1uZBGYUHdUcid3g/vfiEl7lwWgOH/K.;Hannah;Moore;hannah.moore@theflexwork.io;America/Denver;;https://example.com/image10.jpg;USER;HR Specialist;5;true;en;ACT159;RST159;system;;;system;
+11;$2a$10$VEjxo0jq2YG9Rbk2HmX9S.k1uZBGYUHdUcid3g/vfiEl7lwWgOH/K.;Isaac;Young;isaac.young@theflexwork.io;America/Chicago;;https://example.com/image11.jpg;USER;Sales Associate;6;true;en;ACT753;RST753;system;;;system;
+12;$2a$10$VEjxo0jq2YG9Rbk2HmX9S.k1uZBGYUHdUcid3g/vfiEl7lwWgOH/K.;Julia;Reed;julia.reed@theflexwork.io;America/Chicago;;https://example.com/image12.jpg;USER;Product Designer;5;true;en;ACT369;RST369;system;;;system;
+13;$2a$10$VEjxo0jq2YG9Rbk2HmX9S.k1uZBGYUHdUcid3g/vfiEl7lwWgOH/K.;Kevin;Wright;kevin.wright@theflexwork.io;America/Chicago;;https://example.com/image13.jpg;USER;Software Engineer;5;true;en;ACT258;RST258;system;;;system;
+14;$2a$10$VEjxo0jq2YG9Rbk2HmX9S.k1uZBGYUHdUcid3g/vfiEl7lwWgOH/K.;Liam;Harris;liam.harris@theflexwork.io;America/New_York;;https://example.com/image14.jpg;USER;Support Engineer;6;true;en;ACT147;RST147;system;;;system;
+15;$2a$10$VEjxo0jq2YG9Rbk2HmX9S.k1uZBGYUHdUcid3g/vfiEl7lwWgOH/K.;Mia;Clark;mia.clark@theflexwork.io;America/Los_Angeles;;https://example.com/image15.jpg;USER;Business Analyst;NULL;true;en;ACT369;RST369;system;;;system;
+16;$2a$10$VEjxo0jq2YG9Rbk2HmX9S.k1uZBGYUHdUcid3g/vfiEl7lwWgOH/K.;Noah;Lewis;noah.lewis@theflexwork.io;America/Denver;;https://example.com/image16.jpg;USER;Operations Manager;7;false;en;ACT951;RST951;system;;;system;
+17;$2a$10$VEjxo0jq2YG9Rbk2HmX9S.k1uZBGYUHdUcid3g/vfiEl7lwWgOH/K.;Olivia;Martinez;olivia.martinez@theflexwork.io;America/New_York;;https://example.com/image17.jpg;USER;Graphic Designer;7;true;es;ACT753;RST753;system;;;system;
+18;$2a$10$VEjxo0jq2YG9Rbk2HmX9S.k1uZBGYUHdUcid3g/vfiEl7lwWgOH/K.;Paul;White;paul.white@theflexwork.io;America/Los_Angeles;;https://example.com/image18.jpg;USER;Finance Analyst;NULL;true;en;ACT159;RST159;system;;;system;

@@ -1,10 +1,9 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <databaseChangeLog
 	xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
-	xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd
-                        http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
+	xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
 
 
 	<changeSet id="00000000000000:1-core-tables" author="flexapp">
@@ -14,10 +13,10 @@
 			<column name="id" type="bigint" autoIncrement="true">
 				<constraints primaryKey="true" />
 			</column>
-			<column name="password_hash" type="varchar(60)" />
-			<column name="first_name" type="varchar(50)" />
-			<column name="last_name" type="varchar(50)" />
-			<column name="email" type="varchar(256)">
+			<column name="password_hash" type="VARCHAR(61)" />
+			<column name="first_name" type="VARCHAR(50)" />
+			<column name="last_name" type="VARCHAR(50)" />
+			<column name="email" type="VARCHAR(256)">
 				<constraints unique="true" nullable="true"
 					uniqueConstraintName="ux_user_email" />
 			</column>
@@ -25,33 +24,33 @@
 				defaultValue="America/Los_Angeles">
 				<constraints nullable="true" />
 			</column>
-			<column name="last_login_time" type="TIMESTAMP" />
-			<column name="image_url" type="varchar(256)" />
+			<column name="last_login_time" type="timestamptz" />
+			<column name="image_url" type="VARCHAR(256)" />
 			<column name="role" type="VARCHAR(50)" />
 			<column name="title" type="VARCHAR(100)" />
 			<column name="manager_id" type="BIGINT" />
-			<column name="activated" type="boolean" valueBoolean="false">
+			<column name="activated" type="BOOLEAN" valueBoolean="false">
 				<constraints nullable="false" />
 			</column>
-			<column name="lang_key" type="varchar(10)" />
-			<column name="activation_key" type="varchar(20)" />
-			<column name="reset_key" type="varchar(20)" />
-			<column name="created_by" type="varchar(256)">
+			<column name="lang_key" type="VARCHAR(10)" />
+			<column name="activation_key" type="VARCHAR(20)" />
+			<column name="reset_key" type="VARCHAR(20)" />
+			<column name="created_by" type="VARCHAR(256)">
 				<constraints nullable="false" />
 			</column>
-			<column name="created_date" type="timestamp" />
-			<column name="reset_date" type="timestamp">
+			<column name="created_date" type="timestamptz" />
+			<column name="reset_date" type="timestamptz">
 				<constraints nullable="true" />
 			</column>
-			<column name="last_modified_by" type="varchar(256)" />
-			<column name="last_modified_date" type="timestamp" />
+			<column name="last_modified_by" type="VARCHAR(256)" />
+			<column name="last_modified_date" type="timestamptz" />
 		</createTable>
 
 		<createTable tableName="fw_authority">
-			<column name="name" type="varchar(50)">
+			<column name="name" type="VARCHAR(50)">
 				<constraints primaryKey="true" nullable="false" />
 			</column>
-			<column name="descriptive_name" type="varchar(50)">
+			<column name="descriptive_name" type="VARCHAR(50)">
 				<constraints unique="true" nullable="false" />
 			</column>
 			<column name="system_role" type="BOOLEAN"
@@ -63,7 +62,7 @@
 			<column name="user_id" type="bigint">
 				<constraints nullable="false" />
 			</column>
-			<column name="authority_name" type="varchar(50)">
+			<column name="authority_name" type="VARCHAR(50)">
 				<constraints nullable="false" />
 			</column>
 		</createTable>
@@ -82,7 +81,7 @@
 			referencedTableName="fw_user" onDelete="CASCADE" />
 
 		<addNotNullConstraint columnName="password_hash"
-			columnDataType="varchar(60)" tableName="fw_user" />
+			columnDataType="VARCHAR(60)" tableName="fw_user" />
 
 		<createTable tableName="fw_resource">
 			<column name="name" type="VARCHAR(50)">
@@ -171,10 +170,10 @@
 				<constraints primaryKey="true"
 					primaryKeyName="fw_date_time_wrapperPK" />
 			</column>
-			<column name="instant" type="timestamp" />
-			<column name="local_date_time" type="timestamp" />
-			<column name="offset_date_time" type="timestamp" />
-			<column name="zoned_date_time" type="timestamp" />
+			<column name="instant" type="timestamptz" />
+			<column name="local_date_time" type="timestamptz" />
+			<column name="offset_date_time" type="timestamptz" />
+			<column name="zoned_date_time" type="timestamptz" />
 			<column name="local_time" type="time" />
 			<column name="offset_time" type="time" />
 			<column name="local_date" type="date" />
@@ -189,15 +188,60 @@
 		</loadData>
 		<loadData file="config/liquibase/tenant/data/user.csv"
 			separator=";" tableName="fw_user" usePreparedStatements="true">
-			<column name="id" type="numeric" />
-			<column name="activated" type="boolean" />
-			<column name="created_date" type="timestamp" />
+			<column name="id" type="NUMERIC" />
+			<column name="password_hash" type="STRING" />
+			<column name="first_name" type="STRING" />
+			<column name="last_name" type="STRING" />
+			<column name="email" type="STRING" />
+			<column name="timezone" type="STRING" />
+			<column name="last_login_time" type="TIMESTAMP" />
+			<column name="image_url" type="STRING" />
+			<column name="role" type="STRING" />
+			<column name="title" type="STRING" />
+			<column name="manager_id" type="NUMERIC" />
+			<column name="activated" type="BOOLEAN" />
+			<column name="lang_key" type="STRING" />
+			<column name="activation_key" type="STRING" />
+			<column name="reset_key" type="STRING" />
+			<column name="created_by" type="STRING" />
+			<column name="created_date" type="TIMESTAMP" />
+			<column name="reset_date" type="TIMESTAMP" />
+			<column name="last_modified_by" type="STRING" />
+			<column name="last_modified_date" type="TIMESTAMP" />
 		</loadData>
 		<loadData
 			file="config/liquibase/tenant/data/user_authority.csv" separator=";"
 			tableName="fw_user_authority" usePreparedStatements="true">
 			<column name="user_id" type="numeric" />
 		</loadData>
+		<loadData
+			file="config/liquibase/tenant/data/fw_organization.csv"
+			tableName="fw_organization" usePreparedStatements="true"
+			separator=";">
+			<column name="id" type="NUMERIC" />
+			<column name="name" type="STRING" />
+			<column name="logo_url" type="STRING" />
+			<column name="slogan" type="STRING" />
+			<column name="description" type="STRING" />
+		</loadData>
+		<loadData file="config/liquibase/tenant/data/fw_team.csv"
+			tableName="fw_team" separator=";">
+
+			<column name="id" type="NUMERIC" />
+			<column name="name" type="STRING" />
+			<column name="logo_url" type="STRING" />
+			<column name="slogan" type="STRING" />
+			<column name="description" type="STRING" />
+			<column name="organization_id" type="NUMERIC" />
+		</loadData>
+
+		<loadData
+			file="config/liquibase/tenant/data/fw_user_team.csv"
+			tableName="fw_user_team" separator=";">
+			<column name="user_id" type="NUMERIC" />
+			<column name="team_id" type="NUMERIC" />
+		</loadData>
+
 		<loadData file="config/liquibase/tenant/data/resource.csv"
 			separator=";" tableName="fw_resource" usePreparedStatements="true" />
 		<loadData

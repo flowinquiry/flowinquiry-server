@@ -75,4 +75,7 @@ public class Contact {
 
     @Column(name = "status", length = 50)
     private String status;
+
+    @Column(name = "lead_source", length = 50)
+    private String leadSource;
 }

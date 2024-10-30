@@ -38,6 +38,8 @@ public class ContactDTO {
 
     private String status;
 
+    private String leadSource;
+
     private LocalDateTime createdAt;
 
     private LocalDateTime updatedAt;

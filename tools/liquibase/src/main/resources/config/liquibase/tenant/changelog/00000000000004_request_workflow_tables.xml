@@ -18,13 +18,13 @@
 				<constraints nullable="false"
 					foreignKeyName="fk_workflows_created_by" references="fw_user(id)" />
 			</column>
-			<column name="created_at" type="TIMESTAMP"
+			<column name="created_at" type="timestamptz"
 				defaultValueDate="CURRENT_TIMESTAMP" />
 			<column name="updated_by" type="BIGINT">
 				<constraints foreignKeyName="fk_workflows_updated_by"
 					references="fw_user(id)" />
 			</column>
-			<column name="updated_at" type="TIMESTAMP"
+			<column name="updated_at" type="timestamptz"
 				defaultValueDate="CURRENT_TIMESTAMP" />
 		</createTable>
 
@@ -50,14 +50,14 @@
 					foreignKeyName="fk_workflow_status_created_by"
 					references="fw_user(id)" nullable="false" />
 			</column>
-			<column name="created_at" type="TIMESTAMP"
+			<column name="created_at" type="timestamptz"
 				defaultValueDate="CURRENT_TIMESTAMP" />
 			<column name="updated_by" type="BIGINT">
 				<constraints
 					foreignKeyName="fk_workflow_status_updated_by"
 					references="fw_user(id)" />
 			</column>
-			<column name="updated_at" type="TIMESTAMP"
+			<column name="updated_at" type="timestamptz"
 				defaultValueDate="CURRENT_TIMESTAMP" />
 		</createTable>
 
@@ -74,9 +74,9 @@
 					foreignKeyName="fk_requests_status"
 					references="fw_workflow_status(id)" />
 			</column>
-			<column name="created_at" type="TIMESTAMP"
+			<column name="created_at" type="timestamptz"
 				defaultValueDate="CURRENT_TIMESTAMP" />
-			<column name="updated_at" type="TIMESTAMP"
+			<column name="updated_at" type="timestamptz"
 				defaultValueDate="CURRENT_TIMESTAMP" />
 			<column name="created_by" type="BIGINT">
 				<constraints nullable="false"
@@ -111,13 +111,13 @@
 				<constraints nullable="false"
 					foreignKeyName="fk_transitions_created_by" references="fw_user(id)" />
 			</column>
-			<column name="created_at" type="TIMESTAMP"
+			<column name="created_at" type="timestamptz"
 				defaultValueDate="CURRENT_TIMESTAMP" />
 			<column name="updated_by" type="BIGINT">
 				<constraints foreignKeyName="fk_transitions_updated_by"
 					references="fw_user(id)" />
 			</column>
-			<column name="updated_at" type="TIMESTAMP"
+			<column name="updated_at" type="timestamptz"
 				defaultValueDate="CURRENT_TIMESTAMP" />
 		</createTable>
 
@@ -134,7 +134,7 @@
 				<constraints foreignKeyName="fk_request_statuses_status"
 					references="fw_workflow_status(id)" nullable="false" />
 			</column>
-			<column name="updated_at" type="TIMESTAMP"
+			<column name="updated_at" type="timestamptz"
 				defaultValueDate="CURRENT_TIMESTAMP" />
 			<column name="updated_by" type="BIGINT">
 				<constraints

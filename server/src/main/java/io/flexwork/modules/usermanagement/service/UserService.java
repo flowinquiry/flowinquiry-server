@@ -312,6 +312,11 @@ public class UserService {
     }
 
     @Transactional(readOnly = true)
+    public Optional<UserDTO> getUserWithAuthoritiesById(Long id) {
+        return userRepository.findOneWithAuthoritiesById(id).map(userMapper::userToUserDTO);
+    }
+
+    @Transactional(readOnly = true)
     public Optional<User> getUserWithAuthorities() {
         return SecurityUtils.getCurrentUserLogin()
                 .map(UserKey::getEmail)

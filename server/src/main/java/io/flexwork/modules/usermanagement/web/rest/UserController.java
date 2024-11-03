@@ -29,7 +29,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -207,22 +206,6 @@ public class UserController {
         return pageable.getSort().stream()
                 .map(Sort.Order::getProperty)
                 .allMatch(ALLOWED_ORDERED_PROPERTIES::contains);
-    }
-
-    /**
-     * {@code GET /admin/users/:login} : get the "login" user.
-     *
-     * @param login the login of the user to find.
-     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the "login"
-     *     user, or with status {@code 404 (Not Found)}.
-     */
-    @GetMapping("/users/{login}")
-    @PreAuthorize("hasAuthority(\"" + AuthoritiesConstants.ADMIN + "\")")
-    public ResponseEntity<UserDTO> getUser(
-            @PathVariable("login") @Pattern(regexp = Constants.LOGIN_REGEX) String login) {
-        LOG.debug("REST request to get User : {}", login);
-        return ResponseUtil.wrapOrNotFound(
-                userService.getUserWithAuthoritiesByEmail(login).map(userMapper::userToUserDTO));
     }
 
     /**

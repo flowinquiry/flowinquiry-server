@@ -1,17 +1,19 @@
 package io.flexwork.modules.usermanagement.service.dto;
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 
 @Data
+@AllArgsConstructor
 @Builder
 public class TeamDTO {
 
-    private Long id; // Team ID
-    private String name; // Team name
-    private String logoUrl; // Team logo URL
-    private String slogan; // Team slogan
-    private String description; // Team description
-    private Long
-            organizationId; // Organization ID (to represent the relationship with Organization)
+    private Long id;
+    private String name;
+    private String logoUrl;
+    private String slogan;
+    private String description;
+    private Long organizationId;
+    private Long memberCount;
 }

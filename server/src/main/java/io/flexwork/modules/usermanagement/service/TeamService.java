@@ -4,6 +4,8 @@ import static io.flexwork.query.QueryUtils.createSpecification;
 
 import io.flexwork.modules.usermanagement.domain.Team;
 import io.flexwork.modules.usermanagement.repository.TeamRepository;
+import io.flexwork.modules.usermanagement.service.dto.TeamDTO;
+import io.flexwork.modules.usermanagement.service.mapper.TeamMapper;
 import io.flexwork.query.QueryDTO;
 import jakarta.persistence.EntityNotFoundException;
 import java.util.Optional;
@@ -11,13 +13,17 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class TeamService {
 
     private TeamRepository teamRepository;
 
-    public TeamService(TeamRepository teamRepository) {
+    private TeamMapper teamMapper;
+
+    public TeamService(TeamRepository teamRepository, TeamMapper teamMapper) {
+        this.teamMapper = teamMapper;
         this.teamRepository = teamRepository;
     }
 
@@ -61,8 +67,9 @@ public class TeamService {
                 .orElseThrow(() -> new EntityNotFoundException("Team not found with id: " + id));
     }
 
-    public Page<Team> findTeams(Optional<QueryDTO> queryDTO, Pageable pageable) {
+    @Transactional(readOnly = true)
+    public Page<TeamDTO> findTeams(Optional<QueryDTO> queryDTO, Pageable pageable) {
         Specification<Team> spec = createSpecification(queryDTO);
-        return teamRepository.findAll(spec, pageable);
+        return teamRepository.findAllDTOs(spec, pageable);
     }
 }

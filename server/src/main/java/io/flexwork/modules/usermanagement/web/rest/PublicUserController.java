@@ -2,7 +2,6 @@ package io.flexwork.modules.usermanagement.web.rest;
 
 import io.flexwork.modules.usermanagement.service.UserService;
 import io.flexwork.modules.usermanagement.service.dto.UserDTO;
-import io.flexwork.modules.usermanagement.service.mapper.UserMapper;
 import io.flexwork.query.QueryDTO;
 import jakarta.validation.Valid;
 import java.util.List;
@@ -15,12 +14,15 @@ import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import tech.jhipster.web.util.PaginationUtil;
+import tech.jhipster.web.util.ResponseUtil;
 
 @RestController
 @RequestMapping("/api")
@@ -31,12 +33,9 @@ public class PublicUserController {
 
     private static final Logger LOG = LoggerFactory.getLogger(PublicUserController.class);
 
-    private final UserMapper userMapper;
-
     private final UserService userService;
 
-    public PublicUserController(UserMapper userMapper, UserService userService) {
-        this.userMapper = userMapper;
+    public PublicUserController(UserService userService) {
         this.userService = userService;
     }
 
@@ -60,6 +59,11 @@ public class PublicUserController {
                 PaginationUtil.generatePaginationHttpHeaders(
                         ServletUriComponentsBuilder.fromCurrentRequest(), page);
         return new ResponseEntity<>(page, headers, HttpStatus.OK);
+    }
+
+    @GetMapping("/users/{userId}")
+    public ResponseEntity<UserDTO> getUser(@PathVariable("userId") Long userId) {
+        return ResponseUtil.wrapOrNotFound(userService.getUserWithAuthoritiesById(userId));
     }
 
     private boolean onlyContainsAllowedProperties(Pageable pageable) {

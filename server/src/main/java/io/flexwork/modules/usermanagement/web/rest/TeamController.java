@@ -5,7 +5,6 @@ import io.flexwork.modules.usermanagement.service.TeamService;
 import io.flexwork.modules.usermanagement.service.UserService;
 import io.flexwork.modules.usermanagement.service.dto.TeamDTO;
 import io.flexwork.modules.usermanagement.service.dto.UserDTO;
-import io.flexwork.modules.usermanagement.service.mapper.TeamMapper;
 import io.flexwork.query.QueryDTO;
 import jakarta.validation.Valid;
 import java.util.Optional;
@@ -26,13 +25,10 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/teams")
 public class TeamController {
 
-    private final TeamMapper teamMapper;
-
     private final UserService userService;
     private final TeamService teamService;
 
-    public TeamController(TeamMapper teamMapper, TeamService teamService, UserService userService) {
-        this.teamMapper = teamMapper;
+    public TeamController(TeamService teamService, UserService userService) {
         this.teamService = teamService;
         this.userService = userService;
     }
@@ -69,8 +65,7 @@ public class TeamController {
     @PostMapping("/search")
     public ResponseEntity<Page<TeamDTO>> findTeams(
             @Valid @RequestBody Optional<QueryDTO> queryDTO, Pageable pageable) {
-        Page<Team> teams = teamService.findTeams(queryDTO, pageable);
-        return new ResponseEntity<>(teams.map(teamMapper::teamToTeamDTO), HttpStatus.OK);
+        return new ResponseEntity<>(teamService.findTeams(queryDTO, pageable), HttpStatus.OK);
     }
 
     @GetMapping("/{teamId}/members")

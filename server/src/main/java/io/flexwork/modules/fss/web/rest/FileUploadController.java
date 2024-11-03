@@ -61,6 +61,10 @@ public class FileUploadController {
         String prefixPath = typeRelativePaths.get(type);
 
         String fileName = URLEncoder.encode(file.getOriginalFilename(), StandardCharsets.UTF_8);
+        if (fileName.isEmpty()) {
+
+            return ResponseEntity.badRequest().body("File name is empty");
+        }
         storageService.uploadFile(prefixPath, fileName, file.getInputStream(), file.getSize());
         String pathRes =
                 Json.createObjectBuilder()

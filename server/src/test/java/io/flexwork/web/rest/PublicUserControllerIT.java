@@ -1,6 +1,7 @@
 package io.flexwork.web.rest;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -97,5 +98,11 @@ class PublicUserControllerIT {
         restUserMockMvc
                 .perform(post("/api/users/search?sort=id,desc").accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
+    }
+
+    @Test
+    @Transactional
+    void getNonExistingUser() throws Exception {
+        restUserMockMvc.perform(get("/api/users/123456")).andExpect(status().isNotFound());
     }
 }

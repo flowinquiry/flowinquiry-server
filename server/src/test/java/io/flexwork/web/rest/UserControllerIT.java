@@ -269,7 +269,7 @@ class UserControllerIT {
 
         // Get the user
         restUserMockMvc
-                .perform(get("/api/admin/users/{login}", user.getEmail()))
+                .perform(get("/api/users/{userId}", user.getId()))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
                 .andExpect(jsonPath("$.firstName").value(DEFAULT_FIRSTNAME))
@@ -277,12 +277,6 @@ class UserControllerIT {
                 .andExpect(jsonPath("$.email").value(DEFAULT_EMAIL))
                 .andExpect(jsonPath("$.imageUrl").value(DEFAULT_IMAGEURL))
                 .andExpect(jsonPath("$.langKey").value(DEFAULT_LANGKEY));
-    }
-
-    @Test
-    @Transactional
-    void getNonExistingUser() throws Exception {
-        restUserMockMvc.perform(get("/api/admin/users/unknown")).andExpect(status().isNotFound());
     }
 
     @Test

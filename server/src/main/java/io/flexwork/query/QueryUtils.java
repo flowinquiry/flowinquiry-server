@@ -1,6 +1,7 @@
 package io.flexwork.query;
 
 import jakarta.persistence.criteria.CriteriaBuilder;
+import jakarta.persistence.criteria.Expression;
 import jakarta.persistence.criteria.Join;
 import jakarta.persistence.criteria.JoinType;
 import jakarta.persistence.criteria.Predicate;
@@ -36,6 +37,24 @@ public class QueryUtils {
         String field = filter.getField();
         Object value = filter.getValue();
 
+        // Check for multiple fields to concatenate (e.g., "firstName,lastName" or "field1,field2")
+        if (field.contains(",")) {
+            String likePattern = "%" + value.toString().toLowerCase() + "%";
+            String[] fields = field.split(",");
+
+            // Concatenate specified fields with spaces between them
+            Expression<String> concatenatedFields = cb.lower(root.get(fields[0]));
+
+            for (int i = 1; i < fields.length; i++) {
+                concatenatedFields =
+                        cb.concat(
+                                concatenatedFields, cb.concat(" ", cb.lower(root.get(fields[i]))));
+            }
+
+            // Apply the like condition to the concatenated fields
+            return cb.like(concatenatedFields, likePattern);
+        }
+
         // Check if the field requires a join
         if (field.contains(".")) {
             // Split the field by dot notation to get the join entity and target field
@@ -54,6 +73,8 @@ public class QueryUtils {
                     return cb.lessThan(join.get(targetField), (Comparable) value);
                 case "eq":
                     return cb.equal(join.get(targetField), value);
+                case "lk":
+                    return cb.like(join.get(targetField), "%" + value + "%");
                 case "in":
                     return join.get(targetField).in((List<?>) value);
                 default:
@@ -68,17 +89,14 @@ public class QueryUtils {
                     return cb.lessThan(root.get(field), (Comparable) value);
                 case "eq":
                     return cb.equal(root.get(field), value);
+                case "lk":
+                    return cb.like(
+                            cb.lower(root.get(field)), "%" + value.toString().toLowerCase() + "%");
                 case "in":
                     return root.get(field).in((List<?>) value);
                 default:
                     throw new IllegalArgumentException("Invalid operator: " + filter.getOperator());
             }
         }
-    }
-
-    private static boolean isJoinField(String field) {
-        // Define rules to detect join fields, e.g., fields that include a dot (.)
-        // indicating they are part of a related entity, like "account.id"
-        return field.contains(".");
     }
 }

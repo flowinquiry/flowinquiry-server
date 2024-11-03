@@ -32,6 +32,9 @@ public interface UserRepository extends JpaRepository<User, Long>, JpaSpecificat
     @Cacheable(cacheNames = USERS_BY_EMAIL_CACHE)
     Optional<User> findOneWithAuthoritiesByEmailIgnoreCase(String email);
 
+    @EntityGraph(attributePaths = "authorities")
+    Optional<User> findOneWithAuthoritiesById(Long id);
+
     Page<User> findAllByIdNotNullAndActivatedIsTrue(Pageable pageable);
 
     @Modifying

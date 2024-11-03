@@ -88,7 +88,7 @@ dependencies {
     implementation("com.github.ben-manes.caffeine:caffeine")
     implementation("com.zaxxer:HikariCP")
     implementation(libs.dot.env)
-    implementation(libs.json.api)
+    implementation(libs.bundles.json)
 
     implementation("jakarta.annotation:jakarta.annotation-api")
     implementation(libs.jhipster.framework)

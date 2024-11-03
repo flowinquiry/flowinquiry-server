@@ -1,5 +1,7 @@
 package io.flexwork.modules.usermanagement.web.rest;
 
+import com.flexwork.platform.utils.CodecUtils;
+import io.flexwork.modules.fss.service.StorageService;
 import io.flexwork.modules.usermanagement.AuthoritiesConstants;
 import io.flexwork.modules.usermanagement.domain.User;
 import io.flexwork.modules.usermanagement.repository.UserRepository;
@@ -26,6 +28,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -34,7 +37,10 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import tech.jhipster.web.util.HeaderUtil;
 import tech.jhipster.web.util.PaginationUtil;
@@ -96,15 +102,19 @@ public class UserController {
 
     private final MailService mailService;
 
+    private final StorageService storageService;
+
     public UserController(
             UserService userService,
             UserRepository userRepository,
             UserMapper userMapper,
-            MailService mailService) {
+            MailService mailService,
+            StorageService storageService) {
         this.userService = userService;
         this.userRepository = userRepository;
         this.userMapper = userMapper;
         this.mailService = mailService;
+        this.storageService = storageService;
     }
 
     /**
@@ -144,7 +154,7 @@ public class UserController {
     }
 
     /**
-     * {@code PUT /admin/users} : Updates an existing User.
+     * {@code PUT /users} : Updates an existing User.
      *
      * @param userDTO the user to update.
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the updated
@@ -152,12 +162,13 @@ public class UserController {
      * @throws EmailAlreadyUsedException {@code 400 (Bad Request)} if the email is already in use.
      * @throws LoginAlreadyUsedException {@code 400 (Bad Request)} if the email is already in use.
      */
-    @PutMapping({"/users", "/users/{login}"})
-    @PreAuthorize("hasAuthority(\"" + AuthoritiesConstants.ADMIN + "\")")
+    @PutMapping(
+            value = {"/users"},
+            consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<UserDTO> updateUser(
-            @PathVariable(name = "login", required = false) @Pattern(regexp = Constants.LOGIN_REGEX)
-                    String email,
-            @Valid @RequestBody UserDTO userDTO) {
+            @RequestPart("userDTO") UserDTO userDTO,
+            @RequestParam(value = "file", required = false) MultipartFile avatarFile)
+            throws Exception {
         LOG.debug("REST request to update User : {}", userDTO);
         Optional<User> existingUser = userRepository.findOneByEmailIgnoreCase(userDTO.getEmail());
         if (existingUser.isPresent()
@@ -169,6 +180,17 @@ public class UserController {
                 && (!existingUser.orElseThrow().getId().equals(userDTO.getId()))) {
             throw new LoginAlreadyUsedException();
         }
+
+        // Handle the avatar file upload, if present
+        if (avatarFile != null && !avatarFile.isEmpty()) {
+            String avatarPath =
+                    storageService.uploadImage(
+                            "avatar",
+                            CodecUtils.encodeLongToBase64(userDTO.getId()),
+                            avatarFile.getInputStream());
+            userDTO.setImageUrl(avatarPath);
+        }
+
         Optional<UserDTO> updatedUser =
                 userService.updateUser(userDTO).map(userMapper::userToUserDTO);
 

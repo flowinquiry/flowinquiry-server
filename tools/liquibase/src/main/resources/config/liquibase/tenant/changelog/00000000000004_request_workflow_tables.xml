@@ -7,7 +7,7 @@
 	<changeSet id="00000000000004_request_workflow"
 		author="flexapp">
 		<createTable tableName="fw_workflow">
-			<column name="id" type="BIGINT" autoIncrement="true">
+			<column name="id" type="BIGINT">
 				<constraints primaryKey="true" nullable="false" />
 			</column>
 			<column name="name" type="VARCHAR(255)">
@@ -28,8 +28,11 @@
 				defaultValueDate="CURRENT_TIMESTAMP" />
 		</createTable>
 
+		<addAutoIncrement tableName="fw_workflow"
+			columnName="id" incrementBy="1" startWith="1000" />
+
 		<createTable tableName="fw_workflow_status">
-			<column name="id" type="BIGINT" autoIncrement="true">
+			<column name="id" type="BIGINT">
 				<constraints primaryKey="true" nullable="false" />
 			</column>
 			<column name="name" type="VARCHAR(100)">
@@ -61,6 +64,9 @@
 				defaultValueDate="CURRENT_TIMESTAMP" />
 		</createTable>
 
+		<addAutoIncrement tableName="fw_workflow_status"
+			columnName="id" incrementBy="1" startWith="1000" />
+
 		<createTable tableName="fw_team_request">
 			<column name="id" type="BIGINT" autoIncrement="true">
 				<constraints primaryKey="true" nullable="false" />
@@ -89,7 +95,7 @@
 		</createTable>
 
 		<createTable tableName="fw_workflow_transition">
-			<column name="id" type="BIGINT" autoIncrement="true">
+			<column name="id" type="BIGINT">
 				<constraints primaryKey="true" nullable="false" />
 			</column>
 			<column name="workflow_id" type="BIGINT">
@@ -121,8 +127,11 @@
 				defaultValueDate="CURRENT_TIMESTAMP" />
 		</createTable>
 
+		<addAutoIncrement tableName="fw_workflow_transition"
+			columnName="id" incrementBy="1" startWith="1000" />
+
 		<createTable tableName="fw_team_request_status">
-			<column name="id" type="BIGINT" autoIncrement="true">
+			<column name="id" type="BIGINT">
 				<constraints primaryKey="true" nullable="false" />
 			</column>
 			<column name="request_id" type="BIGINT">
@@ -143,5 +152,8 @@
 			</column>
 			<column name="comments" type="TEXT" />
 		</createTable>
+
+		<addAutoIncrement tableName="fw_team_request_status"
+			columnName="id" incrementBy="1" startWith="1000" />
 	</changeSet>
 </databaseChangeLog>

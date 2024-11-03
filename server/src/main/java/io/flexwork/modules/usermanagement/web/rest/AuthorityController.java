@@ -81,11 +81,9 @@ public class AuthorityController {
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the authority,
      *     or with status {@code 404 (Not Found)}.
      */
-    @GetMapping("/{id}")
-    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN')")
-    public ResponseEntity<Authority> getAuthority(@PathVariable("id") String id) {
-        LOG.debug("REST request to get Authority : {}", id);
-        Optional<Authority> authority = authorityRepository.findById(id);
+    @GetMapping("/{name}")
+    public ResponseEntity<Authority> getAuthority(@PathVariable("name") String name) {
+        Optional<Authority> authority = authorityRepository.findByName(name);
         return ResponseUtil.wrapOrNotFound(authority);
     }
 

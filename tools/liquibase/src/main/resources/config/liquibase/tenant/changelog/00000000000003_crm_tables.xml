@@ -7,10 +7,9 @@
 
 	<!-- ChangeSet for creating the 'account' table -->
 	<changeSet id="00000000000003:crm_module" author="flexapp">
-		<createSequence sequenceName="fw_crm_account_seq"
-			minValue="1" startValue="1" incrementBy="1" />
+
 		<createTable tableName="fw_crm_account">
-			<column name="id" type="bigint" autoIncrement="true">
+			<column name="id" type="bigint">
 				<constraints primaryKey="true" nullable="false" />
 			</column>
 			<column name="name" type="VARCHAR(256)">
@@ -43,6 +42,9 @@
 			<column name="assigned_to_user_id" type="bigint" />
 			<column name="notes" type="TEXT" />
 		</createTable>
+
+		<addAutoIncrement tableName="fw_crm_account"
+			columnName="id" incrementBy="1" startWith="1000" />
 
 		<!-- Add foreign key constraint for parent_account_id -->
 		<addForeignKeyConstraint
@@ -77,7 +79,7 @@
 		</createIndex>
 
 		<createTable tableName="fw_crm_contact">
-			<column name="id" type="BIGINT" autoIncrement="true">
+			<column name="id" type="BIGINT">
 				<constraints primaryKey="true" nullable="false" />
 			</column>
 			<column name="account_id" type="BIGINT">
@@ -109,6 +111,9 @@
 			<column name="status" type="VARCHAR(50)" />
 			<column name="lead_source" type="VARCHAR(50)" />
 		</createTable>
+
+		<addAutoIncrement tableName="fw_crm_contact"
+			columnName="id" incrementBy="1" startWith="1000" />
 
 		<!-- Add foreign key constraint -->
 		<addForeignKeyConstraint
@@ -218,7 +223,7 @@
 		</createTable>
 
 		<createTable tableName="fw_crm_case">
-			<column name="id" type="BIGINT" autoIncrement="true">
+			<column name="id" type="BIGINT">
 				<constraints primaryKey="true" nullable="false" />
 			</column>
 			<column name="case_number" type="VARCHAR(50)">
@@ -241,6 +246,8 @@
 			<column name="updated_at" type="timestamptz"
 				defaultValueComputed="CURRENT_TIMESTAMP" />
 		</createTable>
+		<addAutoIncrement tableName="fw_crm_case"
+			columnName="id" incrementBy="1" startWith="1000" />
 
 		<addForeignKeyConstraint
 			baseTableName="fw_crm_case" baseColumnNames="account_id"
@@ -252,7 +259,7 @@
 			referencedTableName="fw_crm_contact" referencedColumnNames="id" />
 
 		<createTable tableName="fw_crm_comment">
-			<column name="id" type="BIGINT" autoIncrement="true">
+			<column name="id" type="BIGINT">
 				<constraints primaryKey="true" nullable="false" />
 			</column>
 			<column name="content" type="TEXT">
@@ -272,6 +279,9 @@
 				<constraints nullable="false" />
 			</column>
 		</createTable>
+
+		<addAutoIncrement tableName="fw_crm_comment"
+			columnName="id" incrementBy="1" startWith="1000" />
 
 		<addForeignKeyConstraint
 			baseTableName="fw_crm_comment" baseColumnNames="created_by"
@@ -313,7 +323,7 @@
 			referencedColumnNames="id" />
 
 		<createTable tableName="fw_crm_value_definitions">
-			<column name="id" type="BIGINT" autoIncrement="true">
+			<column name="id" type="BIGINT">
 				<constraints primaryKey="true" nullable="false" />
 			</column>
 			<column name="entity_type" type="VARCHAR(255)">
@@ -337,6 +347,10 @@
 				<constraints nullable="false" />
 			</column>
 		</createTable>
+
+		<addAutoIncrement
+			tableName="fw_crm_value_definitions" columnName="id" incrementBy="1"
+			startWith="1000" />
 
 		<createIndex tableName="fw_crm_value_definitions"
 			indexName="idx_entity_type_key">

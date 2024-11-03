@@ -7,6 +7,7 @@
                         http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
 	<changeSet id="00000000000002:files-module" author="flexapp">
 		<comment>File storage system table design with closure table model</comment>
+
 		<createSequence sequenceName="fw_fss_object_seq"
 			minValue="1" startValue="3" incrementBy="3" />
 		<createTable tableName="fw_fss_object">
@@ -27,6 +28,8 @@
 			<column name="last_modified_by" type="varchar(50)" />
 			<column name="last_modified_date" type="timestamptz" />
 		</createTable>
+
+
 		<createTable tableName="fw_fss_object_paths">
 			<column name="ancestor_id" type="bigint">
 				<constraints nullable="false" />

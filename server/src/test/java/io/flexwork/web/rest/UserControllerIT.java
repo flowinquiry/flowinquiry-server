@@ -28,6 +28,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.http.MediaType;
+import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
@@ -286,16 +287,27 @@ class UserControllerIT {
         userRepository.saveAndFlush(user);
         int databaseSizeBeforeUpdate = userRepository.findAll().size();
 
-        // Update the user
         User updatedUser = userRepository.findById(user.getId()).orElseThrow();
 
         UserDTO userDTO = getAdminUserDTO(updatedUser);
 
+        MockMultipartFile userDTOFile =
+                new MockMultipartFile(
+                        "userDTO",
+                        "userDTO.json",
+                        MediaType.APPLICATION_JSON_VALUE,
+                        om.writeValueAsBytes(userDTO));
+
         restUserMockMvc
                 .perform(
-                        put("/api/admin/users")
-                                .contentType(MediaType.APPLICATION_JSON)
-                                .content(om.writeValueAsBytes(userDTO)))
+                        multipart("/api/admin/users")
+                                .file(userDTOFile)
+                                .contentType(MediaType.MULTIPART_FORM_DATA_VALUE)
+                                .with(
+                                        request -> {
+                                            request.setMethod("PUT");
+                                            return request;
+                                        }))
                 .andExpect(status().isOk());
 
         // Validate the User in the database
@@ -358,11 +370,23 @@ class UserControllerIT {
         userDTO.setAuthorities(
                 Collections.singleton(new AuthorityDTO(AuthoritiesConstants.USER, "User")));
 
+        MockMultipartFile userDTOFile =
+                new MockMultipartFile(
+                        "userDTO",
+                        "userDTO.json",
+                        MediaType.APPLICATION_JSON_VALUE,
+                        om.writeValueAsBytes(userDTO));
+
         restUserMockMvc
                 .perform(
-                        put("/api/admin/users")
-                                .contentType(MediaType.APPLICATION_JSON)
-                                .content(om.writeValueAsBytes(userDTO)))
+                        multipart("/api/admin/users")
+                                .file(userDTOFile)
+                                .contentType(MediaType.MULTIPART_FORM_DATA_VALUE)
+                                .with(
+                                        request -> {
+                                            request.setMethod("PUT"); // Force PUT instead of POST
+                                            return request;
+                                        }))
                 .andExpect(status().isOk());
 
         // Validate the User in the database
@@ -416,11 +440,23 @@ class UserControllerIT {
         userDTO.setAuthorities(
                 Collections.singleton(new AuthorityDTO(AuthoritiesConstants.USER, "User")));
 
+        MockMultipartFile userDTOFile =
+                new MockMultipartFile(
+                        "userDTO",
+                        "userDTO.json",
+                        MediaType.APPLICATION_JSON_VALUE,
+                        om.writeValueAsBytes(userDTO));
+
         restUserMockMvc
                 .perform(
-                        put("/api/admin/users")
-                                .contentType(MediaType.APPLICATION_JSON)
-                                .content(om.writeValueAsBytes(userDTO)))
+                        multipart("/api/admin/users")
+                                .file(userDTOFile)
+                                .contentType(MediaType.MULTIPART_FORM_DATA_VALUE)
+                                .with(
+                                        request -> {
+                                            request.setMethod("PUT");
+                                            return request;
+                                        }))
                 .andExpect(status().isBadRequest());
     }
 

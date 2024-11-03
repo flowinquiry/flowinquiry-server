@@ -1,6 +1,6 @@
 package io.flexwork.modules.fss.web.rest;
 
-import io.flexwork.modules.fss.service.IStorageService;
+import io.flexwork.modules.fss.service.StorageService;
 import jakarta.servlet.http.HttpServletRequest;
 import java.io.ByteArrayOutputStream;
 import org.springframework.http.*;
@@ -12,9 +12,9 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/files")
 public class FileDownloadController {
 
-    private final IStorageService storageService;
+    private final StorageService storageService;
 
-    public FileDownloadController(IStorageService storageService) {
+    public FileDownloadController(StorageService storageService) {
         this.storageService = storageService;
     }
 

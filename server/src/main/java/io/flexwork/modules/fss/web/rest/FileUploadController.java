@@ -1,12 +1,10 @@
 package io.flexwork.modules.fss.web.rest;
 
 import io.flexwork.modules.fss.service.FsObjectService;
-import io.flexwork.modules.fss.service.IStorageService;
+import io.flexwork.modules.fss.service.StorageService;
 import io.flexwork.modules.usermanagement.service.dto.UserKey;
 import io.flexwork.security.SecurityUtils;
 import jakarta.json.Json;
-import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -36,9 +34,9 @@ public class FileUploadController {
 
     private final FsObjectService fsObjectService;
 
-    private final IStorageService storageService;
+    private final StorageService storageService;
 
-    public FileUploadController(FsObjectService fsObjectService, IStorageService storageService) {
+    public FileUploadController(FsObjectService fsObjectService, StorageService storageService) {
         this.fsObjectService = fsObjectService;
         this.storageService = storageService;
     }
@@ -60,17 +58,9 @@ public class FileUploadController {
             return ResponseEntity.badRequest().body("Not support upload with type " + type);
         String prefixPath = typeRelativePaths.get(type);
 
-        String fileName = URLEncoder.encode(file.getOriginalFilename(), StandardCharsets.UTF_8);
-        if (fileName.isEmpty()) {
-
-            return ResponseEntity.badRequest().body("File name is empty");
-        }
-        storageService.uploadFile(prefixPath, fileName, file.getInputStream(), file.getSize());
-        String pathRes =
-                Json.createObjectBuilder()
-                        .add("path", prefixPath + "/" + fileName)
-                        .build()
-                        .toString();
-        return ResponseEntity.ok(pathRes);
+        String path =
+                storageService.uploadFile(
+                        prefixPath, file.getOriginalFilename(), file.getInputStream());
+        return ResponseEntity.ok(Json.createObjectBuilder().add("path", path).build().toString());
     }
 }

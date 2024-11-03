@@ -12,5 +12,7 @@ import org.springframework.stereotype.Repository;
 public interface AuthorityRepository extends JpaRepository<Authority, String> {
     List<Authority> findByNameIn(List<String> authorityNames);
 
+    Optional<Authority> findByName(String name);
+
     Optional<Authority> findByDescriptiveName(String descriptiveName);
 }

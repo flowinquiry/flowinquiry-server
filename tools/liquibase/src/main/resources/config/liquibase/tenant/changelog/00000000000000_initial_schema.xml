@@ -10,7 +10,7 @@
 		<createSequence sequenceName="sequence_generator"
 			minValue="100" startValue="100" incrementBy="1" />
 		<createTable tableName="fw_user">
-			<column name="id" type="bigint" autoIncrement="true">
+			<column name="id" type="bigint">
 				<constraints primaryKey="true" />
 			</column>
 			<column name="password_hash" type="VARCHAR(61)" />
@@ -45,6 +45,9 @@
 			<column name="last_modified_by" type="VARCHAR(256)" />
 			<column name="last_modified_date" type="timestamptz" />
 		</createTable>
+
+		<addAutoIncrement tableName="fw_user" columnName="id"
+			incrementBy="1" startWith="1000" />
 
 		<createTable tableName="fw_authority">
 			<column name="name" type="VARCHAR(50)">
@@ -113,9 +116,10 @@
 			referencedColumnNames="name" onDelete="CASCADE"
 			constraintName="fk_authority_resource_permissions_resource" />
 
+
 		<!-- Create Team Table -->
 		<createTable tableName="fw_team">
-			<column name="id" type="BIGINT" autoIncrement="true">
+			<column name="id" type="BIGINT">
 				<constraints primaryKey="true" />
 			</column>
 			<column name="name" type="VARCHAR(255)" />
@@ -125,9 +129,12 @@
 			<column name="organization_id" type="BIGINT" />
 		</createTable>
 
+		<addAutoIncrement tableName="fw_team" columnName="id"
+			incrementBy="1" startWith="1000" />
+
 		<!-- Create Organization Table -->
 		<createTable tableName="fw_organization">
-			<column name="id" type="BIGINT" autoIncrement="true">
+			<column name="id" type="BIGINT">
 				<constraints primaryKey="true" />
 			</column>
 			<column name="name" type="VARCHAR(255)" />
@@ -135,6 +142,9 @@
 			<column name="slogan" type="VARCHAR(255)" />
 			<column name="description" type="TEXT" />
 		</createTable>
+
+		<addAutoIncrement tableName="fw_organization"
+			columnName="id" incrementBy="1" startWith="1000" />
 
 		<addForeignKeyConstraint
 			baseTableName="fw_team" baseColumnNames="organization_id"

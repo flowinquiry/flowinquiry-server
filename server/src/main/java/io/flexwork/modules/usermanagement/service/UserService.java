@@ -212,15 +212,18 @@ public class UserService {
                             user.setActivated(userDTO.isActivated());
                             user.setLangKey(userDTO.getLangKey());
                             Set<Authority> managedAuthorities = user.getAuthorities();
-                            managedAuthorities.clear();
-                            userDTO.getAuthorities().stream()
-                                    .map(
-                                            authorityDTO ->
-                                                    authorityRepository.findById(
-                                                            authorityDTO.getName()))
-                                    .filter(Optional::isPresent)
-                                    .map(Optional::get)
-                                    .forEach(managedAuthorities::add);
+                            if (userDTO.getAuthorities() != null) {
+                                managedAuthorities.clear();
+                                userDTO.getAuthorities().stream()
+                                        .map(
+                                                authorityDTO ->
+                                                        authorityRepository.findById(
+                                                                authorityDTO.getName()))
+                                        .filter(Optional::isPresent)
+                                        .map(Optional::get)
+                                        .forEach(managedAuthorities::add);
+                            }
+
                             userRepository.save(user);
                             LOG.debug("Changed Information for User: {}", user);
                             return user;

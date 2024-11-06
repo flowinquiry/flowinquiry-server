@@ -30,36 +30,32 @@ public class AccountServiceIT {
                         .industry("industry2")
                         .status("status2")
                         .build();
-        Account updatedAccount = accountMapper.accountDTOToAccount(accountDTO);
-        Account returnedUpdateAccount =
-                accountService.updateAccount(savedAccount.getId(), updatedAccount);
+
+        AccountDTO returnedUpdateAccount =
+                accountService.updateAccount(savedAccount.getId(), accountDTO);
         assertAll(
                 () -> assertEquals("account_name2", returnedUpdateAccount.getName()),
                 () -> assertEquals("account_type2", returnedUpdateAccount.getType()),
                 () -> assertEquals("industry2", returnedUpdateAccount.getIndustry()),
                 () -> assertEquals("status2", returnedUpdateAccount.getStatus()),
-                () ->
-                        assertEquals(
-                                savedAccount.getAssignedToUser(),
-                                returnedUpdateAccount.getAssignedToUser()));
+                () -> assertNull(savedAccount.getAssignedToUser()));
     }
 
     @Test
     public void testSaveAccountSuccessfully() {
-        Account account1 =
-                Account.builder()
+        AccountDTO account1 =
+                AccountDTO.builder()
                         .name("account_name")
                         .type("account_type")
                         .industry("industry")
                         .status("status")
                         .build();
-        Account savedAccount = accountService.saveAccount(account1);
+        AccountDTO savedAccount = accountService.saveAccount(account1);
 
-        Optional<Account> optionalAccount = accountService.findAccountById(savedAccount.getId());
-        // Ensure the returnedAccount was found
+        Optional<AccountDTO> optionalAccount = accountService.findAccountById(savedAccount.getId());
         assertTrue(optionalAccount.isPresent(), "Account should be present");
 
-        Account returnedAccount = optionalAccount.get();
+        AccountDTO returnedAccount = optionalAccount.get();
         assertAll(
                 () -> assertEquals(savedAccount.getName(), returnedAccount.getName()),
                 () -> assertEquals(savedAccount.getType(), returnedAccount.getType()),
@@ -68,7 +64,7 @@ public class AccountServiceIT {
                 () -> assertEquals(savedAccount.getId(), returnedAccount.getId()),
                 () ->
                         assertEquals(
-                                savedAccount.getAssignedToUser(),
-                                returnedAccount.getAssignedToUser()));
+                                savedAccount.getAssignedToUserId(),
+                                returnedAccount.getAssignedToUserId()));
     }
 }

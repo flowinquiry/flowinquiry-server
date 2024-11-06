@@ -69,4 +69,14 @@ public class ContactService {
         Specification<Contact> spec = createSpecification(queryDTO);
         return contactRepository.findAll(spec, pageable).map(contactMapper::contactToContactDTO);
     }
+
+    public Optional<ContactDTO> getNextEntity(Long currentId) {
+        return contactRepository.findNextEntity(currentId).map(contactMapper::contactToContactDTO);
+    }
+
+    public Optional<ContactDTO> getPreviousEntity(Long currentId) {
+        return contactRepository
+                .findPreviousEntity(currentId)
+                .map(contactMapper::contactToContactDTO);
+    }
 }

@@ -97,6 +97,21 @@ public class User extends AbstractAuditingEntity<Long> implements Serializable {
     @Column(name = "timezone", nullable = false)
     private String timezone;
 
+    @Column(name = "about", columnDefinition = "TEXT")
+    private String about;
+
+    @Column(name = "address", length = 255)
+    private String address;
+
+    @Column(name = "city", length = 100)
+    private String city;
+
+    @Column(name = "state", length = 100)
+    private String state;
+
+    @Column(name = "country", length = 100)
+    private String country;
+
     @Column(name = "last_login_time")
     private LocalDateTime lastLoginTime;
 

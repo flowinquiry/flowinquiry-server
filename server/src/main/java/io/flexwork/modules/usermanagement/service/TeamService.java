@@ -71,4 +71,11 @@ public class TeamService {
         Specification<Team> spec = createSpecification(queryDTO);
         return teamRepository.findAllDTOs(spec, pageable);
     }
+
+    @Transactional(readOnly = true)
+    public List<TeamDTO> findAllTeamsByUserId(Long userId) {
+        return teamRepository.findAllTeamsByUserId(userId).stream()
+                .map(teamMapper::teamToTeamDTO)
+                .toList();
+    }
 }

@@ -126,4 +126,15 @@ public class TeamController {
             @PathVariable Long teamId, Pageable pageable) {
         return new ResponseEntity<>(userService.getUsersByTeam(teamId, pageable), HttpStatus.OK);
     }
+
+    @GetMapping("/users/{userId}")
+    public ResponseEntity<List<TeamDTO>> getTeamsByUserId(@PathVariable Long userId) {
+        List<TeamDTO> teams = teamService.findAllTeamsByUserId(userId);
+
+        if (teams.isEmpty()) {
+            return ResponseEntity.noContent().build();
+        }
+
+        return ResponseEntity.ok(teams);
+    }
 }

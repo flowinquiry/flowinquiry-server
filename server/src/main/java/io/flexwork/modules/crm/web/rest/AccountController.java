@@ -1,9 +1,7 @@
 package io.flexwork.modules.crm.web.rest;
 
-import io.flexwork.modules.crm.domain.Account;
 import io.flexwork.modules.crm.service.AccountService;
 import io.flexwork.modules.crm.service.dto.AccountDTO;
-import io.flexwork.modules.crm.service.mapper.AccountMapper;
 import io.flexwork.query.QueryDTO;
 import jakarta.validation.Valid;
 import java.util.List;
@@ -27,40 +25,31 @@ public class AccountController {
 
     private final AccountService accountService;
 
-    private AccountMapper accountMapper;
-
-    public AccountController(AccountService accountService, AccountMapper accountMapper) {
+    public AccountController(AccountService accountService) {
         this.accountService = accountService;
-        this.accountMapper = accountMapper;
     }
 
-    // Get an account by ID
     @GetMapping("/{id}")
     public ResponseEntity<AccountDTO> getAccountById(@PathVariable Long id) {
-        Optional<Account> account = accountService.findAccountById(id);
-        return account.map(value -> ResponseEntity.ok(accountMapper.accountToAccountDTO(value)))
+        return accountService
+                .findAccountById(id)
+                .map(ResponseEntity::ok)
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
-    // Create a new account
     @PostMapping
     public ResponseEntity<AccountDTO> createAccount(@RequestBody AccountDTO account) {
-        Account savedAccount =
-                accountService.saveAccount(accountMapper.accountDTOToAccount(account));
-        return new ResponseEntity<>(
-                accountMapper.accountToAccountDTO(savedAccount), HttpStatus.CREATED);
+        AccountDTO savedAccount = accountService.saveAccount(account);
+        return new ResponseEntity<>(savedAccount, HttpStatus.CREATED);
     }
 
-    // Update an existing account
     @PutMapping("/{id}")
     public ResponseEntity<AccountDTO> updateAccount(
             @PathVariable Long id, @RequestBody AccountDTO accountDTO) {
-        Account updatedAccount =
-                accountService.updateAccount(id, accountMapper.accountDTOToAccount(accountDTO));
-        return ResponseEntity.ok(accountMapper.accountToAccountDTO(updatedAccount));
+        AccountDTO updatedAccount = accountService.updateAccount(id, accountDTO);
+        return ResponseEntity.ok(updatedAccount);
     }
 
-    // Delete an account by ID
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteAccount(@PathVariable Long id) {
         accountService.deleteAccountById(id);
@@ -76,16 +65,15 @@ public class AccountController {
     @PostMapping("/search")
     public ResponseEntity<Page<AccountDTO>> findAccounts(
             @Valid @RequestBody Optional<QueryDTO> queryDTO, Pageable pageable) {
-        Page<Account> accounts = accountService.findAccounts(queryDTO, pageable);
-        return new ResponseEntity<>(
-                accounts.map(accountMapper::accountToAccountDTO), HttpStatus.OK);
+        Page<AccountDTO> accounts = accountService.findAccounts(queryDTO, pageable);
+        return new ResponseEntity<>(accounts, HttpStatus.OK);
     }
 
     @GetMapping("/next/{currentId}")
     public ResponseEntity<AccountDTO> getNextEntity(@PathVariable Long currentId) {
         return accountService
                 .getNextEntity(currentId)
-                .map(value -> ResponseEntity.ok(accountMapper.accountToAccountDTO(value)))
+                .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
 
@@ -93,7 +81,7 @@ public class AccountController {
     public ResponseEntity<AccountDTO> getPreviousEntity(@PathVariable Long currentId) {
         return accountService
                 .getPreviousEntity(currentId)
-                .map(value -> ResponseEntity.ok(accountMapper.accountToAccountDTO(value)))
+                .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
 }

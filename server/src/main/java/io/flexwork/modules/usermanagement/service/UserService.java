@@ -353,4 +353,10 @@ public class UserService {
     public List<String> getAuthorities() {
         return authorityRepository.findAll().stream().map(Authority::getName).toList();
     }
+
+    public List<UserDTO> findAllUsersByAuthority(String authorityName) {
+        return userRepository.findAllUsersByAuthority(authorityName).stream()
+                .map(userMapper::userToUserDTO)
+                .collect(Collectors.toList());
+    }
 }

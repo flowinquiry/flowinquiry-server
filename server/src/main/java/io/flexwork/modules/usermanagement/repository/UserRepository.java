@@ -44,4 +44,7 @@ public interface UserRepository extends JpaRepository<User, Long>, JpaSpecificat
 
     @Query("SELECT u FROM User u JOIN u.teams t WHERE t.id = :teamId")
     Page<User> findAllByTeamId(@Param("teamId") Long teamId, Pageable pageable);
+
+    @Query("SELECT u FROM User u JOIN u.authorities a WHERE a.name = :authorityName")
+    List<User> findAllUsersByAuthority(@Param("authorityName") String authorityName);
 }

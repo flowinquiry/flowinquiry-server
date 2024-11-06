@@ -33,6 +33,16 @@ public class UserDTO implements Serializable {
 
     private Set<AuthorityDTO> authorities;
 
+    private String about;
+
+    private String address;
+
+    private String city;
+
+    private String state;
+
+    private String country;
+
     private String createdBy;
 
     private Instant createdDate;

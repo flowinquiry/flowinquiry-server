@@ -73,4 +73,20 @@ public class ContactController {
         contactService.deleteContacts(ids);
         return ResponseEntity.noContent().build();
     }
+
+    @GetMapping("/next/{currentId}")
+    public ResponseEntity<ContactDTO> getNextEntity(@PathVariable Long currentId) {
+        return contactService
+                .getNextEntity(currentId)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
+    }
+
+    @GetMapping("/previous/{currentId}")
+    public ResponseEntity<ContactDTO> getPreviousEntity(@PathVariable Long currentId) {
+        return contactService
+                .getPreviousEntity(currentId)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
+    }
 }

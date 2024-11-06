@@ -13,29 +13,21 @@ import org.springframework.stereotype.Repository;
 public interface AccountRepository
         extends JpaRepository<Account, Long>, JpaSpecificationExecutor<Account> {
 
-    // Find an account by its name
     Optional<Account> findByName(String accountName);
 
-    // Find accounts by their type
     List<Account> findByType(String accountType);
 
-    // Find accounts by their status
     List<Account> findByStatus(String status);
 
-    // Find accounts by industry
     List<Account> findByIndustry(String industry);
 
-    // Find accounts by parent account
     List<Account> findByParentAccount(Account parentAccount);
 
-    // Find accounts assigned to a specific user
     List<Account> findByAssignedToUserId(Long assignedToUserId);
 
-    // Query to find the next entity based on the current primary key
     @Query("SELECT e FROM Account e WHERE e.id > :currentId ORDER BY e.id ASC LIMIT 1")
     Optional<Account> findNextEntity(@Param("currentId") Long currentId);
 
-    // Query to find the previous entity based on the current primary key
     @Query("SELECT e FROM Account e WHERE e.id < :currentId ORDER BY e.id DESC LIMIT 1")
     Optional<Account> findPreviousEntity(@Param("currentId") Long currentId);
 }

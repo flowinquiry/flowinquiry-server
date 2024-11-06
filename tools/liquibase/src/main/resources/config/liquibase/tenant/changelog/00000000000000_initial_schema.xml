@@ -29,12 +29,27 @@
 			<column name="role" type="VARCHAR(50)" />
 			<column name="title" type="VARCHAR(100)" />
 			<column name="manager_id" type="BIGINT" />
+			<column name="address" type="VARCHAR(255)">
+				<constraints nullable="true" />
+			</column>
+			<column name="city" type="VARCHAR(100)">
+				<constraints nullable="true" />
+			</column>
+			<column name="state" type="VARCHAR(100)">
+				<constraints nullable="true" />
+			</column>
+			<column name="country" type="VARCHAR(100)">
+				<constraints nullable="true" />
+			</column>
 			<column name="activated" type="BOOLEAN" valueBoolean="false">
 				<constraints nullable="false" />
 			</column>
 			<column name="lang_key" type="VARCHAR(10)" />
 			<column name="activation_key" type="VARCHAR(20)" />
 			<column name="reset_key" type="VARCHAR(20)" />
+			<column name="about" type="TEXT">
+				<constraints nullable="true" />
+			</column>
 			<column name="created_by" type="VARCHAR(256)">
 				<constraints nullable="false" />
 			</column>
@@ -218,6 +233,10 @@
 			<column name="reset_date" type="TIMESTAMP" />
 			<column name="last_modified_by" type="STRING" />
 			<column name="last_modified_date" type="TIMESTAMP" />
+			<column name="about" type="STRING" />
+			<column name="address" type="STRING" />
+			<column name="city" type="STRING" />
+			<column name="state" type="STRING" />
 		</loadData>
 		<loadData
 			file="config/liquibase/tenant/data/user_authority.csv" separator=";"

@@ -6,6 +6,7 @@ import io.flexwork.modules.crm.domain.Account;
 import io.flexwork.modules.crm.domain.Action;
 import io.flexwork.modules.crm.event.ActivityLogEvent;
 import io.flexwork.modules.crm.repository.AccountRepository;
+import io.flexwork.modules.crm.service.dto.AccountDTO;
 import io.flexwork.modules.crm.service.mapper.AccountMapper;
 import io.flexwork.modules.usermanagement.service.dto.UserKey;
 import io.flexwork.query.QueryDTO;
@@ -38,27 +39,31 @@ public class AccountService {
     }
 
     // Find an account by its ID
-    public Optional<Account> findAccountById(Long accountId) {
-        return accountRepository.findById(accountId);
+    public Optional<AccountDTO> findAccountById(Long accountId) {
+        return accountRepository.findById(accountId).map(accountMapper::accountToAccountDTO);
     }
 
     // Save a new account or update an existing one
-    public Account saveAccount(Account account) {
-        return activityServiceWrapper.saveEntity(
-                account,
-                accountRepository,
-                (savedAccount) ->
-                        new ActivityLogEvent(
-                                this,
-                                accountMapper.accountEntityToActivityLog(
-                                        savedAccount,
-                                        Action.CREATE,
-                                        SecurityUtils.getCurrentUserLogin()
-                                                .map(UserKey::getId)
-                                                .orElse(null))));
+    public AccountDTO saveAccount(AccountDTO account) {
+        Account accountEntity =
+                activityServiceWrapper.saveEntity(
+                        accountMapper.accountDTOToAccount(account),
+                        accountRepository,
+                        (savedAccount) ->
+                                new ActivityLogEvent(
+                                        this,
+                                        accountMapper.accountEntityToActivityLog(
+                                                savedAccount,
+                                                Action.CREATE,
+                                                SecurityUtils.getCurrentUserLogin()
+                                                        .map(UserKey::getId)
+                                                        .orElse(null))));
+        return accountMapper.accountToAccountDTO(accountEntity);
     }
 
-    public Account updateAccount(Long accountId, Account accountDetails) {
+    public AccountDTO updateAccount(Long accountId, AccountDTO accountDetails) {
+        Account accountEntityDetails = accountMapper.accountDTOToAccount(accountDetails);
+
         Account existingAccount =
                 accountRepository
                         .findById(accountId)
@@ -68,26 +73,26 @@ public class AccountService {
                                                 "Account not found with id: " + accountId));
 
         // Step 2: Update the fields of the existing account with the new details
-        existingAccount.setName(accountDetails.getName());
-        existingAccount.setType(accountDetails.getType());
-        existingAccount.setIndustry(accountDetails.getIndustry());
-        existingAccount.setWebsite(accountDetails.getWebsite());
-        existingAccount.setPhoneNumber(accountDetails.getPhoneNumber());
-        existingAccount.setEmail(accountDetails.getEmail());
-        existingAccount.setAddressLine1(accountDetails.getAddressLine1());
-        existingAccount.setAddressLine2(accountDetails.getAddressLine2());
-        existingAccount.setCity(accountDetails.getCity());
-        existingAccount.setState(accountDetails.getState());
-        existingAccount.setPostalCode(accountDetails.getPostalCode());
-        existingAccount.setCountry(accountDetails.getCountry());
-        existingAccount.setAnnualRevenue(accountDetails.getAnnualRevenue());
-        existingAccount.setParentAccount(accountDetails.getParentAccount());
-        existingAccount.setStatus(accountDetails.getStatus());
-        existingAccount.setAssignedToUser(accountDetails.getAssignedToUser());
-        existingAccount.setNotes(accountDetails.getNotes());
+        existingAccount.setName(accountEntityDetails.getName());
+        existingAccount.setType(accountEntityDetails.getType());
+        existingAccount.setIndustry(accountEntityDetails.getIndustry());
+        existingAccount.setWebsite(accountEntityDetails.getWebsite());
+        existingAccount.setPhoneNumber(accountEntityDetails.getPhoneNumber());
+        existingAccount.setEmail(accountEntityDetails.getEmail());
+        existingAccount.setAddressLine1(accountEntityDetails.getAddressLine1());
+        existingAccount.setAddressLine2(accountEntityDetails.getAddressLine2());
+        existingAccount.setCity(accountEntityDetails.getCity());
+        existingAccount.setState(accountEntityDetails.getState());
+        existingAccount.setPostalCode(accountEntityDetails.getPostalCode());
+        existingAccount.setCountry(accountEntityDetails.getCountry());
+        existingAccount.setAnnualRevenue(accountEntityDetails.getAnnualRevenue());
+        existingAccount.setParentAccount(accountEntityDetails.getParentAccount());
+        existingAccount.setStatus(accountEntityDetails.getStatus());
+        existingAccount.setAssignedToUser(accountEntityDetails.getAssignedToUser());
+        existingAccount.setNotes(accountEntityDetails.getNotes());
 
         // Step 3: Save the updated account
-        return accountRepository.save(existingAccount);
+        return accountMapper.accountToAccountDTO(accountRepository.save(existingAccount));
     }
 
     // Delete an account by its ID
@@ -100,16 +105,18 @@ public class AccountService {
         accountRepository.deleteAllByIdInBatch(ids);
     }
 
-    public Page<Account> findAccounts(Optional<QueryDTO> queryDTO, Pageable pageable) {
+    public Page<AccountDTO> findAccounts(Optional<QueryDTO> queryDTO, Pageable pageable) {
         Specification<Account> spec = createSpecification(queryDTO);
-        return accountRepository.findAll(spec, pageable);
+        return accountRepository.findAll(spec, pageable).map(accountMapper::accountToAccountDTO);
     }
 
-    public Optional<Account> getNextEntity(Long currentId) {
-        return accountRepository.findNextEntity(currentId);
+    public Optional<AccountDTO> getNextEntity(Long currentId) {
+        return accountRepository.findNextEntity(currentId).map(accountMapper::accountToAccountDTO);
     }
 
-    public Optional<Account> getPreviousEntity(Long currentId) {
-        return accountRepository.findPreviousEntity(currentId);
+    public Optional<AccountDTO> getPreviousEntity(Long currentId) {
+        return accountRepository
+                .findPreviousEntity(currentId)
+                .map(accountMapper::accountToAccountDTO);
     }
 }

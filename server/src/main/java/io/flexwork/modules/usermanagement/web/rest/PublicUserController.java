@@ -25,7 +25,7 @@ import tech.jhipster.web.util.PaginationUtil;
 import tech.jhipster.web.util.ResponseUtil;
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/users")
 public class PublicUserController {
 
     private static final List<String> ALLOWED_ORDERED_PROPERTIES =
@@ -46,7 +46,7 @@ public class PublicUserController {
      * @param pageable the pagination information.
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body all users.
      */
-    @PostMapping("/users/search")
+    @PostMapping("/search")
     public ResponseEntity<Page<UserDTO>> searchAllPublicUsers(
             @Valid @RequestBody Optional<QueryDTO> queryDTO, Pageable pageable) {
         LOG.debug("REST request to get all public User names");
@@ -61,9 +61,20 @@ public class PublicUserController {
         return new ResponseEntity<>(page, headers, HttpStatus.OK);
     }
 
-    @GetMapping("/users/{userId}")
+    @GetMapping("/{userId}")
     public ResponseEntity<UserDTO> getUser(@PathVariable("userId") Long userId) {
         return ResponseUtil.wrapOrNotFound(userService.getUserWithAuthoritiesById(userId));
+    }
+
+    @GetMapping("/authorities/{authorityName}")
+    public ResponseEntity<List<UserDTO>> getUsersByAuthority(@PathVariable String authorityName) {
+        List<UserDTO> users = userService.findAllUsersByAuthority(authorityName);
+
+        if (users.isEmpty()) {
+            return ResponseEntity.noContent().build();
+        }
+
+        return ResponseEntity.ok(users);
     }
 
     private boolean onlyContainsAllowedProperties(Pageable pageable) {

@@ -1,5 +1,6 @@
 package io.flexwork.modules.teams.domain;
 
+import io.flexwork.modules.usermanagement.domain.Team;
 import io.flexwork.modules.usermanagement.domain.User;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -15,7 +16,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Table(name = "fw_requests")
+@Table(name = "fw_team_request")
 @Data
 @Builder
 @NoArgsConstructor
@@ -27,22 +28,23 @@ public class TeamRequest {
     private Long id;
 
     @ManyToOne
+    @JoinColumn(name = "team_id", nullable = false)
+    private Team team;
+
+    @ManyToOne
     @JoinColumn(name = "workflow_id", nullable = false)
     private Workflow workflow;
 
     @ManyToOne
-    @JoinColumn(name = "current_status_id", nullable = false)
-    private WorkflowStatus currentStatus;
+    @JoinColumn(name = "request_user_id", nullable = false)
+    private User requestUser;
 
     @ManyToOne
-    @JoinColumn(name = "created_by", nullable = false)
-    private User createdBy;
+    @JoinColumn(name = "assign_user_id")
+    private User assignUser;
 
-    private LocalDateTime createdAt;
-
-    @ManyToOne
-    @JoinColumn(name = "updated_by")
-    private User updatedBy;
-
-    private LocalDateTime updatedAt;
+    private String requestTitle;
+    private String requestDescription;
+    private LocalDateTime createdDate;
+    private String currentState;
 }

@@ -8,43 +8,43 @@ import lombok.Data;
 @Builder
 public class AccountDTO {
 
-    private Long id; // Unique identifier for the account
+    private Long id;
 
-    private String name; // Name of the account
+    private String name;
 
-    private String type; // Type of the account (e.g., customer, vendor)
+    private String type;
 
-    private String industry; // Industry in which the account operates
+    private String industry;
 
-    private String website; // Website URL for the account
+    private String website;
 
-    private String phoneNumber; // Contact phone number
+    private String phoneNumber;
 
-    private String email; // Email address
+    private String email;
 
-    private String addressLine1; // First line of address
+    private String addressLine1;
 
-    private String addressLine2; // Second line of address (optional)
+    private String addressLine2;
 
-    private String city; // City where the account is located
+    private String city;
 
-    private String state; // State or region of the account
+    private String state;
 
-    private String postalCode; // Postal code
+    private String postalCode;
 
-    private String country; // Country of the account
+    private String country;
 
-    private String annualRevenue; // Annual revenue of the account (if applicable)
+    private String annualRevenue;
 
-    private Long parentAccountId; // ID of the parent account (if any)
+    private Long parentAccountId;
 
-    private LocalDateTime createdAt; // Creation timestamp
+    private LocalDateTime createdAt;
 
-    private LocalDateTime updatedAt; // Last update timestamp
+    private LocalDateTime updatedAt;
 
-    private String status; // Current status of the account
+    private String status;
 
-    private Long assignedToUserId; // ID of the user the account is assigned to
+    private Long assignedToUserId;
 
-    private String notes; // Additional notes or details about the account
+    private String notes;
 }

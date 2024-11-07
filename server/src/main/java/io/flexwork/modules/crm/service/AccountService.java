@@ -38,7 +38,6 @@ public class AccountService {
         this.accountMapper = accountMapper;
     }
 
-    // Find an account by its ID
     public Optional<AccountDTO> findAccountById(Long accountId) {
         return accountRepository.findById(accountId).map(accountMapper::accountToAccountDTO);
     }
@@ -72,7 +71,6 @@ public class AccountService {
                                         new EntityNotFoundException(
                                                 "Account not found with id: " + accountId));
 
-        // Step 2: Update the fields of the existing account with the new details
         existingAccount.setName(accountEntityDetails.getName());
         existingAccount.setType(accountEntityDetails.getType());
         existingAccount.setIndustry(accountEntityDetails.getIndustry());

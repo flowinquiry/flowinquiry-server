@@ -9,8 +9,8 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 
 @Entity
-@Table(name = "fw_workflow_transitions")
-public class WorkflowTransition {
+@Table(name = "fw_workflow_states")
+public class WorkflowState {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -20,8 +20,7 @@ public class WorkflowTransition {
     @JoinColumn(name = "workflow_id", nullable = false)
     private Workflow workflow;
 
-    private String sourceState;
-    private String targetState;
-    private String eventName;
-    private Long slaDuration;
+    private String stateName;
+    private Boolean isInitial;
+    private Boolean isFinal;
 }

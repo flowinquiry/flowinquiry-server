@@ -27,23 +27,30 @@ public class ContactService {
         this.contactMapper = contactMapper;
     }
 
-    public Page<Contact> findByAccountId(Long accountId, Pageable pageable) {
-        return contactRepository.findByAccountId(accountId, pageable);
+    public Page<ContactDTO> findByAccountId(Long accountId, Pageable pageable) {
+        return contactRepository
+                .findByAccountId(accountId, pageable)
+                .map(contactMapper::contactToContactDTO);
     }
 
-    public Optional<Contact> getContactById(Long id) {
-        return contactRepository.findById(id);
+    public Optional<ContactDTO> getContactById(Long id) {
+        return contactRepository.findById(id).map(contactMapper::contactToContactDTO);
     }
 
-    public Contact createContact(Contact contact) {
-        return contactRepository.save(contact);
+    public ContactDTO createContact(ContactDTO contact) {
+        return contactMapper.contactToContactDTO(
+                contactRepository.save(contactMapper.contactDTOToContact(contact)));
     }
 
-    public Contact updateContact(Long id, Contact contactDetails) {
+    public ContactDTO updateContact(ContactDTO contactDetails) {
         Contact contact =
                 contactRepository
-                        .findById(id)
-                        .orElseThrow(() -> new RuntimeException("Contact not found with id " + id));
+                        .findById(contactDetails.getId())
+                        .orElseThrow(
+                                () ->
+                                        new RuntimeException(
+                                                "Contact not found with id "
+                                                        + contactDetails.getId()));
 
         contact.setFirstName(contactDetails.getFirstName());
         contact.setLastName(contactDetails.getLastName());
@@ -52,7 +59,7 @@ public class ContactService {
         contact.setPosition(contactDetails.getPosition());
         contact.setNotes(contactDetails.getNotes());
 
-        return contactRepository.save(contact);
+        return contactMapper.contactToContactDTO(contactRepository.save(contact));
     }
 
     public void deleteContact(Long id) {

@@ -2,7 +2,6 @@ package io.flexwork.modules.usermanagement.web.rest;
 
 import io.flexwork.modules.usermanagement.domain.Authority;
 import io.flexwork.modules.usermanagement.repository.AuthorityRepository;
-import io.flexwork.modules.usermanagement.web.rest.errors.BadRequestAlertException;
 import jakarta.validation.Valid;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -50,9 +49,7 @@ public class AuthorityController {
     public ResponseEntity<Authority> createAuthority(@Valid @RequestBody Authority authority)
             throws URISyntaxException {
         LOG.debug("REST request to save Authority : {}", authority);
-        if (authorityRepository.existsById(authority.getName())) {
-            throw new BadRequestAlertException("authority already exists", ENTITY_NAME, "idexists");
-        }
+
         authority = authorityRepository.save(authority);
         return ResponseEntity.created(new URI("/api/authorities/" + authority.getName()))
                 .headers(

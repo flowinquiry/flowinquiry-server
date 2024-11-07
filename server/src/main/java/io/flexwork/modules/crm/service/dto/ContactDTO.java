@@ -10,7 +10,7 @@ public class ContactDTO {
 
     private Long id;
 
-    private Long accountId; // Assuming that you want to reference the Account by its ID in the DTO
+    private Long accountId;
 
     private String accountName;
 

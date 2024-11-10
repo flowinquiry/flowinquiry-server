@@ -64,28 +64,27 @@ done
 
 
 # Define the output script that will store the sensitive data
-output_script=".env.local"
+output_file=".env.local"
 
-# Create a backup if the file already exists
-if [ -f "$output_script" ]; then
-  cp "$output_script" "${output_script}.backup"
-  echo "Backup of .env.local created as .env.local.backup"
+# Check if the file exists; if not, create it
+if [ ! -f "$output_file" ]; then
+  touch "$output_file"
 fi
 
 # Function to add or update a key-value pair in the .env.local file
 add_or_update_env_var() {
   local key="$1"
   local value="$2"
-  if grep -q "^$key=" "$output_script" 2>/dev/null; then
+  if grep -q "^$key=" "$output_file" 2>/dev/null; then
     # If key exists, update its value
     if [[ "$OSTYPE" == "darwin"* ]]; then
-      sed -i '' "s|^$key=.*|$key=$value|" "$output_script" # macOS
+      sed -i '' "s|^$key=.*|$key=$value|" "$output_file" # macOS
     else
-      sed -i "s|^$key=.*|$key=$value|" "$output_script" # Linux
+      sed -i "s|^$key=.*|$key=$value|" "$output_file" # Linux
     fi
   else
     # If key does not exist, add it to the file
-    echo "$key=$value" >> "$output_script"
+    echo "$key=$value" >> "$output_file"
   fi
 }
 
@@ -99,7 +98,7 @@ add_or_update_env_var "spring.mail.username" "$smtp_username"
 add_or_update_env_var "spring.mail.password" "$smtp_password"
 add_or_update_env_var "spring.mail.properties.mail.smtp.auth" "true"
 add_or_update_env_var "flexwork.mail.from" $sender_email
-add_or_update_env_var "flexwork.mail.base-url" $base_url_email
+add_or_update_env_var "flexwork.mail.base_url" $base_url_email
 
 # Add STARTTLS settings if required
 if [[ "$requires_starttls" == "y" ]]; then
@@ -108,5 +107,5 @@ if [[ "$requires_starttls" == "y" ]]; then
 fi
 
 # Set permissions to restrict access to the file
-chmod 644 "$output_script"
+chmod 644 "$output_file"
 echo "Configuration has been saved to .env.local"

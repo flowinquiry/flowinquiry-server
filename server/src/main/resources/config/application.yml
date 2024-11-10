@@ -31,17 +31,9 @@ management:
           - env
           - health
           - info
-          - jhimetrics
-          - jhiopenapigroups
-          - logfile
-          - loggers
           - prometheus
-          - threaddump
-          - caches
-          - liquibase
   endpoint:
     health:
-      show-details: when_authorized
       roles: 'ROLE_ADMIN'
       probes:
         enabled: true

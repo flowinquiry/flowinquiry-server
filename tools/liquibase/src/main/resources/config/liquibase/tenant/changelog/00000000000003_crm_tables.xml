@@ -6,7 +6,7 @@
         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
 
 	<!-- ChangeSet for creating the 'account' table -->
-	<changeSet id="00000000000003:crm_module" author="flexapp">
+	<changeSet id="00000000000003:01_crm_module" author="flexapp">
 
 		<createTable tableName="fw_crm_account">
 			<column name="id" type="bigint">
@@ -357,7 +357,10 @@
 			<column name="entity_type" />
 			<column name="value_key" />
 		</createIndex>
-
+	</changeSet>
+	<changeSet
+		id="00000000000003:02-insert-crm-value-definitions-data"
+		author="flexapp">
 		<loadData
 			file="config/liquibase/tenant/data/fw_crm_value_definitions.csv"
 			separator=";" tableName="fw_crm_value_definitions"
@@ -368,7 +371,9 @@
 			<column name="description" type="text" />
 			<column name="is_default" type="boolean" />
 		</loadData>
-
+	</changeSet>
+	<changeSet id="00000000000003:03-insert-crm-account-data"
+		author="flexapp">
 		<loadData
 			file="config/liquibase/tenant/data/fw_crm_account.csv" separator=";"
 			tableName="fw_crm_account" dateFormat="yyyy-MM-dd HH:mm:ss">
@@ -393,7 +398,9 @@
 			<column name="assigned_to_user_id" type="NUMERIC" />
 			<column name="notes" type="STRING" />
 		</loadData>
-
+	</changeSet>
+	<changeSet id="00000000000003:04-insert-crm-contact-data"
+		author="flexapp">
 		<loadData
 			file="config/liquibase/tenant/data/fw_crm_contact.csv" separator=";"
 			tableName="fw_crm_contact" dateFormat="yyyy-MM-dd HH:mm:ss">

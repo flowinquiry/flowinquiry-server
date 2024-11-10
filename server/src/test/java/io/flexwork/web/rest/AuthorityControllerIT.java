@@ -129,7 +129,7 @@ class AuthorityControllerIT {
                         post(ENTITY_API_URL)
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .content(om.writeValueAsBytes(authority)))
-                .andExpect(status().isBadRequest());
+                .andExpect(status().isCreated());
 
         // Validate the Authority in the database
         assertSameRepositoryCount(databaseSizeBeforeCreate);

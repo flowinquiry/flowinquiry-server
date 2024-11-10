@@ -15,6 +15,8 @@ public class FlexworkProperties {
 
     private final Cache cache = new Cache();
 
+    private final Security security = new Security();
+
     private final CorsConfiguration cors = new CorsConfiguration();
 
     @Getter
@@ -45,6 +47,24 @@ public class FlexworkProperties {
         @Setter
         public static class Cache {
             private int timeToLiveInDays = 1461;
+        }
+    }
+
+    @Getter
+    public static class Security {
+        private final Authentication authentication = new Authentication();
+
+        @Getter
+        public static class Authentication {
+            final Jwt jwt = new Jwt();
+
+            @Getter
+            @Setter
+            public static class Jwt {
+                private String base64Secret;
+                private long tokenValidityInSeconds;
+                private long tokenValidityInSecondsForRememberMe;
+            }
         }
     }
 }

@@ -20,21 +20,21 @@
 	</appender>
 
 	<!-- File appender with masking for error and custom logs only -->
-	<appender name="MASKED_FILE"
-		class="ch.qos.logback.core.FileAppender">
-		<file>logs/masked-log.log</file>
-		<encoder>
-			<pattern>%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} -
-				%mask{%msg}%n</pattern>
-		</encoder>
+	<!-- <appender name="MASKED_FILE" -->
+	<!-- class="ch.qos.logback.core.FileAppender"> -->
+	<!-- <file>./logs/masked-log.log</file> -->
+	<!-- <encoder> -->
+	<!-- <pattern>%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - -->
+	<!-- %mask{%msg}%n</pattern> -->
+	<!-- </encoder> -->
 
-		<!-- Filter to include only ERROR level logs -->
-		<filter class="ch.qos.logback.classic.filter.LevelFilter">
-			<level>ERROR</level>
-			<onMatch>ACCEPT</onMatch>
-			<onMismatch>DENY</onMismatch>
-		</filter>
-	</appender>
+	<!-- &lt;!&ndash; Filter to include only ERROR level logs &ndash;&gt; -->
+	<!-- <filter class="ch.qos.logback.classic.filter.LevelFilter"> -->
+	<!-- <level>ERROR</level> -->
+	<!-- <onMatch>ACCEPT</onMatch> -->
+	<!-- <onMismatch>DENY</onMismatch> -->
+	<!-- </filter> -->
+	<!-- </appender> -->
 
 	<include
 		resource="org/springframework/boot/logging/logback/defaults.xml" />
@@ -49,7 +49,6 @@
 	<logger name="jakarta.management.remote" level="WARN" />
 	<logger name="jakarta.xml.bind" level="WARN" />
 	<logger name="jdk.event.security" level="INFO" />
-	<logger name="com.ryantenney" level="WARN" />
 	<logger name="com.sun" level="WARN" />
 	<logger name="com.zaxxer" level="WARN" />
 	<logger name="io.undertow" level="WARN" />
@@ -63,8 +62,8 @@
 	<logger name="org.hibernate.ejb.HibernatePersistence"
 		level="OFF" />
 	<logger name="org.postgresql" level="WARN" />
-	<logger name="org.springframework" level="INFO" />
-	<logger name="org.springframework.web" level="INFO" />
+	<logger name="org.springframework" level="WARN" />
+	<logger name="org.springframework.web" level="WARN" />
 	<logger name="org.springframework.security" level="INFO" />
 	<logger name="org.springframework.boot.autoconfigure.logging"
 		level="INFO" />
@@ -87,7 +86,7 @@
 		source="logging.level.root" defaultValue="INFO" />
 	<root level="${log.level}">
 		<appender-ref ref="CONSOLE" />
-		<appender-ref ref="MASKED_FILE" />
+		<!-- <appender-ref ref="MASKED_FILE" /> -->
 	</root>
 
 	<contextListener

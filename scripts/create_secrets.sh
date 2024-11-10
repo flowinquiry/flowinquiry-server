@@ -5,7 +5,7 @@ read -sp "Enter your database password: " db_password
 echo
 
 # Define the output script that will store the sensitive data
-output_script="./.env.local"
+output_file="./.env.local"
 
 # Function to update or add key-value pairs
 update_or_add() {
@@ -24,12 +24,12 @@ update_or_add() {
 }
 
 # Create the file if it doesn't exist
-if [ ! -f "$output_script" ]; then
-  echo "#!/bin/bash" > "$output_script"
+if [ ! -f "$output_file" ]; then
+  echo "#!/bin/bash" > "$output_file"
 fi
 
 # Write the sensitive data to the output script
-update_or_add "POSTGRES_PASSWORD" "$db_password" "$output_script"
+update_or_add "POSTGRES_PASSWORD" "$db_password" "$output_file"
 
 # Generate a random alphanumeric string with a length of 50
 random_string=$(LC_CTYPE=C tr -dc 'a-zA-Z0-9' < /dev/urandom | fold -w 90 | head -n 1)
@@ -38,9 +38,9 @@ random_string=$(LC_CTYPE=C tr -dc 'a-zA-Z0-9' < /dev/urandom | fold -w 90 | head
 encoded_string=$(echo -n "$random_string" | base64)
 echo $encoded_string
 
-update_or_add "JWT_BASE64_SECRET" "$encoded_string" "$output_script"
+update_or_add "JWT_BASE64_SECRET" "$encoded_string" "$output_file"
 
 # Set permissions to restrict access to the file
-chmod 644 "$output_script"
+chmod 644 "$output_file"
 
-echo "Sensitive data has been written to $output_script with restricted permissions."
+echo "Sensitive data has been written to $output_file with restricted permissions."

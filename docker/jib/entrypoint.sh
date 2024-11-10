@@ -31,8 +31,5 @@ file_env() {
 file_env 'SPRING_DATASOURCE_URL'
 file_env 'SPRING_DATASOURCE_USERNAME'
 file_env 'SPRING_DATASOURCE_PASSWORD'
-file_env 'SPRING_LIQUIBASE_URL'
-file_env 'SPRING_LIQUIBASE_USER'
-file_env 'SPRING_LIQUIBASE_PASSWORD'
 
-exec java ${JAVA_OPTS} -noverify -XX:+AlwaysPreTouch -Djava.security.egd=file:/dev/./urandom -cp /app/resources/:/app/classes/:/app/libs/* "io.flexwork.FlexworkApp"  "$@"
+exec java ${JAVA_OPTS} -XX:+AlwaysPreTouch -Djava.security.egd=file:/dev/./urandom -cp /app/resources/:/app/classes/:/app/libs/* "io.flexwork.FlexworkApp"  "$@"

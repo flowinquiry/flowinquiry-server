@@ -7,13 +7,14 @@ jib {
         image = "eclipse-temurin:17-jre-focal"
         platforms {
             platform {
-                architecture = "${findProperty('jibArchitecture') ?: 'amd64'}"
                 os = "linux"
+                architecture = "amd64"
             }
         }
     }
     to {
-        image = "theflexwork/flexwork-server-community:latest"
+        image = "theflexwork/flexwork-server"
+        tags = ['latest', findProperty('projectVersion')]
     }
     container {
         entrypoint = ["bash", "-c", "/entrypoint.sh"]

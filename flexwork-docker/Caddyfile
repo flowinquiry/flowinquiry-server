@@ -1,16 +1,10 @@
-local.flexwork.io {
+local.flexwork.io, localhost {
     @http {
         protocol http
     }
     redir @http https://{host}{uri}
 
     tls internal
-    # Reverse proxy for the front-end (e.g., Next.js)
-    reverse_proxy  /* host.docker.internal:3000
-
-    # Reverse proxy for the back-end (e.g., API)
-    #reverse_proxy /api/* host.docker.internal:8080
-
-    # Optional: Handle requests that don't match a specific path
-    #file_server
+    # Reverse proxy for the front-end
+    reverse_proxy /* front-end:3000
 }

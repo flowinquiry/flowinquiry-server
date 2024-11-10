@@ -15,7 +15,7 @@ public class OrganizationMapperTest {
     private OrganizationMapper organizationMapper = Mappers.getMapper(OrganizationMapper.class);
 
     @Test
-    void testOrganizationToOrganizationDTO() {
+    void testToDto() {
         Organization organization =
                 Organization.builder()
                         .id(1L)
@@ -25,8 +25,7 @@ public class OrganizationMapperTest {
                                         Team.builder().id(1L).name("Team1").build(),
                                         Team.builder().id(2L).name("Team2").build()))
                         .build();
-        OrganizationDTO organizationDTO =
-                organizationMapper.organizationToOrganizationDTO(organization);
+        OrganizationDTO organizationDTO = organizationMapper.toDto(organization);
         assertAll(
                 () -> assertEquals(organization.getId(), organizationDTO.getId()),
                 () -> assertEquals(organization.getDescription(), organizationDTO.getDescription()),

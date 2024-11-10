@@ -7,7 +7,7 @@ import org.mapstruct.Mapper;
 @Mapper(componentModel = "spring")
 public interface AuthorityMapper {
 
-    AuthorityDTO authorityToAuthorityDTO(Authority authority);
+    AuthorityDTO toDto(Authority authority);
 
-    Authority authorityDTOToAuthority(AuthorityDTO authorityDTO);
+    Authority toEntity(AuthorityDTO authorityDTO);
 }

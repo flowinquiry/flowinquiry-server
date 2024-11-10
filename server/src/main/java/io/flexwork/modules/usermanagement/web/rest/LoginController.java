@@ -78,7 +78,7 @@ public class LoginController {
         UserDTO adminUserDTO =
                 userService
                         .getUserWithAuthorities()
-                        .map(value -> userMapper.userToUserDTO(value))
+                        .map(value -> userMapper.toDto(value))
                         .orElseThrow(() -> new InvalidLoginException());
 
         String jwt = this.createToken(authentication, loginVM.isRememberMe());

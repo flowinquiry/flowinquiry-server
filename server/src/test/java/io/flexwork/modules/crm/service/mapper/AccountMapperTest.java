@@ -13,7 +13,7 @@ public class AccountMapperTest {
     private AccountMapper accountMapper = Mappers.getMapper(AccountMapper.class);
 
     @Test
-    public void testAccountDTOToAccount() {
+    public void testToEntity() {
         AccountDTO accountDTO =
                 AccountDTO.builder()
                         .id(1L)
@@ -21,7 +21,7 @@ public class AccountMapperTest {
                         .assignedToUserId(1L)
                         .industry("industry")
                         .build();
-        Account account = accountMapper.accountDTOToAccount(accountDTO);
+        Account account = accountMapper.toEntity(accountDTO);
         assertAll(
                 () -> assertEquals(accountDTO.getIndustry(), account.getIndustry()),
                 () -> assertEquals(accountDTO.getType(), account.getType()),
@@ -38,9 +38,9 @@ public class AccountMapperTest {
     }
 
     @Test
-    public void testAccountToAccountDTO() {
+    public void testToDto() {
         Account account = Account.builder().id(1L).name("accountName").build();
-        AccountDTO accountDTO = accountMapper.accountToAccountDTO(account);
+        AccountDTO accountDTO = accountMapper.toDto(account);
         assertAll(
                 () -> assertEquals(account.getName(), accountDTO.getName()),
                 () -> assertNull(accountDTO.getAssignedToUserId()),
@@ -53,7 +53,7 @@ public class AccountMapperTest {
                         .parentAccount(account)
                         .assignedToUser(User.builder().id(1L).build())
                         .build();
-        AccountDTO accountDTO2 = accountMapper.accountToAccountDTO(account2);
+        AccountDTO accountDTO2 = accountMapper.toDto(account2);
         assertAll(
                 () -> assertEquals(account2.getName(), accountDTO.getName()),
                 () ->
@@ -77,7 +77,7 @@ public class AccountMapperTest {
                         .build();
 
         Account account = Account.builder().id(1L).name("accountName").build();
-        accountMapper.updateAccountFromDTO(accountDTO, account);
+        accountMapper.updateFromDto(accountDTO, account);
         assertAll(
                 () -> assertEquals("accountName", account.getName()),
                 () -> assertEquals("industry", account.getIndustry()),

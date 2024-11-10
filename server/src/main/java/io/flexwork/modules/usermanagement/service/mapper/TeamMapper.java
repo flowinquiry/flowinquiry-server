@@ -11,17 +11,17 @@ import org.mapstruct.MappingTarget;
 public interface TeamMapper {
 
     @Mapping(target = "organizationId", source = "organization.id")
-    TeamDTO teamToTeamDTO(Team team);
+    TeamDTO toDto(Team team);
 
     @Mapping(
             target = "organization",
             expression = "java(ofOrganization(teamDTO.getOrganizationId()))")
-    Team teamDTOToTeam(TeamDTO teamDTO);
+    Team toEntity(TeamDTO teamDTO);
 
     @Mapping(
             target = "organization",
             expression = "java(ofOrganization(teamDTO.getOrganizationId()))")
-    void updateTeamFromDTO(TeamDTO teamDTO, @MappingTarget Team team);
+    void updateFromDto(TeamDTO teamDTO, @MappingTarget Team team);
 
     default Organization ofOrganization(Long organizationId) {
         return (organizationId == null) ? null : Organization.builder().id(organizationId).build();

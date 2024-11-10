@@ -28,18 +28,15 @@ public class ContactService {
     }
 
     public Page<ContactDTO> findByAccountId(Long accountId, Pageable pageable) {
-        return contactRepository
-                .findByAccountId(accountId, pageable)
-                .map(contactMapper::contactToContactDTO);
+        return contactRepository.findByAccountId(accountId, pageable).map(contactMapper::toDto);
     }
 
     public Optional<ContactDTO> getContactById(Long id) {
-        return contactRepository.findById(id).map(contactMapper::contactToContactDTO);
+        return contactRepository.findById(id).map(contactMapper::toDto);
     }
 
     public ContactDTO createContact(ContactDTO contact) {
-        return contactMapper.contactToContactDTO(
-                contactRepository.save(contactMapper.contactDTOToContact(contact)));
+        return contactMapper.toDto(contactRepository.save(contactMapper.toEntity(contact)));
     }
 
     public ContactDTO updateContact(ContactDTO contactDetails) {
@@ -59,7 +56,7 @@ public class ContactService {
         contact.setPosition(contactDetails.getPosition());
         contact.setNotes(contactDetails.getNotes());
 
-        return contactMapper.contactToContactDTO(contactRepository.save(contact));
+        return contactMapper.toDto(contactRepository.save(contact));
     }
 
     public void deleteContact(Long id) {
@@ -74,16 +71,14 @@ public class ContactService {
     @Transactional(readOnly = true)
     public Page<ContactDTO> findContacts(Optional<QueryDTO> queryDTO, Pageable pageable) {
         Specification<Contact> spec = createSpecification(queryDTO);
-        return contactRepository.findAll(spec, pageable).map(contactMapper::contactToContactDTO);
+        return contactRepository.findAll(spec, pageable).map(contactMapper::toDto);
     }
 
     public Optional<ContactDTO> getNextEntity(Long currentId) {
-        return contactRepository.findNextEntity(currentId).map(contactMapper::contactToContactDTO);
+        return contactRepository.findNextEntity(currentId).map(contactMapper::toDto);
     }
 
     public Optional<ContactDTO> getPreviousEntity(Long currentId) {
-        return contactRepository
-                .findPreviousEntity(currentId)
-                .map(contactMapper::contactToContactDTO);
+        return contactRepository.findPreviousEntity(currentId).map(contactMapper::toDto);
     }
 }

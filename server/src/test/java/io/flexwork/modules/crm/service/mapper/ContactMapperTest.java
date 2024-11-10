@@ -13,10 +13,10 @@ public class ContactMapperTest {
     private ContactMapper contactMapper = Mappers.getMapper(ContactMapper.class);
 
     @Test
-    public void testContactDTOToContact() {
+    public void testToEntity() {
         ContactDTO contactDTO =
                 ContactDTO.builder().id(1L).accountId(1L).firstName("firstName").build();
-        Contact contact = contactMapper.contactDTOToContact(contactDTO);
+        Contact contact = contactMapper.toEntity(contactDTO);
         assertAll(
                 () -> assertEquals(contactDTO.getId(), contact.getId()),
                 () -> assertEquals(contactDTO.getFirstName(), contact.getFirstName()),
@@ -25,14 +25,14 @@ public class ContactMapperTest {
     }
 
     @Test
-    public void testContactToContactDTO() {
+    public void testToDto() {
         Contact contact =
                 Contact.builder()
                         .id(1L)
                         .account(Account.builder().id(1L).build())
                         .firstName("firstName")
                         .build();
-        ContactDTO contactDTO = contactMapper.contactToContactDTO(contact);
+        ContactDTO contactDTO = contactMapper.toDto(contact);
         assertAll(
                 () -> assertEquals(contact.getFirstName(), contactDTO.getFirstName()),
                 () -> assertEquals(contact.getId(), contactDTO.getId()),

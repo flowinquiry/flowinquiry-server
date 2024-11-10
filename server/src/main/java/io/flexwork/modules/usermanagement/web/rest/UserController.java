@@ -191,8 +191,7 @@ public class UserController {
             userDTO.setImageUrl(avatarPath);
         }
 
-        Optional<UserDTO> updatedUser =
-                userService.updateUser(userDTO).map(userMapper::userToUserDTO);
+        Optional<UserDTO> updatedUser = userService.updateUser(userDTO).map(userMapper::toDto);
 
         return ResponseUtil.wrapOrNotFound(
                 updatedUser,
@@ -217,7 +216,7 @@ public class UserController {
         }
 
         final Page<UserDTO> page =
-                userService.findAllManagedUsers(queryDTO, pageable).map(userMapper::userToUserDTO);
+                userService.findAllManagedUsers(queryDTO, pageable).map(userMapper::toDto);
         HttpHeaders headers =
                 PaginationUtil.generatePaginationHttpHeaders(
                         ServletUriComponentsBuilder.fromCurrentRequest(), page);

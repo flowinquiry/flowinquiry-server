@@ -12,7 +12,7 @@ public interface AccountMapper {
     // Mapping from entity to DTO
     @Mapping(target = "parentAccountId", source = "parentAccount.id")
     @Mapping(target = "assignedToUserId", source = "assignedToUser.id")
-    AccountDTO accountToAccountDTO(Account account);
+    AccountDTO toDto(Account account);
 
     // Mapping from DTO to entity
     @Mapping(
@@ -21,7 +21,7 @@ public interface AccountMapper {
     @Mapping(
             target = "parentAccount",
             expression = "java(ofParentAccount(accountDTO.getParentAccountId()))")
-    Account accountDTOToAccount(AccountDTO accountDTO);
+    Account toEntity(AccountDTO accountDTO);
 
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
     @Mapping(
@@ -30,7 +30,7 @@ public interface AccountMapper {
     @Mapping(
             target = "parentAccount",
             expression = "java(ofParentAccount(accountDTO.getParentAccountId()))")
-    void updateAccountFromDTO(AccountDTO accountDTO, @MappingTarget Account account);
+    void updateFromDto(AccountDTO accountDTO, @MappingTarget Account account);
 
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "entityType", constant = "ACCOUNT")

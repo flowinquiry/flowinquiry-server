@@ -11,13 +11,13 @@ import org.mapstruct.MappingTarget;
 public interface ContactMapper {
     @Mapping(source = "account.id", target = "accountId")
     @Mapping(source = "account.name", target = "accountName")
-    ContactDTO contactToContactDTO(Contact contact);
+    ContactDTO toDto(Contact contact);
 
     @Mapping(target = "account", expression = "java(ofAccount(contactDTO.getAccountId()))")
-    Contact contactDTOToContact(ContactDTO contactDTO);
+    Contact toEntity(ContactDTO contactDTO);
 
     @Mapping(target = "account", expression = "java(ofAccount(contactDTO.getAccountId()))")
-    void updateContactFromContactDTO(ContactDTO contactDTO, @MappingTarget Contact contact);
+    void updateFromDto(ContactDTO contactDTO, @MappingTarget Contact contact);
 
     default Account ofAccount(Long accountId) {
         Account account = new Account();

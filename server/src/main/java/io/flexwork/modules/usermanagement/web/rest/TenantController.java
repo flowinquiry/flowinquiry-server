@@ -27,12 +27,12 @@ public class TenantController {
 
     @PostMapping("/tenants")
     public TenantDTO createTenant(@RequestBody TenantDTO tenantDTO) {
-        Tenant tenant = tenantMapper.tenantDtoToTenant(tenantDTO);
-        return tenantMapper.tenantToTenantDto(tenantService.registerNewTenant(tenant));
+        Tenant tenant = tenantMapper.toEntity(tenantDTO);
+        return tenantMapper.toDto(tenantService.registerNewTenant(tenant));
     }
 
     @GetMapping("/tenants")
     public Page<TenantDTO> findAllTenants(Pageable pageable) {
-        return tenantService.findAllTenants(pageable).map(tenantMapper::tenantToTenantDto);
+        return tenantService.findAllTenants(pageable).map(tenantMapper::toDto);
     }
 }

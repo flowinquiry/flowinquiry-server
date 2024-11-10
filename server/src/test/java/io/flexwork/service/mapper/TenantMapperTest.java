@@ -15,7 +15,7 @@ public class TenantMapperTest {
     private TenantMapper tenantMapper = Mappers.getMapper(TenantMapper.class);
 
     @Test
-    public void testTenantDtoToTenant() {
+    public void testToEntity() {
         TenantDTO tenantDTO =
                 TenantDTO.builder()
                         .id(1L)
@@ -25,7 +25,7 @@ public class TenantMapperTest {
                         .domain("domain")
                         .build();
 
-        Tenant tenant = tenantMapper.tenantDtoToTenant(tenantDTO);
+        Tenant tenant = tenantMapper.toEntity(tenantDTO);
         assertAll(
                 () -> assertEquals(1L, tenant.getId()),
                 () -> assertEquals("test", tenant.getName()),
@@ -35,7 +35,7 @@ public class TenantMapperTest {
     }
 
     @Test
-    public void testTenantToTenantDTO() {
+    public void testToDTO() {
         Tenant tenant =
                 Tenant.builder()
                         .nameId("nameId")
@@ -45,7 +45,7 @@ public class TenantMapperTest {
                         .logoUrl("logoUrl")
                         .description("description")
                         .build();
-        TenantDTO tenantDTO = tenantMapper.tenantToTenantDto(tenant);
+        TenantDTO tenantDTO = tenantMapper.toDto(tenant);
         assertAll(
                 () -> assertEquals(1L, tenantDTO.getId()),
                 () -> assertEquals("name", tenantDTO.getName()),

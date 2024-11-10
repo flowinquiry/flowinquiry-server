@@ -67,7 +67,6 @@ public class OrganizationController {
     public ResponseEntity<Page<OrganizationDTO>> findOrganizations(
             @RequestBody Optional<QueryDTO> queryDTO, Pageable pageable) {
         Page<Organization> teams = organizationService.findOrganizations(queryDTO, pageable);
-        return new ResponseEntity<>(
-                teams.map(organizationMapper::organizationToOrganizationDTO), HttpStatus.OK);
+        return new ResponseEntity<>(teams.map(organizationMapper::toDto), HttpStatus.OK);
     }
 }

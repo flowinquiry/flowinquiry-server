@@ -308,7 +308,7 @@ class UserAccountControllerIT {
                 .isEqualTo("test-register-duplicate-email@example.com");
 
         testUser4.orElseThrow().setActivated(true);
-        userService.updateUser(userMapper.userToUserDTO(testUser4.orElseThrow()));
+        userService.updateUser(userMapper.toDto(testUser4.orElseThrow()));
 
         userService.deleteUserByEmail("test-register-duplicate-email@example.com");
     }

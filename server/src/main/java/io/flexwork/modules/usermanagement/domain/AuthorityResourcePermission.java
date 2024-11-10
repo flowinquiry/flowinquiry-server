@@ -3,25 +3,36 @@ package io.flexwork.modules.usermanagement.domain;
 import jakarta.persistence.*;
 import lombok.*;
 
-@Entity
-@Table(name = "fw_authority_resource_permission")
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@Entity
+@Table(name = "fw_authority_resource_permission")
+@IdClass(AuthorityResourcePermissionId.class) // Composite key class
 public class AuthorityResourcePermission {
+    @Id
+    @Column(name = "authority_name")
+    private String authorityName;
 
-    @EmbeddedId private AuthorityResourcePermissionId id;
+    @Id
+    @Column(name = "resource_name")
+    private String resourceName;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @MapsId("authorityName")
+    @Id private Permission permission;
+
+    @ManyToOne
+    @JoinColumn(name = "authority_name", insertable = false, updatable = false)
     private Authority authority;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @MapsId(value = "resourceName")
+    @ManyToOne
+    @JoinColumn(name = "resource_name", insertable = false, updatable = false)
     private Resource resource;
 
-    @Column(name = "permission", nullable = false, insertable = false, updatable = false)
-    @Enumerated(EnumType.STRING)
-    private Permission permission;
+    public AuthorityResourcePermission(
+            String authorityName, String resourceName, Permission permission) {
+        this.authorityName = authorityName;
+        this.resourceName = resourceName;
+        this.permission = permission;
+    }
 }

@@ -13,7 +13,7 @@ import org.mapstruct.Mapping;
 public interface OrganizationMapper {
 
     @Mapping(target = "teams", expression = "java(mapTeamsForIdOnly(organization.getTeams()))")
-    OrganizationDTO organizationToOrganizationDTO(Organization organization);
+    OrganizationDTO toDto(Organization organization);
 
     Organization organizationDTOToOrganization(OrganizationDTO organizationDTO);
 

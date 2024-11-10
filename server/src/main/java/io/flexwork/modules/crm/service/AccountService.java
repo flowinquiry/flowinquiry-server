@@ -39,14 +39,14 @@ public class AccountService {
     }
 
     public Optional<AccountDTO> findAccountById(Long accountId) {
-        return accountRepository.findById(accountId).map(accountMapper::accountToAccountDTO);
+        return accountRepository.findById(accountId).map(accountMapper::toDto);
     }
 
     // Save a new account or update an existing one
     public AccountDTO saveAccount(AccountDTO account) {
         Account accountEntity =
                 activityServiceWrapper.saveEntity(
-                        accountMapper.accountDTOToAccount(account),
+                        accountMapper.toEntity(account),
                         accountRepository,
                         (savedAccount) ->
                                 new ActivityLogEvent(
@@ -57,11 +57,11 @@ public class AccountService {
                                                 SecurityUtils.getCurrentUserLogin()
                                                         .map(UserKey::getId)
                                                         .orElse(null))));
-        return accountMapper.accountToAccountDTO(accountEntity);
+        return accountMapper.toDto(accountEntity);
     }
 
     public AccountDTO updateAccount(Long accountId, AccountDTO accountDetails) {
-        Account accountEntityDetails = accountMapper.accountDTOToAccount(accountDetails);
+        Account accountEntityDetails = accountMapper.toEntity(accountDetails);
 
         Account existingAccount =
                 accountRepository
@@ -90,7 +90,7 @@ public class AccountService {
         existingAccount.setNotes(accountEntityDetails.getNotes());
 
         // Step 3: Save the updated account
-        return accountMapper.accountToAccountDTO(accountRepository.save(existingAccount));
+        return accountMapper.toDto(accountRepository.save(existingAccount));
     }
 
     // Delete an account by its ID
@@ -105,16 +105,14 @@ public class AccountService {
 
     public Page<AccountDTO> findAccounts(Optional<QueryDTO> queryDTO, Pageable pageable) {
         Specification<Account> spec = createSpecification(queryDTO);
-        return accountRepository.findAll(spec, pageable).map(accountMapper::accountToAccountDTO);
+        return accountRepository.findAll(spec, pageable).map(accountMapper::toDto);
     }
 
     public Optional<AccountDTO> getNextEntity(Long currentId) {
-        return accountRepository.findNextEntity(currentId).map(accountMapper::accountToAccountDTO);
+        return accountRepository.findNextEntity(currentId).map(accountMapper::toDto);
     }
 
     public Optional<AccountDTO> getPreviousEntity(Long currentId) {
-        return accountRepository
-                .findPreviousEntity(currentId)
-                .map(accountMapper::accountToAccountDTO);
+        return accountRepository.findPreviousEntity(currentId).map(accountMapper::toDto);
     }
 }

@@ -7,7 +7,7 @@ import org.mapstruct.Mapper;
 @Mapper(componentModel = "spring")
 public interface TenantMapper {
 
-    Tenant tenantDtoToTenant(TenantDTO tenantDTO);
+    Tenant toEntity(TenantDTO tenantDTO);
 
-    TenantDTO tenantToTenantDto(Tenant tenant);
+    TenantDTO toDto(Tenant tenant);
 }

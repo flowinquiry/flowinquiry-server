@@ -29,8 +29,8 @@ public class TeamService {
     }
 
     public TeamDTO createTeam(TeamDTO teamDTO) {
-        Team team = teamMapper.teamDTOToTeam(teamDTO);
-        return teamMapper.teamToTeamDTO(teamRepository.save(team));
+        Team team = teamMapper.toEntity(teamDTO);
+        return teamMapper.toDto(teamRepository.save(team));
     }
 
     public Team updateTeam(TeamDTO updatedTeam) {
@@ -41,7 +41,7 @@ public class TeamService {
                                 () ->
                                         new EntityNotFoundException(
                                                 "Team not found with id: " + updatedTeam.getId()));
-        teamMapper.updateTeamFromDTO(updatedTeam, existingTeam);
+        teamMapper.updateFromDto(updatedTeam, existingTeam);
 
         return teamRepository.save(existingTeam);
     }
@@ -74,8 +74,6 @@ public class TeamService {
 
     @Transactional(readOnly = true)
     public List<TeamDTO> findAllTeamsByUserId(Long userId) {
-        return teamRepository.findAllTeamsByUserId(userId).stream()
-                .map(teamMapper::teamToTeamDTO)
-                .toList();
+        return teamRepository.findAllTeamsByUserId(userId).stream().map(teamMapper::toDto).toList();
     }
 }

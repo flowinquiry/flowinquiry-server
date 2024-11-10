@@ -302,11 +302,11 @@ public class UserService {
                 .and(
                         ((root, query, criteriaBuilder) ->
                                 criteriaBuilder.isTrue(root.get(User_.ACTIVATED))));
-        return userRepository.findAll(spec, pageable).map(userMapper::userToUserDTO);
+        return userRepository.findAll(spec, pageable).map(userMapper::toDto);
     }
 
     public Page<UserDTO> getUsersByTeam(Long teamId, Pageable pageable) {
-        return userRepository.findAllByTeamId(teamId, pageable).map(userMapper::userToUserDTO);
+        return userRepository.findAllByTeamId(teamId, pageable).map(userMapper::toDto);
     }
 
     @Transactional(readOnly = true)
@@ -316,7 +316,7 @@ public class UserService {
 
     @Transactional(readOnly = true)
     public Optional<UserDTO> getUserWithAuthoritiesById(Long id) {
-        return userRepository.findOneWithAuthoritiesById(id).map(userMapper::userToUserDTO);
+        return userRepository.findOneWithAuthoritiesById(id).map(userMapper::toDto);
     }
 
     @Transactional(readOnly = true)
@@ -356,7 +356,7 @@ public class UserService {
 
     public List<UserDTO> findAllUsersByAuthority(String authorityName) {
         return userRepository.findAllUsersByAuthority(authorityName).stream()
-                .map(userMapper::userToUserDTO)
+                .map(userMapper::toDto)
                 .collect(Collectors.toList());
     }
 }

@@ -147,7 +147,7 @@ class UserControllerIT {
                                 .getContentAsString(),
                         UserDTO.class);
 
-        User convertedUser = userMapper.userDTOToUser(returnedUserDTO);
+        User convertedUser = userMapper.toEntity(returnedUserDTO);
         // Validate the returned User
         assertThat(convertedUser.getFirstName()).isEqualTo(DEFAULT_FIRSTNAME);
         assertThat(convertedUser.getLastName()).isEqualTo(DEFAULT_LASTNAME);

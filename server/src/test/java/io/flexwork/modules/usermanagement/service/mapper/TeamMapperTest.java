@@ -14,9 +14,9 @@ public class TeamMapperTest {
     private TeamMapper teamMapper = Mappers.getMapper(TeamMapper.class);
 
     @Test
-    public void testTeamDTOToTeam() {
+    public void testToEntity() {
         TeamDTO teamDTO = TeamDTO.builder().id(1L).name("Name").organizationId(1L).build();
-        Team team = teamMapper.teamDTOToTeam(teamDTO);
+        Team team = teamMapper.toEntity(teamDTO);
         assertAll(
                 () -> assertEquals(teamDTO.getId(), team.getId()),
                 () -> assertEquals(teamDTO.getName(), team.getName()),
@@ -24,7 +24,7 @@ public class TeamMapperTest {
     }
 
     @Test
-    public void testTeamToTeamDTO() {
+    public void testToDto() {
         Team team =
                 Team.builder()
                         .id(1L)
@@ -32,7 +32,7 @@ public class TeamMapperTest {
                         .organization(
                                 Organization.builder().id(1L).description("description").build())
                         .build();
-        TeamDTO teamDTO = teamMapper.teamToTeamDTO(team);
+        TeamDTO teamDTO = teamMapper.toDto(team);
         assertAll(
                 () -> assertEquals(team.getId(), teamDTO.getId()),
                 () -> assertEquals(team.getOrganization().getId(), teamDTO.getId()),

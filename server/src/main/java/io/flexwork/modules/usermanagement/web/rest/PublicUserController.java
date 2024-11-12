@@ -9,6 +9,7 @@ import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpHeaders;
@@ -19,6 +20,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import tech.jhipster.web.util.PaginationUtil;
@@ -74,6 +76,16 @@ public class PublicUserController {
             return ResponseEntity.noContent().build();
         }
 
+        return ResponseEntity.ok(users);
+    }
+
+    @GetMapping("/authorities/searchUsersNotInAuthority")
+    public ResponseEntity<List<UserDTO>> findUsersNotInAuthority(
+            @RequestParam("userTerm") String searchTerm,
+            @RequestParam("authorityName") String authorityName) {
+        PageRequest pageRequest = PageRequest.of(0, 20); // Limit to 20 results
+        List<UserDTO> users =
+                userService.findUsersNotInAuthority(searchTerm, authorityName, pageRequest);
         return ResponseEntity.ok(users);
     }
 

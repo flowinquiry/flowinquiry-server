@@ -208,14 +208,15 @@
 
 	<changeSet author="flexapp"
 		id="00000000000000:03-insert-default-authority-data" context="!test">
-		<loadData file="config/liquibase/tenant/data/authority.csv"
-			separator=";" tableName="fw_authority" usePreparedStatements="true">
+		<loadData
+			file="config/liquibase/tenant/data/fw_authority.csv" separator=";"
+			tableName="fw_authority" usePreparedStatements="true">
 			<column name="name" type="string" />
 		</loadData>
 	</changeSet>
 	<changeSet author="flexapp"
 		id="00000000000000:04-insert-default-user-data" context="!test">
-		<loadData file="config/liquibase/tenant/data/user.csv"
+		<loadData file="config/liquibase/tenant/data/fw_user.csv"
 			separator=";" tableName="fw_user" usePreparedStatements="true">
 			<column name="id" type="NUMERIC" />
 			<column name="password_hash" type="STRING" />
@@ -247,8 +248,9 @@
 		id="00000000000000:05-insert-default-user-authority-data"
 		context="!test">
 		<loadData
-			file="config/liquibase/tenant/data/user_authority.csv" separator=";"
-			tableName="fw_user_authority" usePreparedStatements="true">
+			file="config/liquibase/tenant/data/fw_user_authority.csv"
+			separator=";" tableName="fw_user_authority"
+			usePreparedStatements="true">
 			<column name="user_id" type="numeric" />
 		</loadData>
 		<loadData
@@ -287,7 +289,7 @@
 	</changeSet>
 	<changeSet author="flexapp"
 		id="00000000000000:08-insert-default-fw-resource" context="!test">
-		<loadData file="config/liquibase/tenant/data/resource.csv"
+		<loadData file="config/liquibase/tenant/data/fw_resource.csv"
 			separator=";" tableName="fw_resource" usePreparedStatements="true">
 			<column name="name" type="STRING" />
 			<column name="description" type="STRING" />
@@ -297,7 +299,7 @@
 		id="00000000000000:09-insert-default-fw-authority-resource-permission"
 		context="!test">
 		<loadData
-			file="config/liquibase/tenant/data/authority_resource_permission.csv"
+			file="config/liquibase/tenant/data/fw_authority_resource_permission.csv"
 			separator=";" tableName="fw_authority_resource_permission"
 			usePreparedStatements="true" />
 	</changeSet>

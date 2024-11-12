@@ -2,9 +2,11 @@ package io.flexwork.modules.usermanagement.web.rest;
 
 import io.flexwork.modules.usermanagement.domain.Authority;
 import io.flexwork.modules.usermanagement.repository.AuthorityRepository;
+import io.flexwork.modules.usermanagement.service.UserService;
 import jakarta.validation.Valid;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.List;
 import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -32,8 +34,11 @@ public class AuthorityController {
 
     private final AuthorityRepository authorityRepository;
 
-    public AuthorityController(AuthorityRepository authorityRepository) {
+    private final UserService userService;
+
+    public AuthorityController(AuthorityRepository authorityRepository, UserService userService) {
         this.authorityRepository = authorityRepository;
+        this.userService = userService;
     }
 
     /**
@@ -74,7 +79,7 @@ public class AuthorityController {
     /**
      * {@code GET /authorities/:id} : get the "id" authority.
      *
-     * @param id the id of the authority to retrieve.
+     * @param name the id of the authority to retrieve.
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the authority,
      *     or with status {@code 404 (Not Found)}.
      */
@@ -100,5 +105,12 @@ public class AuthorityController {
                         HeaderUtil.createEntityDeletionAlert(
                                 applicationName, true, ENTITY_NAME, id))
                 .build();
+    }
+
+    @PostMapping("/{authorityName}/add-users")
+    public ResponseEntity<Void> addUsersToAuthority(
+            @PathVariable String authorityName, @RequestBody List<Long> userIds) {
+        userService.addUsersToAuthority(userIds, authorityName);
+        return ResponseEntity.ok().build();
     }
 }

@@ -354,9 +354,38 @@ public class UserService {
         return authorityRepository.findAll().stream().map(Authority::getName).toList();
     }
 
+    @Transactional(readOnly = true)
     public List<UserDTO> findAllUsersByAuthority(String authorityName) {
         return userRepository.findAllUsersByAuthority(authorityName).stream()
                 .map(userMapper::toDto)
                 .collect(Collectors.toList());
+    }
+
+    @Transactional(readOnly = true)
+    public List<UserDTO> findUsersNotInAuthority(
+            String searchTerm, String authorityName, Pageable pageable) {
+        return userMapper.toDtos(
+                userRepository.findUsersNotInAuthority(searchTerm, authorityName, pageable));
+    }
+
+    @Transactional
+    public void addUsersToAuthority(List<Long> userIds, String authorityName) {
+        // Fetch the authority entity
+        Authority authority =
+                authorityRepository
+                        .findById(authorityName)
+                        .orElseThrow(
+                                () ->
+                                        new IllegalArgumentException(
+                                                "Authority not found: " + authorityName));
+
+        // Fetch the users and associate them with the authority
+        List<User> users = userRepository.findAllById(userIds);
+        for (User user : users) {
+            user.getAuthorities().add(authority);
+        }
+
+        // Save all updated users
+        userRepository.saveAll(users);
     }
 }

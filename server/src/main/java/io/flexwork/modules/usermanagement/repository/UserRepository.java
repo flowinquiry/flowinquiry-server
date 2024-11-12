@@ -47,4 +47,14 @@ public interface UserRepository extends JpaRepository<User, Long>, JpaSpecificat
 
     @Query("SELECT u FROM User u JOIN u.authorities a WHERE a.name = :authorityName")
     List<User> findAllUsersByAuthority(@Param("authorityName") String authorityName);
+
+    @Query(
+            "SELECT u FROM User u "
+                    + "WHERE (LOWER(u.email) LIKE LOWER(CONCAT('%', :searchTerm, '%')) "
+                    + "OR LOWER(CONCAT(u.firstName, ' ', u.lastName)) LIKE LOWER(CONCAT('%', :searchTerm, '%'))) "
+                    + "AND :authorityName NOT IN (SELECT a.name FROM u.authorities a)")
+    List<User> findUsersNotInAuthority(
+            @Param("searchTerm") String searchTerm,
+            @Param("authorityName") String authorityName,
+            Pageable pageable);
 }

@@ -13,7 +13,6 @@ import java.time.ZoneOffset;
 import java.util.HashSet;
 import java.util.Set;
 import lombok.*;
-import org.hibernate.annotations.BatchSize;
 
 /** A user. */
 @Entity
@@ -123,7 +122,6 @@ public class User extends AbstractAuditingEntity<Long> implements Serializable {
             inverseJoinColumns = {
                 @JoinColumn(name = "authority_name", referencedColumnName = "name")
             })
-    @BatchSize(size = 20)
     private Set<Authority> authorities = new HashSet<>();
 
     public LocalDateTime getLastLoginTime() {

@@ -113,4 +113,11 @@ public class AuthorityController {
         userService.addUsersToAuthority(userIds, authorityName);
         return ResponseEntity.ok().build();
     }
+
+    @DeleteMapping("/{authorityName}/{userId}")
+    public ResponseEntity<Void> removeUserFromAuthority(
+            @PathVariable Long userId, @PathVariable String authorityName) {
+        userService.removeUserFromAuthority(userId, authorityName);
+        return ResponseEntity.noContent().build();
+    }
 }

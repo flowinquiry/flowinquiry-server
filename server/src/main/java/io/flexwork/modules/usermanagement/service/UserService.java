@@ -388,4 +388,29 @@ public class UserService {
         // Save all updated users
         userRepository.saveAll(users);
     }
+
+    @Transactional
+    public void removeUserFromAuthority(Long userId, String authorityName) {
+        // Find the user
+        User user =
+                userRepository
+                        .findById(userId)
+                        .orElseThrow(
+                                () -> new IllegalArgumentException("User not found: " + userId));
+
+        // Find the authority
+        Authority authority =
+                authorityRepository
+                        .findById(authorityName)
+                        .orElseThrow(
+                                () ->
+                                        new IllegalArgumentException(
+                                                "Authority not found: " + authorityName));
+
+        // Remove the authority from the user's authorities set
+        if (user.getAuthorities().contains(authority)) {
+            user.getAuthorities().remove(authority);
+            userRepository.save(user); // Save the updated user
+        }
+    }
 }

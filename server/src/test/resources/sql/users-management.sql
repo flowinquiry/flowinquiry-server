@@ -1,3 +1,19 @@
+-- Insert Authorities
+INSERT
+    INTO
+        fw_authority(
+            name,
+            descriptive_name,
+            system_role,
+            description
+        )
+    VALUES(
+        'ROLE_Test',
+        'Test role',
+        FALSE,
+        'Test role'
+    );
+
 INSERT
     INTO
         fw_user(

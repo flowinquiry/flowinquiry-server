@@ -1,6 +1,7 @@
 package io.flexwork.modules.usermanagement.web.rest;
 
 import io.flexwork.modules.usermanagement.service.UserService;
+import io.flexwork.modules.usermanagement.service.dto.ResourcePermissionDTO;
 import io.flexwork.modules.usermanagement.service.dto.UserDTO;
 import io.flexwork.query.QueryDTO;
 import jakarta.validation.Valid;
@@ -87,6 +88,14 @@ public class PublicUserController {
         List<UserDTO> users =
                 userService.findUsersNotInAuthority(searchTerm, authorityName, pageRequest);
         return ResponseEntity.ok(users);
+    }
+
+    @GetMapping("/permissions/{userId}")
+    public ResponseEntity<List<ResourcePermissionDTO>> getUserResourcesWithPermissions(
+            @PathVariable Long userId) {
+        List<ResourcePermissionDTO> resourcesWithPermissions =
+                userService.getResourcesWithPermissionsByUserId(userId);
+        return ResponseEntity.ok(resourcesWithPermissions);
     }
 
     private boolean onlyContainsAllowedProperties(Pageable pageable) {

@@ -1,6 +1,7 @@
 package io.flexwork.db;
 
 public class TenantContext {
+
     private static ThreadLocal<String> currentTenant = new InheritableThreadLocal<>();
 
     public static String getCurrentTenant() {

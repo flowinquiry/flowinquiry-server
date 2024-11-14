@@ -23,7 +23,7 @@ import org.springframework.test.context.jdbc.SqlGroup;
 @EnableConfigurationProperties({FlexworkProperties.class})
 @EmbeddedSQL
 @SqlGroup({
-    @Sql("/sql/users.sql"),
+    @Sql("/sql/users-management.sql"),
     @Sql("/sql/accounts.sql"),
     @Sql(value = "/sql/cleanup.sql", executionPhase = AFTER_TEST_METHOD)
 })

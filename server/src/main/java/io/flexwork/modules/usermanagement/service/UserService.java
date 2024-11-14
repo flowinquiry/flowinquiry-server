@@ -8,6 +8,7 @@ import io.flexwork.modules.usermanagement.domain.User;
 import io.flexwork.modules.usermanagement.domain.User_;
 import io.flexwork.modules.usermanagement.repository.AuthorityRepository;
 import io.flexwork.modules.usermanagement.repository.UserRepository;
+import io.flexwork.modules.usermanagement.service.dto.ResourcePermissionDTO;
 import io.flexwork.modules.usermanagement.service.dto.UserDTO;
 import io.flexwork.modules.usermanagement.service.dto.UserKey;
 import io.flexwork.modules.usermanagement.service.mapper.UserMapper;
@@ -412,5 +413,18 @@ public class UserService {
             user.getAuthorities().remove(authority);
             userRepository.save(user); // Save the updated user
         }
+    }
+
+    public List<ResourcePermissionDTO> getResourcesWithPermissionsByUserId(Long userId) {
+        List<Object[]> results = userRepository.findResourcesWithHighestPermissionsByUserId(userId);
+
+        return results.stream()
+                .map(
+                        result ->
+                                new ResourcePermissionDTO(
+                                        (String) result[0], // resourceName
+                                        (String) result[1] // permission
+                                        ))
+                .collect(Collectors.toList());
     }
 }

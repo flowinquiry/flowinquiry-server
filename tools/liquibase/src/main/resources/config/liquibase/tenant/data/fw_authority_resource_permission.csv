@@ -1,4 +1,4 @@
 authority_name;resource_name;permission
-ROLE_USER;User;READ
-ROLE_USER;Account;WRITE
-ROLE_USER;Contact;WRITE
+ROLE_USER;User;0
+ROLE_USER;Account;1
+ROLE_USER;Contact;1

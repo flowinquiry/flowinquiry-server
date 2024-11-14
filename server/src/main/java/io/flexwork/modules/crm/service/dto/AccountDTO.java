@@ -38,6 +38,8 @@ public class AccountDTO {
 
     private Long parentAccountId;
 
+    private String parentAccountName;
+
     private LocalDateTime createdAt;
 
     private LocalDateTime updatedAt;

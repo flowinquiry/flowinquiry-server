@@ -11,6 +11,7 @@ import org.mapstruct.*;
 public interface AccountMapper {
     // Mapping from entity to DTO
     @Mapping(target = "parentAccountId", source = "parentAccount.id")
+    @Mapping(target = "parentAccountName", source = "parentAccount.name")
     @Mapping(target = "assignedToUserId", source = "assignedToUser.id")
     AccountDTO toDto(Account account);
 

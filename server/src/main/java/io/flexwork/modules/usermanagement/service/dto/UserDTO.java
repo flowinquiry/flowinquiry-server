@@ -43,6 +43,8 @@ public class UserDTO implements Serializable {
 
     private String country;
 
+    private String title;
+
     private String createdBy;
 
     private Instant createdDate;

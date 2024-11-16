@@ -1,8 +1,9 @@
 package io.flexwork.modules.usermanagement.web.rest;
 
 import io.flexwork.modules.usermanagement.domain.Authority;
-import io.flexwork.modules.usermanagement.repository.AuthorityRepository;
-import io.flexwork.modules.usermanagement.service.UserService;
+import io.flexwork.modules.usermanagement.service.AuthorityService;
+import io.flexwork.modules.usermanagement.service.dto.AuthorityDTO;
+import io.flexwork.modules.usermanagement.service.dto.UserDTO;
 import jakarta.validation.Valid;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -12,6 +13,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -32,13 +34,10 @@ public class AuthorityController {
     @Value("${spring.application.name}")
     private String applicationName;
 
-    private final AuthorityRepository authorityRepository;
+    private final AuthorityService authorityService;
 
-    private final UserService userService;
-
-    public AuthorityController(AuthorityRepository authorityRepository, UserService userService) {
-        this.authorityRepository = authorityRepository;
-        this.userService = userService;
+    public AuthorityController(AuthorityService authorityService) {
+        this.authorityService = authorityService;
     }
 
     /**
@@ -51,16 +50,16 @@ public class AuthorityController {
      */
     @PostMapping("")
     @PreAuthorize("hasAnyAuthority('ROLE_ADMIN')")
-    public ResponseEntity<Authority> createAuthority(@Valid @RequestBody Authority authority)
+    public ResponseEntity<AuthorityDTO> createAuthority(@Valid @RequestBody Authority authority)
             throws URISyntaxException {
         LOG.debug("REST request to save Authority : {}", authority);
 
-        authority = authorityRepository.save(authority);
-        return ResponseEntity.created(new URI("/api/authorities/" + authority.getName()))
+        AuthorityDTO savedAuthority = authorityService.createAuthority(authority);
+        return ResponseEntity.created(new URI("/api/authorities/" + savedAuthority.getName()))
                 .headers(
                         HeaderUtil.createEntityCreationAlert(
-                                applicationName, true, ENTITY_NAME, authority.getName()))
-                .body(authority);
+                                applicationName, true, ENTITY_NAME, savedAuthority.getName()))
+                .body(savedAuthority);
     }
 
     /**
@@ -70,8 +69,8 @@ public class AuthorityController {
      *     in body.
      */
     @GetMapping("")
-    public Page<Authority> getAllAuthorities(Pageable pageable) {
-        return authorityRepository.findAll(pageable);
+    public Page<AuthorityDTO> getAllAuthorities(Pageable pageable) {
+        return authorityService.findAllAuthorities(pageable);
     }
 
     /**
@@ -82,8 +81,8 @@ public class AuthorityController {
      *     or with status {@code 404 (Not Found)}.
      */
     @GetMapping("/{name}")
-    public ResponseEntity<Authority> getAuthority(@PathVariable("name") String name) {
-        Optional<Authority> authority = authorityRepository.findByName(name);
+    public ResponseEntity<AuthorityDTO> getAuthority(@PathVariable("name") String name) {
+        Optional<AuthorityDTO> authority = authorityService.findAuthorityByName(name);
         return ResponseUtil.wrapOrNotFound(authority);
     }
 
@@ -97,7 +96,7 @@ public class AuthorityController {
     @PreAuthorize("hasAnyAuthority('ROLE_ADMIN')")
     public ResponseEntity<Void> deleteAuthority(@PathVariable("id") String id) {
         LOG.debug("REST request to delete Authority : {}", id);
-        authorityRepository.deleteById(id);
+        authorityService.deleteAuthority(id);
         return ResponseEntity.noContent()
                 .headers(
                         HeaderUtil.createEntityDeletionAlert(
@@ -105,17 +104,38 @@ public class AuthorityController {
                 .build();
     }
 
+    @GetMapping("/{authorityName}/users")
+    public ResponseEntity<List<UserDTO>> getUsersByAuthority(@PathVariable String authorityName) {
+        List<UserDTO> users = authorityService.findAllUsersByAuthority(authorityName);
+
+        if (users.isEmpty()) {
+            return ResponseEntity.noContent().build();
+        }
+
+        return ResponseEntity.ok(users);
+    }
+
+    @GetMapping("/searchUsersNotInAuthority")
+    public ResponseEntity<List<UserDTO>> findUsersNotInAuthority(
+            @RequestParam("userTerm") String searchTerm,
+            @RequestParam("authorityName") String authorityName) {
+        PageRequest pageRequest = PageRequest.of(0, 20); // Limit to 20 results
+        List<UserDTO> users =
+                authorityService.findUsersNotInAuthority(searchTerm, authorityName, pageRequest);
+        return ResponseEntity.ok(users);
+    }
+
     @PostMapping("/{authorityName}/add-users")
     public ResponseEntity<Void> addUsersToAuthority(
             @PathVariable String authorityName, @RequestBody List<Long> userIds) {
-        userService.addUsersToAuthority(userIds, authorityName);
+        authorityService.addUsersToAuthority(userIds, authorityName);
         return ResponseEntity.ok().build();
     }
 
-    @DeleteMapping("/{authorityName}/{userId}")
+    @DeleteMapping("/{authorityName}/users/{userId}")
     public ResponseEntity<Void> removeUserFromAuthority(
             @PathVariable Long userId, @PathVariable String authorityName) {
-        userService.removeUserFromAuthority(userId, authorityName);
+        authorityService.removeUserFromAuthority(userId, authorityName);
         return ResponseEntity.noContent().build();
     }
 }

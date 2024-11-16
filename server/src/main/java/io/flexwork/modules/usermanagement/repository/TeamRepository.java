@@ -1,6 +1,7 @@
 package io.flexwork.modules.usermanagement.repository;
 
 import io.flexwork.modules.usermanagement.domain.Team;
+import io.flexwork.modules.usermanagement.domain.User;
 import io.flexwork.modules.usermanagement.service.dto.TeamDTO;
 import java.util.List;
 import org.springframework.data.domain.Page;
@@ -22,4 +23,23 @@ public interface TeamRepository extends JpaRepository<Team, Long>, JpaSpecificat
 
     @Query("SELECT t FROM Team t JOIN t.users u WHERE u.id = :userId")
     List<Team> findAllTeamsByUserId(@Param("userId") Long userId);
+
+    @Query(
+            """
+        SELECT u
+        FROM User u
+        WHERE (LOWER(u.firstName) LIKE LOWER(CONCAT('%', :searchTerm, '%'))
+           OR LOWER(u.lastName) LIKE LOWER(CONCAT('%', :searchTerm, '%'))
+           OR LOWER(u.email) LIKE LOWER(CONCAT('%', :searchTerm, '%')))
+          AND u.id NOT IN (
+              SELECT ut.id
+              FROM Team t
+              JOIN t.users ut
+              WHERE t.id = :teamId
+          )
+    """)
+    List<User> findUsersNotInTeam(
+            @Param("searchTerm") String searchTerm,
+            @Param("teamId") Long teamId,
+            Pageable pageable);
 }

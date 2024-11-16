@@ -8,6 +8,7 @@ import io.flexwork.modules.usermanagement.domain.Permission;
 import io.flexwork.modules.usermanagement.domain.User;
 import io.flexwork.modules.usermanagement.domain.User_;
 import io.flexwork.modules.usermanagement.repository.AuthorityRepository;
+import io.flexwork.modules.usermanagement.repository.TeamRepository;
 import io.flexwork.modules.usermanagement.repository.UserRepository;
 import io.flexwork.modules.usermanagement.service.dto.ResourcePermissionDTO;
 import io.flexwork.modules.usermanagement.service.dto.UserDTO;
@@ -46,16 +47,20 @@ public class UserService {
 
     private final AuthorityRepository authorityRepository;
 
+    private final TeamRepository teamRepository;
+
     private final UserMapper userMapper;
 
     public UserService(
             UserRepository userRepository,
             PasswordEncoder passwordEncoder,
             AuthorityRepository authorityRepository,
+            TeamRepository teamRepository,
             UserMapper userMapper) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.authorityRepository = authorityRepository;
+        this.teamRepository = teamRepository;
         this.userMapper = userMapper;
     }
 
@@ -308,7 +313,7 @@ public class UserService {
     }
 
     public Page<UserDTO> getUsersByTeam(Long teamId, Pageable pageable) {
-        return userRepository.findAllByTeamId(teamId, pageable).map(userMapper::toDto);
+        return userRepository.findUsersByTeamId(teamId, pageable).map(userMapper::toDto);
     }
 
     @Transactional(readOnly = true)
@@ -345,81 +350,6 @@ public class UserService {
     //                            userRepository.delete(user);
     //                        });
     //    }
-
-    /**
-     * Gets a list of all the authorities.
-     *
-     * @return a list of all the authorities.
-     */
-    @Transactional(readOnly = true)
-    public List<String> getAuthorities() {
-        return authorityRepository.findAll().stream().map(Authority::getName).toList();
-    }
-
-    @Transactional(readOnly = true)
-    public List<UserDTO> findAllUsersByAuthority(String authorityName) {
-        return userRepository.findAllUsersByAuthority(authorityName).stream()
-                .map(userMapper::toDto)
-                .collect(Collectors.toList());
-    }
-
-    @Transactional(readOnly = true)
-    public List<UserDTO> findUsersNotInAuthority(
-            String searchTerm, String authorityName, Pageable pageable) {
-        return userMapper.toDtos(
-                userRepository.findUsersNotInAuthority(searchTerm, authorityName, pageable));
-    }
-
-    @Transactional(readOnly = true)
-    public List<UserDTO> findUsersNotInTeam(String searchTerm, Long teamId, Pageable pageable) {
-        return userMapper.toDtos(userRepository.findUsersNotInTeam(searchTerm, teamId, pageable));
-    }
-
-    @Transactional
-    public void addUsersToAuthority(List<Long> userIds, String authorityName) {
-        // Fetch the authority entity
-        Authority authority =
-                authorityRepository
-                        .findById(authorityName)
-                        .orElseThrow(
-                                () ->
-                                        new IllegalArgumentException(
-                                                "Authority not found: " + authorityName));
-
-        // Fetch the users and associate them with the authority
-        List<User> users = userRepository.findAllById(userIds);
-        for (User user : users) {
-            user.getAuthorities().add(authority);
-        }
-
-        // Save all updated users
-        userRepository.saveAll(users);
-    }
-
-    @Transactional
-    public void removeUserFromAuthority(Long userId, String authorityName) {
-        // Find the user
-        User user =
-                userRepository
-                        .findById(userId)
-                        .orElseThrow(
-                                () -> new IllegalArgumentException("User not found: " + userId));
-
-        // Find the authority
-        Authority authority =
-                authorityRepository
-                        .findById(authorityName)
-                        .orElseThrow(
-                                () ->
-                                        new IllegalArgumentException(
-                                                "Authority not found: " + authorityName));
-
-        // Remove the authority from the user's authorities set
-        if (user.getAuthorities().contains(authority)) {
-            user.getAuthorities().remove(authority);
-            userRepository.save(user); // Save the updated user
-        }
-    }
 
     public List<ResourcePermissionDTO> getResourcesWithPermissionsByUserId(Long userId) {
         List<Object[]> results = userRepository.findResourcesWithHighestPermissionsByUserId(userId);

@@ -14,6 +14,7 @@ import java.util.Optional;
 import java.util.UUID;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -25,6 +26,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
@@ -136,5 +138,20 @@ public class TeamController {
         }
 
         return ResponseEntity.ok(teams);
+    }
+
+    @PostMapping("/{teamId}/add-users")
+    public ResponseEntity<Void> addUsersToTeam(
+            @PathVariable Long teamId, @RequestBody List<Long> userIds) {
+        teamService.addUsersToTeam(userIds, teamId);
+        return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/searchUsersNotInTeam")
+    public ResponseEntity<List<UserDTO>> findUsersNotInTeam(
+            @RequestParam("userTerm") String searchTerm, @RequestParam("teamId") Long teamId) {
+        PageRequest pageRequest = PageRequest.of(0, 20); // Limit to 20 results
+        List<UserDTO> users = teamService.findUsersNotInTeam(searchTerm, teamId, pageRequest);
+        return ResponseEntity.ok(users);
     }
 }

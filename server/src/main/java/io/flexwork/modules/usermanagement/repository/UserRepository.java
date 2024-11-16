@@ -43,39 +43,7 @@ public interface UserRepository extends JpaRepository<User, Long>, JpaSpecificat
     void updateLastLoginTime(String userEmail, LocalDateTime lastLoginTime);
 
     @Query("SELECT u FROM User u JOIN u.teams t WHERE t.id = :teamId")
-    Page<User> findAllByTeamId(@Param("teamId") Long teamId, Pageable pageable);
-
-    @Query("SELECT u FROM User u JOIN u.authorities a WHERE a.name = :authorityName")
-    List<User> findAllUsersByAuthority(@Param("authorityName") String authorityName);
-
-    @Query(
-            "SELECT u FROM User u "
-                    + "WHERE (LOWER(u.email) LIKE LOWER(CONCAT('%', :searchTerm, '%')) "
-                    + "OR LOWER(CONCAT(u.firstName, ' ', u.lastName)) LIKE LOWER(CONCAT('%', :searchTerm, '%'))) "
-                    + "AND :authorityName NOT IN (SELECT a.name FROM u.authorities a)")
-    List<User> findUsersNotInAuthority(
-            @Param("searchTerm") String searchTerm,
-            @Param("authorityName") String authorityName,
-            Pageable pageable);
-
-    @Query(
-            """
-        SELECT u
-        FROM User u
-        WHERE (LOWER(u.firstName) LIKE LOWER(CONCAT('%', :searchTerm, '%'))
-           OR LOWER(u.lastName) LIKE LOWER(CONCAT('%', :searchTerm, '%'))
-           OR LOWER(u.email) LIKE LOWER(CONCAT('%', :searchTerm, '%')))
-          AND u.id NOT IN (
-              SELECT ut.id
-              FROM Team t
-              JOIN t.users ut
-              WHERE t.id = :teamId
-          )
-    """)
-    List<User> findUsersNotInTeam(
-            @Param("searchTerm") String searchTerm,
-            @Param("teamId") Long teamId,
-            Pageable pageable);
+    Page<User> findUsersByTeamId(@Param("teamId") Long teamId, Pageable pageable);
 
     @Query(
             value =

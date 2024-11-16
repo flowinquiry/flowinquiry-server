@@ -1,6 +1,7 @@
 package io.flexwork.modules.usermanagement.domain;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Size;
 import java.util.HashSet;
 import java.util.Set;
 import lombok.*;
@@ -17,23 +18,25 @@ public class Team {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Size(max = 255)
+    @Column(name = "name")
     private String name;
 
+    @Size(max = 500)
     @Column(name = "logo_url")
     private String logoUrl;
 
+    @Size(max = 255)
+    @Column(name = "slogan")
     private String slogan;
 
+    @Column(name = "description", columnDefinition = "TEXT")
     private String description;
 
     @ManyToOne
     @JoinColumn(name = "organization_id")
     private Organization organization;
 
-    @ManyToMany
-    @JoinTable(
-            name = "fw_user_team",
-            joinColumns = @JoinColumn(name = "team_id"),
-            inverseJoinColumns = @JoinColumn(name = "user_id"))
+    @ManyToMany(mappedBy = "teams")
     private Set<User> users = new HashSet<>();
 }

@@ -132,7 +132,7 @@ public class AuthorityController {
         return ResponseEntity.ok().build();
     }
 
-    @DeleteMapping("/{authorityName}/{userId}")
+    @DeleteMapping("/{authorityName}/users/{userId}")
     public ResponseEntity<Void> removeUserFromAuthority(
             @PathVariable Long userId, @PathVariable String authorityName) {
         authorityService.removeUserFromAuthority(userId, authorityName);

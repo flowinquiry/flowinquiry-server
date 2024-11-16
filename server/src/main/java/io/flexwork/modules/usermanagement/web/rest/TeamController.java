@@ -154,4 +154,11 @@ public class TeamController {
         List<UserDTO> users = teamService.findUsersNotInTeam(searchTerm, teamId, pageRequest);
         return ResponseEntity.ok(users);
     }
+
+    @DeleteMapping("/{teamId}/users/{userId}")
+    public ResponseEntity<Void> removeUserFromTeam(
+            @PathVariable Long userId, @PathVariable Long teamId) {
+        teamService.removeUserFromTeam(userId, teamId);
+        return ResponseEntity.noContent().build();
+    }
 }

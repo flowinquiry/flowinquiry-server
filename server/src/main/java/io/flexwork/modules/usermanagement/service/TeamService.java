@@ -114,4 +114,27 @@ public class TeamService {
         // Save all updated users
         userRepository.saveAll(users);
     }
+
+    @Transactional
+    public void removeUserFromTeam(Long userId, Long teamId) {
+        // Find the user
+        User user =
+                userRepository
+                        .findByIdWithTeams(userId)
+                        .orElseThrow(
+                                () -> new IllegalArgumentException("User not found: " + userId));
+
+        // Find the team
+        Team team =
+                teamRepository
+                        .findById(teamId)
+                        .orElseThrow(
+                                () -> new IllegalArgumentException("Team not found: " + teamId));
+
+        // Remove the team from the user's teams set
+        if (user.getTeams().contains(team)) {
+            user.getTeams().remove(team);
+            userRepository.save(user); // Save the updated user
+        }
+    }
 }

@@ -19,6 +19,9 @@ public interface UserRepository extends JpaRepository<User, Long>, JpaSpecificat
 
     String USERS_BY_EMAIL_CACHE = "usersByEmail";
 
+    @Query("SELECT u FROM User u LEFT JOIN FETCH u.teams WHERE u.id = :userId")
+    Optional<User> findByIdWithTeams(@Param("userId") Long userId);
+
     Optional<User> findOneByActivationKey(String activationKey);
 
     List<User> findAllByActivatedIsFalseAndActivationKeyIsNotNullAndCreatedDateBefore(

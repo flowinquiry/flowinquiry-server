@@ -4,6 +4,7 @@ import static io.flexwork.query.QueryUtils.createSpecification;
 
 import io.flexwork.modules.usermanagement.AuthoritiesConstants;
 import io.flexwork.modules.usermanagement.domain.Authority;
+import io.flexwork.modules.usermanagement.domain.Permission;
 import io.flexwork.modules.usermanagement.domain.User;
 import io.flexwork.modules.usermanagement.domain.User_;
 import io.flexwork.modules.usermanagement.repository.AuthorityRepository;
@@ -423,7 +424,9 @@ public class UserService {
                         result ->
                                 new ResourcePermissionDTO(
                                         (String) result[0], // resourceName
-                                        (String) result[1] // permission
+                                        (result[1] == null)
+                                                ? Permission.NONE.toString()
+                                                : (String) result[1] // permission
                                         ))
                 .collect(Collectors.toList());
     }

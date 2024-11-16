@@ -695,9 +695,8 @@ class UserAccountControllerIT {
 
         restAccountMockMvc
                 .perform(
-                        post("/api/account/reset-password/init")
-                                .header(HEADER_TENANT_ID, DEFAULT_TENANT)
-                                .content("password-reset@example.com"))
+                        get("/api/account/reset-password/init?email=password-reset@example.com")
+                                .header(HEADER_TENANT_ID, DEFAULT_TENANT))
                 .andExpect(status().isOk());
 
         userService.deleteUserByEmail("password-reset@example.com");
@@ -715,9 +714,8 @@ class UserAccountControllerIT {
 
         restAccountMockMvc
                 .perform(
-                        post("/api/account/reset-password/init")
-                                .header(HEADER_TENANT_ID, DEFAULT_TENANT)
-                                .content("password-reset-upper-case@EXAMPLE.COM"))
+                        get("/api/account/reset-password/init?email=password-reset-upper-case@EXAMPLE.COM")
+                                .header(HEADER_TENANT_ID, DEFAULT_TENANT))
                 .andExpect(status().isOk());
 
         userService.deleteUserByEmail("password-reset-upper-case@example.com");
@@ -727,9 +725,8 @@ class UserAccountControllerIT {
     void testRequestPasswordResetWrongEmail() throws Exception {
         restAccountMockMvc
                 .perform(
-                        post("/api/account/reset-password/init")
-                                .header(HEADER_TENANT_ID, DEFAULT_TENANT)
-                                .content("password-reset-wrong-email@example.com"))
+                        get("/api/account/reset-password/init?email=password-reset-wrong-email@example.com")
+                                .header(HEADER_TENANT_ID, DEFAULT_TENANT))
                 .andExpect(status().isOk());
     }
 

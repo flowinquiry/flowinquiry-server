@@ -19,7 +19,8 @@ public interface AuthorityResourcePermissionRepository
             "SELECT new io.flexwork.modules.usermanagement.domain.AuthorityResourcePermission( "
                     + "    :authorityName, "
                     + "    r.name, "
-                    + "    COALESCE(arp.permission, 'NONE')"
+                    + "    COALESCE(CAST(arp.permission AS integer), 0)" // Explicitly cast as
+                    // integer
                     + ") "
                     + "FROM Resource r "
                     + "LEFT JOIN AuthorityResourcePermission arp "

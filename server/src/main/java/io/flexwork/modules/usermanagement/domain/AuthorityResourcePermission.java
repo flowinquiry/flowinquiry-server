@@ -33,9 +33,9 @@ public class AuthorityResourcePermission {
     private Resource resource;
 
     public AuthorityResourcePermission(
-            String authorityName, String resourceName, Permission permission) {
+            String authorityName, String resourceName, int permissionOrdinal) {
         this.authorityName = authorityName;
         this.resourceName = resourceName;
-        this.permission = permission;
+        this.permission = Permission.values()[permissionOrdinal];
     }
 }

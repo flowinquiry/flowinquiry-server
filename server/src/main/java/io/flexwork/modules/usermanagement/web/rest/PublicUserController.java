@@ -90,6 +90,14 @@ public class PublicUserController {
         return ResponseEntity.ok(users);
     }
 
+    @GetMapping("/authorities/searchUsersNotInTeam")
+    public ResponseEntity<List<UserDTO>> findUsersNotInTeam(
+            @RequestParam("userTerm") String searchTerm, @RequestParam("teamId") Long teamId) {
+        PageRequest pageRequest = PageRequest.of(0, 20); // Limit to 20 results
+        List<UserDTO> users = userService.findUsersNotInTeam(searchTerm, teamId, pageRequest);
+        return ResponseEntity.ok(users);
+    }
+
     @GetMapping("/permissions/{userId}")
     public ResponseEntity<List<ResourcePermissionDTO>> getUserResourcesWithPermissions(
             @PathVariable Long userId) {

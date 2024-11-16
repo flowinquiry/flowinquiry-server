@@ -59,6 +59,25 @@ public interface UserRepository extends JpaRepository<User, Long>, JpaSpecificat
             Pageable pageable);
 
     @Query(
+            """
+        SELECT u
+        FROM User u
+        WHERE (LOWER(u.firstName) LIKE LOWER(CONCAT('%', :searchTerm, '%'))
+           OR LOWER(u.lastName) LIKE LOWER(CONCAT('%', :searchTerm, '%'))
+           OR LOWER(u.email) LIKE LOWER(CONCAT('%', :searchTerm, '%')))
+          AND u.id NOT IN (
+              SELECT ut.id
+              FROM Team t
+              JOIN t.users ut
+              WHERE t.id = :teamId
+          )
+    """)
+    List<User> findUsersNotInTeam(
+            @Param("searchTerm") String searchTerm,
+            @Param("teamId") Long teamId,
+            Pageable pageable);
+
+    @Query(
             value =
                     """
     SELECT r.name AS resourceName,

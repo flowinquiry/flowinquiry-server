@@ -1,6 +1,7 @@
 package io.flexwork.modules.usermanagement.domain;
 
 import jakarta.persistence.*;
+import java.util.HashSet;
 import java.util.Set;
 import lombok.*;
 
@@ -29,6 +30,10 @@ public class Team {
     @JoinColumn(name = "organization_id")
     private Organization organization;
 
-    @ManyToMany(mappedBy = "teams")
-    private Set<User> members;
+    @ManyToMany
+    @JoinTable(
+            name = "fw_user_team",
+            joinColumns = @JoinColumn(name = "team_id"),
+            inverseJoinColumns = @JoinColumn(name = "user_id"))
+    private Set<User> users = new HashSet<>();
 }

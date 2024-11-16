@@ -370,6 +370,11 @@ public class UserService {
                 userRepository.findUsersNotInAuthority(searchTerm, authorityName, pageable));
     }
 
+    @Transactional(readOnly = true)
+    public List<UserDTO> findUsersNotInTeam(String searchTerm, Long teamId, Pageable pageable) {
+        return userMapper.toDtos(userRepository.findUsersNotInTeam(searchTerm, teamId, pageable));
+    }
+
     @Transactional
     public void addUsersToAuthority(List<Long> userIds, String authorityName) {
         // Fetch the authority entity

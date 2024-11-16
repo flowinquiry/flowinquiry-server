@@ -16,10 +16,10 @@ import org.springframework.stereotype.Repository;
 public interface TeamRepository extends JpaRepository<Team, Long>, JpaSpecificationExecutor<Team> {
     @Query(
             "SELECT new io.flexwork.modules.usermanagement.service.dto.TeamDTO(t.id, t.name, t.logoUrl, t.slogan, t.description, t.organization.id, COUNT(m.id)) "
-                    + "FROM Team t LEFT JOIN t.members m "
+                    + "FROM Team t LEFT JOIN t.users m "
                     + "GROUP BY t.id")
     Page<TeamDTO> findAllDTOs(Specification<Team> spec, Pageable pageable);
 
-    @Query("SELECT t FROM Team t JOIN t.members u WHERE u.id = :userId")
+    @Query("SELECT t FROM Team t JOIN t.users u WHERE u.id = :userId")
     List<Team> findAllTeamsByUserId(@Param("userId") Long userId);
 }

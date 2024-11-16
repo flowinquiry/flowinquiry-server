@@ -70,9 +70,7 @@ public class AuthorityController {
      *     in body.
      */
     @GetMapping("")
-    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN')")
     public Page<Authority> getAllAuthorities(Pageable pageable) {
-        LOG.debug("REST request to get all Authorities");
         return authorityRepository.findAll(pageable);
     }
 

@@ -12,6 +12,7 @@ import io.flexwork.modules.usermanagement.web.rest.errors.EmailAlreadyUsedExcept
 import io.flexwork.modules.usermanagement.web.rest.errors.InvalidPasswordException;
 import io.flexwork.security.SecurityUtils;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Email;
 import java.util.Optional;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -147,11 +148,11 @@ public class UserAccountController {
     /**
      * {@code POST /account/reset-password/init} : Send an email to reset the password of the user.
      *
-     * @param mail the mail of the user.
+     * @param email the mail of the user.
      */
-    @PostMapping(path = "/account/reset-password/init")
-    public void requestPasswordReset(@RequestBody String mail) {
-        Optional<User> user = userService.requestPasswordReset(mail);
+    @GetMapping(path = "/account/reset-password/init")
+    public void requestPasswordReset(@RequestParam("email") @Email String email) {
+        Optional<User> user = userService.requestPasswordReset(email);
         if (user.isPresent()) {
             mailService.sendPasswordResetMail(user.orElseThrow());
         } else {

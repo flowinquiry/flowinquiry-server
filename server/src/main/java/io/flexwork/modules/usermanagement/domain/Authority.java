@@ -1,10 +1,12 @@
 package io.flexwork.modules.usermanagement.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToMany;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
@@ -24,7 +26,6 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@SuppressWarnings("common-java:DuplicatedBlocks")
 public class Authority implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -46,6 +47,9 @@ public class Authority implements Serializable {
 
     @ManyToMany(mappedBy = "authorities")
     private Set<User> users;
+
+    @OneToMany(mappedBy = "authority", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<AuthorityResourcePermission> authorityResourcePermissions;
 
     @Override
     public boolean equals(Object o) {

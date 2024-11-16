@@ -1,8 +1,9 @@
 name;description
-User;User Resource
-File;File Resource
-Account;Account Resource
-Contact;Contact Resource
-Case;Case Resource
-Team;Team Resource
-Organization;Organization Resource
+Users;
+Files;
+Accounts;
+Contacts;
+Cases;
+Teams;
+Organizations;
+Authorities;

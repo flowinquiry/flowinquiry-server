@@ -57,4 +57,38 @@ public interface UserRepository extends JpaRepository<User, Long>, JpaSpecificat
             @Param("searchTerm") String searchTerm,
             @Param("authorityName") String authorityName,
             Pageable pageable);
+
+    @Query(
+            value =
+                    """
+    SELECT r.name AS resourceName,
+           CASE
+               WHEN EXISTS (
+                   SELECT 1
+                   FROM fw_user_authority uaAdmin
+                   WHERE uaAdmin.user_id = :userId
+                   AND uaAdmin.authority_name = 'ROLE_ADMIN'
+               ) THEN 'ACCESS'
+               ELSE
+                   CASE MAX(
+                       CASE rp.permission::int
+                           WHEN 0 THEN 0  -- NONE
+                           WHEN 1 THEN 1  -- READ
+                           WHEN 2 THEN 2  -- WRITE
+                           WHEN 3 THEN 3  -- ACCESS
+                       END
+                   )
+                   WHEN 0 THEN 'NONE'
+                   WHEN 1 THEN 'READ'
+                   WHEN 2 THEN 'WRITE'
+                   WHEN 3 THEN 'ACCESS'
+                   END
+           END AS permission
+    FROM fw_resource r
+    LEFT JOIN fw_authority_resource_permission rp ON rp.resource_name = r.name
+    LEFT JOIN fw_user_authority ua ON rp.authority_name = ua.authority_name AND ua.user_id = :userId
+    GROUP BY r.name
+    """,
+            nativeQuery = true)
+    List<Object[]> findResourcesWithHighestPermissionsByUserId(@Param("userId") Long userId);
 }

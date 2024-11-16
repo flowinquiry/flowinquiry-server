@@ -7,11 +7,14 @@ import io.flexwork.IntegrationTest;
 import io.flexwork.modules.usermanagement.domain.User;
 import io.flexwork.modules.usermanagement.repository.UserRepository;
 import io.flexwork.modules.usermanagement.service.UserService;
+import io.flexwork.modules.usermanagement.service.dto.ResourcePermissionDTO;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
+import java.util.List;
 import java.util.Optional;
 import org.apache.commons.lang3.RandomStringUtils;
+import org.assertj.core.groups.Tuple;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -201,4 +204,24 @@ class UserServiceIT {
     //        Optional<User> maybeDbUser = userRepository.findById(dbUser.getId());
     //        assertThat(maybeDbUser).contains(dbUser);
     //    }
+    @Test
+    @Transactional
+    void testFindResourcesWithHighestPermissionsByUserId() {
+        // Act - call the method to test
+        Long userId = 1001L; // This ID is set in the SQL file
+        List<ResourcePermissionDTO> result =
+                userService.getResourcesWithPermissionsByUserId(userId);
+
+        // Assert - verify results
+        assertThat(result).hasSize(8);
+
+        // Check specific permissions
+        assertThat(result)
+                .extracting("resourceName", "permission")
+                .containsExactlyInAnyOrder(
+                        Tuple.tuple("Files", "READ"), Tuple.tuple("Accounts", "WRITE"),
+                        Tuple.tuple("Cases", "READ"), Tuple.tuple("Teams", "READ"),
+                        Tuple.tuple("Contacts", "WRITE"), Tuple.tuple("Authorities", "READ"),
+                        Tuple.tuple("Organizations", "READ"), Tuple.tuple("Users", "READ"));
+    }
 }

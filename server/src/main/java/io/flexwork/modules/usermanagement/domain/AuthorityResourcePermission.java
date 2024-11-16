@@ -19,7 +19,10 @@ public class AuthorityResourcePermission {
     @Column(name = "resource_name")
     private String resourceName;
 
-    @Id private Permission permission;
+    @Enumerated(EnumType.ORDINAL)
+    @Column(name = "permission", nullable = false)
+    @Id
+    private Permission permission;
 
     @ManyToOne
     @JoinColumn(name = "authority_name", insertable = false, updatable = false)
@@ -30,9 +33,9 @@ public class AuthorityResourcePermission {
     private Resource resource;
 
     public AuthorityResourcePermission(
-            String authorityName, String resourceName, Permission permission) {
+            String authorityName, String resourceName, int permissionOrdinal) {
         this.authorityName = authorityName;
         this.resourceName = resourceName;
-        this.permission = permission;
+        this.permission = Permission.values()[permissionOrdinal];
     }
 }

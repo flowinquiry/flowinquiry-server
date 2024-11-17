@@ -19,9 +19,6 @@ public interface UserRepository extends JpaRepository<User, Long>, JpaSpecificat
 
     String USERS_BY_EMAIL_CACHE = "usersByEmail";
 
-    @Query("SELECT u FROM User u LEFT JOIN FETCH u.teams WHERE u.id = :userId")
-    Optional<User> findByIdWithTeams(@Param("userId") Long userId);
-
     Optional<User> findOneByActivationKey(String activationKey);
 
     List<User> findAllByActivatedIsFalseAndActivationKeyIsNotNullAndCreatedDateBefore(
@@ -81,4 +78,7 @@ public interface UserRepository extends JpaRepository<User, Long>, JpaSpecificat
     """,
             nativeQuery = true)
     List<Object[]> findResourcesWithHighestPermissionsByUserId(@Param("userId") Long userId);
+
+    @Query("SELECT u FROM User u LEFT JOIN FETCH u.teams WHERE u.id = :id")
+    Optional<User> findByIdWithTeams(@Param("id") Long id);
 }

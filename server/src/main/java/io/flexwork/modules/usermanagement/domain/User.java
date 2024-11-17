@@ -26,8 +26,7 @@ public class User extends AbstractAuditingEntity<Long> implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "sequenceGenerator")
-    @SequenceGenerator(name = "sequenceGenerator")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @EqualsAndHashCode.Include
     private Long id;
 
@@ -73,13 +72,6 @@ public class User extends AbstractAuditingEntity<Long> implements Serializable {
     @JoinColumn(name = "manager_id")
     private User manager;
 
-    @ManyToMany
-    @JoinTable(
-            name = "fw_user_team",
-            joinColumns = @JoinColumn(name = "user_id"),
-            inverseJoinColumns = @JoinColumn(name = "team_id"))
-    private Set<Team> teams;
-
     @Size(max = 20)
     @Column(name = "activation_key", length = 20)
     @JsonIgnore
@@ -115,6 +107,16 @@ public class User extends AbstractAuditingEntity<Long> implements Serializable {
     private LocalDateTime lastLoginTime;
 
     @JsonIgnore
+    @EqualsAndHashCode.Exclude
+    @ManyToMany
+    @JoinTable(
+            name = "fw_user_team",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "team_id"))
+    private Set<Team> teams;
+
+    @JsonIgnore
+    @EqualsAndHashCode.Exclude
     @ManyToMany
     @JoinTable(
             name = "fw_user_authority",

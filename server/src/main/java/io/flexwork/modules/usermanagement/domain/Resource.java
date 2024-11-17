@@ -20,6 +20,7 @@ public class Resource {
     @Column(name = "description", length = 256)
     private String description;
 
+    @EqualsAndHashCode.Exclude
     @OneToMany(mappedBy = "resource", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Set<AuthorityResourcePermission> authorityResourcePermissions = new HashSet<>();
 }

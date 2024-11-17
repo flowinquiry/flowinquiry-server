@@ -15,5 +15,5 @@ public class TeamDTO {
     private String slogan;
     private String description;
     private Long organizationId;
-    private Long memberCount;
+    private Long usersCount;
 }

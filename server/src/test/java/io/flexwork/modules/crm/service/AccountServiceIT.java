@@ -6,7 +6,6 @@ import io.flexwork.IntegrationTest;
 import io.flexwork.modules.crm.domain.Account;
 import io.flexwork.modules.crm.repository.AccountRepository;
 import io.flexwork.modules.crm.service.dto.AccountDTO;
-import io.flexwork.modules.crm.service.mapper.AccountMapper;
 import java.util.Optional;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,13 +14,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 public class AccountServiceIT {
 
     @Autowired private AccountService accountService;
-
-    @Autowired private AccountMapper accountMapper;
     @Autowired private AccountRepository accountRepository;
 
     @Test
     public void testUpdatedAccount() {
-        Account savedAccount = accountRepository.findByName("account_1").orElseThrow();
+        Account savedAccount = accountRepository.findByName("Acme Corporation").orElseThrow();
         AccountDTO accountDTO =
                 AccountDTO.builder()
                         .id(savedAccount.getId())
@@ -38,7 +35,7 @@ public class AccountServiceIT {
                 () -> assertEquals("account_type2", returnedUpdateAccount.getType()),
                 () -> assertEquals("industry2", returnedUpdateAccount.getIndustry()),
                 () -> assertEquals("status2", returnedUpdateAccount.getStatus()),
-                () -> assertNull(savedAccount.getAssignedToUser()));
+                () -> assertNotNull(savedAccount.getAssignedToUser()));
     }
 
     @Test

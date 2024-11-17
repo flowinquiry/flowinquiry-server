@@ -24,10 +24,12 @@ public class AuthorityResourcePermission {
     @Id
     private Permission permission;
 
+    @EqualsAndHashCode.Exclude
     @ManyToOne
     @JoinColumn(name = "authority_name", insertable = false, updatable = false)
     private Authority authority;
 
+    @EqualsAndHashCode.Exclude
     @ManyToOne
     @JoinColumn(name = "resource_name", insertable = false, updatable = false)
     private Resource resource;

@@ -129,14 +129,12 @@ public class AuthorityService {
 
     @Transactional
     public void removeUserFromAuthority(Long userId, String authorityName) {
-        // Find the user
         User user =
                 userRepository
                         .findById(userId)
                         .orElseThrow(
                                 () -> new IllegalArgumentException("User not found: " + userId));
 
-        // Find the authority
         Authority authority =
                 authorityRepository
                         .findById(authorityName)

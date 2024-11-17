@@ -16,6 +16,7 @@ import java.util.Set;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 /** A Authority. */
@@ -45,9 +46,11 @@ public class Authority implements Serializable {
     @Column(name = "description")
     private String description;
 
+    @EqualsAndHashCode.Exclude
     @ManyToMany(mappedBy = "authorities")
     private Set<User> users;
 
+    @EqualsAndHashCode.Exclude
     @OneToMany(mappedBy = "authority", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<AuthorityResourcePermission> authorityResourcePermissions;
 

@@ -5,7 +5,6 @@ import static io.flexwork.db.DbConstants.DEFAULT_TENANT;
 import io.flexwork.db.service.LiquibaseService;
 import io.flexwork.modules.usermanagement.domain.Tenant;
 import io.flexwork.modules.usermanagement.repository.TenantRepository;
-import jakarta.transaction.Transactional;
 import java.util.Optional;
 import java.util.Random;
 import java.util.UUID;
@@ -15,8 +14,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
+@Transactional
 public class TenantService {
 
     private static final Logger LOG = LoggerFactory.getLogger(TenantService.class);
@@ -35,7 +36,6 @@ public class TenantService {
      * @return the tenant realm
      */
     @SneakyThrows
-    @Transactional
     public Tenant registerNewTenant(Tenant tenant) {
         LOG.info("Registering new tenant: {}", tenant);
 
@@ -64,6 +64,7 @@ public class TenantService {
         return tenant;
     }
 
+    @Transactional(readOnly = true)
     public Tenant getDefaultTenant() {
         return tenantRepository
                 .findByNameIgnoreCase(DEFAULT_TENANT)

@@ -34,9 +34,11 @@ public class Team {
     private String description;
 
     @ManyToOne
+    @EqualsAndHashCode.Exclude
     @JoinColumn(name = "organization_id")
     private Organization organization;
 
     @ManyToMany(mappedBy = "teams")
+    @EqualsAndHashCode.Exclude
     private Set<User> users = new HashSet<>();
 }

@@ -21,6 +21,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
+@Transactional
 public class TeamService {
 
     private final TeamRepository teamRepository;
@@ -74,10 +75,9 @@ public class TeamService {
         teamRepository.deleteAllByIdInBatch(ids);
     }
 
-    public Team findTeamById(Long id) {
-        return teamRepository
-                .findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Team not found with id: " + id));
+    @Transactional(readOnly = true)
+    public Optional<TeamDTO> findTeamById(Long id) {
+        return teamRepository.findById(id).map(teamMapper::toDto);
     }
 
     @Transactional(readOnly = true)
@@ -96,7 +96,6 @@ public class TeamService {
         return userMapper.toDtos(teamRepository.findUsersNotInTeam(searchTerm, teamId, pageable));
     }
 
-    @Transactional
     public void addUsersToTeam(List<Long> userIds, Long teamId) {
         // Fetch the authority entity
         Team team =
@@ -117,14 +116,12 @@ public class TeamService {
 
     @Transactional
     public void removeUserFromTeam(Long userId, Long teamId) {
-        // Find the user
         User user =
                 userRepository
-                        .findByIdWithTeams(userId)
+                        .findById(userId)
                         .orElseThrow(
                                 () -> new IllegalArgumentException("User not found: " + userId));
 
-        // Find the team
         Team team =
                 teamRepository
                         .findById(teamId)

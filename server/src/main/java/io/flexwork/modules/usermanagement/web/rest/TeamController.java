@@ -111,9 +111,11 @@ public class TeamController {
 
     // Find a team by ID
     @GetMapping("/{id}")
-    public ResponseEntity<Team> findTeamById(@PathVariable Long id) {
-        Team team = teamService.findTeamById(id);
-        return ResponseEntity.ok(team);
+    public ResponseEntity<TeamDTO> findTeamById(@PathVariable Long id) {
+        return teamService
+                .findTeamById(id)
+                .map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     // Find teams
@@ -132,12 +134,7 @@ public class TeamController {
     @GetMapping("/users/{userId}")
     public ResponseEntity<List<TeamDTO>> getTeamsByUserId(@PathVariable Long userId) {
         List<TeamDTO> teams = teamService.findAllTeamsByUserId(userId);
-
-        if (teams.isEmpty()) {
-            return ResponseEntity.noContent().build();
-        }
-
-        return ResponseEntity.ok(teams);
+        return (teams.isEmpty()) ? ResponseEntity.noContent().build() : ResponseEntity.ok(teams);
     }
 
     @PostMapping("/{teamId}/add-users")

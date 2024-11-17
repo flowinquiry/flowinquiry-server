@@ -6,6 +6,7 @@ import io.flexwork.modules.usermanagement.domain.Team;
 import io.flexwork.modules.usermanagement.service.TeamService;
 import io.flexwork.modules.usermanagement.service.dto.TeamDTO;
 import io.flexwork.modules.usermanagement.service.dto.UserDTO;
+import io.flexwork.modules.usermanagement.service.dto.UserWithTeamRoleDTO;
 import io.flexwork.query.QueryDTO;
 import jakarta.validation.Valid;
 import java.util.List;
@@ -122,7 +123,7 @@ public class TeamController {
     }
 
     @GetMapping("/{teamId}/members")
-    public ResponseEntity<Page<UserDTO>> findUsersByTeamId(
+    public ResponseEntity<Page<UserWithTeamRoleDTO>> findUsersByTeamId(
             @PathVariable Long teamId, Pageable pageable) {
         return new ResponseEntity<>(teamService.getUsersByTeam(teamId, pageable), HttpStatus.OK);
     }

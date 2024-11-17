@@ -8,6 +8,7 @@ import io.flexwork.modules.usermanagement.repository.TeamRepository;
 import io.flexwork.modules.usermanagement.repository.UserRepository;
 import io.flexwork.modules.usermanagement.service.dto.TeamDTO;
 import io.flexwork.modules.usermanagement.service.dto.UserDTO;
+import io.flexwork.modules.usermanagement.service.dto.UserWithTeamRoleDTO;
 import io.flexwork.modules.usermanagement.service.mapper.TeamMapper;
 import io.flexwork.modules.usermanagement.service.mapper.UserMapper;
 import io.flexwork.query.QueryDTO;
@@ -91,8 +92,8 @@ public class TeamService {
         return teamRepository.findAllTeamsByUserId(userId).stream().map(teamMapper::toDto).toList();
     }
 
-    public Page<UserDTO> getUsersByTeam(Long teamId, Pageable pageable) {
-        return teamRepository.findUsersByTeamId(teamId, pageable).map(userMapper::toDto);
+    public Page<UserWithTeamRoleDTO> getUsersByTeam(Long teamId, Pageable pageable) {
+        return teamRepository.findUsersByTeamId(teamId, pageable);
     }
 
     @Transactional(readOnly = true)

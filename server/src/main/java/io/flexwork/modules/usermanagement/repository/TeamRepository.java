@@ -3,6 +3,7 @@ package io.flexwork.modules.usermanagement.repository;
 import io.flexwork.modules.usermanagement.domain.Team;
 import io.flexwork.modules.usermanagement.domain.User;
 import io.flexwork.modules.usermanagement.service.dto.TeamDTO;
+import io.flexwork.modules.usermanagement.service.dto.UserWithTeamRoleDTO;
 import java.util.List;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -43,6 +44,8 @@ public interface TeamRepository extends JpaRepository<Team, Long>, JpaSpecificat
             @Param("teamId") Long teamId,
             Pageable pageable);
 
-    @Query("SELECT u FROM User u JOIN u.teams t WHERE t.id = :teamId")
-    Page<User> findUsersByTeamId(@Param("teamId") Long teamId, Pageable pageable);
+    @Query(
+            "SELECT new io.flexwork.modules.usermanagement.service.dto.UserWithTeamRoleDTO(u.id, u.email, u.firstName, u.lastName, u.timezone, u.imageUrl, u.title, ut.team.id, ut.role.name) "
+                    + "FROM User u JOIN u.userTeams ut WHERE ut.team.id = :teamId")
+    Page<UserWithTeamRoleDTO> findUsersByTeamId(@Param("teamId") Long teamId, Pageable pageable);
 }

@@ -78,7 +78,4 @@ public interface UserRepository extends JpaRepository<User, Long>, JpaSpecificat
     """,
             nativeQuery = true)
     List<Object[]> findResourcesWithHighestPermissionsByUserId(@Param("userId") Long userId);
-
-    @Query("SELECT u FROM User u LEFT JOIN FETCH u.teams WHERE u.id = :id")
-    Optional<User> findByIdWithTeams(@Param("id") Long id);
 }

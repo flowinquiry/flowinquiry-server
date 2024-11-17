@@ -7,6 +7,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import java.util.List;
+import lombok.EqualsAndHashCode;
 
 @Entity
 @Table(name = "fw_workflow")
@@ -19,6 +20,7 @@ public class Workflow {
     private String name;
     private String description;
 
+    @EqualsAndHashCode.Exclude
     @OneToMany(mappedBy = "workflow")
     private List<WorkflowState> states;
 }

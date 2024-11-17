@@ -24,9 +24,11 @@ public class FsObject extends AbstractAuditingEntity<Long> implements Serializab
     @Column(name = "description", length = 4000)
     private String description;
 
+    @EqualsAndHashCode.Exclude
     @OneToMany(mappedBy = "descendant", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<FsObjectPath> ancestors = new HashSet<>();
 
+    @EqualsAndHashCode.Exclude
     @OneToMany(mappedBy = "ancestor", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<FsObjectPath> descendants = new HashSet<>();
 }

@@ -24,6 +24,7 @@ public class Organization {
 
     private String description;
 
+    @EqualsAndHashCode.Exclude
     @OneToMany(mappedBy = "organization")
     private Set<Team> teams;
 }

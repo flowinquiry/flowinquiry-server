@@ -148,6 +148,13 @@
 		<addAutoIncrement tableName="fw_team" columnName="id"
 			incrementBy="1" startWith="1000" />
 
+		<createTable tableName="fw_team_role">
+			<column name="name" type="VARCHAR(50)">
+				<constraints unique="true" nullable="false" />
+			</column>
+			<column name="description" type="TEXT" />
+		</createTable>
+
 		<!-- Create Organization Table -->
 		<createTable tableName="fw_organization">
 			<column name="id" type="BIGINT">
@@ -168,15 +175,15 @@
 			onDelete="CASCADE" constraintName="fk_teams_organization" />
 
 
-		<!-- Create User_Team Join Table -->
 		<createTable tableName="fw_user_team">
 			<column name="user_id" type="BIGINT">
-				<constraints nullable="false" primaryKey="true"
-					primaryKeyName="pk_fw_user_team" />
+				<constraints nullable="false" />
 			</column>
 			<column name="team_id" type="BIGINT">
-				<constraints nullable="false" primaryKey="true"
-					primaryKeyName="pk_fw_user_team" />
+				<constraints nullable="false" />
+			</column>
+			<column name="role_name" type="VARCHAR(50)">
+				<constraints nullable="false" />
 			</column>
 		</createTable>
 		<addForeignKeyConstraint
@@ -187,6 +194,10 @@
 			baseTableName="fw_user_team" baseColumnNames="team_id"
 			referencedTableName="fw_team" referencedColumnNames="id"
 			onDelete="CASCADE" constraintName="fk_user_team_team" />
+		<addForeignKeyConstraint
+			baseTableName="fw_user_team" baseColumnNames="role_name"
+			referencedTableName="fw_team_role" referencedColumnNames="name"
+			onDelete="CASCADE" constraintName="fk_user_team_role" />
 	</changeSet>
 
 	<changeSet author="flexapp"
@@ -277,16 +288,26 @@
 		</loadData>
 	</changeSet>
 	<changeSet author="flexapp"
-		id="00000000000000:07-insert-default-fw-user-team-data">
+		id="00000000000000:07-insert-default-fw-team-role">
 		<loadData
-			file="config/liquibase/tenant/data/fw_user_team.csv"
-			tableName="fw_user_team" separator=";">
-			<column name="user_id" type="STRING" />
-			<column name="team_id" type="STRING" />
+			file="config/liquibase/tenant/data/fw_team_role.csv"
+			tableName="fw_team_role" separator=";">
+			<column name="name" type="STRING" />
+			<column name="description" type="STRING" />
 		</loadData>
 	</changeSet>
 	<changeSet author="flexapp"
-		id="00000000000000:08-insert-default-fw-resource">
+		id="00000000000000:08-insert-default-fw-user-team-data">
+		<loadData
+			file="config/liquibase/tenant/data/fw_user_team.csv"
+			tableName="fw_user_team" separator=";">
+			<column name="user_id" type="NUMERIC" />
+			<column name="team_id" type="NUMERIC" />
+			<column name="role_name" type="STRING" />
+		</loadData>
+	</changeSet>
+	<changeSet author="flexapp"
+		id="00000000000000:09-insert-default-fw-resource">
 		<loadData file="config/liquibase/tenant/data/fw_resource.csv"
 			separator=";" tableName="fw_resource" usePreparedStatements="true">
 			<column name="name" type="STRING" />
@@ -294,7 +315,7 @@
 		</loadData>
 	</changeSet>
 	<changeSet author="flexapp"
-		id="00000000000000:09-insert-default-fw-authority-resource-permission">
+		id="00000000000000:10-insert-default-fw-authority-resource-permission">
 		<loadData
 			file="config/liquibase/tenant/data/fw_authority_resource_permission.csv"
 			separator=";" tableName="fw_authority_resource_permission"

@@ -4,7 +4,6 @@ import io.flexwork.modules.fss.ResourceRemoveEvent;
 import io.flexwork.modules.fss.service.StorageService;
 import io.flexwork.modules.usermanagement.domain.Team;
 import io.flexwork.modules.usermanagement.service.TeamService;
-import io.flexwork.modules.usermanagement.service.UserService;
 import io.flexwork.modules.usermanagement.service.dto.TeamDTO;
 import io.flexwork.modules.usermanagement.service.dto.UserDTO;
 import io.flexwork.query.QueryDTO;
@@ -35,18 +34,15 @@ import org.springframework.web.multipart.MultipartFile;
 @RequestMapping("/api/teams")
 public class TeamController {
 
-    private final UserService userService;
     private final TeamService teamService;
     private final StorageService storageService;
     private final ApplicationEventPublisher eventPublisher;
 
     public TeamController(
             TeamService teamService,
-            UserService userService,
             StorageService storageService,
             ApplicationEventPublisher eventPublisher) {
         this.teamService = teamService;
-        this.userService = userService;
         this.storageService = storageService;
         this.eventPublisher = eventPublisher;
     }
@@ -128,7 +124,7 @@ public class TeamController {
     @GetMapping("/{teamId}/members")
     public ResponseEntity<Page<UserDTO>> findUsersByTeamId(
             @PathVariable Long teamId, Pageable pageable) {
-        return new ResponseEntity<>(userService.getUsersByTeam(teamId, pageable), HttpStatus.OK);
+        return new ResponseEntity<>(teamService.getUsersByTeam(teamId, pageable), HttpStatus.OK);
     }
 
     @GetMapping("/users/{userId}")

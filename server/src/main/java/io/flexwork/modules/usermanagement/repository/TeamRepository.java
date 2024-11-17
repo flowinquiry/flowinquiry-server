@@ -42,4 +42,7 @@ public interface TeamRepository extends JpaRepository<Team, Long>, JpaSpecificat
             @Param("searchTerm") String searchTerm,
             @Param("teamId") Long teamId,
             Pageable pageable);
+
+    @Query("SELECT u FROM User u JOIN u.teams t WHERE t.id = :teamId")
+    Page<User> findUsersByTeamId(@Param("teamId") Long teamId, Pageable pageable);
 }

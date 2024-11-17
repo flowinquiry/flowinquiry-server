@@ -91,6 +91,10 @@ public class TeamService {
         return teamRepository.findAllTeamsByUserId(userId).stream().map(teamMapper::toDto).toList();
     }
 
+    public Page<UserDTO> getUsersByTeam(Long teamId, Pageable pageable) {
+        return teamRepository.findUsersByTeamId(teamId, pageable).map(userMapper::toDto);
+    }
+
     @Transactional(readOnly = true)
     public List<UserDTO> findUsersNotInTeam(String searchTerm, Long teamId, Pageable pageable) {
         return userMapper.toDtos(teamRepository.findUsersNotInTeam(searchTerm, teamId, pageable));

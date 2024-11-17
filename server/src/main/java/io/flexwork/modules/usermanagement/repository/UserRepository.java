@@ -50,9 +50,6 @@ public interface UserRepository extends JpaRepository<User, Long>, JpaSpecificat
     @Query("UPDATE User u SET u.lastLoginTime = :lastLoginTime WHERE u.email = :userEmail")
     void updateLastLoginTime(String userEmail, LocalDateTime lastLoginTime);
 
-    @Query("SELECT u FROM User u JOIN u.teams t WHERE t.id = :teamId")
-    Page<User> findUsersByTeamId(@Param("teamId") Long teamId, Pageable pageable);
-
     @Query(
             value =
                     """

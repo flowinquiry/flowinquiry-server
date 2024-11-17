@@ -312,10 +312,6 @@ public class UserService {
         return userRepository.findAll(spec, pageable).map(userMapper::toDto);
     }
 
-    public Page<UserDTO> getUsersByTeam(Long teamId, Pageable pageable) {
-        return userRepository.findUsersByTeamId(teamId, pageable).map(userMapper::toDto);
-    }
-
     @Transactional(readOnly = true)
     public Optional<User> getUserWithAuthoritiesByEmail(String email) {
         return userRepository.findOneWithAuthoritiesByEmailIgnoreCase(email);

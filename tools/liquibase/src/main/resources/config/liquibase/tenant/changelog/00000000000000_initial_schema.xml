@@ -8,6 +8,8 @@
 
 	<changeSet id="00000000000000:01-core-tables"
 		author="flexapp">
+		<createSequence sequenceName="sequence_generator"
+			minValue="100" startValue="100" incrementBy="1" />
 		<createTable tableName="fw_user">
 			<column name="id" type="bigint">
 				<constraints primaryKey="true" />

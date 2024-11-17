@@ -75,6 +75,12 @@ public class PublicUserController {
         return ResponseEntity.ok(resourcesWithPermissions);
     }
 
+    @GetMapping("/{managerId}/direct-reports")
+    public ResponseEntity<List<UserDTO>> getDirectReports(@PathVariable Long managerId) {
+        List<UserDTO> directReports = userService.getDirectReports(managerId);
+        return ResponseEntity.ok(directReports);
+    }
+
     private boolean onlyContainsAllowedProperties(Pageable pageable) {
         return pageable.getSort().stream()
                 .map(Sort.Order::getProperty)

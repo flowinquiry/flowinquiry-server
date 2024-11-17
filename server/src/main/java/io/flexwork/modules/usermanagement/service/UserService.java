@@ -365,4 +365,15 @@ public class UserService {
                                         ))
                 .collect(Collectors.toList());
     }
+
+    /**
+     * Gets all direct reports of a specific user.
+     *
+     * @param managerId the ID of the manager.
+     * @return a list of direct reports.
+     */
+    public List<UserDTO> getDirectReports(Long managerId) {
+        List<User> directReports = userRepository.findByManagerId(managerId);
+        return directReports.stream().map(userMapper::toDto).collect(Collectors.toList());
+    }
 }

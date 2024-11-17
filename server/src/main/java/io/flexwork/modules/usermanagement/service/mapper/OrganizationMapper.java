@@ -15,9 +15,8 @@ public interface OrganizationMapper {
     @Mapping(target = "teams", expression = "java(mapTeamsForIdOnly(organization.getTeams()))")
     OrganizationDTO toDto(Organization organization);
 
-    Organization organizationDTOToOrganization(OrganizationDTO organizationDTO);
+    Organization toEntity(OrganizationDTO organizationDTO);
 
-    // Custom method to map only the 'id' field from Team to TeamDTO
     default Set<TeamDTO> mapTeamsForIdOnly(Set<Team> teams) {
         return teams.stream()
                 .map(

@@ -33,6 +33,10 @@ public class UserDTO implements Serializable {
 
     private Set<AuthorityDTO> authorities;
 
+    private Long managerId;
+
+    private String managerName;
+
     private String about;
 
     private String address;

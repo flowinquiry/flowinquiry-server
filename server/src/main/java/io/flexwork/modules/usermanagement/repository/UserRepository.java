@@ -37,6 +37,14 @@ public interface UserRepository extends JpaRepository<User, Long>, JpaSpecificat
 
     Page<User> findAllByIdNotNullAndActivatedIsTrue(Pageable pageable);
 
+    /**
+     * Finds all direct reports of a specific user by their manager ID.
+     *
+     * @param managerId the ID of the manager.
+     * @return a list of direct reports.
+     */
+    List<User> findByManagerId(Long managerId);
+
     @Modifying
     @Transactional
     @Query("UPDATE User u SET u.lastLoginTime = :lastLoginTime WHERE u.email = :userEmail")

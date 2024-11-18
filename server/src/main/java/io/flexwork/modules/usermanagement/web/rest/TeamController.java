@@ -4,14 +4,17 @@ import io.flexwork.modules.fss.ResourceRemoveEvent;
 import io.flexwork.modules.fss.service.StorageService;
 import io.flexwork.modules.usermanagement.domain.Team;
 import io.flexwork.modules.usermanagement.service.TeamService;
-import io.flexwork.modules.usermanagement.service.UserService;
 import io.flexwork.modules.usermanagement.service.dto.TeamDTO;
 import io.flexwork.modules.usermanagement.service.dto.UserDTO;
+import io.flexwork.modules.usermanagement.service.dto.UserWithTeamRoleDTO;
 import io.flexwork.query.QueryDTO;
+import jakarta.json.Json;
 import jakarta.validation.Valid;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import lombok.Getter;
+import lombok.Setter;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -35,18 +38,15 @@ import org.springframework.web.multipart.MultipartFile;
 @RequestMapping("/api/teams")
 public class TeamController {
 
-    private final UserService userService;
     private final TeamService teamService;
     private final StorageService storageService;
     private final ApplicationEventPublisher eventPublisher;
 
     public TeamController(
             TeamService teamService,
-            UserService userService,
             StorageService storageService,
             ApplicationEventPublisher eventPublisher) {
         this.teamService = teamService;
-        this.userService = userService;
         this.storageService = storageService;
         this.eventPublisher = eventPublisher;
     }
@@ -126,9 +126,9 @@ public class TeamController {
     }
 
     @GetMapping("/{teamId}/members")
-    public ResponseEntity<Page<UserDTO>> findUsersByTeamId(
+    public ResponseEntity<Page<UserWithTeamRoleDTO>> findUsersByTeamId(
             @PathVariable Long teamId, Pageable pageable) {
-        return new ResponseEntity<>(userService.getUsersByTeam(teamId, pageable), HttpStatus.OK);
+        return new ResponseEntity<>(teamService.getUsersByTeam(teamId, pageable), HttpStatus.OK);
     }
 
     @GetMapping("/users/{userId}")
@@ -139,8 +139,9 @@ public class TeamController {
 
     @PostMapping("/{teamId}/add-users")
     public ResponseEntity<Void> addUsersToTeam(
-            @PathVariable Long teamId, @RequestBody List<Long> userIds) {
-        teamService.addUsersToTeam(userIds, teamId);
+            @PathVariable Long teamId, @RequestBody ListUserIdsAndRoleDTO userIdsAndRoleDTO) {
+        teamService.addUsersToTeam(
+                userIdsAndRoleDTO.getUserIds(), userIdsAndRoleDTO.getRole(), teamId);
         return ResponseEntity.ok().build();
     }
 
@@ -157,5 +158,19 @@ public class TeamController {
             @PathVariable Long userId, @PathVariable Long teamId) {
         teamService.removeUserFromTeam(userId, teamId);
         return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/{teamId}/users/{userId}/role")
+    public ResponseEntity<String> getUserRoleInTeam(
+            @PathVariable Long teamId, @PathVariable Long userId) {
+        String role = teamService.getUserRoleInTeam(userId, teamId);
+        return ResponseEntity.ok(Json.createObjectBuilder().add("role", role).build().toString());
+    }
+
+    @Getter
+    @Setter
+    public static class ListUserIdsAndRoleDTO {
+        private List<Long> userIds;
+        private String role;
     }
 }

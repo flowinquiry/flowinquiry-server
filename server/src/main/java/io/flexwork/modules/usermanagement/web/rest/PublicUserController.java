@@ -64,7 +64,7 @@ public class PublicUserController {
 
     @GetMapping("/{userId}")
     public ResponseEntity<UserDTO> getUser(@PathVariable("userId") Long userId) {
-        return ResponseUtil.wrapOrNotFound(userService.getUserWithAuthoritiesById(userId));
+        return ResponseUtil.wrapOrNotFound(userService.getUserWithManagerById(userId));
     }
 
     @GetMapping("/permissions/{userId}")

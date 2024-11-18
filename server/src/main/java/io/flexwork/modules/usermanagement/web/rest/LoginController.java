@@ -7,7 +7,6 @@ import io.flexwork.modules.usermanagement.repository.UserRepository;
 import io.flexwork.modules.usermanagement.service.UserService;
 import io.flexwork.modules.usermanagement.service.dto.FwUserDetails;
 import io.flexwork.modules.usermanagement.service.dto.UserDTO;
-import io.flexwork.modules.usermanagement.service.mapper.UserMapper;
 import io.flexwork.modules.usermanagement.web.rest.errors.InvalidLoginException;
 import jakarta.validation.Valid;
 import java.time.Instant;
@@ -49,20 +48,16 @@ public class LoginController {
 
     private final UserService userService;
 
-    private UserMapper userMapper;
-
     private final UserRepository userRepository;
 
     public LoginController(
             JwtEncoder jwtEncoder,
             AuthenticationManagerBuilder authenticationManagerBuilder,
             UserService userService,
-            UserMapper userMapper,
             UserRepository userRepository) {
         this.jwtEncoder = jwtEncoder;
         this.authenticationManagerBuilder = authenticationManagerBuilder;
         this.userService = userService;
-        this.userMapper = userMapper;
         this.userRepository = userRepository;
     }
 
@@ -76,10 +71,7 @@ public class LoginController {
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
         UserDTO adminUserDTO =
-                userService
-                        .getUserWithAuthorities()
-                        .map(value -> userMapper.toDto(value))
-                        .orElseThrow(() -> new InvalidLoginException());
+                userService.getUserWithAuthorities().orElseThrow(() -> new InvalidLoginException());
 
         String jwt = this.createToken(authentication, loginVM.isRememberMe());
         HttpHeaders httpHeaders = new HttpHeaders();

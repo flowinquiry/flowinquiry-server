@@ -10,7 +10,7 @@ import org.mapstruct.Named;
 @Mapper(componentModel = "spring")
 public interface UserMapper {
 
-    @Mapping(source = "manager", target = "managerId", qualifiedByName = "mapManagerId")
+    @Mapping(target = "managerId", source = "manager.id")
     @Mapping(source = "manager", target = "managerName", qualifiedByName = "mapManagerName")
     UserDTO toDto(User user);
 
@@ -18,18 +18,17 @@ public interface UserMapper {
 
     List<UserDTO> toDtos(List<User> users);
 
-    @Named("mapManagerId")
-    static Long mapManagerId(User manager) {
-        return (manager != null) ? manager.getId() : null;
-    }
-
     @Named("mapManagerName")
     static String mapManagerName(User manager) {
         if (manager == null) {
             return null;
         }
-        String firstName = manager.getFirstName() != null ? manager.getFirstName() : "";
-        String lastName = manager.getLastName() != null ? manager.getLastName() : "";
-        return (firstName + " " + lastName).trim();
+        try {
+            String firstName = manager.getFirstName() != null ? manager.getFirstName() : "";
+            String lastName = manager.getLastName() != null ? manager.getLastName() : "";
+            return (firstName + " " + lastName).trim();
+        } catch (Exception e) {
+            return null;
+        }
     }
 }

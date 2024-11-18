@@ -126,6 +126,10 @@ public class User extends AbstractAuditingEntity<Long> implements Serializable {
             })
     private Set<Authority> authorities = new HashSet<>();
 
+    @EqualsAndHashCode.Exclude
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<UserTeam> userTeams = new HashSet<>();
+
     public LocalDateTime getLastLoginTime() {
         if (lastLoginTime == null) return null;
         ZoneId userZone =

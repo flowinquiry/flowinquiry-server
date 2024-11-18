@@ -32,6 +32,9 @@ public interface UserRepository extends JpaRepository<User, Long>, JpaSpecificat
     @Cacheable(cacheNames = USERS_BY_EMAIL_CACHE)
     Optional<User> findOneWithAuthoritiesByEmailIgnoreCase(String email);
 
+    @EntityGraph(attributePaths = {"manager"})
+    Optional<User> findOneWithManagerById(Long id);
+
     @EntityGraph(attributePaths = "authorities")
     Optional<User> findOneWithAuthoritiesById(Long id);
 
@@ -49,9 +52,6 @@ public interface UserRepository extends JpaRepository<User, Long>, JpaSpecificat
     @Transactional
     @Query("UPDATE User u SET u.lastLoginTime = :lastLoginTime WHERE u.email = :userEmail")
     void updateLastLoginTime(String userEmail, LocalDateTime lastLoginTime);
-
-    @Query("SELECT u FROM User u JOIN u.teams t WHERE t.id = :teamId")
-    Page<User> findUsersByTeamId(@Param("teamId") Long teamId, Pageable pageable);
 
     @Query(
             value =

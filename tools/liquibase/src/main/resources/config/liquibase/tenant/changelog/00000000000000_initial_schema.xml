@@ -186,14 +186,20 @@
 				<constraints nullable="false" />
 			</column>
 		</createTable>
+
+		<addPrimaryKey columnNames="user_id, team_id"
+			tableName="fw_user_team" />
+
 		<addForeignKeyConstraint
 			baseTableName="fw_user_team" baseColumnNames="user_id"
 			referencedTableName="fw_user" referencedColumnNames="id"
 			onDelete="CASCADE" constraintName="fk_user_team_user" />
+
 		<addForeignKeyConstraint
 			baseTableName="fw_user_team" baseColumnNames="team_id"
 			referencedTableName="fw_team" referencedColumnNames="id"
 			onDelete="CASCADE" constraintName="fk_user_team_team" />
+
 		<addForeignKeyConstraint
 			baseTableName="fw_user_team" baseColumnNames="role_name"
 			referencedTableName="fw_team_role" referencedColumnNames="name"

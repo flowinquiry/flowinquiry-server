@@ -7,6 +7,7 @@ import lombok.EqualsAndHashCode;
 
 @Data
 public class UserWithTeamRoleDTO implements Serializable {
+
     @EqualsAndHashCode.Include private Long id;
 
     @Email @EqualsAndHashCode.Include private String email;

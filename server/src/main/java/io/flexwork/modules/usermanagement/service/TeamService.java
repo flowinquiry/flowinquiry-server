@@ -3,9 +3,14 @@ package io.flexwork.modules.usermanagement.service;
 import static io.flexwork.query.QueryUtils.createSpecification;
 
 import io.flexwork.modules.usermanagement.domain.Team;
+import io.flexwork.modules.usermanagement.domain.TeamRole;
 import io.flexwork.modules.usermanagement.domain.User;
+import io.flexwork.modules.usermanagement.domain.UserTeam;
+import io.flexwork.modules.usermanagement.domain.UserTeamId;
 import io.flexwork.modules.usermanagement.repository.TeamRepository;
+import io.flexwork.modules.usermanagement.repository.TeamRoleRepository;
 import io.flexwork.modules.usermanagement.repository.UserRepository;
+import io.flexwork.modules.usermanagement.repository.UserTeamRepository;
 import io.flexwork.modules.usermanagement.service.dto.TeamDTO;
 import io.flexwork.modules.usermanagement.service.dto.UserDTO;
 import io.flexwork.modules.usermanagement.service.dto.UserWithTeamRoleDTO;
@@ -15,6 +20,7 @@ import io.flexwork.query.QueryDTO;
 import jakarta.persistence.EntityNotFoundException;
 import java.util.List;
 import java.util.Optional;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -29,6 +35,10 @@ public class TeamService {
 
     private final UserRepository userRepository;
 
+    private final UserTeamRepository userTeamRepository;
+
+    private final TeamRoleRepository teamRoleRepository;
+
     private final TeamMapper teamMapper;
 
     private final UserMapper userMapper;
@@ -36,10 +46,14 @@ public class TeamService {
     public TeamService(
             TeamRepository teamRepository,
             UserRepository userRepository,
+            UserTeamRepository userTeamRepository,
+            TeamRoleRepository teamRoleRepository,
             TeamMapper teamMapper,
             UserMapper userMapper) {
         this.teamRepository = teamRepository;
         this.userRepository = userRepository;
+        this.userTeamRepository = userTeamRepository;
+        this.teamRoleRepository = teamRoleRepository;
         this.teamMapper = teamMapper;
         this.userMapper = userMapper;
     }
@@ -101,7 +115,7 @@ public class TeamService {
         return userMapper.toDtos(teamRepository.findUsersNotInTeam(searchTerm, teamId, pageable));
     }
 
-    public void addUsersToTeam(List<Long> userIds, Long teamId) {
+    public void addUsersToTeam(List<Long> userIds, String roleName, Long teamId) {
         // Fetch the authority entity
         Team team =
                 teamRepository
@@ -109,14 +123,36 @@ public class TeamService {
                         .orElseThrow(
                                 () -> new IllegalArgumentException("Team not found: " + teamId));
 
+        TeamRole teamRole =
+                teamRoleRepository
+                        .findById(roleName)
+                        .orElseThrow(
+                                () ->
+                                        new IllegalArgumentException(
+                                                "Invalid role name: " + roleName));
+
         // Fetch the users and associate them with the authority
         List<User> users = userRepository.findAllById(userIds);
-        for (User user : users) {
-            user.getTeams().add(team);
+
+        // Ensure all user IDs are valid
+        if (users.size() != userIds.size()) {
+            throw new IllegalArgumentException("Some user IDs are invalid.");
         }
 
-        // Save all updated users
-        userRepository.saveAll(users);
+        List<UserTeam> userTeams =
+                users.stream()
+                        .map(
+                                user ->
+                                        new UserTeam(
+                                                new UserTeamId(
+                                                        user.getId(), team.getId(), roleName),
+                                                user,
+                                                team,
+                                                teamRole))
+                        .toList();
+
+        // Save all UserTeam entities in a batch
+        userTeamRepository.saveAll(userTeams);
     }
 
     @Transactional
@@ -138,5 +174,10 @@ public class TeamService {
             user.getTeams().remove(team);
             userRepository.save(user); // Save the updated user
         }
+    }
+
+    public String getUserRoleInTeam(Long userId, Long teamId) {
+        String role = teamRepository.findUserRoleInTeam(userId, teamId);
+        return (StringUtils.isNotEmpty(role)) ? role : "Guest";
     }
 }

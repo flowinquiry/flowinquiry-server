@@ -318,15 +318,16 @@ public class UserService {
     }
 
     @Transactional(readOnly = true)
-    public Optional<UserDTO> getUserWithAuthoritiesById(Long id) {
-        return userRepository.findOneWithAuthoritiesById(id).map(userMapper::toDto);
+    public Optional<UserDTO> getUserWithManagerById(Long id) {
+        return userRepository.findOneWithManagerById(id).map(userMapper::toDto);
     }
 
     @Transactional(readOnly = true)
-    public Optional<User> getUserWithAuthorities() {
+    public Optional<UserDTO> getUserWithAuthorities() {
         return SecurityUtils.getCurrentUserLogin()
                 .map(UserKey::getEmail)
-                .flatMap(userRepository::findOneWithAuthoritiesByEmailIgnoreCase);
+                .flatMap(userRepository::findOneWithAuthoritiesByEmailIgnoreCase)
+                .map(userMapper::toDto);
     }
 
     //

@@ -97,7 +97,6 @@ public class UserAccountController {
     public UserDTO getAccount() {
         return userService
                 .getUserWithAuthorities()
-                .map(userMapper::toDto)
                 .orElseThrow(() -> new AccountResourceException("User could not be found"));
     }
 

@@ -18,7 +18,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class UserTeam {
-    @EmbeddedId private UserTeamId id = new UserTeamId();
+    @EmbeddedId private UserTeamId id;
 
     @ManyToOne
     @MapsId("userId")

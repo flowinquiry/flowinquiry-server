@@ -17,7 +17,50 @@
 				<constraints nullable="false" />
 			</column>
 			<column name="description" type="TEXT" />
+			<column name="owner_id" type="BIGINT">
+				<constraints nullable="true" />
+			</column>
+			<!-- Possible Values for visibility -->
+			<!-- PUBLIC: A global workflow discoverable and usable by any team. owner_id 
+				is NULL. -->
+			<!-- PRIVATE: A workflow restricted to a specific team. owner_id references 
+				the team that owns the workflow. -->
+			<!-- TEAM: A workflow created by a team but discoverable by other teams. 
+				owner_id references the owning team. -->
+			<column name="visibility" type="VARCHAR(50)"
+				defaultValue="PRIVATE">
+				<constraints nullable="false" />
+			</column>
 		</createTable>
+
+		<!-- Add foreign key constraint to fw_team for owner_id -->
+		<addForeignKeyConstraint
+			baseTableName="fw_workflow" baseColumnNames="owner_id"
+			referencedTableName="fw_team" referencedColumnNames="id"
+			onDelete="CASCADE" constraintName="fk_workflow_owner_team" />
+
+		<createTable tableName="fw_team_workflow_usage">
+			<column name="id" type="BIGINT" autoIncrement="true">
+				<constraints primaryKey="true" nullable="false" />
+			</column>
+			<column name="team_id" type="BIGINT">
+				<constraints nullable="false" />
+			</column>
+			<column name="workflow_id" type="BIGINT">
+				<constraints nullable="false" />
+			</column>
+		</createTable>
+
+		<addForeignKeyConstraint
+			baseTableName="fw_team_workflow_usage" baseColumnNames="team_id"
+			referencedTableName="fw_team" referencedColumnNames="id"
+			onDelete="CASCADE" constraintName="fk_team_workflow_usage_team" />
+
+		<addForeignKeyConstraint
+			baseTableName="fw_team_workflow_usage" baseColumnNames="workflow_id"
+			referencedTableName="fw_workflow" referencedColumnNames="id"
+			onDelete="CASCADE" constraintName="fk_team_workflow_usage_workflow" />
+
 
 		<!--This table stores each customer request associated with a team, linking 
 			the request to a specific workflow and tracking the current state. -->
@@ -168,6 +211,7 @@
 			<column name="id" type="numeric" />
 			<column name="name" type="string" />
 			<column name="description" type="string" />
+			<column name="owner_id" type="numeric" />
 		</loadData>
 	</changeSet>
 	<changeSet author="flexapp"

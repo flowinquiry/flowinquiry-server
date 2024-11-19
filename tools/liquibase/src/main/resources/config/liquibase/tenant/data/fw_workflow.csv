@@ -1,3 +1,7 @@
-id;name;description
-1;Team Request;Workflow for team requests
-2;Issue Tracking;Workflow for tracking issues
+id;name;description;owner_id
+1;Global Workflow 1;A global workflow available to all teams.;NULL
+2;Global Workflow 2;Another global workflow for all teams.;NULL
+3;Team Workflow 1;A custom workflow for Team 1.;1
+4;Team Workflow 2;A custom workflow for Team 5.;5
+5;Team Workflow 3;A custom workflow for Team 10.;10
+6;Team Workflow 4;A custom workflow for Team 15.;15

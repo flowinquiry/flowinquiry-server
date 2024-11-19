@@ -1,6 +1,6 @@
 package io.flexwork.modules.teams.domain;
 
-import jakarta.persistence.Column;
+import io.flexwork.modules.usermanagement.domain.Team;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -9,28 +9,25 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Table(name = "fw_workflow_actions")
+@Table(name = "fw_team_workflow_usage")
 @Data
-@Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class WorkflowAction {
+public class TeamWorkflowUsage {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "transition_id", nullable = false)
-    private WorkflowTransition transition;
+    @JoinColumn(name = "team_id", nullable = false)
+    private Team team;
 
-    private String actionType;
-
-    @Column(columnDefinition = "json")
-    private String actionData; // Store JSON data for flexibility
+    @ManyToOne
+    @JoinColumn(name = "workflow_id", nullable = false)
+    private Workflow workflow;
 }

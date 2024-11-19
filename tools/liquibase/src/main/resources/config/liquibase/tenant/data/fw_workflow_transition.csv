@@ -3,3 +3,10 @@ id;workflow_id;source_state;target_state;event_name;sla_duration
 2;1;In Progress;Completed;Mark Completed;172800
 3;2;Open;In Review;Submit for Review;43200
 4;2;In Review;Closed;Close Issue;86400
+5;3;Draft;Submitted;Submit Workflow;86400
+6;3;Submitted;Approved;Approve Workflow;43200
+7;4;Initiated;Processing;Begin Processing;86400
+8;4;Processing;Finalized;Finalize Workflow;172800
+9;5;Pending Review;Reviewed;Review Workflow;86400
+10;6;Not Started;In Execution;Start Execution;43200
+11;6;In Execution;Completed;Complete Workflow;172800

@@ -1,5 +1,7 @@
 package io.flexwork.modules.usermanagement.domain;
 
+import io.flexwork.modules.teams.domain.TeamWorkflowUsage;
+import io.flexwork.modules.teams.domain.Workflow;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Size;
 import java.util.HashSet;
@@ -38,15 +40,23 @@ public class Team {
     @JoinColumn(name = "organization_id")
     private Organization organization;
 
-    @ManyToMany(mappedBy = "teams")
     @EqualsAndHashCode.Exclude
+    @ManyToMany(mappedBy = "teams")
     private Set<User> users = new HashSet<>();
 
-    @OneToMany(mappedBy = "team", cascade = CascadeType.ALL, orphanRemoval = true)
     @EqualsAndHashCode.Exclude
+    @OneToMany(mappedBy = "team", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<UserTeam> teamMembers = new HashSet<>();
 
-    @OneToMany(mappedBy = "team", cascade = CascadeType.ALL, orphanRemoval = true)
     @EqualsAndHashCode.Exclude
+    @OneToMany(mappedBy = "team", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<UserTeam> userTeams = new HashSet<>();
+
+    @EqualsAndHashCode.Exclude
+    @OneToMany(mappedBy = "owner", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<Workflow> workflows = new HashSet<>();
+
+    @EqualsAndHashCode.Exclude
+    @OneToMany(mappedBy = "team", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<TeamWorkflowUsage> workflowUsages = new HashSet<>();
 }

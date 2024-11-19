@@ -2,6 +2,7 @@ package io.flexwork.modules.teams.web.rest;
 
 import io.flexwork.modules.teams.domain.Workflow;
 import io.flexwork.modules.teams.service.WorkflowService;
+import io.flexwork.modules.teams.service.dto.WorkflowDTO;
 import java.util.List;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -55,5 +56,17 @@ public class WorkflowController {
         } catch (IllegalArgumentException e) {
             return ResponseEntity.notFound().build();
         }
+    }
+
+    /**
+     * Get all workflows associated with a team.
+     *
+     * @param teamId the ID of the team.
+     * @return a list of workflows available for the team.
+     */
+    @GetMapping("/teams/{teamId}")
+    public ResponseEntity<List<WorkflowDTO>> getWorkflowsByTeam(@PathVariable Long teamId) {
+        List<WorkflowDTO> workflows = workflowService.getWorkflowsForTeam(teamId);
+        return ResponseEntity.ok(workflows);
     }
 }

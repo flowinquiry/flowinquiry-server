@@ -1,6 +1,6 @@
 package io.flexwork.modules.usermanagement.domain;
 
-import io.flexwork.modules.teams.domain.TeamWorkflowUsage;
+import io.flexwork.modules.teams.domain.TeamWorkflowSelection;
 import io.flexwork.modules.teams.domain.Workflow;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Size;
@@ -58,5 +58,5 @@ public class Team {
 
     @EqualsAndHashCode.Exclude
     @OneToMany(mappedBy = "team", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<TeamWorkflowUsage> workflowUsages = new HashSet<>();
+    private Set<TeamWorkflowSelection> workflowUsages = new HashSet<>();
 }

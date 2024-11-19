@@ -2,6 +2,8 @@ package io.flexwork.modules.teams.service;
 
 import io.flexwork.modules.teams.domain.Workflow;
 import io.flexwork.modules.teams.repository.WorkflowRepository;
+import io.flexwork.modules.teams.service.dto.WorkflowDTO;
+import io.flexwork.modules.teams.service.mapper.WorkflowMapper;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.stereotype.Service;
@@ -12,8 +14,11 @@ public class WorkflowService {
 
     private final WorkflowRepository workflowRepository;
 
-    public WorkflowService(WorkflowRepository workflowRepository) {
+    private final WorkflowMapper workflowMapper;
+
+    public WorkflowService(WorkflowRepository workflowRepository, WorkflowMapper workflowMapper) {
         this.workflowRepository = workflowRepository;
+        this.workflowMapper = workflowMapper;
     }
 
     @Transactional
@@ -52,5 +57,17 @@ public class WorkflowService {
         } else {
             throw new IllegalArgumentException("Workflow not found with id: " + id);
         }
+    }
+
+    /**
+     * Fetch all workflows associated with a team.
+     *
+     * @param teamId the ID of the team.
+     * @return a list of workflows available for the team.
+     */
+    public List<WorkflowDTO> getWorkflowsForTeam(Long teamId) {
+        return workflowRepository.findAllWorkflowsByTeam(teamId).stream()
+                .map(workflowMapper::toDto)
+                .toList();
     }
 }

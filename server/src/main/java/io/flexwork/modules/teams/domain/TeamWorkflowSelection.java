@@ -13,11 +13,11 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Table(name = "fw_team_workflow_usage")
+@Table(name = "fw_team_workflow_selection")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class TeamWorkflowUsage {
+public class TeamWorkflowSelection {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

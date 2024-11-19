@@ -39,7 +39,7 @@
 			referencedTableName="fw_team" referencedColumnNames="id"
 			onDelete="CASCADE" constraintName="fk_workflow_owner_team" />
 
-		<createTable tableName="fw_team_workflow_usage">
+		<createTable tableName="fw_team_workflow_selection">
 			<column name="id" type="BIGINT" autoIncrement="true">
 				<constraints primaryKey="true" nullable="false" />
 			</column>
@@ -52,14 +52,15 @@
 		</createTable>
 
 		<addForeignKeyConstraint
-			baseTableName="fw_team_workflow_usage" baseColumnNames="team_id"
+			baseTableName="fw_team_workflow_selection" baseColumnNames="team_id"
 			referencedTableName="fw_team" referencedColumnNames="id"
-			onDelete="CASCADE" constraintName="fk_team_workflow_usage_team" />
+			onDelete="CASCADE" constraintName="fk_team_workflow_selection_team" />
 
 		<addForeignKeyConstraint
-			baseTableName="fw_team_workflow_usage" baseColumnNames="workflow_id"
-			referencedTableName="fw_workflow" referencedColumnNames="id"
-			onDelete="CASCADE" constraintName="fk_team_workflow_usage_workflow" />
+			baseTableName="fw_team_workflow_selection"
+			baseColumnNames="workflow_id" referencedTableName="fw_workflow"
+			referencedColumnNames="id" onDelete="CASCADE"
+			constraintName="fk_team_workflow_selection_workflow" />
 
 
 		<!--This table stores each customer request associated with a team, linking 
@@ -239,6 +240,17 @@
 			<column name="target_state" type="string" />
 			<column name="event_name" type="string" />
 			<column name="sla_duration" type="numeric" />
+		</loadData>
+	</changeSet>
+	<changeSet author="flexapp"
+		id="00000000000004:04-insert-team-workflow-usage-data">
+		<loadData
+			file="config/liquibase/tenant/data/fw_team_workflow_selection.csv"
+			separator=";" tableName="fw_team_workflow_selection"
+			usePreparedStatements="true">
+			<column name="id" type="numeric" />
+			<column name="workflow_id" type="numeric" />
+			<column name="team_id" type="numeric" />
 		</loadData>
 	</changeSet>
 </databaseChangeLog>

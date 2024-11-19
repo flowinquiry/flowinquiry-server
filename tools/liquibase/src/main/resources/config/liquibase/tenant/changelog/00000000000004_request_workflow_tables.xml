@@ -4,7 +4,7 @@
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
-	<changeSet id="00000000000004_request_workflow"
+	<changeSet id="00000000000004:00-workflows-tables"
 		author="flexapp">
 
 		<!--Stores metadata about each workflow, allowing different workflows to 
@@ -17,7 +17,51 @@
 				<constraints nullable="false" />
 			</column>
 			<column name="description" type="TEXT" />
+			<column name="owner_id" type="BIGINT">
+				<constraints nullable="true" />
+			</column>
+			<!-- Possible Values for visibility -->
+			<!-- PUBLIC: A global workflow discoverable and usable by any team. owner_id 
+				is NULL. -->
+			<!-- PRIVATE: A workflow restricted to a specific team. owner_id references 
+				the team that owns the workflow. -->
+			<!-- TEAM: A workflow created by a team but discoverable by other teams. 
+				owner_id references the owning team. -->
+			<column name="visibility" type="VARCHAR(50)"
+				defaultValue="PRIVATE">
+				<constraints nullable="false" />
+			</column>
 		</createTable>
+
+		<!-- Add foreign key constraint to fw_team for owner_id -->
+		<addForeignKeyConstraint
+			baseTableName="fw_workflow" baseColumnNames="owner_id"
+			referencedTableName="fw_team" referencedColumnNames="id"
+			onDelete="CASCADE" constraintName="fk_workflow_owner_team" />
+
+		<createTable tableName="fw_team_workflow_selection">
+			<column name="id" type="BIGINT" autoIncrement="true">
+				<constraints primaryKey="true" nullable="false" />
+			</column>
+			<column name="team_id" type="BIGINT">
+				<constraints nullable="false" />
+			</column>
+			<column name="workflow_id" type="BIGINT">
+				<constraints nullable="false" />
+			</column>
+		</createTable>
+
+		<addForeignKeyConstraint
+			baseTableName="fw_team_workflow_selection" baseColumnNames="team_id"
+			referencedTableName="fw_team" referencedColumnNames="id"
+			onDelete="CASCADE" constraintName="fk_team_workflow_selection_team" />
+
+		<addForeignKeyConstraint
+			baseTableName="fw_team_workflow_selection"
+			baseColumnNames="workflow_id" referencedTableName="fw_workflow"
+			referencedColumnNames="id" onDelete="CASCADE"
+			constraintName="fk_team_workflow_selection_workflow" />
+
 
 		<!--This table stores each customer request associated with a team, linking 
 			the request to a specific workflow and tracking the current state. -->
@@ -65,7 +109,7 @@
 
 		<!--Defines each state in a workflow, marking initial and final states 
 			as needed. -->
-		<createTable tableName="fw_workflow_states">
+		<createTable tableName="fw_workflow_state">
 			<column name="id" type="BIGINT" autoIncrement="true">
 				<constraints primaryKey="true" nullable="false" />
 			</column>
@@ -80,14 +124,14 @@
 		</createTable>
 
 		<addForeignKeyConstraint
-			baseTableName="fw_workflow_states" baseColumnNames="workflow_id"
+			baseTableName="fw_workflow_state" baseColumnNames="workflow_id"
 			constraintName="fk_workflow_states_workflow"
 			referencedTableName="fw_workflow" referencedColumnNames="id" />
 
 		<!--Defines the transitions between states within each workflow. It includes 
 			the event name that triggers each transition, along with the SLA duration 
 			for each transition. -->
-		<createTable tableName="fw_workflow_transitions">
+		<createTable tableName="fw_workflow_transition">
 			<column name="id" type="BIGINT" autoIncrement="true">
 				<constraints primaryKey="true" nullable="false" />
 			</column>
@@ -106,7 +150,7 @@
 			<column name="sla_duration" type="BIGINT" />
 		</createTable>
 		<addForeignKeyConstraint
-			baseTableName="fw_workflow_transitions" baseColumnNames="workflow_id"
+			baseTableName="fw_workflow_transition" baseColumnNames="workflow_id"
 			constraintName="fk_workflow_transitions_workflow"
 			referencedTableName="fw_workflow" referencedColumnNames="id" />
 
@@ -127,7 +171,7 @@
 		<addForeignKeyConstraint
 			baseTableName="fw_workflow_actions" baseColumnNames="transition_id"
 			constraintName="fk_workflow_actions_transition"
-			referencedTableName="fw_workflow_transitions"
+			referencedTableName="fw_workflow_transition"
 			referencedColumnNames="id" />
 
 		<!--Tracks the history of each request as it progresses through its workflow, 
@@ -160,6 +204,53 @@
 			baseColumnNames="team_request_id"
 			constraintName="fk_workflow_transition_request"
 			referencedTableName="fw_team_request" referencedColumnNames="id" />
-
+	</changeSet>
+	<changeSet author="flexapp"
+		id="00000000000004:01-insert-workflow-data">
+		<loadData file="config/liquibase/tenant/data/fw_workflow.csv"
+			separator=";" tableName="fw_workflow" usePreparedStatements="true">
+			<column name="id" type="numeric" />
+			<column name="name" type="string" />
+			<column name="description" type="string" />
+			<column name="owner_id" type="numeric" />
+		</loadData>
+	</changeSet>
+	<changeSet author="flexapp"
+		id="00000000000004:02-insert-workflow-state-data">
+		<loadData
+			file="config/liquibase/tenant/data/fw_workflow_state.csv"
+			separator=";" tableName="fw_workflow_state"
+			usePreparedStatements="true">
+			<column name="id" type="numeric" />
+			<column name="workflow_id" type="numeric" />
+			<column name="state_name" type="string" />
+			<column name="is_initial" type="boolean" />
+			<column name="is_final" type="boolean" />
+		</loadData>
+	</changeSet>
+	<changeSet author="flexapp"
+		id="00000000000004:03-insert-workflow-transition-data">
+		<loadData
+			file="config/liquibase/tenant/data/fw_workflow_transition.csv"
+			separator=";" tableName="fw_workflow_transition"
+			usePreparedStatements="true">
+			<column name="id" type="numeric" />
+			<column name="workflow_id" type="numeric" />
+			<column name="source_state" type="string" />
+			<column name="target_state" type="string" />
+			<column name="event_name" type="string" />
+			<column name="sla_duration" type="numeric" />
+		</loadData>
+	</changeSet>
+	<changeSet author="flexapp"
+		id="00000000000004:04-insert-team-workflow-usage-data">
+		<loadData
+			file="config/liquibase/tenant/data/fw_team_workflow_selection.csv"
+			separator=";" tableName="fw_team_workflow_selection"
+			usePreparedStatements="true">
+			<column name="id" type="numeric" />
+			<column name="workflow_id" type="numeric" />
+			<column name="team_id" type="numeric" />
+		</loadData>
 	</changeSet>
 </databaseChangeLog>

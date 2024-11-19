@@ -8,9 +8,17 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import java.time.LocalDateTime;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Table(name = "fw_workflow_transition_history")
+@Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class WorkflowTransitionHistory {
 
     @Id

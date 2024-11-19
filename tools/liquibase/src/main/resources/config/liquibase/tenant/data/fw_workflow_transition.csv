@@ -1,0 +1,5 @@
+id;workflow_id;source_state;target_state;event_name;sla_duration
+1;1;Requested;In Progress;Start Progress;86400
+2;1;In Progress;Completed;Mark Completed;172800
+3;2;Open;In Review;Submit for Review;43200
+4;2;In Review;Closed;Close Issue;86400

@@ -1,0 +1,7 @@
+id;workflow_id;state_name;is_initial;is_final
+1;1;Requested;true;false
+2;1;In Progress;false;false
+3;1;Completed;false;true
+4;2;Open;true;false
+5;2;In Review;false;false
+6;2;Closed;false;true

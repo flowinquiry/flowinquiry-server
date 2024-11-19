@@ -9,7 +9,7 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 
 @Entity
-@Table(name = "fw_workflow_transitions")
+@Table(name = "fw_workflow_transition")
 public class WorkflowTransition {
 
     @Id

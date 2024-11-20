@@ -106,8 +106,8 @@ public class TeamService {
         return teamRepository.findAllTeamsByUserId(userId).stream().map(teamMapper::toDto).toList();
     }
 
-    public Page<UserWithTeamRoleDTO> getUsersByTeam(Long teamId, Pageable pageable) {
-        return teamRepository.findUsersByTeamId(teamId, pageable);
+    public List<UserWithTeamRoleDTO> getUsersByTeam(Long teamId) {
+        return teamRepository.findUsersByTeamId(teamId);
     }
 
     @Transactional(readOnly = true)

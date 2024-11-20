@@ -126,9 +126,8 @@ public class TeamController {
     }
 
     @GetMapping("/{teamId}/members")
-    public ResponseEntity<Page<UserWithTeamRoleDTO>> findUsersByTeamId(
-            @PathVariable Long teamId, Pageable pageable) {
-        return new ResponseEntity<>(teamService.getUsersByTeam(teamId, pageable), HttpStatus.OK);
+    public ResponseEntity<List<UserWithTeamRoleDTO>> findUsersByTeamId(@PathVariable Long teamId) {
+        return new ResponseEntity<>(teamService.getUsersByTeam(teamId), HttpStatus.OK);
     }
 
     @GetMapping("/users/{userId}")

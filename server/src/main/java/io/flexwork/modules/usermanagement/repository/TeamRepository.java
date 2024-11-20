@@ -47,7 +47,7 @@ public interface TeamRepository extends JpaRepository<Team, Long>, JpaSpecificat
     @Query(
             "SELECT new io.flexwork.modules.usermanagement.service.dto.UserWithTeamRoleDTO(u.id, u.email, u.firstName, u.lastName, u.timezone, u.imageUrl, u.title, ut.team.id, ut.role.name) "
                     + "FROM User u JOIN u.userTeams ut WHERE ut.team.id = :teamId")
-    Page<UserWithTeamRoleDTO> findUsersByTeamId(@Param("teamId") Long teamId, Pageable pageable);
+    List<UserWithTeamRoleDTO> findUsersByTeamId(@Param("teamId") Long teamId);
 
     /**
      * Return the team role of user, return default value is 'Guest'

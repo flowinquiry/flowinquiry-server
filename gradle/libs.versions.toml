@@ -16,6 +16,7 @@ parssonVersion="1.1.7"
 springbootVersion = "3.3.5"
 springDependencyManagementVersion="1.1.6"
 jhisterVersion = "8.7.1"
+j2HtmlVersion = "1.6.0"
 
 [libraries]
 jhipster-framework = { module = "tech.jhipster:jhipster-framework", version.ref = "jhisterVersion" }
@@ -29,6 +30,7 @@ mapstruct = { module = "org.mapstruct:mapstruct", version.ref = "mapstructVersio
 mapstruct-processor = { module = "org.mapstruct:mapstruct-processor", version.ref = "mapstructVersion" }
 jclouds = { module = "org.apache.jclouds:jclouds-all", version.ref = "jcloudsVersion" }
 dot-env = { module = "io.github.cdimascio:dotenv-java", version.ref = "dotEnvVersion" }
+j2html = {module = "com.j2html:j2html", version.ref="j2HtmlVersion"}
 logback-classic = { module = "ch.qos.logback:logback-classic", version.ref = "logbackVersion" }
 junit-bom = { module = "org.junit:junit-bom", version.ref = "junitVersion" }
 junit-jupiter-api = { module = "org.junit.jupiter:junit-jupiter-api" }

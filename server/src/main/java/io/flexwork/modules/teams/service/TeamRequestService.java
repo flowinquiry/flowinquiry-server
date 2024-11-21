@@ -2,6 +2,7 @@ package io.flexwork.modules.teams.service;
 
 import static io.flexwork.query.QueryUtils.createSpecification;
 
+import io.flexwork.modules.collab.service.event.NewTeamRequestCreatedEvent;
 import io.flexwork.modules.teams.domain.TeamRequest;
 import io.flexwork.modules.teams.repository.TeamRequestRepository;
 import io.flexwork.modules.teams.service.dto.TeamRequestDTO;
@@ -11,6 +12,7 @@ import java.time.LocalDateTime;
 import java.util.Optional;
 import org.jclouds.rest.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -23,12 +25,16 @@ public class TeamRequestService {
 
     private final TeamRequestRepository teamRequestRepository;
     private final TeamRequestMapper teamRequestMapper;
+    private final ApplicationEventPublisher eventPublisher;
 
     @Autowired
     public TeamRequestService(
-            TeamRequestRepository teamRequestRepository, TeamRequestMapper teamRequestMapper) {
+            TeamRequestRepository teamRequestRepository,
+            TeamRequestMapper teamRequestMapper,
+            ApplicationEventPublisher eventPublisher) {
         this.teamRequestRepository = teamRequestRepository;
         this.teamRequestMapper = teamRequestMapper;
+        this.eventPublisher = eventPublisher;
     }
 
     @Transactional(readOnly = true)
@@ -60,7 +66,9 @@ public class TeamRequestService {
         TeamRequest teamRequest = teamRequestMapper.toEntity(teamRequestDTO);
         teamRequest.setCreatedDate(LocalDateTime.now());
         teamRequest = teamRequestRepository.save(teamRequest);
-        return teamRequestMapper.toDto(teamRequest);
+        TeamRequestDTO savedTeamRequestDTO = teamRequestMapper.toDto(teamRequest);
+        eventPublisher.publishEvent(new NewTeamRequestCreatedEvent(this, savedTeamRequestDTO));
+        return savedTeamRequestDTO;
     }
 
     @Transactional

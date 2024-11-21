@@ -11,8 +11,8 @@ import static org.mockito.Mockito.when;
 
 import io.flexwork.IntegrationTest;
 import io.flexwork.config.FlexworkProperties;
+import io.flexwork.modules.collab.service.MailService;
 import io.flexwork.modules.usermanagement.domain.User;
-import io.flexwork.modules.usermanagement.service.MailService;
 import io.flexwork.security.Constants;
 import jakarta.mail.Multipart;
 import jakarta.mail.Session;

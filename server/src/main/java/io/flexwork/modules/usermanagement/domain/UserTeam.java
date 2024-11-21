@@ -1,5 +1,7 @@
 package io.flexwork.modules.usermanagement.domain;
 
+import io.flexwork.modules.collab.domain.Team;
+import io.flexwork.modules.collab.domain.TeamRole;
 import jakarta.persistence.EmbeddedId;
 import jakarta.persistence.Entity;
 import jakarta.persistence.JoinColumn;

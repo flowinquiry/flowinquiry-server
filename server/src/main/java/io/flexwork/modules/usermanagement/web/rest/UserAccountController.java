@@ -1,8 +1,8 @@
 package io.flexwork.modules.usermanagement.web.rest;
 
+import io.flexwork.modules.collab.service.MailService;
 import io.flexwork.modules.usermanagement.domain.User;
 import io.flexwork.modules.usermanagement.repository.UserRepository;
-import io.flexwork.modules.usermanagement.service.MailService;
 import io.flexwork.modules.usermanagement.service.UserService;
 import io.flexwork.modules.usermanagement.service.dto.PasswordChangeDTO;
 import io.flexwork.modules.usermanagement.service.dto.UserDTO;

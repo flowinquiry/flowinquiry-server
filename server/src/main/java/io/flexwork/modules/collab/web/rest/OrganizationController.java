@@ -1,9 +1,9 @@
-package io.flexwork.modules.usermanagement.web.rest;
+package io.flexwork.modules.collab.web.rest;
 
-import io.flexwork.modules.usermanagement.domain.Organization;
-import io.flexwork.modules.usermanagement.service.OrganizationService;
-import io.flexwork.modules.usermanagement.service.dto.OrganizationDTO;
-import io.flexwork.modules.usermanagement.service.mapper.OrganizationMapper;
+import io.flexwork.modules.collab.domain.Organization;
+import io.flexwork.modules.collab.service.OrganizationService;
+import io.flexwork.modules.collab.service.dto.OrganizationDTO;
+import io.flexwork.modules.collab.service.mapper.OrganizationMapper;
 import io.flexwork.query.QueryDTO;
 import java.util.Optional;
 import org.springframework.data.domain.Page;

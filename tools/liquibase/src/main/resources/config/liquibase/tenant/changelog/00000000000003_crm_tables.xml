@@ -258,36 +258,6 @@
 			constraintName="fk_cases_contact"
 			referencedTableName="fw_crm_contact" referencedColumnNames="id" />
 
-		<createTable tableName="fw_crm_comment">
-			<column name="id" type="BIGINT">
-				<constraints primaryKey="true" nullable="false" />
-			</column>
-			<column name="content" type="TEXT">
-				<constraints nullable="false" />
-			</column>
-			<column name="created_by" type="BIGINT">
-				<constraints nullable="false" />
-			</column>
-			<column name="created_at" type="timestamptz"
-				defaultValueComputed="CURRENT_TIMESTAMP" />
-			<column name="updated_at" type="timestamptz"
-				defaultValueComputed="CURRENT_TIMESTAMP" />
-			<column name="entity_type" type="VARCHAR(20)">
-				<constraints nullable="false" />
-			</column>
-			<column name="entity_id" type="BIGINT">
-				<constraints nullable="false" />
-			</column>
-		</createTable>
-
-		<addAutoIncrement tableName="fw_crm_comment"
-			columnName="id" incrementBy="1" startWith="1000" />
-
-		<addForeignKeyConstraint
-			baseTableName="fw_crm_comment" baseColumnNames="created_by"
-			constraintName="fk_comment_user" referencedTableName="fw_user"
-			referencedColumnNames="id" />
-
 		<createTable tableName="fw_crm_activity_log">
 			<column name="id" type="BIGINT" autoIncrement="true">
 				<constraints primaryKey="true" nullable="false" />

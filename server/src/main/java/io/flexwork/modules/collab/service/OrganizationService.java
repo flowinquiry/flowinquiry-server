@@ -1,9 +1,9 @@
-package io.flexwork.modules.usermanagement.service;
+package io.flexwork.modules.collab.service;
 
 import static io.flexwork.query.QueryUtils.createSpecification;
 
-import io.flexwork.modules.usermanagement.domain.Organization;
-import io.flexwork.modules.usermanagement.repository.OrganizationRepository;
+import io.flexwork.modules.collab.domain.Organization;
+import io.flexwork.modules.collab.repository.OrganizationRepository;
 import io.flexwork.query.QueryDTO;
 import jakarta.persistence.EntityNotFoundException;
 import java.util.Optional;

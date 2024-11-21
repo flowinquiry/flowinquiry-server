@@ -1,4 +1,4 @@
-package io.flexwork.modules.usermanagement.service;
+package io.flexwork.modules.collab.service;
 
 import io.flexwork.config.FlexworkProperties;
 import io.flexwork.modules.usermanagement.domain.User;

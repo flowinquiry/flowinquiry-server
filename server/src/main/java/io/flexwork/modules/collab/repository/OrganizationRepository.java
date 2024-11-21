@@ -1,6 +1,6 @@
-package io.flexwork.modules.usermanagement.repository;
+package io.flexwork.modules.collab.repository;
 
-import io.flexwork.modules.usermanagement.domain.Organization;
+import io.flexwork.modules.collab.domain.Organization;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.stereotype.Repository;

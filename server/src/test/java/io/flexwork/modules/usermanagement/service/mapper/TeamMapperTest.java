@@ -3,9 +3,10 @@ package io.flexwork.modules.usermanagement.service.mapper;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import io.flexwork.modules.usermanagement.domain.Organization;
-import io.flexwork.modules.usermanagement.domain.Team;
-import io.flexwork.modules.usermanagement.service.dto.TeamDTO;
+import io.flexwork.modules.collab.domain.Organization;
+import io.flexwork.modules.collab.domain.Team;
+import io.flexwork.modules.collab.service.dto.TeamDTO;
+import io.flexwork.modules.collab.service.mapper.TeamMapper;
 import org.junit.jupiter.api.Test;
 import org.mapstruct.factory.Mappers;
 

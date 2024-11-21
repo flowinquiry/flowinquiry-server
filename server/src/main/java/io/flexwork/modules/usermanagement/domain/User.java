@@ -1,6 +1,7 @@
 package io.flexwork.modules.usermanagement.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import io.flexwork.modules.collab.domain.Team;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotNull;

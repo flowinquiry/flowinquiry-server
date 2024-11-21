@@ -1,6 +1,6 @@
-package io.flexwork.modules.usermanagement.repository;
+package io.flexwork.modules.collab.repository;
 
-import io.flexwork.modules.usermanagement.domain.TeamRole;
+import io.flexwork.modules.collab.domain.TeamRole;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

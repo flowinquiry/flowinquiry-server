@@ -1,4 +1,4 @@
-package io.flexwork.modules.usermanagement.service.dto;
+package io.flexwork.modules.collab.service.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

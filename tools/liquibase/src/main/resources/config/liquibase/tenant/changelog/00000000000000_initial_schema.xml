@@ -204,6 +204,31 @@
 			baseTableName="fw_user_team" baseColumnNames="role_name"
 			referencedTableName="fw_team_role" referencedColumnNames="name"
 			onDelete="CASCADE" constraintName="fk_user_team_role" />
+
+		<createTable tableName="fw_comment">
+			<column name="id" type="BIGINT" autoIncrement="true">
+				<constraints primaryKey="true" nullable="false" />
+			</column>
+			<column name="content" type="TEXT">
+				<constraints nullable="false" />
+			</column>
+			<column name="created_by" type="BIGINT">
+				<constraints nullable="false" />
+			</column>
+			<column name="created_at" type="timestamptz"
+				defaultValueComputed="CURRENT_TIMESTAMP" />
+			<column name="entity_type" type="VARCHAR(20)">
+				<constraints nullable="false" />
+			</column>
+			<column name="entity_id" type="BIGINT">
+				<constraints nullable="false" />
+			</column>
+		</createTable>
+
+		<addForeignKeyConstraint
+			baseTableName="fw_comment" baseColumnNames="created_by"
+			constraintName="fk_comment_user" referencedTableName="fw_user"
+			referencedColumnNames="id" />
 	</changeSet>
 
 	<changeSet author="flexapp"

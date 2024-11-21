@@ -1,7 +1,9 @@
-package io.flexwork.modules.usermanagement.domain;
+package io.flexwork.modules.collab.domain;
 
 import io.flexwork.modules.teams.domain.TeamWorkflowSelection;
 import io.flexwork.modules.teams.domain.Workflow;
+import io.flexwork.modules.usermanagement.domain.User;
+import io.flexwork.modules.usermanagement.domain.UserTeam;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Size;
 import java.util.HashSet;

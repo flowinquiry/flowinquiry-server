@@ -8,7 +8,6 @@ import io.flexwork.modules.usermanagement.domain.Permission;
 import io.flexwork.modules.usermanagement.domain.User;
 import io.flexwork.modules.usermanagement.domain.User_;
 import io.flexwork.modules.usermanagement.repository.AuthorityRepository;
-import io.flexwork.modules.usermanagement.repository.TeamRepository;
 import io.flexwork.modules.usermanagement.repository.UserRepository;
 import io.flexwork.modules.usermanagement.service.dto.ResourcePermissionDTO;
 import io.flexwork.modules.usermanagement.service.dto.UserDTO;
@@ -47,20 +46,16 @@ public class UserService {
 
     private final AuthorityRepository authorityRepository;
 
-    private final TeamRepository teamRepository;
-
     private final UserMapper userMapper;
 
     public UserService(
             UserRepository userRepository,
             PasswordEncoder passwordEncoder,
             AuthorityRepository authorityRepository,
-            TeamRepository teamRepository,
             UserMapper userMapper) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.authorityRepository = authorityRepository;
-        this.teamRepository = teamRepository;
         this.userMapper = userMapper;
     }
 

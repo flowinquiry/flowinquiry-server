@@ -1,6 +1,6 @@
 package io.flexwork.modules.teams.domain;
 
-import io.flexwork.modules.usermanagement.domain.Team;
+import io.flexwork.modules.collab.domain.Team;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;

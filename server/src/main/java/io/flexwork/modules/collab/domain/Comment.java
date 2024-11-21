@@ -1,10 +1,10 @@
-package io.flexwork.modules.crm.domain;
+package io.flexwork.modules.collab.domain;
 
 import io.flexwork.modules.usermanagement.domain.User;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.ForeignKey;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -16,11 +16,9 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.UpdateTimestamp;
 
 @Entity
-@Table(name = "fw_crm_comments")
+@Table(name = "fw_comment")
 @Data
 @Builder
 @NoArgsConstructor
@@ -31,31 +29,26 @@ public class Comment {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "content", nullable = false)
+    @Column(name = "content", nullable = false, columnDefinition = "TEXT")
     private String content;
 
-    @ManyToOne
-    @JoinColumn(name = "created_by", nullable = false)
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(
+            name = "created_by",
+            nullable = false,
+            foreignKey = @ForeignKey(name = "fk_comment_user"))
     private User createdBy;
 
-    @Column(name = "created_at", updatable = false)
-    @CreationTimestamp
+    @Column(
+            name = "created_at",
+            nullable = false,
+            columnDefinition = "TIMESTAMPTZ",
+            updatable = false)
     private LocalDateTime createdAt;
 
-    @Column(name = "updated_at")
-    @UpdateTimestamp
-    private LocalDateTime updatedAt;
-
-    @Enumerated(EnumType.STRING)
-    @Column(name = "entity_type", nullable = false)
-    private EntityType entityType;
+    @Column(name = "entity_type", nullable = false, length = 20)
+    private String entityType;
 
     @Column(name = "entity_id", nullable = false)
     private Long entityId;
-
-    public enum EntityType {
-        ACCOUNT,
-        CONTACT,
-        CASE
-    }
 }

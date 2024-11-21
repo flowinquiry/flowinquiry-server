@@ -1,11 +1,11 @@
 package io.flexwork.modules.usermanagement.web.rest;
 
 import com.flexwork.platform.utils.CodecUtils;
+import io.flexwork.modules.collab.service.MailService;
 import io.flexwork.modules.fss.service.StorageService;
 import io.flexwork.modules.usermanagement.AuthoritiesConstants;
 import io.flexwork.modules.usermanagement.domain.User;
 import io.flexwork.modules.usermanagement.repository.UserRepository;
-import io.flexwork.modules.usermanagement.service.MailService;
 import io.flexwork.modules.usermanagement.service.UserService;
 import io.flexwork.modules.usermanagement.service.dto.UserDTO;
 import io.flexwork.modules.usermanagement.service.mapper.UserMapper;

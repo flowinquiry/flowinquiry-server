@@ -1,20 +1,20 @@
-package io.flexwork.modules.usermanagement.service;
+package io.flexwork.modules.collab.service;
 
 import static io.flexwork.query.QueryUtils.createSpecification;
 
-import io.flexwork.modules.usermanagement.domain.Team;
-import io.flexwork.modules.usermanagement.domain.TeamRole;
+import io.flexwork.modules.collab.domain.Team;
+import io.flexwork.modules.collab.domain.TeamRole;
+import io.flexwork.modules.collab.repository.TeamRepository;
+import io.flexwork.modules.collab.repository.TeamRoleRepository;
+import io.flexwork.modules.collab.service.dto.TeamDTO;
+import io.flexwork.modules.collab.service.mapper.TeamMapper;
 import io.flexwork.modules.usermanagement.domain.User;
 import io.flexwork.modules.usermanagement.domain.UserTeam;
 import io.flexwork.modules.usermanagement.domain.UserTeamId;
-import io.flexwork.modules.usermanagement.repository.TeamRepository;
-import io.flexwork.modules.usermanagement.repository.TeamRoleRepository;
 import io.flexwork.modules.usermanagement.repository.UserRepository;
 import io.flexwork.modules.usermanagement.repository.UserTeamRepository;
-import io.flexwork.modules.usermanagement.service.dto.TeamDTO;
 import io.flexwork.modules.usermanagement.service.dto.UserDTO;
 import io.flexwork.modules.usermanagement.service.dto.UserWithTeamRoleDTO;
-import io.flexwork.modules.usermanagement.service.mapper.TeamMapper;
 import io.flexwork.modules.usermanagement.service.mapper.UserMapper;
 import io.flexwork.query.QueryDTO;
 import jakarta.persistence.EntityNotFoundException;

@@ -15,6 +15,19 @@ import org.mapstruct.NullValuePropertyMappingStrategy;
 @Mapper(componentModel = "spring")
 public interface TeamRequestMapper {
 
+    @Mapping(target = "teamId", source = "team.id")
+    @Mapping(target = "requestUserId", source = "requestUser.id")
+    @Mapping(
+            target = "requestUserName",
+            expression =
+                    "java(concatName(teamRequest.getRequestUser().getFirstName(), teamRequest.getRequestUser().getLastName()))")
+    @Mapping(target = "assignUserId", source = "assignUser.id")
+    @Mapping(
+            target = "assignUserName",
+            expression =
+                    "java(concatName(teamRequest.getAssignUser().getFirstName(), teamRequest.getAssignUser().getLastName()))")
+    @Mapping(target = "workflowId", source = "workflow.id")
+    @Mapping(target = "workflowName", source = "workflow.name")
     TeamRequestDTO toDto(TeamRequest teamRequest);
 
     @Mapping(target = "team", source = "teamId", qualifiedByName = "toTeam")
@@ -36,6 +49,10 @@ public interface TeamRequestMapper {
     @Named("toUser")
     default User toUser(Long userId) {
         return (userId == null) ? null : User.builder().id(userId).build();
+    }
+
+    default String concatName(String firstName, String lastName) {
+        return firstName + " " + (lastName != null ? lastName : "");
     }
 
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)

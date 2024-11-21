@@ -1,14 +1,19 @@
 package io.flexwork.modules.teams.service;
 
+import static io.flexwork.query.QueryUtils.createSpecification;
+
 import io.flexwork.modules.teams.domain.TeamRequest;
 import io.flexwork.modules.teams.repository.TeamRequestRepository;
 import io.flexwork.modules.teams.service.dto.TeamRequestDTO;
 import io.flexwork.modules.teams.service.mapper.TeamRequestMapper;
+import io.flexwork.query.QueryDTO;
 import java.time.LocalDateTime;
-import java.util.List;
-import java.util.stream.Collectors;
+import java.util.Optional;
 import org.jclouds.rest.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -17,7 +22,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class TeamRequestService {
 
     private final TeamRequestRepository teamRequestRepository;
-    private final TeamRequestMapper teamRequestMapper; // Assume a MapStruct mapper
+    private final TeamRequestMapper teamRequestMapper;
 
     @Autowired
     public TeamRequestService(
@@ -27,10 +32,15 @@ public class TeamRequestService {
     }
 
     @Transactional(readOnly = true)
-    public List<TeamRequestDTO> getAllTeamRequests() {
-        return teamRequestRepository.findAll().stream()
-                .map(teamRequestMapper::toDto)
-                .collect(Collectors.toList());
+    public Page<TeamRequestDTO> getAllTeamRequests(Pageable pageable) {
+        return teamRequestRepository.findAll(pageable).map(teamRequestMapper::toDto);
+    }
+
+    public Page<TeamRequestDTO> findTeamRequests(Optional<QueryDTO> queryDTO, Pageable pageable) {
+        Specification<TeamRequest> spec = createSpecification(queryDTO);
+        return teamRequestRepository
+                .findAllWithEagerRelationships(spec, pageable)
+                .map(teamRequestMapper::toDto);
     }
 
     @Transactional(readOnly = true)
@@ -48,7 +58,7 @@ public class TeamRequestService {
     @Transactional
     public TeamRequestDTO createTeamRequest(TeamRequestDTO teamRequestDTO) {
         TeamRequest teamRequest = teamRequestMapper.toEntity(teamRequestDTO);
-        teamRequest.setCreatedDate(LocalDateTime.now()); // Example of setting default value
+        teamRequest.setCreatedDate(LocalDateTime.now());
         teamRequest = teamRequestRepository.save(teamRequest);
         return teamRequestMapper.toDto(teamRequest);
     }
@@ -63,7 +73,7 @@ public class TeamRequestService {
                                         new ResourceNotFoundException(
                                                 "TeamRequest not found with id: " + id));
 
-        teamRequestMapper.updateEntity(teamRequestDTO, existingTeamRequest); // Update fields
+        teamRequestMapper.updateEntity(teamRequestDTO, existingTeamRequest);
         existingTeamRequest = teamRequestRepository.save(existingTeamRequest);
         return teamRequestMapper.toDto(existingTeamRequest);
     }

@@ -34,7 +34,7 @@ public class Activity {
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private EntityType entityType;
+    private CrmEntityType crmEntityType;
 
     @Column(nullable = false)
     private Long entityId;

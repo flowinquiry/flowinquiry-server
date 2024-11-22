@@ -9,6 +9,7 @@ import io.flexwork.modules.teams.service.dto.TeamRequestDTO;
 import io.flexwork.modules.teams.service.mapper.TeamRequestMapper;
 import io.flexwork.query.QueryDTO;
 import java.time.LocalDateTime;
+import java.util.Objects;
 import java.util.Optional;
 import org.jclouds.rest.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,11 +43,12 @@ public class TeamRequestService {
         return teamRequestRepository.findAll(pageable).map(teamRequestMapper::toDto);
     }
 
-    public Page<TeamRequestDTO> findTeamRequests(Optional<QueryDTO> queryDTO, Pageable pageable) {
-        Specification<TeamRequest> spec = createSpecification(queryDTO);
-        return teamRequestRepository
-                .findAllWithEagerRelationships(spec, pageable)
-                .map(teamRequestMapper::toDto);
+    public Page<TeamRequestDTO> findTeamRequests(QueryDTO queryDTO, Pageable pageable) {
+        if (!hasTeamIdFilter(queryDTO)) {
+            throw new ResourceNotFoundException("No team id found");
+        }
+        Specification<TeamRequest> spec = createSpecification(Optional.of(queryDTO));
+        return teamRequestRepository.findAll(spec, pageable).map(teamRequestMapper::toDto);
     }
 
     @Transactional(readOnly = true)
@@ -92,5 +94,13 @@ public class TeamRequestService {
             throw new ResourceNotFoundException("TeamRequest not found with id: " + id);
         }
         teamRequestRepository.deleteById(id);
+    }
+
+    private static boolean hasTeamIdFilter(QueryDTO queryDTO) {
+        return queryDTO != null
+                && queryDTO.getFilters() != null
+                && queryDTO.getFilters().stream()
+                        .filter(Objects::nonNull)
+                        .anyMatch(filter -> "team.id".equals(filter.getField()));
     }
 }

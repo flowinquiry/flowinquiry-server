@@ -4,7 +4,6 @@ import io.flexwork.modules.teams.service.TeamRequestService;
 import io.flexwork.modules.teams.service.dto.TeamRequestDTO;
 import io.flexwork.query.QueryDTO;
 import jakarta.validation.Valid;
-import java.util.Optional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -36,7 +35,7 @@ public class TeamRequestController {
 
     @PostMapping("/search")
     public ResponseEntity<Page<TeamRequestDTO>> findTeamRequests(
-            @Valid @RequestBody Optional<QueryDTO> queryDTO, Pageable pageable) {
+            @Valid @RequestBody QueryDTO queryDTO, Pageable pageable) {
         Page<TeamRequestDTO> teamRequests = teamRequestService.findTeamRequests(queryDTO, pageable);
         return new ResponseEntity<>(teamRequests, HttpStatus.OK);
     }

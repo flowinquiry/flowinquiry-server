@@ -26,7 +26,7 @@ public interface AccountMapper {
     void updateFromDto(AccountDTO accountDTO, @MappingTarget Account account);
 
     @Mapping(target = "id", ignore = true)
-    @Mapping(target = "entityType", constant = "ACCOUNT")
+    @Mapping(target = "crmEntityType", constant = "ACCOUNT")
     @Mapping(target = "entityId", source = "account.id")
     @Mapping(target = "user", source = "updatedUserId", qualifiedByName = "toUser")
     ActivityLog accountEntityToActivityLog(Account account, Action action, Long updatedUserId);

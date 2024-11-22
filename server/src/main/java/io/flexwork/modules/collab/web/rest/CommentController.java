@@ -1,6 +1,7 @@
 package io.flexwork.modules.collab.web.rest;
 
 import io.flexwork.modules.collab.domain.Comment;
+import io.flexwork.modules.collab.domain.EntityType;
 import io.flexwork.modules.collab.service.CommentService;
 import io.flexwork.modules.collab.service.dto.CommentDTO;
 import java.util.List;
@@ -8,7 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/comments")
+@RequestMapping("/api/comments")
 public class CommentController {
 
     private final CommentService commentService;
@@ -31,7 +32,7 @@ public class CommentController {
 
     @GetMapping
     public ResponseEntity<List<CommentDTO>> getCommentsForEntity(
-            @RequestParam String entityType, @RequestParam Long entityId) {
+            @RequestParam EntityType entityType, @RequestParam Long entityId) {
         List<CommentDTO> comments = commentService.getCommentsForEntity(entityType, entityId);
         return ResponseEntity.ok(comments);
     }

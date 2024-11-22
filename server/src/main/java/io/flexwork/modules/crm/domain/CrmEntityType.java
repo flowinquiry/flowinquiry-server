@@ -1,6 +1,6 @@
 package io.flexwork.modules.crm.domain;
 
-public enum EntityType {
+public enum CrmEntityType {
     ACCOUNT,
     CONTACT,
     OPPORTUNITY,

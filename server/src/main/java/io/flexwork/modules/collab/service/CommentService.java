@@ -1,6 +1,7 @@
 package io.flexwork.modules.collab.service;
 
 import io.flexwork.modules.collab.domain.Comment;
+import io.flexwork.modules.collab.domain.EntityType;
 import io.flexwork.modules.collab.repository.CommentRepository;
 import io.flexwork.modules.collab.service.dto.CommentDTO;
 import io.flexwork.modules.collab.service.mapper.CommentMapper;
@@ -32,8 +33,10 @@ public class CommentService {
                         () -> new IllegalArgumentException("Comment not found with id: " + id));
     }
 
-    public List<CommentDTO> getCommentsForEntity(String entityType, Long entityId) {
-        return commentRepository.findByEntityTypeAndEntityId(entityType, entityId).stream()
+    public List<CommentDTO> getCommentsForEntity(EntityType entityType, Long entityId) {
+        return commentRepository
+                .findByEntityTypeAndEntityIdOrderByCreatedAtDesc(entityType, entityId)
+                .stream()
                 .map(commentMapper::toDTO)
                 .toList();
     }

@@ -10,6 +10,7 @@ import org.mapstruct.Mapping;
 public interface CommentMapper {
     @Mapping(source = "createdBy.id", target = "createdById")
     @Mapping(target = "createdByName", expression = "java(mapFullName(comment.getCreatedBy()))")
+    @Mapping(source = "createdBy.imageUrl", target = "createdByImageUrl")
     CommentDTO toDTO(Comment comment);
 
     @Mapping(source = "createdById", target = "createdBy.id")

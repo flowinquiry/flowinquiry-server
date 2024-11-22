@@ -44,7 +44,7 @@ public class ActivityLog {
 
     @Enumerated(EnumType.STRING)
     @Column(name = "entity_type", nullable = false)
-    private EntityType entityType;
+    private CrmEntityType crmEntityType;
 
     @Column(name = "entity_id", nullable = false)
     private Long entityId;

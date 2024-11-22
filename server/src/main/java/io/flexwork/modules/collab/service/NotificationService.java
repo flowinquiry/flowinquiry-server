@@ -1,6 +1,5 @@
 package io.flexwork.modules.collab.service;
 
-import io.flexwork.modules.collab.domain.Notification;
 import io.flexwork.modules.collab.repository.NotificationRepository;
 import io.flexwork.modules.collab.service.dto.NotificationDTO;
 import io.flexwork.modules.collab.service.mapper.NotificationMapper;
@@ -28,12 +27,8 @@ public class NotificationService {
                 .toList();
     }
 
-    public void markNotificationAsRead(Long notificationId) {
-        Notification notification =
-                notificationRepository
-                        .findById(notificationId)
-                        .orElseThrow(() -> new IllegalArgumentException("Notification not found"));
-        notification.setRead(true);
-        notificationRepository.save(notification);
+    @Transactional
+    public void markNotificationsAsRead(List<Long> notificationIds) {
+        notificationRepository.markAsRead(notificationIds);
     }
 }

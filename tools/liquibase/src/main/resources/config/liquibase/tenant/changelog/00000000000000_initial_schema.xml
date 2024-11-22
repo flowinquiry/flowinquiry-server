@@ -174,7 +174,6 @@
 			referencedTableName="fw_organization" referencedColumnNames="id"
 			onDelete="CASCADE" constraintName="fk_teams_organization" />
 
-
 		<createTable tableName="fw_user_team">
 			<column name="user_id" type="BIGINT">
 				<constraints nullable="false" />
@@ -228,6 +227,28 @@
 		<addForeignKeyConstraint
 			baseTableName="fw_comment" baseColumnNames="created_by"
 			constraintName="fk_comment_user" referencedTableName="fw_user"
+			referencedColumnNames="id" />
+
+		<createTable tableName="fw_notification">
+			<column name="id" type="BIGINT" autoIncrement="true">
+				<constraints primaryKey="true" nullable="false" />
+			</column>
+			<column name="content" type="TEXT">
+				<constraints nullable="false" />
+			</column>
+			<column name="created_at" type="timestamptz"
+				defaultValueComputed="CURRENT_TIMESTAMP" />
+			<column name="user_id" type="BIGINT">
+				<constraints nullable="false" />
+			</column>
+			<column name="is_read" type="BOOLEAN" defaultValue="false">
+				<constraints nullable="false" />
+			</column>
+		</createTable>
+
+		<addForeignKeyConstraint
+			baseTableName="fw_notification" baseColumnNames="user_id"
+			constraintName="fk_notification_user" referencedTableName="fw_user"
 			referencedColumnNames="id" />
 	</changeSet>
 

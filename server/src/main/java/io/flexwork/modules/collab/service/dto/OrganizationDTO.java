@@ -7,10 +7,10 @@ import lombok.Data;
 @Data
 @Builder
 public class OrganizationDTO {
-    private Long id; // Organization ID
-    private String name; // Organization name
-    private String logoUrl; // Logo URL
-    private String slogan; // Organization slogan
-    private String description; // Description of the organization
-    private Set<TeamDTO> teams; // Set of team IDs
+    private Long id;
+    private String name;
+    private String logoUrl;
+    private String slogan;
+    private String description;
+    private Set<TeamDTO> teams;
 }

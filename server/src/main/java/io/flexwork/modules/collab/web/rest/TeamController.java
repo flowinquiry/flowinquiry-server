@@ -73,7 +73,6 @@ public class TeamController {
         return ResponseEntity.status(HttpStatus.CREATED).body(createdTeam);
     }
 
-    // Update an existing team
     @PutMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<Team> updateTeam(
             @RequestPart("teamDTO") TeamDTO team,

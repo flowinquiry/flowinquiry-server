@@ -1,18 +1,25 @@
 id;workflow_id;state_name;is_initial;is_final
-1;1;Requested;true;false
-2;1;In Progress;false;false
-3;1;Completed;false;true
-4;2;Open;true;false
-5;2;In Review;false;false
-6;2;Closed;false;true
-7;3;Draft;true;false
-8;3;Submitted;false;false
-9;3;Approved;false;true
-10;4;Initiated;true;false
-11;4;Processing;false;false
-12;4;Finalized;false;true
-13;5;Pending Review;true;false
-14;5;Reviewed;false;true
-15;6;Not Started;true;false
-16;6;In Execution;false;false
-17;6;Completed;false;true
+1;1;New;True;False
+2;1;Request Evidence;False;False
+3;1;Evidence Provided;False;False
+4;1;Refund Approved;False;False
+5;1;Refund Denied;False;True
+6;1;Refund Completed;False;True
+7;2;New;True;False
+8;2;Assigned;False;False
+9;2;In Progress;False;False
+10;2;Not an Issue;False;True
+11;2;Fixed;False;False
+12;2;Verified;False;True
+13;3;New;True;False
+14;3;Manager Approval;False;False
+15;3;IT Approval;False;False
+16;3;Vendor Procurement;False;False
+17;3;Delivered;False;True
+18;3;Rejected;False;True
+19;4;New;True;False
+20;4;Manager Approval;False;False
+21;4;IT Approval;False;False
+22;4;Procurement;False;False
+23;4;Delivered;False;True
+24;4;Rejected;False;True

@@ -59,5 +59,7 @@ public interface TeamRequestMapper {
     }
 
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
+    @Mapping(target = "assignUser", source = "assignUserId", qualifiedByName = "toUser")
+    @Mapping(target = "requestUser", source = "requestUserId", qualifiedByName = "toUser")
     void updateEntity(TeamRequestDTO dto, @MappingTarget TeamRequest entity);
 }

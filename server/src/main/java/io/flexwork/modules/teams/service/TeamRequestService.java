@@ -4,11 +4,13 @@ import static io.flexwork.query.QueryUtils.createSpecification;
 
 import io.flexwork.modules.collab.service.event.NewTeamRequestCreatedEvent;
 import io.flexwork.modules.teams.domain.TeamRequest;
+import io.flexwork.modules.teams.domain.WorkflowState;
 import io.flexwork.modules.teams.repository.TeamRequestRepository;
+import io.flexwork.modules.teams.repository.WorkflowRepository;
+import io.flexwork.modules.teams.repository.WorkflowStateRepository;
 import io.flexwork.modules.teams.service.dto.TeamRequestDTO;
 import io.flexwork.modules.teams.service.mapper.TeamRequestMapper;
 import io.flexwork.query.QueryDTO;
-import java.time.LocalDateTime;
 import java.util.Objects;
 import java.util.Optional;
 import org.jclouds.rest.ResourceNotFoundException;
@@ -26,15 +28,21 @@ public class TeamRequestService {
 
     private final TeamRequestRepository teamRequestRepository;
     private final TeamRequestMapper teamRequestMapper;
+    private final WorkflowStateRepository workflowStateRepository;
+    private final WorkflowRepository workflowRepository;
     private final ApplicationEventPublisher eventPublisher;
 
     @Autowired
     public TeamRequestService(
             TeamRequestRepository teamRequestRepository,
             TeamRequestMapper teamRequestMapper,
+            WorkflowRepository workflowRepository,
+            WorkflowStateRepository workflowStateRepository,
             ApplicationEventPublisher eventPublisher) {
         this.teamRequestRepository = teamRequestRepository;
         this.teamRequestMapper = teamRequestMapper;
+        this.workflowRepository = workflowRepository;
+        this.workflowStateRepository = workflowStateRepository;
         this.eventPublisher = eventPublisher;
     }
 
@@ -65,8 +73,20 @@ public class TeamRequestService {
 
     @Transactional
     public TeamRequestDTO createTeamRequest(TeamRequestDTO teamRequestDTO) {
+
+        Long workflowId = teamRequestDTO.getWorkflowId();
+        if (workflowId == null) {
+            throw new ResourceNotFoundException("No workflow id found");
+        }
+        WorkflowState initialStateByWorkflowId =
+                workflowStateRepository.findInitialStateByWorkflowId(workflowId);
+        if (initialStateByWorkflowId == null) {
+            throw new ResourceNotFoundException(
+                    "No initial state found for workflow id " + workflowId);
+        }
+        teamRequestDTO.setCurrentState(initialStateByWorkflowId.getStateName());
+
         TeamRequest teamRequest = teamRequestMapper.toEntity(teamRequestDTO);
-        teamRequest.setCreatedDate(LocalDateTime.now());
         teamRequest = teamRequestRepository.save(teamRequest);
         TeamRequestDTO savedTeamRequestDTO = teamRequestMapper.toDto(teamRequest);
         eventPublisher.publishEvent(new NewTeamRequestCreatedEvent(this, savedTeamRequestDTO));

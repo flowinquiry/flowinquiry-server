@@ -19,13 +19,10 @@ public interface TeamRequestMapper {
     @Mapping(target = "requestUserId", source = "requestUser.id")
     @Mapping(
             target = "requestUserName",
-            expression =
-                    "java(concatName(teamRequest.getRequestUser().getFirstName(), teamRequest.getRequestUser().getLastName()))")
+            source = "requestUser",
+            qualifiedByName = "mapUserFullName")
     @Mapping(target = "assignUserId", source = "assignUser.id")
-    @Mapping(
-            target = "assignUserName",
-            expression =
-                    "java(concatName(teamRequest.getAssignUser().getFirstName(), teamRequest.getAssignUser().getLastName()))")
+    @Mapping(target = "assignUserName", source = "assignUser", qualifiedByName = "mapUserFullName")
     @Mapping(target = "workflowId", source = "workflow.id")
     @Mapping(target = "workflowName", source = "workflow.name")
     TeamRequestDTO toDto(TeamRequest teamRequest);
@@ -51,8 +48,14 @@ public interface TeamRequestMapper {
         return (userId == null) ? null : User.builder().id(userId).build();
     }
 
-    default String concatName(String firstName, String lastName) {
-        return firstName + " " + (lastName != null ? lastName : "");
+    @Named("mapUserFullName")
+    default String mapUserFullName(User user) {
+        if (user == null) {
+            return null;
+        }
+        String firstName = user.getFirstName() != null ? user.getFirstName() : "";
+        String lastName = user.getLastName() != null ? user.getLastName() : "";
+        return (firstName + " " + lastName).trim();
     }
 
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)

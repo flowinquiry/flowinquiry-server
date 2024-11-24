@@ -37,6 +37,8 @@ public class UserDTO implements Serializable {
 
     private String managerName;
 
+    private String managerImageUrl;
+
     private String about;
 
     private String address;

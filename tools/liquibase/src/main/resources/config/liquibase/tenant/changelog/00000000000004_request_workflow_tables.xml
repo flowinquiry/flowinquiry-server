@@ -83,6 +83,9 @@
 			</column>
 			<column name="request_title" type="VARCHAR(255)" />
 			<column name="request_description" type="TEXT" />
+			<column name="priority" type="VARCHAR(50)">
+				<constraints nullable="false" />
+			</column>
 			<column name="created_date" type="TIMESTAMP"
 				defaultValueComputed="CURRENT_TIMESTAMP">
 				<constraints nullable="false" />

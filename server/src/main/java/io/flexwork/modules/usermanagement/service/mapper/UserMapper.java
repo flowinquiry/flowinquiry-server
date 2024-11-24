@@ -12,6 +12,7 @@ public interface UserMapper {
 
     @Mapping(target = "managerId", source = "manager.id")
     @Mapping(source = "manager", target = "managerName", qualifiedByName = "mapManagerName")
+    @Mapping(target = "managerImageUrl", source = "manager.imageUrl")
     UserDTO toDto(User user);
 
     User toEntity(UserDTO userDTO);

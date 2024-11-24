@@ -1,5 +1,5 @@
-id;name;description;owner_id;visibility
-1;Refund Process Workflow;Handles customer refund requests.;;PUBLIC
-2;Bug Fix Workflow;Tracks the lifecycle of software bug fixes.;;PUBLIC
-3;New Hardware Request;Manages team-specific hardware requests.;1.0;PRIVATE
-4;Software Approval Workflow;Tracks software license or tool requests.;1.0;PRIVATE
+id;name;description;owner_id;visibility;request_name
+1;Refund Process Workflow;Handles customer refund requests.;;PUBLIC;Refund
+2;Bug Fix Workflow;Tracks the lifecycle of software bug fixes.;;PUBLIC;Bug
+3;New Hardware Request;Manages team-specific hardware requests.;1.0;PRIVATE;Hardware Request
+4;Software Approval Workflow;Tracks software license or tool requests.;1.0;PRIVATE;License Request

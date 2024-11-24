@@ -1,6 +1,8 @@
 package io.flexwork.modules.teams.domain;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -24,11 +26,16 @@ public class WorkflowState {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "workflow_id", nullable = false)
     private Workflow workflow;
 
+    @Column(name = "state_name", nullable = false)
     private String stateName;
+
+    @Column(name = "is_initial", nullable = false)
     private Boolean isInitial;
+
+    @Column(name = "is_final", nullable = false)
     private Boolean isFinal;
 }

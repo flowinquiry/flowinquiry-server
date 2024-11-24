@@ -1,7 +1,5 @@
-id;name;description;owner_id;visibility
-1;Global Workflow 1;A global workflow available to all teams.;NULL;PUBLIC
-2;Global Workflow 2;Another global workflow for all teams.;NULL;PUBLIC
-3;Team Workflow 1;A private workflow for Team 1.;1;PRIVATE
-4;Team Workflow 2;A workflow discoverable by other teams.;5;TEAM
-5;Team Workflow 3;A private workflow for Team 10.;10;PRIVATE
-6;Team Workflow 4;A global workflow with team-specific use.;NULL;PUBLIC
+id;name;description;owner_id;visibility;request_name
+1;Refund Process Workflow;Handles customer refund requests.;;PUBLIC;Refund
+2;Bug Fix Workflow;Tracks the lifecycle of software bug fixes.;;PUBLIC;Bug
+3;New Hardware Request;Manages team-specific hardware requests.;1.0;PRIVATE;Hardware Request
+4;Software Approval Workflow;Tracks software license or tool requests.;1.0;PRIVATE;License Request

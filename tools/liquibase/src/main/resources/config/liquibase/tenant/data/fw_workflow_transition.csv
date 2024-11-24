@@ -1,12 +1,24 @@
 id;workflow_id;source_state;target_state;event_name;sla_duration
-1;1;Requested;In Progress;Start Progress;86400
-2;1;In Progress;Completed;Mark Completed;172800
-3;2;Open;In Review;Submit for Review;43200
-4;2;In Review;Closed;Close Workflow;86400
-5;3;Draft;Submitted;Submit Workflow;86400
-6;3;Submitted;Approved;Approve Workflow;43200
-7;4;Initiated;Processing;Begin Processing;86400
-8;4;Processing;Finalized;Finalize Workflow;172800
-9;5;Pending Review;Reviewed;Review Workflow;86400
-10;6;Not Started;In Execution;Start Execution;43200
-11;6;In Execution;Completed;Complete Workflow;172800
+1;1;New;Request Evidence;Request Evidence;86400
+2;1;Request Evidence;Evidence Provided;Provide Evidence;172800
+3;1;Evidence Provided;Refund Approved;Approve Refund;86400
+4;1;Evidence Provided;Refund Denied;Deny Refund;86400
+5;1;Refund Approved;Refund Completed;Complete Refund;43200
+6;2;New;Assigned;Assign to User;86400
+7;2;Assigned;In Progress;Start Progress;43200
+8;2;Assigned;Not an Issue;Mark as Not an Issue;43200
+9;2;In Progress;Fixed;Resolve Bug;86400
+10;2;Fixed;Verified;Verify Fix;43200
+11;2;Fixed;Not an Issue;Mark as Not an Issue;43200
+12;3;New;Manager Approval;Submit Request;86400
+13;3;Manager Approval;IT Approval;Approve by Manager;43200
+14;3;Manager Approval;Rejected;Reject Request;43200
+15;3;IT Approval;Vendor Procurement;Approve by IT;43200
+16;3;IT Approval;Rejected;Reject Request;43200
+17;3;Vendor Procurement;Delivered;Procure Hardware;172800
+18;4;New;Manager Approval;Submit Request;86400
+19;4;Manager Approval;IT Approval;Approve by Manager;43200
+20;4;Manager Approval;Rejected;Reject Request;43200
+21;4;IT Approval;Procurement;Approve by IT;43200
+22;4;IT Approval;Rejected;Reject Request;43200
+23;4;Procurement;Delivered;Procure and Deliver;172800

@@ -16,10 +16,13 @@ public class TeamRequestDTO {
     private String workflowName;
     private Long requestUserId;
     private String requestUserName;
+    private String requestUserImageUrl;
     private Long assignUserId;
     private String assignUserName;
+    private String assignUserImageUrl;
     private String requestTitle;
     private String requestDescription;
+    private String priority;
     private LocalDateTime createdDate;
     private String currentState;
 }

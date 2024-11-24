@@ -69,7 +69,7 @@ public class AccountController {
         return new ResponseEntity<>(accounts, HttpStatus.OK);
     }
 
-    @GetMapping("/next/{currentId}")
+    @GetMapping("/{currentId}/next")
     public ResponseEntity<AccountDTO> getNextEntity(@PathVariable Long currentId) {
         return accountService
                 .getNextEntity(currentId)
@@ -77,7 +77,7 @@ public class AccountController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
-    @GetMapping("/previous/{currentId}")
+    @GetMapping("/{currentId}/previous")
     public ResponseEntity<AccountDTO> getPreviousEntity(@PathVariable Long currentId) {
         return accountService
                 .getPreviousEntity(currentId)

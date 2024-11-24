@@ -123,4 +123,12 @@ public class TeamRequestService {
                         .filter(Objects::nonNull)
                         .anyMatch(filter -> "team.id".equals(filter.getField()));
     }
+
+    public Optional<TeamRequestDTO> getNextEntity(Long requestId) {
+        return teamRequestRepository.findNextEntity(requestId).map(teamRequestMapper::toDto);
+    }
+
+    public Optional<TeamRequestDTO> getPreviousEntity(Long requestId) {
+        return teamRequestRepository.findPreviousEntity(requestId).map(teamRequestMapper::toDto);
+    }
 }

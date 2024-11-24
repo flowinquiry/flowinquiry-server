@@ -66,4 +66,20 @@ public class TeamRequestController {
         teamRequestService.deleteTeamRequest(id);
         return ResponseEntity.noContent().build();
     }
+
+    @GetMapping("/{currentId}/next")
+    public ResponseEntity<TeamRequestDTO> getNextEntity(@PathVariable Long currentId) {
+        return teamRequestService
+                .getNextEntity(currentId)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
+    }
+
+    @GetMapping("/{currentId}/previous")
+    public ResponseEntity<TeamRequestDTO> getPreviousEntity(@PathVariable Long currentId) {
+        return teamRequestService
+                .getPreviousEntity(currentId)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
+    }
 }

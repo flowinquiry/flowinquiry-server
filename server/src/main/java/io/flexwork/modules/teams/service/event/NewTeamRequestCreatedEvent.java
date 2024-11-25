@@ -1,4 +1,4 @@
-package io.flexwork.modules.collab.service.event;
+package io.flexwork.modules.teams.service.event;
 
 import io.flexwork.modules.teams.service.dto.TeamRequestDTO;
 import lombok.Getter;

@@ -1,6 +1,5 @@
 package io.flexwork.modules.teams.domain;
 
-import io.flexwork.modules.collab.domain.Team;
 import io.flexwork.modules.usermanagement.domain.User;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;

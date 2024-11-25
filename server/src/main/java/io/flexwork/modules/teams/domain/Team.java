@@ -1,7 +1,5 @@
-package io.flexwork.modules.collab.domain;
+package io.flexwork.modules.teams.domain;
 
-import io.flexwork.modules.teams.domain.TeamWorkflowSelection;
-import io.flexwork.modules.teams.domain.Workflow;
 import io.flexwork.modules.usermanagement.domain.User;
 import io.flexwork.modules.usermanagement.domain.UserTeam;
 import jakarta.persistence.*;

@@ -1,4 +1,4 @@
-package io.flexwork.modules.collab.domain;
+package io.flexwork.modules.teams.domain;
 
 import jakarta.persistence.*;
 import java.util.Set;

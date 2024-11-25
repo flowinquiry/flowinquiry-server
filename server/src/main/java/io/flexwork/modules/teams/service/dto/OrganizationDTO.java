@@ -1,19 +1,16 @@
-package io.flexwork.modules.collab.service.dto;
+package io.flexwork.modules.teams.service.dto;
 
-import lombok.AllArgsConstructor;
+import java.util.Set;
 import lombok.Builder;
 import lombok.Data;
 
 @Data
-@AllArgsConstructor
 @Builder
-public class TeamDTO {
-
+public class OrganizationDTO {
     private Long id;
     private String name;
     private String logoUrl;
     private String slogan;
     private String description;
-    private Long organizationId;
-    private Long usersCount;
+    private Set<TeamDTO> teams;
 }

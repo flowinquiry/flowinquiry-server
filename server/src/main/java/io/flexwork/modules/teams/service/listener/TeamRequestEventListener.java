@@ -1,12 +1,13 @@
-package io.flexwork.modules.collab.service.listener;
+package io.flexwork.modules.teams.service.listener;
 
 import static j2html.TagCreator.*;
 
+import com.flexwork.platform.utils.Obfuscator;
 import io.flexwork.modules.collab.domain.Notification;
 import io.flexwork.modules.collab.repository.NotificationRepository;
-import io.flexwork.modules.collab.repository.TeamRepository;
-import io.flexwork.modules.collab.service.event.NewTeamRequestCreatedEvent;
+import io.flexwork.modules.teams.repository.TeamRepository;
 import io.flexwork.modules.teams.service.dto.TeamRequestDTO;
+import io.flexwork.modules.teams.service.event.NewTeamRequestCreatedEvent;
 import io.flexwork.modules.usermanagement.domain.User;
 import io.flexwork.modules.usermanagement.service.dto.UserWithTeamRoleDTO;
 import java.time.LocalDateTime;
@@ -31,15 +32,33 @@ public class TeamRequestEventListener {
         String html =
                 p(
                                 text("A new "),
-                                a("ticket request").withHref("#"),
-                                text(" has been just created by "),
-                                a("user").withHref("#"))
+                                a("ticket ")
+                                        .withHref(
+                                                "/portal/teams/"
+                                                        + Obfuscator.obfuscate(
+                                                                teamRequestDTO.getTeamId())
+                                                        + "/requests/"
+                                                        + Obfuscator.obfuscate(
+                                                                teamRequestDTO.getId())),
+                                text(" has been created by "),
+                                a(teamRequestDTO.getRequestUserName())
+                                        .withHref(
+                                                "/portals/users/"
+                                                        + Obfuscator.obfuscate(
+                                                                teamRequestDTO.getRequestUserId())))
                         .render();
 
         List<UserWithTeamRoleDTO> usersInTeam =
                 teamRepository.findUsersByTeamId(teamRequestDTO.getTeamId());
         List<Notification> notifications =
                 usersInTeam.stream()
+                        .filter(
+                                user ->
+                                        !user.getId()
+                                                .equals(
+                                                        teamRequestDTO
+                                                                .getRequestUserId())) // Exclude
+                        // creator
                         .map(
                                 user ->
                                         Notification.builder()

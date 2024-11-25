@@ -1,13 +1,13 @@
-package io.flexwork.modules.collab.service;
+package io.flexwork.modules.teams.service;
 
 import static io.flexwork.query.QueryUtils.createSpecification;
 
-import io.flexwork.modules.collab.domain.Team;
-import io.flexwork.modules.collab.domain.TeamRole;
-import io.flexwork.modules.collab.repository.TeamRepository;
-import io.flexwork.modules.collab.repository.TeamRoleRepository;
-import io.flexwork.modules.collab.service.dto.TeamDTO;
-import io.flexwork.modules.collab.service.mapper.TeamMapper;
+import io.flexwork.modules.teams.domain.Team;
+import io.flexwork.modules.teams.domain.TeamRole;
+import io.flexwork.modules.teams.repository.TeamRepository;
+import io.flexwork.modules.teams.repository.TeamRoleRepository;
+import io.flexwork.modules.teams.service.dto.TeamDTO;
+import io.flexwork.modules.teams.service.mapper.TeamMapper;
 import io.flexwork.modules.usermanagement.domain.User;
 import io.flexwork.modules.usermanagement.domain.UserTeam;
 import io.flexwork.modules.usermanagement.domain.UserTeamId;

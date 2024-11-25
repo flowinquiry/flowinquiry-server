@@ -1,10 +1,10 @@
-package io.flexwork.modules.collab.web.rest;
+package io.flexwork.modules.teams.web.rest;
 
-import io.flexwork.modules.collab.domain.Team;
-import io.flexwork.modules.collab.service.TeamService;
-import io.flexwork.modules.collab.service.dto.TeamDTO;
 import io.flexwork.modules.fss.ResourceRemoveEvent;
 import io.flexwork.modules.fss.service.StorageService;
+import io.flexwork.modules.teams.domain.Team;
+import io.flexwork.modules.teams.service.TeamService;
+import io.flexwork.modules.teams.service.dto.TeamDTO;
 import io.flexwork.modules.usermanagement.service.dto.UserDTO;
 import io.flexwork.modules.usermanagement.service.dto.UserWithTeamRoleDTO;
 import io.flexwork.query.QueryDTO;
@@ -117,7 +117,6 @@ public class TeamController {
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
-    // Find teams
     @PostMapping("/search")
     public ResponseEntity<Page<TeamDTO>> findTeams(
             @Valid @RequestBody Optional<QueryDTO> queryDTO, Pageable pageable) {

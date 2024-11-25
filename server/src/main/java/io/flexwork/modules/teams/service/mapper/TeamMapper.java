@@ -1,8 +1,8 @@
-package io.flexwork.modules.collab.service.mapper;
+package io.flexwork.modules.teams.service.mapper;
 
-import io.flexwork.modules.collab.domain.Organization;
-import io.flexwork.modules.collab.domain.Team;
-import io.flexwork.modules.collab.service.dto.TeamDTO;
+import io.flexwork.modules.teams.domain.Organization;
+import io.flexwork.modules.teams.domain.Team;
+import io.flexwork.modules.teams.service.dto.TeamDTO;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;

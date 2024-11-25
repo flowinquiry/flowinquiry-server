@@ -1,6 +1,6 @@
 package io.flexwork.modules.teams.service.mapper;
 
-import io.flexwork.modules.collab.domain.Team;
+import io.flexwork.modules.teams.domain.Team;
 import io.flexwork.modules.teams.domain.Workflow;
 import io.flexwork.modules.teams.service.dto.WorkflowDTO;
 import org.mapstruct.Mapper;

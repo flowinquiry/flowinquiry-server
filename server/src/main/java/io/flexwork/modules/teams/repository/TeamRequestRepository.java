@@ -19,6 +19,10 @@ public interface TeamRequestRepository
     @EntityGraph(attributePaths = {"team", "requestUser", "assignUser", "workflow"})
     Page<TeamRequest> findAll(Specification<TeamRequest> spec, Pageable pageable);
 
+    @EntityGraph(attributePaths = {"team", "requestUser", "assignUser", "workflow"})
+    Optional<TeamRequest> findById(@Param("id") Long id);
+
+    @EntityGraph(attributePaths = {"team", "requestUser", "assignUser", "workflow"})
     @Query(
             value =
                     """
@@ -35,6 +39,7 @@ public interface TeamRequestRepository
     """)
     Optional<TeamRequest> findPreviousEntity(@Param("requestId") Long requestId);
 
+    @EntityGraph(attributePaths = {"team", "requestUser", "assignUser", "workflow"})
     @Query(
             value =
                     """

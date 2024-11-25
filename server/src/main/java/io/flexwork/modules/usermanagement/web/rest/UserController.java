@@ -1,6 +1,6 @@
 package io.flexwork.modules.usermanagement.web.rest;
 
-import com.flexwork.platform.utils.CodecUtils;
+import com.flexwork.platform.utils.Obfuscator;
 import io.flexwork.modules.collab.service.MailService;
 import io.flexwork.modules.fss.service.StorageService;
 import io.flexwork.modules.usermanagement.AuthoritiesConstants;
@@ -186,7 +186,7 @@ public class UserController {
             String avatarPath =
                     storageService.uploadImage(
                             "avatar",
-                            CodecUtils.encodeLongToBase64(userDTO.getId()),
+                            Obfuscator.obfuscate(userDTO.getId()),
                             avatarFile.getInputStream());
             userDTO.setImageUrl(avatarPath);
         }

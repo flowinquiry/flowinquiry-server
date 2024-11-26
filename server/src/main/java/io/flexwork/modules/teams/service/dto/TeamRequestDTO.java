@@ -14,6 +14,7 @@ public class TeamRequestDTO {
     private String teamName;
     private Long workflowId;
     private String workflowName;
+    private String workflowRequestName;
     private Long requestUserId;
     private String requestUserName;
     private String requestUserImageUrl;

@@ -12,6 +12,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.Table;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -54,6 +55,21 @@ public class TeamRequest {
     @Column(nullable = false, length = 50)
     @Enumerated(EnumType.STRING)
     private TeamRequestPriority priority;
+
+    @Column(name = "last_updated_time")
+    private LocalDateTime lastUpdatedTime;
+
+    @Column(name = "is_deleted", nullable = false)
+    private boolean isDeleted = false;
+
+    @Column(name = "is_recurring", nullable = false)
+    private boolean isRecurring = false;
+
+    @Column(name = "estimated_completion_date")
+    private LocalDate estimatedCompletionDate;
+
+    @Column(name = "actual_completion_date")
+    private LocalDate actualCompletionDate;
 
     @PrePersist
     private void prePersist() {

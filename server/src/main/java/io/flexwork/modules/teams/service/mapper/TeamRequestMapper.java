@@ -28,6 +28,7 @@ public interface TeamRequestMapper {
     @Mapping(target = "teamName", source = "team.name")
     @Mapping(target = "workflowId", source = "workflow.id")
     @Mapping(target = "workflowName", source = "workflow.name")
+    @Mapping(target = "workflowRequestName", source = "workflow.requestName")
     TeamRequestDTO toDto(TeamRequest teamRequest);
 
     @Mapping(target = "team", source = "teamId", qualifiedByName = "toTeam")

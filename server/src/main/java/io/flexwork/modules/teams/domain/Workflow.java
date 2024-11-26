@@ -34,6 +34,9 @@ public class Workflow {
     private String name;
     private String description;
 
+    @Column(name = "request_name", length = 255)
+    private String requestName;
+
     @EqualsAndHashCode.Exclude
     @ManyToOne
     @JoinColumn(name = "owner_id", nullable = true)

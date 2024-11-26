@@ -1,5 +1,6 @@
 package io.flexwork.modules.teams.service.dto;
 
+import io.flexwork.modules.teams.domain.TicketChannel;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
@@ -29,4 +30,5 @@ public class TeamRequestDTO {
     private LocalDate estimatedCompletionDate;
     private LocalDate actualCompletionDate;
     private String currentState;
+    private TicketChannel channel;
 }

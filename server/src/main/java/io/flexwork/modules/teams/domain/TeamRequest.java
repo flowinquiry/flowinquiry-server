@@ -2,6 +2,7 @@ package io.flexwork.modules.teams.domain;
 
 import io.flexwork.modules.usermanagement.domain.User;
 import jakarta.persistence.Column;
+import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -70,6 +71,10 @@ public class TeamRequest {
 
     @Column(name = "actual_completion_date")
     private LocalDate actualCompletionDate;
+
+    @Column(name = "channel")
+    @Convert(converter = TicketChannelConverter.class)
+    private TicketChannel channel;
 
     @PrePersist
     private void prePersist() {

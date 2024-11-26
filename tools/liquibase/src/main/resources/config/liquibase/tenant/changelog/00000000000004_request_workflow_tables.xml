@@ -93,6 +93,27 @@
 				defaultValueComputed="CURRENT_TIMESTAMP">
 				<constraints nullable="false" />
 			</column>
+			<column name="last_updated_time" type="TIMESTAMP">
+				<constraints nullable="true" />
+			</column>
+			<column name="is_deleted" type="BOOLEAN" defaultValue="false">
+				<constraints nullable="false" />
+			</column>
+			<!-- Flag for recurring requests -->
+			<column name="is_recurring" type="BOOLEAN"
+				defaultValue="false">
+				<constraints nullable="false" />
+			</column>
+
+			<!-- Estimated completion date -->
+			<column name="estimated_completion_date" type="TIMESTAMP">
+				<constraints nullable="true" />
+			</column>
+
+			<!-- Actual completion date -->
+			<column name="actual_completion_date" type="TIMESTAMP">
+				<constraints nullable="true" />
+			</column>
 			<column name="current_state" type="VARCHAR(255)" />
 		</createTable>
 

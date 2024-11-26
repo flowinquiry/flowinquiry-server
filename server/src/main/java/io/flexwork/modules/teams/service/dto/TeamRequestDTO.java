@@ -1,5 +1,6 @@
 package io.flexwork.modules.teams.service.dto;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -25,5 +26,7 @@ public class TeamRequestDTO {
     private String requestDescription;
     private String priority;
     private LocalDateTime createdDate;
+    private LocalDate estimatedCompletionDate;
+    private LocalDate actualCompletionDate;
     private String currentState;
 }

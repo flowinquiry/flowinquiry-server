@@ -8,6 +8,7 @@ import io.flexwork.modules.teams.repository.TeamRepository;
 import io.flexwork.modules.teams.repository.TeamRoleRepository;
 import io.flexwork.modules.teams.service.dto.TeamDTO;
 import io.flexwork.modules.teams.service.event.NewUsersAddedIntoTeamEvent;
+import io.flexwork.modules.teams.service.event.RemoveUserOutOfTeamEvent;
 import io.flexwork.modules.teams.service.mapper.TeamMapper;
 import io.flexwork.modules.usermanagement.domain.User;
 import io.flexwork.modules.usermanagement.domain.UserTeam;
@@ -181,8 +182,10 @@ public class TeamService {
         // Remove the team from the user's teams set
         if (user.getTeams().contains(team)) {
             user.getTeams().remove(team);
-            userRepository.save(user); // Save the updated user
+            userRepository.save(user);
         }
+
+        eventPublisher.publishEvent(new RemoveUserOutOfTeamEvent(this, teamId, userId));
     }
 
     public String getUserRoleInTeam(Long userId, Long teamId) {

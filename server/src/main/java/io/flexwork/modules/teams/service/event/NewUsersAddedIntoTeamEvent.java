@@ -16,5 +16,8 @@ public class NewUsersAddedIntoTeamEvent extends ApplicationEvent {
     public NewUsersAddedIntoTeamEvent(
             Object source, List<Long> userIds, Long teamId, String roleName) {
         super(source);
+        this.userIds = userIds;
+        this.teamId = teamId;
+        this.roleName = roleName;
     }
 }

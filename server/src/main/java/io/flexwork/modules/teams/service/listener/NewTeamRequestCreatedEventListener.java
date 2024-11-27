@@ -16,6 +16,7 @@ import io.flexwork.modules.usermanagement.service.dto.UserWithTeamRoleDTO;
 import java.time.LocalDateTime;
 import java.util.List;
 import org.springframework.context.event.EventListener;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -34,6 +35,7 @@ public class NewTeamRequestCreatedEventListener {
         this.activityLogRepository = activityLogRepository;
     }
 
+    @Async("taskExecutor")
     @Transactional
     @EventListener
     public void onNewTeamRequestCreated(NewTeamRequestCreatedEvent event) {

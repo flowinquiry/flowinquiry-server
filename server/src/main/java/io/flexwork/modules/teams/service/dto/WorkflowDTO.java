@@ -18,4 +18,10 @@ public class WorkflowDTO {
     private String description;
 
     boolean isGlobal;
+
+    private Integer level1EscalationTimeout;
+
+    private Integer level2EscalationTimeout;
+
+    private Integer level3EscalationTimeout;
 }

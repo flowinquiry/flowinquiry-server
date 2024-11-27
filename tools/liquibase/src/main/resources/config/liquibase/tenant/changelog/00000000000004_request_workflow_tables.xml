@@ -34,6 +34,23 @@
 				defaultValue="PRIVATE">
 				<constraints nullable="false" />
 			</column>
+
+			<!--Default value is set to a large number (1000,000 minutes). Configure 
+				this to enable escalations for Levels. -->
+			<column name="level1_escalation_timeout" type="INT"
+				defaultValue="1000000">
+				<constraints nullable="false" />
+			</column>
+
+			<column name="level2_escalation_timeout" type="INT"
+				defaultValue="1000000">
+				<constraints nullable="false" />
+			</column>
+
+			<column name="level3_escalation_timeout" type="INT"
+				defaultValue="1000000">
+				<constraints nullable="false" />
+			</column>
 		</createTable>
 
 		<!-- Add foreign key constraint to fw_team for owner_id -->
@@ -182,6 +199,10 @@
 				<constraints nullable="false" />
 			</column>
 			<column name="sla_duration" type="BIGINT" />
+			<column name="escalate_on_violation" type="BOOLEAN"
+				defaultValue="true">
+				<constraints nullable="false" />
+			</column>
 		</createTable>
 		<addForeignKeyConstraint
 			baseTableName="fw_workflow_transition" baseColumnNames="workflow_id"
@@ -238,6 +259,35 @@
 			baseColumnNames="team_request_id"
 			constraintName="fk_workflow_transition_request"
 			referencedTableName="fw_team_request" referencedColumnNames="id" />
+
+		<createTable tableName="fw_escalation_tracking">
+			<column name="id" type="BIGINT" autoIncrement="true">
+				<constraints primaryKey="true" nullable="false" />
+			</column>
+			<column name="team_request_id" type="BIGINT">
+				<constraints nullable="false" />
+			</column>
+			<column name="escalation_level" type="INT">
+				<constraints nullable="false" />
+			</column>
+			<column name="escalated_to_user_id" type="BIGINT" />
+			<column name="escalation_time" type="TIMESTAMP"
+				defaultValueComputed="CURRENT_TIMESTAMP">
+				<constraints nullable="false" />
+			</column>
+		</createTable>
+
+		<addForeignKeyConstraint
+			baseTableName="fw_escalation_tracking"
+			baseColumnNames="team_request_id"
+			referencedTableName="fw_team_request" referencedColumnNames="id"
+			constraintName="fw_escalation_tracking_request" onDelete="CASCADE" />
+
+		<addForeignKeyConstraint
+			baseTableName="fw_escalation_tracking"
+			baseColumnNames="escalated_to_user_id"
+			constraintName="fw_escalation_tracking_user"
+			referencedTableName="fw_user" referencedColumnNames="id" />
 	</changeSet>
 	<changeSet author="flexapp"
 		id="00000000000004:01-insert-workflow-data">

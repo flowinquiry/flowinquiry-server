@@ -1,5 +1,6 @@
 package io.flexwork.modules.teams.domain;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -32,4 +33,7 @@ public class WorkflowTransition {
     private String targetState;
     private String eventName;
     private Long slaDuration;
+
+    @Column(name = "escalate_on_violation", nullable = false)
+    private Boolean escalateOnViolation;
 }

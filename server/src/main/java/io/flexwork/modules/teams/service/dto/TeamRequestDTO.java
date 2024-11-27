@@ -31,4 +31,5 @@ public class TeamRequestDTO {
     private LocalDate actualCompletionDate;
     private String currentState;
     private TicketChannel channel;
+    private boolean isCompleted;
 }

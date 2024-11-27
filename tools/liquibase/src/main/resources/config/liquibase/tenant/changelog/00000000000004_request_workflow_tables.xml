@@ -116,6 +116,12 @@
 				<constraints nullable="true" />
 			</column>
 			<column name="current_state" type="VARCHAR(255)" />
+			<!--This column is set to true if the current_state is associated with 
+				a workflow_state where the is_final flag is true. -->
+			<column name="is_completed" type="BOOLEAN"
+				defaultValue="false">
+				<constraints nullable="false" />
+			</column>
 		</createTable>
 
 		<addForeignKeyConstraint

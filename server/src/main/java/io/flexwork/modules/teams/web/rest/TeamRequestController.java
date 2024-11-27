@@ -1,9 +1,11 @@
 package io.flexwork.modules.teams.web.rest;
 
 import io.flexwork.modules.teams.service.TeamRequestService;
+import io.flexwork.modules.teams.service.dto.SlaDurationDTO;
 import io.flexwork.modules.teams.service.dto.TeamRequestDTO;
 import io.flexwork.query.QueryDTO;
 import jakarta.validation.Valid;
+import java.util.List;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -81,5 +83,13 @@ public class TeamRequestController {
                 .getPreviousEntity(currentId)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
+    }
+
+    @GetMapping("/{teamRequestId}/current-state-slas")
+    public ResponseEntity<List<SlaDurationDTO>> getSlaDurationsForCurrentState(
+            @PathVariable Long teamRequestId) {
+        List<SlaDurationDTO> slaDurations =
+                teamRequestService.getSlaDurationsForCurrentState(teamRequestId);
+        return ResponseEntity.ok(slaDurations);
     }
 }

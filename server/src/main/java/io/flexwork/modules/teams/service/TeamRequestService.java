@@ -8,6 +8,7 @@ import io.flexwork.modules.teams.domain.WorkflowState;
 import io.flexwork.modules.teams.repository.TeamRequestRepository;
 import io.flexwork.modules.teams.repository.WorkflowRepository;
 import io.flexwork.modules.teams.repository.WorkflowStateRepository;
+import io.flexwork.modules.teams.service.dto.SlaDurationDTO;
 import io.flexwork.modules.teams.service.dto.TeamRequestDTO;
 import io.flexwork.modules.teams.service.event.NewTeamRequestCreatedEvent;
 import io.flexwork.modules.teams.service.mapper.TeamRequestMapper;
@@ -15,6 +16,7 @@ import io.flexwork.query.QueryDTO;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.persistence.PersistenceContext;
+import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import org.jclouds.rest.ResourceNotFoundException;
@@ -144,5 +146,9 @@ public class TeamRequestService {
 
     public Optional<TeamRequestDTO> getPreviousEntity(Long requestId) {
         return teamRequestRepository.findPreviousEntity(requestId).map(teamRequestMapper::toDto);
+    }
+
+    public List<SlaDurationDTO> getSlaDurationsForCurrentState(Long teamRequestId) {
+        return teamRequestRepository.findSlaDurationsForCurrentState(teamRequestId);
     }
 }

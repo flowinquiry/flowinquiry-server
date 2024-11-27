@@ -1,6 +1,8 @@
 package io.flexwork.modules.teams.repository;
 
 import io.flexwork.modules.teams.domain.TeamRequest;
+import io.flexwork.modules.teams.service.dto.SlaDurationDTO;
+import java.util.List;
 import java.util.Optional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -55,4 +57,21 @@ public interface TeamRequestRepository
             LIMIT 1
     """)
     Optional<TeamRequest> findNextEntity(@Param("requestId") Long requestId);
+
+    @Query(
+            """
+        SELECT new io.flexwork.modules.teams.service.dto.SlaDurationDTO(
+            tr.sourceState,
+            tr.targetState,
+            tr.slaDuration,
+            tr.eventName
+        )
+        FROM TeamRequest r
+        JOIN WorkflowTransition tr
+            ON r.workflow.id = tr.workflow.id
+            AND r.currentState = tr.sourceState
+        WHERE r.id = :teamRequestId
+    """)
+    List<SlaDurationDTO> findSlaDurationsForCurrentState(
+            @Param("teamRequestId") Long teamRequestId);
 }

@@ -76,6 +76,9 @@ public class TeamRequest {
     @Convert(converter = TicketChannelConverter.class)
     private TicketChannel channel;
 
+    @Column(name = "is_completed", nullable = false)
+    private boolean isCompleted = false;
+
     @PrePersist
     private void prePersist() {
         if (createdDate == null) {

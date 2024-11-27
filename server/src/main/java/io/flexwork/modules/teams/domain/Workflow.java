@@ -53,4 +53,22 @@ public class Workflow {
     @EqualsAndHashCode.Exclude
     @OneToMany(mappedBy = "workflow", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<WorkflowTransition> transitions;
+
+    @Column(
+            name = "level1_escalation_timeout",
+            nullable = false,
+            columnDefinition = "INT DEFAULT 1000000")
+    private Integer level1EscalationTimeout;
+
+    @Column(
+            name = "level2_escalation_timeout",
+            nullable = false,
+            columnDefinition = "INT DEFAULT 1000000")
+    private Integer level2EscalationTimeout;
+
+    @Column(
+            name = "level3_escalation_timeout",
+            nullable = false,
+            columnDefinition = "INT DEFAULT 1000000")
+    private Integer level3EscalationTimeout;
 }

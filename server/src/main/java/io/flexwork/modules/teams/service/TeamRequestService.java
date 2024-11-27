@@ -105,14 +105,15 @@ public class TeamRequestService {
     }
 
     @Transactional
-    public TeamRequestDTO updateTeamRequest(Long id, TeamRequestDTO teamRequestDTO) {
+    public TeamRequestDTO updateTeamRequest(TeamRequestDTO teamRequestDTO) {
         TeamRequest existingTeamRequest =
                 teamRequestRepository
-                        .findById(id)
+                        .findById(teamRequestDTO.getId())
                         .orElseThrow(
                                 () ->
                                         new ResourceNotFoundException(
-                                                "TeamRequest not found with id: " + id));
+                                                "TeamRequest not found with id: "
+                                                        + teamRequestDTO.getId()));
 
         teamRequestMapper.updateEntity(teamRequestDTO, existingTeamRequest);
         existingTeamRequest = teamRequestRepository.save(existingTeamRequest);

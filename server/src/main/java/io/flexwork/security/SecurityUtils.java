@@ -1,6 +1,7 @@
 package io.flexwork.security;
 
 import io.flexwork.modules.usermanagement.AuthoritiesConstants;
+import io.flexwork.modules.usermanagement.domain.User;
 import io.flexwork.modules.usermanagement.service.dto.FwUserDetails;
 import io.flexwork.modules.usermanagement.service.dto.UserKey;
 import java.util.Arrays;
@@ -33,6 +34,12 @@ public final class SecurityUtils {
     public static Optional<UserKey> getCurrentUserLogin() {
         SecurityContext securityContext = SecurityContextHolder.getContext();
         return Optional.ofNullable(extractPrincipal(securityContext.getAuthentication()));
+    }
+
+    public static User getCurrentUserAuditorLogin() {
+        return SecurityUtils.getCurrentUserLogin()
+                .map(userKey -> User.builder().id(userKey.getId()).build())
+                .orElse(null);
     }
 
     private static UserKey extractPrincipal(Authentication authentication) {

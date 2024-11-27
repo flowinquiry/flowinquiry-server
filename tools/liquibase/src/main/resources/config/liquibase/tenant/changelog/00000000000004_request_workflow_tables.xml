@@ -86,6 +86,7 @@
 			</column>
 			<column name="request_title" type="VARCHAR(255)" />
 			<column name="request_description" type="TEXT" />
+			<column name="channel" type="VARCHAR(50)" />
 			<column name="priority" type="VARCHAR(50)">
 				<constraints nullable="false" />
 			</column>

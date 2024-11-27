@@ -3,14 +3,10 @@ package io.flexwork.modules.crm.service;
 import static io.flexwork.query.QueryUtils.createSpecification;
 
 import io.flexwork.modules.crm.domain.Account;
-import io.flexwork.modules.crm.domain.Action;
-import io.flexwork.modules.crm.event.ActivityLogEvent;
 import io.flexwork.modules.crm.repository.AccountRepository;
 import io.flexwork.modules.crm.service.dto.AccountDTO;
 import io.flexwork.modules.crm.service.mapper.AccountMapper;
-import io.flexwork.modules.usermanagement.service.dto.UserKey;
 import io.flexwork.query.QueryDTO;
-import io.flexwork.security.SecurityUtils;
 import jakarta.persistence.EntityNotFoundException;
 import java.util.List;
 import java.util.Optional;
@@ -25,16 +21,10 @@ public class AccountService {
 
     private final AccountRepository accountRepository;
 
-    private final AuditServiceWrapperService<Account> activityServiceWrapper;
-
     private AccountMapper accountMapper;
 
-    public AccountService(
-            AccountRepository accountRepository,
-            AuditServiceWrapperService<Account> activityServiceWrapper,
-            AccountMapper accountMapper) {
+    public AccountService(AccountRepository accountRepository, AccountMapper accountMapper) {
         this.accountRepository = accountRepository;
-        this.activityServiceWrapper = activityServiceWrapper;
         this.accountMapper = accountMapper;
     }
 
@@ -44,20 +34,7 @@ public class AccountService {
 
     // Save a new account or update an existing one
     public AccountDTO saveAccount(AccountDTO account) {
-        Account accountEntity =
-                activityServiceWrapper.saveEntity(
-                        accountMapper.toEntity(account),
-                        accountRepository,
-                        (savedAccount) ->
-                                new ActivityLogEvent(
-                                        this,
-                                        accountMapper.accountEntityToActivityLog(
-                                                savedAccount,
-                                                Action.CREATE,
-                                                SecurityUtils.getCurrentUserLogin()
-                                                        .map(UserKey::getId)
-                                                        .orElse(null))));
-        return accountMapper.toDto(accountEntity);
+        return accountMapper.toDto(accountRepository.save(accountMapper.toEntity(account)));
     }
 
     public AccountDTO updateAccount(Long accountId, AccountDTO accountDetails) {

@@ -58,7 +58,7 @@ public class TeamRequestController {
         if (!id.equals(teamRequestDTO.getId())) {
             throw new IllegalArgumentException("Id in URL and payload do not match");
         }
-        return ResponseEntity.ok(teamRequestService.updateTeamRequest(id, teamRequestDTO));
+        return ResponseEntity.ok(teamRequestService.updateTeamRequest(teamRequestDTO));
     }
 
     @DeleteMapping("/{id}")

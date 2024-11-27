@@ -1,8 +1,6 @@
 package io.flexwork.modules.crm.service.mapper;
 
 import io.flexwork.modules.crm.domain.Account;
-import io.flexwork.modules.crm.domain.Action;
-import io.flexwork.modules.crm.domain.ActivityLog;
 import io.flexwork.modules.crm.service.dto.AccountDTO;
 import io.flexwork.modules.usermanagement.domain.User;
 import org.mapstruct.*;
@@ -24,12 +22,6 @@ public interface AccountMapper {
     @Mapping(target = "assignedToUser", source = "assignedToUserId", qualifiedByName = "toUser")
     @Mapping(target = "parentAccount", source = "parentAccountId", qualifiedByName = "toAccount")
     void updateFromDto(AccountDTO accountDTO, @MappingTarget Account account);
-
-    @Mapping(target = "id", ignore = true)
-    @Mapping(target = "crmEntityType", constant = "ACCOUNT")
-    @Mapping(target = "entityId", source = "account.id")
-    @Mapping(target = "user", source = "updatedUserId", qualifiedByName = "toUser")
-    ActivityLog accountEntityToActivityLog(Account account, Action action, Long updatedUserId);
 
     @Named("toUser")
     default User toUser(Long userId) {

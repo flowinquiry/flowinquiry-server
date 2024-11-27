@@ -2,6 +2,7 @@ package io.flexwork.modules.teams.service;
 
 import static io.flexwork.query.QueryUtils.createSpecification;
 
+import io.flexwork.modules.audit.AuditLogUpdateEvent;
 import io.flexwork.modules.teams.domain.TeamRequest;
 import io.flexwork.modules.teams.domain.WorkflowState;
 import io.flexwork.modules.teams.repository.TeamRequestRepository;
@@ -105,17 +106,19 @@ public class TeamRequestService {
     }
 
     @Transactional
-    public TeamRequestDTO updateTeamRequest(Long id, TeamRequestDTO teamRequestDTO) {
+    public TeamRequestDTO updateTeamRequest(TeamRequestDTO teamRequestDTO) {
         TeamRequest existingTeamRequest =
                 teamRequestRepository
-                        .findById(id)
+                        .findById(teamRequestDTO.getId())
                         .orElseThrow(
                                 () ->
                                         new ResourceNotFoundException(
-                                                "TeamRequest not found with id: " + id));
+                                                "TeamRequest not found with id: "
+                                                        + teamRequestDTO.getId()));
 
         teamRequestMapper.updateEntity(teamRequestDTO, existingTeamRequest);
         existingTeamRequest = teamRequestRepository.save(existingTeamRequest);
+        eventPublisher.publishEvent(new AuditLogUpdateEvent(this, teamRequestDTO));
         return teamRequestMapper.toDto(existingTeamRequest);
     }
 

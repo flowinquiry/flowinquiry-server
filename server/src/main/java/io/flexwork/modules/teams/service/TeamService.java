@@ -7,6 +7,7 @@ import io.flexwork.modules.teams.domain.TeamRole;
 import io.flexwork.modules.teams.repository.TeamRepository;
 import io.flexwork.modules.teams.repository.TeamRoleRepository;
 import io.flexwork.modules.teams.service.dto.TeamDTO;
+import io.flexwork.modules.teams.service.event.NewUsersAddedIntoTeamEvent;
 import io.flexwork.modules.teams.service.mapper.TeamMapper;
 import io.flexwork.modules.usermanagement.domain.User;
 import io.flexwork.modules.usermanagement.domain.UserTeam;
@@ -21,6 +22,7 @@ import jakarta.persistence.EntityNotFoundException;
 import java.util.List;
 import java.util.Optional;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -43,19 +45,23 @@ public class TeamService {
 
     private final UserMapper userMapper;
 
+    private final ApplicationEventPublisher eventPublisher;
+
     public TeamService(
             TeamRepository teamRepository,
             UserRepository userRepository,
             UserTeamRepository userTeamRepository,
             TeamRoleRepository teamRoleRepository,
             TeamMapper teamMapper,
-            UserMapper userMapper) {
+            UserMapper userMapper,
+            ApplicationEventPublisher eventPublisher) {
         this.teamRepository = teamRepository;
         this.userRepository = userRepository;
         this.userTeamRepository = userTeamRepository;
         this.teamRoleRepository = teamRoleRepository;
         this.teamMapper = teamMapper;
         this.userMapper = userMapper;
+        this.eventPublisher = eventPublisher;
     }
 
     public TeamDTO createTeam(TeamDTO teamDTO) {
@@ -153,6 +159,9 @@ public class TeamService {
 
         // Save all UserTeam entities in a batch
         userTeamRepository.saveAll(userTeams);
+
+        eventPublisher.publishEvent(
+                new NewUsersAddedIntoTeamEvent(this, userIds, teamId, roleName));
     }
 
     @Transactional

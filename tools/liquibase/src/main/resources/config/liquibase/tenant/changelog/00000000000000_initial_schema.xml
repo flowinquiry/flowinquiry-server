@@ -246,9 +246,29 @@
 			</column>
 		</createTable>
 
+		<createTable tableName="fw_activity_log">
+			<column name="id" type="BIGINT" autoIncrement="true">
+				<constraints primaryKey="true" nullable="false" />
+			</column>
+			<column name="entity_type" type="VARCHAR(20)">
+				<constraints nullable="false" />
+			</column>
+			<column name="entity_id" type="BIGINT">
+				<constraints nullable="false" />
+			</column>
+			<column name="content" type="TEXT" />
+			<column name="created_at" type="timestamptz"
+				defaultValueComputed="CURRENT_TIMESTAMP" />
+			<column name="updated_at" type="timestamptz"
+				defaultValueComputed="CURRENT_TIMESTAMP" />
+			<column name="created_by" type="BIGINT">
+				<constraints nullable="true" />
+			</column>
+		</createTable>
+
 		<addForeignKeyConstraint
-			baseTableName="fw_notification" baseColumnNames="user_id"
-			constraintName="fk_notification_user" referencedTableName="fw_user"
+			baseTableName="fw_activity_log" baseColumnNames="created_by"
+			constraintName="fk_activity_log_user" referencedTableName="fw_user"
 			referencedColumnNames="id" />
 	</changeSet>
 

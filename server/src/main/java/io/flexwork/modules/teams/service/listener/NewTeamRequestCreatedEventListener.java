@@ -16,11 +16,11 @@ import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 
 @Component
-public class TeamRequestEventListener {
+public class NewTeamRequestCreatedEventListener {
     private final NotificationRepository notificationRepository;
     private final TeamRepository teamRepository;
 
-    public TeamRequestEventListener(
+    public NewTeamRequestCreatedEventListener(
             NotificationRepository notificationRepository, TeamRepository teamRepository) {
         this.notificationRepository = notificationRepository;
         this.teamRepository = teamRepository;

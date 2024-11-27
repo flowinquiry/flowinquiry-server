@@ -4,7 +4,7 @@ plugins {
 
 jib {
     from {
-        image = "eclipse-temurin:17-jre-focal"
+        image = "eclipse-temurin:21-jre-focal"
         platforms {
             platform {
                 os = "linux"

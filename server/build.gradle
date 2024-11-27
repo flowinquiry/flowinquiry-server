@@ -15,7 +15,7 @@ version = "0.0.1-SNAPSHOT"
 
 description = ""
 
-assert System.properties["java.specification.version"] == "17" || "18" || "19" || "20" || "21" || "22"
+assert System.properties["java.specification.version"] == "21" || "22" || "23"
 
 ext {
     springProfiles = ""
@@ -120,6 +120,8 @@ dependencies {
     implementation("org.hibernate.validator:hibernate-validator")
     implementation(libs.bundles.spring.statemachine)
     implementation(libs.liquibase)
+    implementation(libs.bundles.shedlock)
+
 
 //    testImplementation("com.tngtech.archunit:archunit-junit5-api:${archunitJunit5Version}") {
 //        exclude group: "org.slf4j", module: "slf4j-api"

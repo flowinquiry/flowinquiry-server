@@ -28,7 +28,6 @@ import org.springframework.boot.autoconfigure.liquibase.LiquibaseProperties;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.core.annotation.Order;
 import org.springframework.core.env.Environment;
-import org.springframework.scheduling.annotation.EnableScheduling;
 import tech.jhipster.config.DefaultProfileUtil;
 
 @SpringBootApplication
@@ -38,7 +37,6 @@ import tech.jhipster.config.DefaultProfileUtil;
     FlexworkProperties.class
 })
 @EntityScan("io.flexwork")
-@EnableScheduling
 @Order(1)
 public class FlexworkApp implements CommandLineRunner {
 

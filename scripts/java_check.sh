@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Set the required Java version as a variable
-REQUIRED_JAVA_VERSION=17
+REQUIRED_JAVA_VERSION=21
 
 # Function to compare two versions
 # Function to compare two versions

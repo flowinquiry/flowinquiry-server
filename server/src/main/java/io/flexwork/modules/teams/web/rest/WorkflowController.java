@@ -2,7 +2,9 @@ package io.flexwork.modules.teams.web.rest;
 
 import io.flexwork.modules.teams.domain.Workflow;
 import io.flexwork.modules.teams.service.WorkflowService;
+import io.flexwork.modules.teams.service.WorkflowStateService;
 import io.flexwork.modules.teams.service.dto.WorkflowDTO;
+import io.flexwork.modules.teams.service.dto.WorkflowStateDTO;
 import java.util.List;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -13,8 +15,12 @@ public class WorkflowController {
 
     private final WorkflowService workflowService;
 
-    public WorkflowController(WorkflowService workflowService) {
+    private final WorkflowStateService workflowStateService;
+
+    public WorkflowController(
+            WorkflowService workflowService, WorkflowStateService workflowStateService) {
         this.workflowService = workflowService;
+        this.workflowStateService = workflowStateService;
     }
 
     @PostMapping
@@ -68,5 +74,17 @@ public class WorkflowController {
     public ResponseEntity<List<WorkflowDTO>> getWorkflowsByTeam(@PathVariable Long teamId) {
         List<WorkflowDTO> workflows = workflowService.getWorkflowsForTeam(teamId);
         return ResponseEntity.ok(workflows);
+    }
+
+    /**
+     * Retrieve all workflow states for a given workflow ID.
+     *
+     * @param workflowId the ID of the workflow
+     * @return a list of workflow states
+     */
+    @GetMapping("/{workflowId}/states")
+    public ResponseEntity<List<WorkflowStateDTO>> getWorkflowStates(@PathVariable Long workflowId) {
+        List<WorkflowStateDTO> states = workflowStateService.getStatesByWorkflowId(workflowId);
+        return ResponseEntity.ok(states);
     }
 }

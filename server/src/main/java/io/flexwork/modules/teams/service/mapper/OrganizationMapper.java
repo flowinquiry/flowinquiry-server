@@ -23,7 +23,7 @@ public interface OrganizationMapper {
                         team ->
                                 TeamDTO.builder()
                                         .id(team.getId())
-                                        .build()) // Map only the 'id' field, set other fields as
+                                        .build()) // Map only the 'id' field, set other fields as//
                 // null
                 .collect(Collectors.toSet());
     }

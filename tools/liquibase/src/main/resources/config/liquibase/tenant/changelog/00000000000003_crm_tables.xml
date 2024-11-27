@@ -258,11 +258,6 @@
 			constraintName="fk_cases_contact"
 			referencedTableName="fw_crm_contact" referencedColumnNames="id" />
 
-		<addForeignKeyConstraint
-			baseTableName="fw_crm_activity_log" baseColumnNames="user_id"
-			constraintName="fk_activity_log_user" referencedTableName="fw_user"
-			referencedColumnNames="id" />
-
 		<createTable tableName="fw_crm_value_definitions">
 			<column name="id" type="BIGINT">
 				<constraints primaryKey="true" nullable="false" />

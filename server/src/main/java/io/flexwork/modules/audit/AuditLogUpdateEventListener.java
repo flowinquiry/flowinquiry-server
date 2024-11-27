@@ -3,28 +3,30 @@ package io.flexwork.modules.audit;
 import io.flexwork.modules.collab.domain.ActivityLog;
 import io.flexwork.modules.collab.domain.EntityType;
 import io.flexwork.modules.collab.repository.ActivityLogRepository;
+import io.flexwork.security.SecurityUtils;
 import jakarta.persistence.EntityNotFoundException;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.List;
-import org.aspectj.lang.ProceedingJoinPoint;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationContext;
+import org.springframework.context.event.EventListener;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.scheduling.annotation.Async;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
-@Service
-public class AuditLogAsyncService {
+@Component
+public class AuditLogUpdateEventListener {
 
-    private static final Logger LOG = LoggerFactory.getLogger(AuditLogAsyncService.class);
+    private static final Logger LOG = LoggerFactory.getLogger(AuditLogUpdateEventListener.class);
 
     private final ActivityLogRepository activityLogRepository;
     private final EntityFieldHandlerRegistryFactory registryFactory;
     private final ApplicationContext applicationContext;
 
-    public AuditLogAsyncService(
+    public AuditLogUpdateEventListener(
             ActivityLogRepository activityLogRepository,
             EntityFieldHandlerRegistryFactory registryFactory,
             ApplicationContext applicationContext) {
@@ -33,11 +35,13 @@ public class AuditLogAsyncService {
         this.applicationContext = applicationContext;
     }
 
-    @Async
-    public void handleAsyncLogEntityChanges(ProceedingJoinPoint joinPoint) {
+    @Async("auditLogExecutor")
+    @Transactional
+    @EventListener
+    public void onNewTeamRequestCreated(AuditLogUpdateEvent event) {
         try {
-            Object[] args = joinPoint.getArgs();
-            Object updatedEntity = args[0];
+
+            Object updatedEntity = event.getUpdatedEntity();
             Class<?> entityClass = updatedEntity.getClass();
             Long entityId = extractEntityId(updatedEntity);
 
@@ -56,9 +60,7 @@ public class AuditLogAsyncService {
 
             if (!changes.isEmpty()) {
                 // Generate HTML content
-                String htmlLog =
-                        ActivityLogUtils.generateHtmlLog(
-                                registry.getEntityType(), entityId, changes);
+                String htmlLog = ActivityLogUtils.generateHtmlLog(changes);
 
                 // Save the aggregated activity log
                 saveActivityLog(registry.getEntityType(), entityId, htmlLog);
@@ -111,7 +113,7 @@ public class AuditLogAsyncService {
         activityLog.setEntityType(entityType);
         activityLog.setEntityId(entityId);
         activityLog.setContent(activityDetails);
-
+        activityLog.setCreatedBy(SecurityUtils.getCurrentUserAuditorLogin());
         activityLogRepository.save(activityLog);
     }
 

@@ -2,6 +2,7 @@ package io.flexwork.modules.teams.service;
 
 import static io.flexwork.query.QueryUtils.createSpecification;
 
+import io.flexwork.modules.audit.AuditLogUpdateEvent;
 import io.flexwork.modules.teams.domain.TeamRequest;
 import io.flexwork.modules.teams.domain.WorkflowState;
 import io.flexwork.modules.teams.repository.TeamRequestRepository;
@@ -117,6 +118,7 @@ public class TeamRequestService {
 
         teamRequestMapper.updateEntity(teamRequestDTO, existingTeamRequest);
         existingTeamRequest = teamRequestRepository.save(existingTeamRequest);
+        eventPublisher.publishEvent(new AuditLogUpdateEvent(this, teamRequestDTO));
         return teamRequestMapper.toDto(existingTeamRequest);
     }
 

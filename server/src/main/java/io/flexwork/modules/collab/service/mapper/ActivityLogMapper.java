@@ -11,5 +11,6 @@ public interface ActivityLogMapper {
 
     @Mapping(source = "createdBy", target = "createdByName", qualifiedByName = "mapUserToFullName")
     @Mapping(source = "createdBy.id", target = "createdById")
+    @Mapping(source = "createdBy.imageUrl", target = "createdByImageUrl")
     ActivityLogDTO toDTO(ActivityLog activityLog);
 }

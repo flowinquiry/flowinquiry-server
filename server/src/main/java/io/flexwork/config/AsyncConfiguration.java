@@ -1,6 +1,7 @@
 package io.flexwork.config;
 
 import java.util.concurrent.Executor;
+import net.javacrumbs.shedlock.spring.annotation.EnableSchedulerLock;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.aop.interceptor.AsyncUncaughtExceptionHandler;
@@ -20,6 +21,7 @@ import tech.jhipster.async.ExceptionHandlingAsyncTaskExecutor;
 @Configuration
 @EnableAsync
 @EnableScheduling
+@EnableSchedulerLock(defaultLockAtMostFor = "10m")
 @Profile("!testdev & !testprod")
 public class AsyncConfiguration implements AsyncConfigurer {
 
@@ -44,7 +46,7 @@ public class AsyncConfiguration implements AsyncConfigurer {
     }
 
     @Bean(name = "auditLogExecutor")
-    public TaskExecutor auditLogaskExecutor() {
+    public TaskExecutor auditLogTaskExecutor() {
         ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
         executor.setCorePoolSize(10);
         executor.setMaxPoolSize(50);

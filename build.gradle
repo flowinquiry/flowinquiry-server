@@ -7,7 +7,7 @@ plugins {
 version = "0.0.1-SNAPSHOT"
 description = "The flexible configurable crm service"
 
-assert System.properties["java.specification.version"] == "17" || "18" || "19" || "20" || "21" || "22"
+assert System.properties["java.specification.version"] == "21" || "22" || "23"
 
 allprojects {
     group = 'io.flexwork'
@@ -19,8 +19,8 @@ allprojects {
         afterEvaluate {
             if (it.plugins.hasPlugin('java') || it.plugins.hasPlugin('java-library')) {
                 java {
-                    sourceCompatibility=17
-                    targetCompatibility=17
+                    sourceCompatibility=21
+                    targetCompatibility=21
                 }
             }
         }

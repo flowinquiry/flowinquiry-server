@@ -10,6 +10,23 @@
 		author="flexapp">
 		<createSequence sequenceName="sequence_generator"
 			minValue="100" startValue="100" incrementBy="1" />
+
+		<!--Table for shedLock, a distributed lock for spring scheduling service -->
+		<createTable tableName="shedlock">
+			<column name="name" type="VARCHAR(64)">
+				<constraints nullable="false" primaryKey="true" />
+			</column>
+			<column name="lock_until" type="TIMESTAMP">
+				<constraints nullable="false" />
+			</column>
+			<column name="locked_at" type="TIMESTAMP">
+				<constraints nullable="false" />
+			</column>
+			<column name="locked_by" type="VARCHAR(255)">
+				<constraints nullable="false" />
+			</column>
+		</createTable>
+
 		<createTable tableName="fw_user">
 			<column name="id" type="bigint">
 				<constraints primaryKey="true" />

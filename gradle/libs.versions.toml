@@ -17,6 +17,7 @@ springbootVersion = "3.3.5"
 springDependencyManagementVersion="1.1.6"
 jhisterVersion = "8.7.1"
 j2HtmlVersion = "1.6.0"
+shedlockVersion="6.0.1"
 
 [libraries]
 jhipster-framework = { module = "tech.jhipster:jhipster-framework", version.ref = "jhisterVersion" }
@@ -39,6 +40,8 @@ mockito = { module = "org.mockito:mockito-inline", version.ref = "mockitoVersion
 mockito-junit = { module = "org.mockito:mockito-junit-jupiter", version.ref = "mockitoJunitVersion" }
 json-api = { module = "jakarta.json:jakarta.json-api", version.ref = "jsonApiVersion" }
 parsson = { module = "org.eclipse.parsson:parsson", version.ref = "parssonVersion" }
+shedlock = {module="net.javacrumbs.shedlock:shedlock-spring", version.ref="shedlockVersion"}
+shedlock-jdbc-provider = {module="net.javacrumbs.shedlock:shedlock-provider-jdbc-template", version.ref="shedlockVersion"}
 
 [plugins]
 spring-boot = { id = "org.springframework.boot", version.ref = "springbootVersion" }
@@ -50,3 +53,4 @@ logback = ["logback-classic"]
 junit = ["junit-jupiter-api", "junit-jupiter-engine"]
 mockito = ["mockito", "mockito-junit"]
 json = ["json-api", "parsson"]
+shedlock = ["shedlock", "shedlock-jdbc-provider"]

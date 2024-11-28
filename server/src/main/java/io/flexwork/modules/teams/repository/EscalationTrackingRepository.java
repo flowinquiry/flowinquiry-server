@@ -19,7 +19,7 @@ public interface EscalationTrackingRepository extends JpaRepository<EscalationTr
             """
         SELECT MAX(et.escalationLevel)
         FROM EscalationTracking et
-        WHERE et.teamRequestId = :teamRequestId
+        WHERE et.teamRequest.id = :teamRequestId
     """)
     Optional<Integer> findMaxEscalationLevel(@Param("teamRequestId") Long teamRequestId);
 
@@ -36,7 +36,7 @@ public interface EscalationTrackingRepository extends JpaRepository<EscalationTr
             """
         SELECT COUNT(et) > 0
         FROM EscalationTracking et
-        WHERE et.teamRequestId = :teamRequestId
+        WHERE et.teamRequest.id = :teamRequestId
           AND et.escalationLevel = :escalationLevel
           AND et.escalationTime < :threshold
     """)

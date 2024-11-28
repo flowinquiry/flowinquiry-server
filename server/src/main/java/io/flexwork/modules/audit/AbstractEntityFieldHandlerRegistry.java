@@ -3,11 +3,10 @@ package io.flexwork.modules.audit;
 import io.flexwork.modules.collab.domain.EntityType;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.function.BiFunction;
 
 public abstract class AbstractEntityFieldHandlerRegistry implements EntityFieldHandlerRegistry {
 
-    private final Map<String, BiFunction<Object, Object, String>> fieldHandlers = new HashMap<>();
+    private final Map<String, EntityFieldHandler> fieldHandlers = new HashMap<>();
 
     /**
      * Add a field handler for a specific field.
@@ -15,7 +14,7 @@ public abstract class AbstractEntityFieldHandlerRegistry implements EntityFieldH
      * @param fieldName The name of the field.
      * @param handler A function that processes the old and new values of the field.
      */
-    protected void addFieldHandler(String fieldName, BiFunction<Object, Object, String> handler) {
+    protected void addFieldHandler(String fieldName, EntityFieldHandler handler) {
         fieldHandlers.put(fieldName, handler);
     }
 
@@ -26,7 +25,7 @@ public abstract class AbstractEntityFieldHandlerRegistry implements EntityFieldH
      * @return A handler function that processes the old and new values of the field.
      */
     @Override
-    public BiFunction<Object, Object, String> getHandler(String fieldName) {
+    public EntityFieldHandler getHandler(String fieldName) {
         return fieldHandlers.get(fieldName);
     }
 

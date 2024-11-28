@@ -117,11 +117,14 @@ public class TeamRequestService {
                                         new ResourceNotFoundException(
                                                 "TeamRequest not found with id: "
                                                         + teamRequestDTO.getId()));
+        TeamRequestDTO previousTeamRequest = teamRequestMapper.toDto(existingTeamRequest);
 
         teamRequestMapper.updateEntity(teamRequestDTO, existingTeamRequest);
-        existingTeamRequest = teamRequestRepository.save(existingTeamRequest);
-        eventPublisher.publishEvent(new AuditLogUpdateEvent(this, teamRequestDTO));
-        return teamRequestMapper.toDto(existingTeamRequest);
+        TeamRequestDTO savedTeamRequest =
+                teamRequestMapper.toDto(teamRequestRepository.save(existingTeamRequest));
+        eventPublisher.publishEvent(
+                new AuditLogUpdateEvent(this, previousTeamRequest, teamRequestDTO));
+        return savedTeamRequest;
     }
 
     @Transactional

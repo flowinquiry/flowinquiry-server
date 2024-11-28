@@ -107,13 +107,6 @@
 			<column name="priority" type="VARCHAR(50)">
 				<constraints nullable="false" />
 			</column>
-			<column name="created_date" type="TIMESTAMP"
-				defaultValueComputed="CURRENT_TIMESTAMP">
-				<constraints nullable="false" />
-			</column>
-			<column name="last_updated_time" type="TIMESTAMP">
-				<constraints nullable="true" />
-			</column>
 			<column name="is_deleted" type="BOOLEAN" defaultValue="false">
 				<constraints nullable="false" />
 			</column>
@@ -124,12 +117,12 @@
 			</column>
 
 			<!-- Estimated completion date -->
-			<column name="estimated_completion_date" type="TIMESTAMP">
+			<column name="estimated_completion_date" type="timestamptz">
 				<constraints nullable="true" />
 			</column>
 
 			<!-- Actual completion date -->
-			<column name="actual_completion_date" type="TIMESTAMP">
+			<column name="actual_completion_date" type="timestamptz">
 				<constraints nullable="true" />
 			</column>
 			<column name="current_state" type="VARCHAR(255)" />
@@ -139,6 +132,10 @@
 				defaultValue="false">
 				<constraints nullable="false" />
 			</column>
+			<column name="created_by" type="bigint" />
+			<column name="created_at" type="timestamptz" />
+			<column name="modified_by" type="bigint" />
+			<column name="modified_at" type="timestamptz" />
 		</createTable>
 
 		<addForeignKeyConstraint
@@ -247,11 +244,11 @@
 			<column name="event_name" type="VARCHAR(255)">
 				<constraints nullable="false" />
 			</column>
-			<column name="transition_date" type="TIMESTAMP"
+			<column name="transition_date" type="timestamptz"
 				defaultValueComputed="CURRENT_TIMESTAMP">
 				<constraints nullable="false" />
 			</column>
-			<column name="sla_due_date" type="TIMESTAMP" />
+			<column name="sla_due_date" type="timestamptz" />
 			<column name="status" type="VARCHAR(50)" />
 		</createTable>
 		<addForeignKeyConstraint
@@ -271,7 +268,7 @@
 				<constraints nullable="false" />
 			</column>
 			<column name="escalated_to_user_id" type="BIGINT" />
-			<column name="escalation_time" type="TIMESTAMP"
+			<column name="escalation_time" type="timestamptz"
 				defaultValueComputed="CURRENT_TIMESTAMP">
 				<constraints nullable="false" />
 			</column>

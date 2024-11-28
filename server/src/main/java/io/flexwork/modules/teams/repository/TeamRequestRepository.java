@@ -82,32 +82,4 @@ public interface TeamRequestRepository
      */
     @Query("SELECT DISTINCT r.workflow.id FROM TeamRequest r")
     List<Long> findAllWorkflowIds();
-
-    //    /**
-    //     * Finds tickets that have exceeded their SLA and are eligible for escalation.
-    //     *
-    //     * @param workflowId The ID of the workflow associated with the tickets.
-    //     * @param escalationLevel The escalation level being processed.
-    //     * @param threshold The timestamp threshold for escalation.
-    //     * @return A list of team request IDs eligible for escalation.
-    //     */
-    //    @Query("""
-    //    SELECT r.id
-    //    FROM TeamRequest r
-    //    JOIN WorkflowTransition tr
-    //        ON r.workflow.id = tr.workflow.id
-    //        AND r.currentState = tr.sourceState
-    //    LEFT JOIN EscalationTracking et
-    //        ON et.teamRequest.id = r.id
-    //        AND et.escalationLevel = :escalationLevel
-    //    WHERE r.workflow.id = :workflowId
-    //      AND r.createdDate + CAST(tr.slaDuration AS INTERVAL) < CURRENT_TIMESTAMP
-    //      AND (et.id IS NULL OR et.escalationTime < :threshold)
-    // """)
-    //    List<Long> findTicketsExceedingSlaAndLevel(
-    //            @Param("workflowId") Long workflowId,
-    //            @Param("escalationLevel") int escalationLevel,
-    //            @Param("threshold") LocalDateTime threshold
-    //    );
-
 }

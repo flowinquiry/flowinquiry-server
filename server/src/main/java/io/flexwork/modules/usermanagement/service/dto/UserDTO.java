@@ -52,11 +52,11 @@ public class UserDTO implements Serializable {
 
     private String title;
 
-    private String createdBy;
+    private Long createdBy;
 
-    private Instant createdDate;
+    private Instant createdAt;
 
-    private String lastModifiedBy;
+    private Long lastModifiedBy;
 
-    private Instant lastModifiedDate;
+    private Instant modifiedAt;
 }

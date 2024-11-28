@@ -50,10 +50,10 @@ public class EscalationService {
                     LocalDateTime.now().minusMinutes(timeoutInMinutes);
 
             // Find tickets that have exceeded the timeout for this level
-            List<Long> tickets =
-                    teamRequestRepository.findTicketsExceedingSlaAndLevel(
-                            workflowId, level, escalationTimeThreshold);
-            tickets.forEach(this::escalateIfNoAction);
+            //            List<Long> tickets =
+            //                    teamRequestRepository.findTicketsExceedingSlaAndLevel(
+            //                            workflowId, level, escalationTimeThreshold);
+            //            tickets.forEach(this::escalateIfNoAction);
         }
     }
 

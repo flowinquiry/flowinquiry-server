@@ -2,7 +2,6 @@ package io.flexwork.modules.teams.repository;
 
 import io.flexwork.modules.teams.domain.TeamRequest;
 import io.flexwork.modules.teams.service.dto.SlaDurationDTO;
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.data.domain.Page;
@@ -84,30 +83,31 @@ public interface TeamRequestRepository
     @Query("SELECT DISTINCT r.workflow.id FROM TeamRequest r")
     List<Long> findAllWorkflowIds();
 
-    /**
-     * Finds tickets that have exceeded their SLA and are eligible for escalation.
-     *
-     * @param workflowId The ID of the workflow associated with the tickets.
-     * @param escalationLevel The escalation level being processed.
-     * @param threshold The timestamp threshold for escalation.
-     * @return A list of team request IDs eligible for escalation.
-     */
-    @Query(
-            """
-        SELECT r.id
-        FROM TeamRequest r
-        JOIN WorkflowTransition tr
-            ON r.workflow.id = tr.workflow.id
-            AND r.currentState = tr.sourceState
-        LEFT JOIN EscalationTracking et
-            ON et.teamRequestId = r.id
-            AND et.escalationLevel = :escalationLevel
-        WHERE r.workflow.id = :workflowId
-          AND r.createdDate + (tr.slaDuration * 1000) < CURRENT_TIMESTAMP
-          AND (et.id IS NULL OR et.escalationTime < :threshold)
-    """)
-    List<Long> findTicketsExceedingSlaAndLevel(
-            @Param("workflowId") Long workflowId,
-            @Param("escalationLevel") int escalationLevel,
-            @Param("threshold") LocalDateTime threshold);
+    //    /**
+    //     * Finds tickets that have exceeded their SLA and are eligible for escalation.
+    //     *
+    //     * @param workflowId The ID of the workflow associated with the tickets.
+    //     * @param escalationLevel The escalation level being processed.
+    //     * @param threshold The timestamp threshold for escalation.
+    //     * @return A list of team request IDs eligible for escalation.
+    //     */
+    //    @Query("""
+    //    SELECT r.id
+    //    FROM TeamRequest r
+    //    JOIN WorkflowTransition tr
+    //        ON r.workflow.id = tr.workflow.id
+    //        AND r.currentState = tr.sourceState
+    //    LEFT JOIN EscalationTracking et
+    //        ON et.teamRequest.id = r.id
+    //        AND et.escalationLevel = :escalationLevel
+    //    WHERE r.workflow.id = :workflowId
+    //      AND r.createdDate + CAST(tr.slaDuration AS INTERVAL) < CURRENT_TIMESTAMP
+    //      AND (et.id IS NULL OR et.escalationTime < :threshold)
+    // """)
+    //    List<Long> findTicketsExceedingSlaAndLevel(
+    //            @Param("workflowId") Long workflowId,
+    //            @Param("escalationLevel") int escalationLevel,
+    //            @Param("threshold") LocalDateTime threshold
+    //    );
+
 }

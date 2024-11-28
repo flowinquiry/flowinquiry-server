@@ -8,8 +8,10 @@ import io.flexwork.modules.teams.domain.WorkflowState;
 import io.flexwork.modules.teams.repository.TeamRequestRepository;
 import io.flexwork.modules.teams.repository.WorkflowRepository;
 import io.flexwork.modules.teams.repository.WorkflowStateRepository;
+import io.flexwork.modules.teams.service.dto.PriorityDistributionDTO;
 import io.flexwork.modules.teams.service.dto.SlaDurationDTO;
 import io.flexwork.modules.teams.service.dto.TeamRequestDTO;
+import io.flexwork.modules.teams.service.dto.TicketDistributionDTO;
 import io.flexwork.modules.teams.service.event.NewTeamRequestCreatedEvent;
 import io.flexwork.modules.teams.service.mapper.TeamRequestMapper;
 import io.flexwork.query.QueryDTO;
@@ -153,5 +155,22 @@ public class TeamRequestService {
 
     public List<SlaDurationDTO> getSlaDurationsForCurrentState(Long teamRequestId) {
         return teamRequestRepository.findSlaDurationsForCurrentState(teamRequestId);
+    }
+
+    // Fetch ticket distribution by team member
+    public List<TicketDistributionDTO> getTicketDistribution(Long teamId) {
+        return teamRequestRepository.findTicketDistributionByTeamId(teamId);
+    }
+
+    // Fetch unassigned tickets
+    public Page<TeamRequestDTO> getUnassignedTickets(Long teamId, Pageable pageable) {
+        return teamRequestRepository
+                .findUnassignedTicketsByTeamId(teamId, pageable)
+                .map(teamRequestMapper::toDto);
+    }
+
+    // Fetch ticket priority distribution
+    public List<PriorityDistributionDTO> getPriorityDistribution(Long teamId) {
+        return teamRequestRepository.findTicketPriorityDistributionByTeamId(teamId);
     }
 }

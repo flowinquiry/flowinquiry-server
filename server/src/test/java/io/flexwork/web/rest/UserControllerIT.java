@@ -337,9 +337,9 @@ class UserControllerIT {
         userDTO.setImageUrl(UPDATED_IMAGEURL);
         userDTO.setLangKey(UPDATED_LANGKEY);
         userDTO.setCreatedBy(updatedUser.getCreatedBy());
-        userDTO.setCreatedDate(updatedUser.getCreatedDate());
-        userDTO.setLastModifiedBy(updatedUser.getLastModifiedBy());
-        userDTO.setLastModifiedDate(updatedUser.getLastModifiedDate());
+        userDTO.setCreatedAt(updatedUser.getCreatedAt());
+        userDTO.setLastModifiedBy(updatedUser.getModifiedBy());
+        userDTO.setModifiedAt(updatedUser.getModifiedAt());
         userDTO.setAuthorities(
                 Collections.singleton(new AuthorityDTO(AuthoritiesConstants.USER, "User")));
         return userDTO;
@@ -364,9 +364,9 @@ class UserControllerIT {
         userDTO.setImageUrl(UPDATED_IMAGEURL);
         userDTO.setLangKey(UPDATED_LANGKEY);
         userDTO.setCreatedBy(updatedUser.getCreatedBy());
-        userDTO.setCreatedDate(updatedUser.getCreatedDate());
-        userDTO.setLastModifiedBy(updatedUser.getLastModifiedBy());
-        userDTO.setLastModifiedDate(updatedUser.getLastModifiedDate());
+        userDTO.setCreatedAt(updatedUser.getCreatedAt());
+        userDTO.setLastModifiedBy(updatedUser.getModifiedBy());
+        userDTO.setModifiedAt(updatedUser.getModifiedAt());
         userDTO.setAuthorities(
                 Collections.singleton(new AuthorityDTO(AuthoritiesConstants.USER, "User")));
 
@@ -434,9 +434,9 @@ class UserControllerIT {
         userDTO.setImageUrl(updatedUser.getImageUrl());
         userDTO.setLangKey(updatedUser.getLangKey());
         userDTO.setCreatedBy(updatedUser.getCreatedBy());
-        userDTO.setCreatedDate(updatedUser.getCreatedDate());
-        userDTO.setLastModifiedBy(updatedUser.getLastModifiedBy());
-        userDTO.setLastModifiedDate(updatedUser.getLastModifiedDate());
+        userDTO.setCreatedAt(updatedUser.getCreatedAt());
+        userDTO.setLastModifiedBy(updatedUser.getModifiedBy());
+        userDTO.setModifiedAt(updatedUser.getModifiedAt());
         userDTO.setAuthorities(
                 Collections.singleton(new AuthorityDTO(AuthoritiesConstants.USER, "User")));
 

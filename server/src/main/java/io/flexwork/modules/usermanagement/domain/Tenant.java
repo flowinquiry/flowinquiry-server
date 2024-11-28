@@ -2,6 +2,7 @@ package io.flexwork.modules.usermanagement.domain;
 
 import static io.flexwork.db.DbConstants.MASTER_SCHEMA;
 
+import io.flexwork.modules.audit.AbstractAuditingEntity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;

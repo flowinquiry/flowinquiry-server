@@ -2,7 +2,6 @@ package io.flexwork.modules.usermanagement.repository;
 
 import io.flexwork.modules.usermanagement.domain.User;
 import jakarta.transaction.Transactional;
-import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -20,9 +19,6 @@ public interface UserRepository extends JpaRepository<User, Long>, JpaSpecificat
     String USERS_BY_EMAIL_CACHE = "usersByEmail";
 
     Optional<User> findOneByActivationKey(String activationKey);
-
-    List<User> findAllByActivatedIsFalseAndActivationKeyIsNotNullAndCreatedDateBefore(
-            Instant dateTime);
 
     Optional<User> findOneByResetKey(String resetKey);
 

@@ -10,7 +10,7 @@ import org.mapstruct.Named;
 @Mapper(componentModel = "spring")
 public interface WorkflowMapper {
 
-    @Mapping(source = "owner", target = "global", qualifiedByName = "mapIsGlobal")
+    @Mapping(source = "owner", target = "isGlobal", qualifiedByName = "mapIsGlobal")
     WorkflowDTO toDto(Workflow workflow);
 
     Workflow toEntity(WorkflowDTO workflowDTO);

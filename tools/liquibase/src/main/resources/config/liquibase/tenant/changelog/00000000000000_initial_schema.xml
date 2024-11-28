@@ -68,15 +68,13 @@
 			<column name="about" type="TEXT">
 				<constraints nullable="true" />
 			</column>
-			<column name="created_by" type="VARCHAR(256)">
-				<constraints nullable="false" />
-			</column>
-			<column name="created_date" type="timestamptz" />
 			<column name="reset_date" type="timestamptz">
 				<constraints nullable="true" />
 			</column>
-			<column name="last_modified_by" type="VARCHAR(256)" />
-			<column name="last_modified_date" type="timestamptz" />
+			<column name="created_by" type="bigint" />
+			<column name="created_at" type="timestamptz" />
+			<column name="modified_by" type="bigint" />
+			<column name="modified_at" type="timestamptz" />
 		</createTable>
 
 		<addAutoIncrement tableName="fw_user" columnName="id"
@@ -228,17 +226,16 @@
 			<column name="content" type="TEXT">
 				<constraints nullable="false" />
 			</column>
-			<column name="created_by" type="BIGINT">
-				<constraints nullable="false" />
-			</column>
-			<column name="created_at" type="timestamptz"
-				defaultValueComputed="CURRENT_TIMESTAMP" />
 			<column name="entity_type" type="VARCHAR(20)">
 				<constraints nullable="false" />
 			</column>
 			<column name="entity_id" type="BIGINT">
 				<constraints nullable="false" />
 			</column>
+			<column name="created_by" type="bigint" />
+			<column name="created_at" type="timestamptz" />
+			<column name="modified_by" type="bigint" />
+			<column name="modified_at" type="timestamptz" />
 		</createTable>
 
 		<addForeignKeyConstraint
@@ -333,11 +330,11 @@
 			<column name="lang_key" type="STRING" />
 			<column name="activation_key" type="STRING" />
 			<column name="reset_key" type="STRING" />
-			<column name="created_by" type="STRING" />
+			<column name="created_by" type="NUMBER" />
 			<column name="created_date" type="TIMESTAMP" />
 			<column name="reset_date" type="TIMESTAMP" />
-			<column name="last_modified_by" type="STRING" />
-			<column name="last_modified_date" type="TIMESTAMP" />
+			<column name="modified_by" type="NUMBER" />
+			<column name="modified_at" type="TIMESTAMP" />
 			<column name="about" type="STRING" />
 			<column name="address" type="STRING" />
 			<column name="city" type="STRING" />

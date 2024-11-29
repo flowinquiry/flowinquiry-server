@@ -95,7 +95,6 @@ public interface TeamRequestRepository
                     + "GROUP BY u.id, u.firstName, u.lastName")
     List<TicketDistributionDTO> findTicketDistributionByTeamId(@Param("teamId") Long teamId);
 
-    // Query to find unassigned tickets for a specific team
     @Query(
             "SELECT r FROM TeamRequest r "
                     + "WHERE r.team.id = :teamId AND r.isCompleted = false AND r.isDeleted = false "
@@ -107,7 +106,21 @@ public interface TeamRequestRepository
                     + "  WHEN io.flexwork.modules.teams.domain.TeamRequestPriority.High THEN 4 "
                     + "  WHEN io.flexwork.modules.teams.domain.TeamRequestPriority.Critical THEN 5 "
                     + "END ASC")
-    Page<TeamRequest> findUnassignedTicketsByTeamId(
+    Page<TeamRequest> findUnassignedTicketsByTeamIdAsc(
+            @Param("teamId") Long teamId, Pageable pageable);
+
+    @Query(
+            "SELECT r FROM TeamRequest r "
+                    + "WHERE r.team.id = :teamId AND r.isCompleted = false AND r.isDeleted = false "
+                    + "AND r.assignUser IS NULL "
+                    + "ORDER BY CASE r.priority "
+                    + "  WHEN io.flexwork.modules.teams.domain.TeamRequestPriority.Trivial THEN 1 "
+                    + "  WHEN io.flexwork.modules.teams.domain.TeamRequestPriority.Low THEN 2 "
+                    + "  WHEN io.flexwork.modules.teams.domain.TeamRequestPriority.Medium THEN 3 "
+                    + "  WHEN io.flexwork.modules.teams.domain.TeamRequestPriority.High THEN 4 "
+                    + "  WHEN io.flexwork.modules.teams.domain.TeamRequestPriority.Critical THEN 5 "
+                    + "END DESC")
+    Page<TeamRequest> findUnassignedTicketsByTeamIdDesc(
             @Param("teamId") Long teamId, Pageable pageable);
 
     // Query to count tickets by priority for a specific team

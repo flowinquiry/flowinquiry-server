@@ -163,9 +163,15 @@ public class TeamRequestService {
     }
 
     // Fetch unassigned tickets
-    public Page<TeamRequestDTO> getUnassignedTickets(Long teamId, Pageable pageable) {
+    public Page<TeamRequestDTO> getUnassignedTickets(
+            Long teamId, String sortDirection, Pageable pageable) {
+        if ("desc".equalsIgnoreCase(sortDirection)) {
+            return teamRequestRepository
+                    .findUnassignedTicketsByTeamIdDesc(teamId, pageable)
+                    .map(teamRequestMapper::toDto);
+        }
         return teamRequestRepository
-                .findUnassignedTicketsByTeamId(teamId, pageable)
+                .findUnassignedTicketsByTeamIdAsc(teamId, pageable)
                 .map(teamRequestMapper::toDto);
     }
 

@@ -11,7 +11,6 @@ import java.util.List;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -113,14 +112,8 @@ public class TeamRequestController {
             @RequestParam(defaultValue = "priority") String sortBy,
             @RequestParam(defaultValue = "asc") String sortDirection) {
 
-        Pageable pageable =
-                PageRequest.of(
-                        page,
-                        size,
-                        sortDirection.equalsIgnoreCase("asc")
-                                ? Sort.by(sortBy).ascending()
-                                : Sort.by(sortBy).descending());
-        return teamRequestService.getUnassignedTickets(teamId, pageable);
+        Pageable pageable = PageRequest.of(page, size);
+        return teamRequestService.getUnassignedTickets(teamId, sortDirection, pageable);
     }
 
     // Endpoint to get priority distribution for a specific team

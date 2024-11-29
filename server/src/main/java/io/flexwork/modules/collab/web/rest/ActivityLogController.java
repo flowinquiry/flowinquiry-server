@@ -25,7 +25,7 @@ public class ActivityLogController {
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size,
             @RequestParam(defaultValue = "createdAt") String sortBy,
-            @RequestParam(defaultValue = "DESC") String sortDirection) {
+            @RequestParam(defaultValue = "desc") String sortDirection) {
         Page<ActivityLogDTO> activityLogs =
                 activityLogService.getActivityLogs(
                         entityType, entityId, page, size, sortBy, sortDirection);

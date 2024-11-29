@@ -81,5 +81,9 @@ public interface TeamRequestMapper {
     @Mapping(target = "workflow", source = "workflowId", qualifiedByName = "toWorkflow")
     @Mapping(target = "assignUser", source = "assignUserId", qualifiedByName = "toUser")
     @Mapping(target = "requestUser", source = "requestUserId", qualifiedByName = "toUser")
+    @Mapping(
+            target = "currentState",
+            source = "currentStateId",
+            qualifiedByName = "toWorkflowState")
     void updateEntity(TeamRequestDTO dto, @MappingTarget TeamRequest entity);
 }

@@ -4,6 +4,7 @@ import io.flexwork.modules.audit.AbstractEntityFieldHandlerRegistry;
 import io.flexwork.modules.audit.EntityFieldHandler;
 import io.flexwork.modules.collab.domain.EntityType;
 import io.flexwork.modules.teams.domain.TicketChannel;
+import io.flexwork.modules.teams.repository.WorkflowStateRepository;
 import io.flexwork.modules.teams.service.dto.TeamRequestDTO;
 import io.flexwork.modules.usermanagement.repository.UserRepository;
 import java.util.Optional;
@@ -14,8 +15,12 @@ public class TeamRequestFieldHandlerRegistry extends AbstractEntityFieldHandlerR
 
     private final UserRepository userRepository;
 
-    public TeamRequestFieldHandlerRegistry(UserRepository userRepository) {
+    private final WorkflowStateRepository workflowStateRepository;
+
+    public TeamRequestFieldHandlerRegistry(
+            UserRepository userRepository, WorkflowStateRepository workflowStateRepository) {
         this.userRepository = userRepository;
+        this.workflowStateRepository = workflowStateRepository;
     }
 
     @Override
@@ -35,7 +40,18 @@ public class TeamRequestFieldHandlerRegistry extends AbstractEntityFieldHandlerR
         addFieldHandler(
                 "actualCompletionDate",
                 new EntityFieldHandler<TeamRequestDTO>("Actual Completion Date"));
-        addFieldHandler("currentState", new EntityFieldHandler<TeamRequestDTO>("Current State"));
+        addFieldHandler(
+                "currentStateId",
+                new EntityFieldHandler<TeamRequestDTO>(
+                        "State",
+                        (objectVal, fieldVal) ->
+                                Optional.ofNullable(fieldVal)
+                                        .flatMap(
+                                                id ->
+                                                        workflowStateRepository
+                                                                .findById((Long) id)
+                                                                .map(state -> state.getStateName()))
+                                        .orElse("")));
         addFieldHandler(
                 "assignUserId",
                 new EntityFieldHandler<>(

@@ -25,4 +25,13 @@ public class WorkflowStateService {
                 .map(workflowStateMapper::toDto)
                 .toList();
     }
+
+    public List<WorkflowStateDTO> getStatesExcludingState(
+            Long workflowId, String excludedStateName) {
+        return workflowStateRepository
+                .findStatesByWorkflowExcludingState(workflowId, excludedStateName)
+                .stream()
+                .map(workflowStateMapper::toDto)
+                .toList();
+    }
 }

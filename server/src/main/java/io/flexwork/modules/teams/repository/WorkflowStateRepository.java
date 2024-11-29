@@ -14,5 +14,16 @@ public interface WorkflowStateRepository extends JpaRepository<WorkflowState, Lo
             "SELECT ws FROM WorkflowState ws WHERE ws.workflow.id = :workflowId AND ws.isInitial = true")
     WorkflowState findInitialStateByWorkflowId(@Param("workflowId") Long workflowId);
 
+    @Query(
+            """
+    SELECT ws
+    FROM WorkflowState ws
+    WHERE ws.workflow.id = :workflowId
+      AND ws.stateName != :excludedStateName
+""")
+    List<WorkflowState> findStatesByWorkflowExcludingState(
+            @Param("workflowId") Long workflowId,
+            @Param("excludedStateName") String excludedStateName);
+
     List<WorkflowState> findByWorkflowId(Long workflowId);
 }

@@ -41,22 +41,27 @@ public class Team {
     private Organization organization;
 
     @EqualsAndHashCode.Exclude
+    @Builder.Default
     @ManyToMany(mappedBy = "teams")
     private Set<User> users = new HashSet<>();
 
     @EqualsAndHashCode.Exclude
+    @Builder.Default
     @OneToMany(mappedBy = "team", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<UserTeam> teamMembers = new HashSet<>();
 
     @EqualsAndHashCode.Exclude
+    @Builder.Default
     @OneToMany(mappedBy = "team", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<UserTeam> userTeams = new HashSet<>();
 
     @EqualsAndHashCode.Exclude
+    @Builder.Default
     @OneToMany(mappedBy = "owner", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<Workflow> workflows = new HashSet<>();
 
     @EqualsAndHashCode.Exclude
+    @Builder.Default
     @OneToMany(mappedBy = "team", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<TeamWorkflowSelection> workflowUsages = new HashSet<>();
 }

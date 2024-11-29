@@ -1,6 +1,6 @@
 package io.flexwork.modules.collab.service.dto;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 import lombok.Builder;
 import lombok.Data;
 
@@ -9,7 +9,8 @@ import lombok.Data;
 public class NotificationDTO {
     private Long id;
     private String content;
-    private LocalDateTime createdAt;
     private Long userId;
     private boolean isRead;
+    private Instant createdAt;
+    private Instant modifiedAt;
 }

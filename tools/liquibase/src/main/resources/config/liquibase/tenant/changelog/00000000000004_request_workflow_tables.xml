@@ -83,6 +83,25 @@
 			constraintName="fk_team_workflow_selection_workflow" />
 
 
+		<createTable tableName="fw_workflow_state">
+			<column name="id" type="BIGINT" autoIncrement="true">
+				<constraints primaryKey="true" nullable="false" />
+			</column>
+			<column name="workflow_id" type="BIGINT">
+				<constraints nullable="false" />
+			</column>
+			<column name="state_name" type="VARCHAR(255)">
+				<constraints nullable="false" />
+			</column>
+			<column name="is_initial" type="BOOLEAN" defaultValue="false" />
+			<column name="is_final" type="BOOLEAN" defaultValue="false" />
+		</createTable>
+
+		<addForeignKeyConstraint
+			baseTableName="fw_workflow_state" baseColumnNames="workflow_id"
+			constraintName="fk_workflow_states_workflow"
+			referencedTableName="fw_workflow" referencedColumnNames="id" />
+
 		<!--This table stores each customer request associated with a team, linking 
 			the request to a specific workflow and tracking the current state. -->
 		<createTable tableName="fw_team_request">
@@ -117,15 +136,18 @@
 			</column>
 
 			<!-- Estimated completion date -->
-			<column name="estimated_completion_date" type="timestamptz">
+			<column name="estimated_completion_date" type="Date">
 				<constraints nullable="true" />
 			</column>
 
 			<!-- Actual completion date -->
-			<column name="actual_completion_date" type="timestamptz">
+			<column name="actual_completion_date" type="Date">
 				<constraints nullable="true" />
 			</column>
-			<column name="current_state" type="VARCHAR(255)" />
+			<column name="is_new" type="BOOLEAN" defaultValue="true">
+				<constraints nullable="false" />
+			</column>
+			<column name="current_state_id" type="bigint" />
 			<!--This column is set to true if the current_state is associated with 
 				a workflow_state where the is_final flag is true. -->
 			<column name="is_completed" type="BOOLEAN"
@@ -140,41 +162,24 @@
 
 		<addForeignKeyConstraint
 			baseTableName="fw_team_request" baseColumnNames="team_id"
-			constraintName="fk_team_id" referencedTableName="fw_team"
-			referencedColumnNames="id" />
+			constraintName="fk_team_request_team_id"
+			referencedTableName="fw_team" referencedColumnNames="id" />
 		<addForeignKeyConstraint
 			baseTableName="fw_team_request" baseColumnNames="workflow_id"
-			constraintName="fk_workflow_id" referencedTableName="fw_workflow"
-			referencedColumnNames="id" />
+			constraintName="fk_team_request_workflow_id"
+			referencedTableName="fw_workflow" referencedColumnNames="id" />
 		<addForeignKeyConstraint
 			baseTableName="fw_team_request" baseColumnNames="request_user_id"
-			constraintName="fk_request_user" referencedTableName="fw_user"
-			referencedColumnNames="id" />
+			constraintName="fk_team_request_request_user"
+			referencedTableName="fw_user" referencedColumnNames="id" />
 		<addForeignKeyConstraint
 			baseTableName="fw_team_request" baseColumnNames="assign_user_id"
-			constraintName="fk_assign_user" referencedTableName="fw_user"
-			referencedColumnNames="id" />
-
-		<!--Defines each state in a workflow, marking initial and final states 
-			as needed. -->
-		<createTable tableName="fw_workflow_state">
-			<column name="id" type="BIGINT" autoIncrement="true">
-				<constraints primaryKey="true" nullable="false" />
-			</column>
-			<column name="workflow_id" type="BIGINT">
-				<constraints nullable="false" />
-			</column>
-			<column name="state_name" type="VARCHAR(255)">
-				<constraints nullable="false" />
-			</column>
-			<column name="is_initial" type="BOOLEAN" defaultValue="false" />
-			<column name="is_final" type="BOOLEAN" defaultValue="false" />
-		</createTable>
-
+			constraintName="fk_team_request_assign_user"
+			referencedTableName="fw_user" referencedColumnNames="id" />
 		<addForeignKeyConstraint
-			baseTableName="fw_workflow_state" baseColumnNames="workflow_id"
-			constraintName="fk_workflow_states_workflow"
-			referencedTableName="fw_workflow" referencedColumnNames="id" />
+			baseTableName="fw_team_request" baseColumnNames="current_state_id"
+			constraintName="team_request_workflow_state"
+			referencedTableName="fw_workflow_state" referencedColumnNames="id" />
 
 		<!--Defines the transitions between states within each workflow. It includes 
 			the event name that triggers each transition, along with the SLA duration 

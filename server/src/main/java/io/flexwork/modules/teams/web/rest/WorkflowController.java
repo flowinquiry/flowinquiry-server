@@ -87,4 +87,19 @@ public class WorkflowController {
         List<WorkflowStateDTO> states = workflowStateService.getStatesByWorkflowId(workflowId);
         return ResponseEntity.ok(states);
     }
+
+    /**
+     * Endpoint to get workflow states excluding a specific state name.
+     *
+     * @param workflowId The ID of the workflow.
+     * @param excludedStateName The state name to exclude.
+     * @return List of state names excluding the specified state.
+     */
+    @GetMapping("/{workflowId}/states/exclude")
+    public ResponseEntity<List<WorkflowStateDTO>> getWorkflowStatesExcludingState(
+            @PathVariable Long workflowId, @RequestParam String excludedStateName) {
+        List<WorkflowStateDTO> states =
+                workflowStateService.getStatesExcludingState(workflowId, excludedStateName);
+        return ResponseEntity.ok(states);
+    }
 }

@@ -2,7 +2,6 @@ package io.flexwork.modules.teams.web.rest;
 
 import io.flexwork.modules.teams.service.TeamRequestService;
 import io.flexwork.modules.teams.service.dto.PriorityDistributionDTO;
-import io.flexwork.modules.teams.service.dto.SlaDurationDTO;
 import io.flexwork.modules.teams.service.dto.TeamRequestDTO;
 import io.flexwork.modules.teams.service.dto.TicketDistributionDTO;
 import io.flexwork.query.QueryDTO;
@@ -13,7 +12,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -32,11 +30,6 @@ public class TeamRequestController {
 
     public TeamRequestController(TeamRequestService teamRequestService) {
         this.teamRequestService = teamRequestService;
-    }
-
-    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN')")
-    public ResponseEntity<Page<TeamRequestDTO>> getAllTeamRequests(Pageable pageable) {
-        return ResponseEntity.ok(teamRequestService.getAllTeamRequests(pageable));
     }
 
     @PostMapping("/search")
@@ -87,14 +80,6 @@ public class TeamRequestController {
                 .getPreviousEntity(currentId)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
-    }
-
-    @GetMapping("/{teamRequestId}/current-state-slas")
-    public ResponseEntity<List<SlaDurationDTO>> getSlaDurationsForCurrentState(
-            @PathVariable Long teamRequestId) {
-        List<SlaDurationDTO> slaDurations =
-                teamRequestService.getSlaDurationsForCurrentState(teamRequestId);
-        return ResponseEntity.ok(slaDurations);
     }
 
     // Endpoint to get ticket distribution for a specific team

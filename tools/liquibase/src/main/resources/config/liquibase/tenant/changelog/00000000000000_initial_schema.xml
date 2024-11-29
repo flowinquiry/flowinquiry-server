@@ -250,14 +250,16 @@
 			<column name="content" type="TEXT">
 				<constraints nullable="false" />
 			</column>
-			<column name="created_at" type="timestamptz"
-				defaultValueComputed="CURRENT_TIMESTAMP" />
 			<column name="user_id" type="BIGINT">
 				<constraints nullable="false" />
 			</column>
 			<column name="is_read" type="BOOLEAN" defaultValue="false">
 				<constraints nullable="false" />
 			</column>
+			<column name="created_by" type="bigint" />
+			<column name="created_at" type="timestamptz" />
+			<column name="modified_by" type="bigint" />
+			<column name="modified_at" type="timestamptz" />
 		</createTable>
 
 		<createTable tableName="fw_activity_log">

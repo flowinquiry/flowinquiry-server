@@ -1,15 +1,17 @@
 package io.flexwork.modules.teams.service.dto;
 
 import io.flexwork.modules.teams.domain.TicketChannel;
+import java.time.Instant;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.experimental.SuperBuilder;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@SuperBuilder
 public class TeamRequestDTO {
     private Long id;
     private Long teamId;
@@ -26,9 +28,11 @@ public class TeamRequestDTO {
     private String requestTitle;
     private String requestDescription;
     private String priority;
-    private LocalDateTime createdDate;
     private LocalDate estimatedCompletionDate;
     private LocalDate actualCompletionDate;
     private String currentState;
     private TicketChannel channel;
+    private boolean isCompleted;
+    private Instant createdAt;
+    private Instant modifiedAt;
 }

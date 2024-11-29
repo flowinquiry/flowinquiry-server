@@ -1,11 +1,15 @@
 package io.flexwork.modules.teams.service.dto;
 
 import java.util.Set;
-import lombok.Builder;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.experimental.SuperBuilder;
 
 @Data
-@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+@SuperBuilder
 public class OrganizationDTO {
     private Long id;
     private String name;

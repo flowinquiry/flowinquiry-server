@@ -8,13 +8,17 @@ import io.flexwork.modules.teams.domain.WorkflowState;
 import io.flexwork.modules.teams.repository.TeamRequestRepository;
 import io.flexwork.modules.teams.repository.WorkflowRepository;
 import io.flexwork.modules.teams.repository.WorkflowStateRepository;
+import io.flexwork.modules.teams.service.dto.PriorityDistributionDTO;
+import io.flexwork.modules.teams.service.dto.SlaDurationDTO;
 import io.flexwork.modules.teams.service.dto.TeamRequestDTO;
+import io.flexwork.modules.teams.service.dto.TicketDistributionDTO;
 import io.flexwork.modules.teams.service.event.NewTeamRequestCreatedEvent;
 import io.flexwork.modules.teams.service.mapper.TeamRequestMapper;
 import io.flexwork.query.QueryDTO;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.persistence.PersistenceContext;
+import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import org.jclouds.rest.ResourceNotFoundException;
@@ -115,11 +119,14 @@ public class TeamRequestService {
                                         new ResourceNotFoundException(
                                                 "TeamRequest not found with id: "
                                                         + teamRequestDTO.getId()));
+        TeamRequestDTO previousTeamRequest = teamRequestMapper.toDto(existingTeamRequest);
 
         teamRequestMapper.updateEntity(teamRequestDTO, existingTeamRequest);
-        existingTeamRequest = teamRequestRepository.save(existingTeamRequest);
-        eventPublisher.publishEvent(new AuditLogUpdateEvent(this, teamRequestDTO));
-        return teamRequestMapper.toDto(existingTeamRequest);
+        TeamRequestDTO savedTeamRequest =
+                teamRequestMapper.toDto(teamRequestRepository.save(existingTeamRequest));
+        eventPublisher.publishEvent(
+                new AuditLogUpdateEvent(this, previousTeamRequest, teamRequestDTO));
+        return savedTeamRequest;
     }
 
     @Transactional
@@ -144,5 +151,32 @@ public class TeamRequestService {
 
     public Optional<TeamRequestDTO> getPreviousEntity(Long requestId) {
         return teamRequestRepository.findPreviousEntity(requestId).map(teamRequestMapper::toDto);
+    }
+
+    public List<SlaDurationDTO> getSlaDurationsForCurrentState(Long teamRequestId) {
+        return teamRequestRepository.findSlaDurationsForCurrentState(teamRequestId);
+    }
+
+    // Fetch ticket distribution by team member
+    public List<TicketDistributionDTO> getTicketDistribution(Long teamId) {
+        return teamRequestRepository.findTicketDistributionByTeamId(teamId);
+    }
+
+    // Fetch unassigned tickets
+    public Page<TeamRequestDTO> getUnassignedTickets(
+            Long teamId, String sortDirection, Pageable pageable) {
+        if ("desc".equalsIgnoreCase(sortDirection)) {
+            return teamRequestRepository
+                    .findUnassignedTicketsByTeamIdDesc(teamId, pageable)
+                    .map(teamRequestMapper::toDto);
+        }
+        return teamRequestRepository
+                .findUnassignedTicketsByTeamIdAsc(teamId, pageable)
+                .map(teamRequestMapper::toDto);
+    }
+
+    // Fetch ticket priority distribution
+    public List<PriorityDistributionDTO> getPriorityDistribution(Long teamId) {
+        return teamRequestRepository.findTicketPriorityDistributionByTeamId(teamId);
     }
 }

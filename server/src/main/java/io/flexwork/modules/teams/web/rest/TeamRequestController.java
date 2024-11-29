@@ -1,10 +1,15 @@
 package io.flexwork.modules.teams.web.rest;
 
 import io.flexwork.modules.teams.service.TeamRequestService;
+import io.flexwork.modules.teams.service.dto.PriorityDistributionDTO;
+import io.flexwork.modules.teams.service.dto.SlaDurationDTO;
 import io.flexwork.modules.teams.service.dto.TeamRequestDTO;
+import io.flexwork.modules.teams.service.dto.TicketDistributionDTO;
 import io.flexwork.query.QueryDTO;
 import jakarta.validation.Valid;
+import java.util.List;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,6 +21,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -81,5 +87,38 @@ public class TeamRequestController {
                 .getPreviousEntity(currentId)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
+    }
+
+    @GetMapping("/{teamRequestId}/current-state-slas")
+    public ResponseEntity<List<SlaDurationDTO>> getSlaDurationsForCurrentState(
+            @PathVariable Long teamRequestId) {
+        List<SlaDurationDTO> slaDurations =
+                teamRequestService.getSlaDurationsForCurrentState(teamRequestId);
+        return ResponseEntity.ok(slaDurations);
+    }
+
+    // Endpoint to get ticket distribution for a specific team
+    @GetMapping("/{teamId}/ticket-distribution")
+    public List<TicketDistributionDTO> getTicketDistribution(@PathVariable Long teamId) {
+        return teamRequestService.getTicketDistribution(teamId);
+    }
+
+    // Endpoint to get unassigned tickets for a specific team
+    @GetMapping("/{teamId}/unassigned-tickets")
+    public Page<TeamRequestDTO> getUnassignedTickets(
+            @PathVariable Long teamId,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "priority") String sortBy,
+            @RequestParam(defaultValue = "asc") String sortDirection) {
+
+        Pageable pageable = PageRequest.of(page, size);
+        return teamRequestService.getUnassignedTickets(teamId, sortDirection, pageable);
+    }
+
+    // Endpoint to get priority distribution for a specific team
+    @GetMapping("/{teamId}/priority-distribution")
+    public List<PriorityDistributionDTO> getPriorityDistribution(@PathVariable Long teamId) {
+        return teamRequestService.getPriorityDistribution(teamId);
     }
 }

@@ -85,9 +85,9 @@ public class UserController {
                     "activated",
                     "langKey",
                     "createdBy",
-                    "createdDate",
-                    "lastModifiedBy",
-                    "lastModifiedDate");
+                    "createdAt",
+                    "modifiedBy",
+                    "modifiedAt");
 
     private static final Logger LOG = LoggerFactory.getLogger(UserController.class);
 

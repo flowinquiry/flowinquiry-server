@@ -1,7 +1,6 @@
 package io.flexwork.modules.audit;
 
 import io.flexwork.modules.collab.domain.EntityType;
-import java.util.function.BiFunction;
 
 public interface EntityFieldHandlerRegistry {
 
@@ -11,7 +10,7 @@ public interface EntityFieldHandlerRegistry {
      * @param fieldName The name of the field to handle.
      * @return A handler function that processes the old and new values of the field.
      */
-    BiFunction<Object, Object, String> getHandler(String fieldName);
+    EntityFieldHandler getHandler(String fieldName);
 
     /**
      * Get the class of the entity this registry handles.

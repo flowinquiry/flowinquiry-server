@@ -1,5 +1,6 @@
 package io.flexwork.modules.teams.domain;
 
+import io.flexwork.modules.audit.AbstractAuditingEntity;
 import io.flexwork.modules.usermanagement.domain.User;
 import jakarta.persistence.Column;
 import jakarta.persistence.Convert;
@@ -11,10 +12,8 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.PrePersist;
 import jakarta.persistence.Table;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -26,7 +25,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class TeamRequest {
+public class TeamRequest extends AbstractAuditingEntity<Long> {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -49,16 +48,14 @@ public class TeamRequest {
     private User assignUser;
 
     private String requestTitle;
+
     private String requestDescription;
-    private LocalDateTime createdDate;
+
     private String currentState;
 
     @Column(nullable = false, length = 50)
     @Enumerated(EnumType.STRING)
     private TeamRequestPriority priority;
-
-    @Column(name = "last_updated_time")
-    private LocalDateTime lastUpdatedTime;
 
     @Column(name = "is_deleted", nullable = false)
     private boolean isDeleted = false;
@@ -76,10 +73,6 @@ public class TeamRequest {
     @Convert(converter = TicketChannelConverter.class)
     private TicketChannel channel;
 
-    @PrePersist
-    private void prePersist() {
-        if (createdDate == null) {
-            createdDate = LocalDateTime.now();
-        }
-    }
+    @Column(name = "is_completed", nullable = false)
+    private boolean isCompleted = false;
 }

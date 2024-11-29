@@ -31,12 +31,12 @@
 			<column name="domain" type="varchar(256)">
 				<constraints nullable="false" unique="true" />
 			</column>
-			<column name="created_by" type="varchar(50)">
+			<column name="created_by" type="bigint">
 				<constraints nullable="true" />
 			</column>
-			<column name="created_date" type="timestamptz" />
-			<column name="last_modified_by" type="varchar(50)" />
-			<column name="last_modified_date" type="timestamptz" />
+			<column name="created_at" type="timestamptz" />
+			<column name="modified_by" type="bigint" />
+			<column name="modified_at" type="timestamptz" />
 		</createTable>
 
 		<addAutoIncrement tableName="fw_tenant"
@@ -48,7 +48,6 @@
 			<column name="name_id" value="flexwork" />
 			<column name="description" value="Default tenant" />
 			<column name="domain" value="" />
-			<column name="created_by" value="Hai Nguyen" />
 		</insert>
 	</changeSet>
 </databaseChangeLog>

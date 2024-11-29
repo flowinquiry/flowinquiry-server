@@ -8,12 +8,12 @@ import org.mapstruct.Mapping;
 
 @Mapper(componentModel = "spring")
 public interface CommentMapper {
-    @Mapping(source = "createdBy.id", target = "createdById")
-    @Mapping(target = "createdByName", expression = "java(mapFullName(comment.getCreatedBy()))")
-    @Mapping(source = "createdBy.imageUrl", target = "createdByImageUrl")
+    @Mapping(source = "createdByUser.id", target = "createdById")
+    @Mapping(target = "createdByName", expression = "java(mapFullName(comment.getCreatedByUser()))")
+    @Mapping(source = "createdByUser.imageUrl", target = "createdByImageUrl")
     CommentDTO toDTO(Comment comment);
 
-    @Mapping(source = "createdById", target = "createdBy.id")
+    @Mapping(source = "createdById", target = "createdByUser.id")
     Comment toEntity(CommentDTO commentDTO);
 
     default String mapFullName(User user) {

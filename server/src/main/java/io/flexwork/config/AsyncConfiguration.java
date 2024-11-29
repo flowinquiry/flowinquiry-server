@@ -1,7 +1,6 @@
 package io.flexwork.config;
 
 import java.util.concurrent.Executor;
-import net.javacrumbs.shedlock.spring.annotation.EnableSchedulerLock;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.aop.interceptor.AsyncUncaughtExceptionHandler;
@@ -13,15 +12,12 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.core.task.TaskExecutor;
 import org.springframework.scheduling.annotation.AsyncConfigurer;
 import org.springframework.scheduling.annotation.EnableAsync;
-import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.security.task.DelegatingSecurityContextTaskExecutor;
 import tech.jhipster.async.ExceptionHandlingAsyncTaskExecutor;
 
 @Configuration
 @EnableAsync
-@EnableScheduling
-@EnableSchedulerLock(defaultLockAtMostFor = "10m")
 @Profile("!testdev & !testprod")
 public class AsyncConfiguration implements AsyncConfigurer {
 

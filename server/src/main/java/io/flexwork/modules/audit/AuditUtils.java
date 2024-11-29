@@ -3,7 +3,6 @@ package io.flexwork.modules.audit;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.BiFunction;
 
 public class AuditUtils {
 
@@ -46,40 +45,18 @@ public class AuditUtils {
             // Compare values and check for changes
             if ((oldValue == null && newValue != null)
                     || (oldValue != null && !oldValue.equals(newValue))) {
-                BiFunction<Object, Object, String> handler = registry.getHandler(field.getName());
-                String description;
+                EntityFieldHandler handler = registry.getHandler(field.getName());
 
-                // Use custom handler if available, otherwise provide a default change description
+                // Only add the fields to audit log if the handler is presented
                 if (handler != null) {
-                    description = handler.apply(oldValue, newValue);
-                } else {
-                    description =
-                            generateDefaultChangeDescription(field.getName(), oldValue, newValue);
+                    oldValue = handler.getFieldGetter().apply(oldEntity, oldValue);
+                    newValue = handler.getFieldGetter().apply(newEntity, newValue);
+                    changes.add(new FieldChange(handler.getFieldName(), oldValue, newValue));
                 }
-
-                changes.add(new FieldChange(field.getName(), oldValue, newValue, description));
             }
         }
 
         return changes;
-    }
-
-    /**
-     * Generate a default description for a field change when no custom handler is available.
-     *
-     * @param fieldName The name of the field.
-     * @param oldValue The old value of the field.
-     * @param newValue The new value of the field.
-     * @return A default string description of the field change.
-     */
-    private static String generateDefaultChangeDescription(
-            String fieldName, Object oldValue, Object newValue) {
-        return fieldName
-                + " changed from '"
-                + (oldValue != null ? oldValue : "N/A")
-                + "' to '"
-                + (newValue != null ? newValue : "N/A")
-                + "'";
     }
 
     /** Represents a single field change in the audit log. */
@@ -87,13 +64,11 @@ public class AuditUtils {
         private final String fieldName;
         private final Object oldValue;
         private final Object newValue;
-        private final String description;
 
-        public FieldChange(String fieldName, Object oldValue, Object newValue, String description) {
+        public FieldChange(String fieldName, Object oldValue, Object newValue) {
             this.fieldName = fieldName;
             this.oldValue = oldValue;
             this.newValue = newValue;
-            this.description = description;
         }
 
         public String getFieldName() {
@@ -106,10 +81,6 @@ public class AuditUtils {
 
         public Object getNewValue() {
             return newValue;
-        }
-
-        public String getDescription() {
-            return description;
         }
     }
 }

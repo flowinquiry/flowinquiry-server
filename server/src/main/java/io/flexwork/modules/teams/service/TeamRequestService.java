@@ -12,6 +12,7 @@ import io.flexwork.modules.teams.service.dto.PriorityDistributionDTO;
 import io.flexwork.modules.teams.service.dto.TeamRequestDTO;
 import io.flexwork.modules.teams.service.dto.TicketDistributionDTO;
 import io.flexwork.modules.teams.service.event.NewTeamRequestCreatedEvent;
+import io.flexwork.modules.teams.service.event.TeamRequestWorkStateTransitionEvent;
 import io.flexwork.modules.teams.service.mapper.TeamRequestMapper;
 import io.flexwork.query.QueryDTO;
 import jakarta.persistence.EntityManager;
@@ -116,12 +117,20 @@ public class TeamRequestService {
                                                 "TeamRequest not found with id: "
                                                         + teamRequestDTO.getId()));
         TeamRequestDTO previousTeamRequest = teamRequestMapper.toDto(existingTeamRequest);
+        Long previousState = previousTeamRequest.getCurrentStateId();
 
         teamRequestMapper.updateEntity(teamRequestDTO, existingTeamRequest);
         TeamRequestDTO savedTeamRequest =
                 teamRequestMapper.toDto(teamRequestRepository.save(existingTeamRequest));
         eventPublisher.publishEvent(
                 new AuditLogUpdateEvent(this, previousTeamRequest, teamRequestDTO));
+
+        Long currentState = savedTeamRequest.getCurrentStateId();
+        if (previousState != currentState) {
+            eventPublisher.publishEvent(
+                    new TeamRequestWorkStateTransitionEvent(
+                            this, teamRequestDTO.getId(), previousState, currentState));
+        }
         return savedTeamRequest;
     }
 

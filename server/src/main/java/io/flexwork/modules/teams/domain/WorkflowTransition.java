@@ -13,12 +13,12 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-@Entity
-@Table(name = "fw_workflow_transition")
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@Entity
+@Table(name = "fw_workflow_transition")
 public class WorkflowTransition {
 
     @Id
@@ -29,11 +29,20 @@ public class WorkflowTransition {
     @JoinColumn(name = "workflow_id", nullable = false)
     private Workflow workflow;
 
-    private String sourceState;
-    private String targetState;
+    @ManyToOne
+    @JoinColumn(name = "source_state_id", nullable = false)
+    private WorkflowState sourceState;
+
+    @ManyToOne
+    @JoinColumn(name = "target_state_id", nullable = false)
+    private WorkflowState targetState;
+
+    @Column(name = "event_name", nullable = false)
     private String eventName;
+
+    @Column(name = "sla_duration")
     private Long slaDuration;
 
     @Column(name = "escalate_on_violation", nullable = false)
-    private Boolean escalateOnViolation;
+    private boolean escalateOnViolation;
 }

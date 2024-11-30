@@ -48,8 +48,7 @@ public class WorkflowTransitionService {
 
         // Find valid target states
         List<WorkflowState> targetStates =
-                workflowTransitionRepository.findValidTargetStates(
-                        workflowId, currentState.getStateName());
+                workflowTransitionRepository.findValidTargetStates(workflowId, workflowStateId);
 
         // Add current state if includeSelf is true
         if (includeSelf) {

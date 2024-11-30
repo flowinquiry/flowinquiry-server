@@ -1,9 +1,11 @@
 package io.flexwork.modules.teams.web.rest;
 
 import io.flexwork.modules.teams.service.TeamRequestService;
+import io.flexwork.modules.teams.service.WorkflowTransitionHistoryService;
 import io.flexwork.modules.teams.service.dto.PriorityDistributionDTO;
 import io.flexwork.modules.teams.service.dto.TeamRequestDTO;
 import io.flexwork.modules.teams.service.dto.TicketDistributionDTO;
+import io.flexwork.modules.teams.service.dto.TransitionItemCollectionDTO;
 import io.flexwork.query.QueryDTO;
 import jakarta.validation.Valid;
 import java.util.List;
@@ -27,9 +29,13 @@ import org.springframework.web.bind.annotation.RestController;
 public class TeamRequestController {
 
     private final TeamRequestService teamRequestService;
+    private final WorkflowTransitionHistoryService workflowTransitionHistoryService;
 
-    public TeamRequestController(TeamRequestService teamRequestService) {
+    public TeamRequestController(
+            TeamRequestService teamRequestService,
+            WorkflowTransitionHistoryService workflowTransitionHistoryService) {
         this.teamRequestService = teamRequestService;
+        this.workflowTransitionHistoryService = workflowTransitionHistoryService;
     }
 
     @PostMapping("/search")
@@ -105,5 +111,20 @@ public class TeamRequestController {
     @GetMapping("/{teamId}/priority-distribution")
     public List<PriorityDistributionDTO> getPriorityDistribution(@PathVariable Long teamId) {
         return teamRequestService.getPriorityDistribution(teamId);
+    }
+
+    /**
+     * Fetch the workflow transition history for a specific ticket/request.
+     *
+     * @param teamRequestId the ID of the ticket
+     * @return a TicketHistoryDto containing workflow details and transitions
+     */
+    @GetMapping("/{ticketId}/states-history")
+    public ResponseEntity<TransitionItemCollectionDTO> getTicketHistory(
+            @PathVariable Long teamRequestId) {
+        TransitionItemCollectionDTO ticketHistory =
+                workflowTransitionHistoryService.getTransitionHistoryByTicketId(teamRequestId);
+
+        return ResponseEntity.ok(ticketHistory);
     }
 }

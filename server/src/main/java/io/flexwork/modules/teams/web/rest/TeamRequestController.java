@@ -119,8 +119,8 @@ public class TeamRequestController {
      * @param teamRequestId the ID of the ticket
      * @return a TicketHistoryDto containing workflow details and transitions
      */
-    @GetMapping("/{ticketId}/states-history")
-    public ResponseEntity<TransitionItemCollectionDTO> getTicketHistory(
+    @GetMapping("/{teamRequestId}/states-history")
+    public ResponseEntity<TransitionItemCollectionDTO> getTicketStateChangesHistory(
             @PathVariable Long teamRequestId) {
         TransitionItemCollectionDTO ticketHistory =
                 workflowTransitionHistoryService.getTransitionHistoryByTicketId(teamRequestId);

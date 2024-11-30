@@ -9,10 +9,10 @@ import io.flexwork.modules.teams.repository.TeamRequestRepository;
 import io.flexwork.modules.teams.repository.WorkflowRepository;
 import io.flexwork.modules.teams.repository.WorkflowStateRepository;
 import io.flexwork.modules.teams.service.dto.PriorityDistributionDTO;
-import io.flexwork.modules.teams.service.dto.SlaDurationDTO;
 import io.flexwork.modules.teams.service.dto.TeamRequestDTO;
 import io.flexwork.modules.teams.service.dto.TicketDistributionDTO;
 import io.flexwork.modules.teams.service.event.NewTeamRequestCreatedEvent;
+import io.flexwork.modules.teams.service.event.TeamRequestWorkStateTransitionEvent;
 import io.flexwork.modules.teams.service.mapper.TeamRequestMapper;
 import io.flexwork.query.QueryDTO;
 import jakarta.persistence.EntityManager;
@@ -55,11 +55,6 @@ public class TeamRequestService {
         this.eventPublisher = eventPublisher;
     }
 
-    @Transactional(readOnly = true)
-    public Page<TeamRequestDTO> getAllTeamRequests(Pageable pageable) {
-        return teamRequestRepository.findAll(pageable).map(teamRequestMapper::toDto);
-    }
-
     public Page<TeamRequestDTO> findTeamRequests(QueryDTO queryDTO, Pageable pageable) {
         if (!hasTeamIdFilter(queryDTO)) {
             throw new ResourceNotFoundException("No team id found");
@@ -93,7 +88,9 @@ public class TeamRequestService {
             throw new ResourceNotFoundException(
                     "No initial state found for workflow id " + workflowId);
         }
-        teamRequestDTO.setCurrentState(initialStateByWorkflowId.getStateName());
+        teamRequestDTO.setIsNew(true);
+        teamRequestDTO.setCurrentStateId(initialStateByWorkflowId.getId());
+        teamRequestDTO.setIsCompleted(false);
 
         TeamRequest teamRequest = teamRequestMapper.toEntity(teamRequestDTO);
         teamRequest = teamRequestRepository.save(teamRequest);
@@ -120,12 +117,20 @@ public class TeamRequestService {
                                                 "TeamRequest not found with id: "
                                                         + teamRequestDTO.getId()));
         TeamRequestDTO previousTeamRequest = teamRequestMapper.toDto(existingTeamRequest);
+        Long previousState = previousTeamRequest.getCurrentStateId();
 
         teamRequestMapper.updateEntity(teamRequestDTO, existingTeamRequest);
         TeamRequestDTO savedTeamRequest =
                 teamRequestMapper.toDto(teamRequestRepository.save(existingTeamRequest));
         eventPublisher.publishEvent(
                 new AuditLogUpdateEvent(this, previousTeamRequest, teamRequestDTO));
+
+        Long currentState = savedTeamRequest.getCurrentStateId();
+        if (previousState != currentState) {
+            eventPublisher.publishEvent(
+                    new TeamRequestWorkStateTransitionEvent(
+                            this, teamRequestDTO.getId(), previousState, currentState));
+        }
         return savedTeamRequest;
     }
 
@@ -151,10 +156,6 @@ public class TeamRequestService {
 
     public Optional<TeamRequestDTO> getPreviousEntity(Long requestId) {
         return teamRequestRepository.findPreviousEntity(requestId).map(teamRequestMapper::toDto);
-    }
-
-    public List<SlaDurationDTO> getSlaDurationsForCurrentState(Long teamRequestId) {
-        return teamRequestRepository.findSlaDurationsForCurrentState(teamRequestId);
     }
 
     // Fetch ticket distribution by team member

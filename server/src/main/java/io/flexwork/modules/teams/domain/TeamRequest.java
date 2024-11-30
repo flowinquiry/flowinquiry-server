@@ -7,6 +7,7 @@ import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -51,8 +52,6 @@ public class TeamRequest extends AbstractAuditingEntity<Long> {
 
     private String requestDescription;
 
-    private String currentState;
-
     @Column(nullable = false, length = 50)
     @Enumerated(EnumType.STRING)
     private TeamRequestPriority priority;
@@ -69,10 +68,17 @@ public class TeamRequest extends AbstractAuditingEntity<Long> {
     @Column(name = "actual_completion_date")
     private LocalDate actualCompletionDate;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "current_state_id")
+    private WorkflowState currentState;
+
     @Column(name = "channel")
     @Convert(converter = TicketChannelConverter.class)
     private TicketChannel channel;
 
+    @Column(name = "is_new", nullable = false)
+    private Boolean isNew = true;
+
     @Column(name = "is_completed", nullable = false)
-    private boolean isCompleted = false;
+    private Boolean isCompleted = false;
 }

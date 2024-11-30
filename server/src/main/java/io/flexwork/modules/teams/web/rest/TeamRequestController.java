@@ -1,10 +1,11 @@
 package io.flexwork.modules.teams.web.rest;
 
 import io.flexwork.modules.teams.service.TeamRequestService;
+import io.flexwork.modules.teams.service.WorkflowTransitionHistoryService;
 import io.flexwork.modules.teams.service.dto.PriorityDistributionDTO;
-import io.flexwork.modules.teams.service.dto.SlaDurationDTO;
 import io.flexwork.modules.teams.service.dto.TeamRequestDTO;
 import io.flexwork.modules.teams.service.dto.TicketDistributionDTO;
+import io.flexwork.modules.teams.service.dto.TransitionItemCollectionDTO;
 import io.flexwork.query.QueryDTO;
 import jakarta.validation.Valid;
 import java.util.List;
@@ -13,7 +14,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -29,14 +29,13 @@ import org.springframework.web.bind.annotation.RestController;
 public class TeamRequestController {
 
     private final TeamRequestService teamRequestService;
+    private final WorkflowTransitionHistoryService workflowTransitionHistoryService;
 
-    public TeamRequestController(TeamRequestService teamRequestService) {
+    public TeamRequestController(
+            TeamRequestService teamRequestService,
+            WorkflowTransitionHistoryService workflowTransitionHistoryService) {
         this.teamRequestService = teamRequestService;
-    }
-
-    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN')")
-    public ResponseEntity<Page<TeamRequestDTO>> getAllTeamRequests(Pageable pageable) {
-        return ResponseEntity.ok(teamRequestService.getAllTeamRequests(pageable));
+        this.workflowTransitionHistoryService = workflowTransitionHistoryService;
     }
 
     @PostMapping("/search")
@@ -89,14 +88,6 @@ public class TeamRequestController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
-    @GetMapping("/{teamRequestId}/current-state-slas")
-    public ResponseEntity<List<SlaDurationDTO>> getSlaDurationsForCurrentState(
-            @PathVariable Long teamRequestId) {
-        List<SlaDurationDTO> slaDurations =
-                teamRequestService.getSlaDurationsForCurrentState(teamRequestId);
-        return ResponseEntity.ok(slaDurations);
-    }
-
     // Endpoint to get ticket distribution for a specific team
     @GetMapping("/{teamId}/ticket-distribution")
     public List<TicketDistributionDTO> getTicketDistribution(@PathVariable Long teamId) {
@@ -120,5 +111,20 @@ public class TeamRequestController {
     @GetMapping("/{teamId}/priority-distribution")
     public List<PriorityDistributionDTO> getPriorityDistribution(@PathVariable Long teamId) {
         return teamRequestService.getPriorityDistribution(teamId);
+    }
+
+    /**
+     * Fetch the workflow transition history for a specific ticket/request.
+     *
+     * @param teamRequestId the ID of the ticket
+     * @return a TicketHistoryDto containing workflow details and transitions
+     */
+    @GetMapping("/{teamRequestId}/states-history")
+    public ResponseEntity<TransitionItemCollectionDTO> getTicketStateChangesHistory(
+            @PathVariable Long teamRequestId) {
+        TransitionItemCollectionDTO ticketHistory =
+                workflowTransitionHistoryService.getTransitionHistoryByTicketId(teamRequestId);
+
+        return ResponseEntity.ok(ticketHistory);
     }
 }

@@ -41,7 +41,7 @@ public class Authority implements Serializable {
     private String descriptiveName;
 
     @Column(name = "system_role")
-    private boolean systemRole;
+    private Boolean systemRole;
 
     @Column(name = "description")
     private String description;

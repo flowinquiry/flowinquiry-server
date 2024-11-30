@@ -3,6 +3,7 @@ package io.flexwork.modules.teams.service.mapper;
 import io.flexwork.modules.teams.domain.Team;
 import io.flexwork.modules.teams.domain.TeamRequest;
 import io.flexwork.modules.teams.domain.Workflow;
+import io.flexwork.modules.teams.domain.WorkflowState;
 import io.flexwork.modules.teams.service.dto.TeamRequestDTO;
 import io.flexwork.modules.usermanagement.domain.User;
 import org.mapstruct.BeanMapping;
@@ -29,12 +30,18 @@ public interface TeamRequestMapper {
     @Mapping(target = "workflowId", source = "workflow.id")
     @Mapping(target = "workflowName", source = "workflow.name")
     @Mapping(target = "workflowRequestName", source = "workflow.requestName")
+    @Mapping(target = "currentStateId", source = "currentState.id")
+    @Mapping(target = "currentStateName", source = "currentState.stateName")
     TeamRequestDTO toDto(TeamRequest teamRequest);
 
     @Mapping(target = "team", source = "teamId", qualifiedByName = "toTeam")
     @Mapping(target = "workflow", source = "workflowId", qualifiedByName = "toWorkflow")
     @Mapping(target = "requestUser", source = "requestUserId", qualifiedByName = "toUser")
     @Mapping(target = "assignUser", source = "assignUserId", qualifiedByName = "toUser")
+    @Mapping(
+            target = "currentState",
+            source = "currentStateId",
+            qualifiedByName = "toWorkflowState")
     TeamRequest toEntity(TeamRequestDTO teamRequestDTO);
 
     @Named("toTeam")
@@ -45,6 +52,13 @@ public interface TeamRequestMapper {
     @Named("toWorkflow")
     default Workflow toWorkflow(Long workflowId) {
         return (workflowId == null) ? null : Workflow.builder().id(workflowId).build();
+    }
+
+    @Named("toWorkflowState")
+    default WorkflowState toWorkflowState(Long workflowStateId) {
+        return (workflowStateId == null)
+                ? null
+                : WorkflowState.builder().id(workflowStateId).build();
     }
 
     @Named("toUser")
@@ -63,7 +77,13 @@ public interface TeamRequestMapper {
     }
 
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
+    @Mapping(target = "team", source = "teamId", qualifiedByName = "toTeam")
+    @Mapping(target = "workflow", source = "workflowId", qualifiedByName = "toWorkflow")
     @Mapping(target = "assignUser", source = "assignUserId", qualifiedByName = "toUser")
     @Mapping(target = "requestUser", source = "requestUserId", qualifiedByName = "toUser")
+    @Mapping(
+            target = "currentState",
+            source = "currentStateId",
+            qualifiedByName = "toWorkflowState")
     void updateEntity(TeamRequestDTO dto, @MappingTarget TeamRequest entity);
 }

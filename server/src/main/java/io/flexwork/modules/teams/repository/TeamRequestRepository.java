@@ -2,7 +2,6 @@ package io.flexwork.modules.teams.repository;
 
 import io.flexwork.modules.teams.domain.TeamRequest;
 import io.flexwork.modules.teams.service.dto.PriorityDistributionDTO;
-import io.flexwork.modules.teams.service.dto.SlaDurationDTO;
 import io.flexwork.modules.teams.service.dto.TicketDistributionDTO;
 import java.util.List;
 import java.util.Optional;
@@ -20,10 +19,10 @@ import org.springframework.stereotype.Repository;
 public interface TeamRequestRepository
         extends JpaRepository<TeamRequest, Long>, JpaSpecificationExecutor<TeamRequest> {
 
-    @EntityGraph(attributePaths = {"team", "requestUser", "assignUser", "workflow"})
+    @EntityGraph(attributePaths = {"team", "requestUser", "assignUser", "workflow", "currentState"})
     Page<TeamRequest> findAll(Specification<TeamRequest> spec, Pageable pageable);
 
-    @EntityGraph(attributePaths = {"team", "requestUser", "assignUser", "workflow"})
+    @EntityGraph(attributePaths = {"team", "requestUser", "assignUser", "workflow", "currentState"})
     Optional<TeamRequest> findById(@Param("id") Long id);
 
     @EntityGraph(attributePaths = {"team", "requestUser", "assignUser", "workflow"})
@@ -59,23 +58,6 @@ public interface TeamRequestRepository
             LIMIT 1
     """)
     Optional<TeamRequest> findNextEntity(@Param("requestId") Long requestId);
-
-    @Query(
-            """
-        SELECT new io.flexwork.modules.teams.service.dto.SlaDurationDTO(
-            tr.sourceState,
-            tr.targetState,
-            tr.slaDuration,
-            tr.eventName
-        )
-        FROM TeamRequest r
-        JOIN WorkflowTransition tr
-            ON r.workflow.id = tr.workflow.id
-            AND r.currentState = tr.sourceState
-        WHERE r.id = :teamRequestId
-    """)
-    List<SlaDurationDTO> findSlaDurationsForCurrentState(
-            @Param("teamRequestId") Long teamRequestId);
 
     /**
      * Finds all distinct workflow IDs associated with team requests.

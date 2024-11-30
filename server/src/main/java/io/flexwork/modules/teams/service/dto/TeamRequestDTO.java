@@ -30,9 +30,11 @@ public class TeamRequestDTO {
     private String priority;
     private LocalDate estimatedCompletionDate;
     private LocalDate actualCompletionDate;
-    private String currentState;
+    private Long currentStateId;
+    private String currentStateName;
     private TicketChannel channel;
-    private boolean isCompleted;
+    private Boolean isNew;
+    private Boolean isCompleted;
     private Instant createdAt;
     private Instant modifiedAt;
 }

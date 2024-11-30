@@ -13,7 +13,6 @@ import io.flexwork.modules.teams.service.dto.TeamRequestDTO;
 import io.flexwork.modules.teams.service.event.NewTeamRequestCreatedEvent;
 import io.flexwork.modules.usermanagement.domain.User;
 import io.flexwork.modules.usermanagement.service.dto.UserWithTeamRoleDTO;
-import java.time.LocalDateTime;
 import java.util.List;
 import org.springframework.context.event.EventListener;
 import org.springframework.scheduling.annotation.Async;
@@ -75,7 +74,6 @@ public class NewTeamRequestCreatedEventListener {
                                                 .content(html)
                                                 .user(User.builder().id(user.getId()).build())
                                                 .isRead(false)
-                                                .createdAt(LocalDateTime.now())
                                                 .build())
                         .toList();
         notificationRepository.saveAll(notifications);

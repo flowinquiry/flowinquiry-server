@@ -2,12 +2,20 @@ package io.flexwork.modules.teams.web.rest;
 
 import io.flexwork.modules.teams.domain.Workflow;
 import io.flexwork.modules.teams.service.WorkflowService;
-import io.flexwork.modules.teams.service.WorkflowStateService;
+import io.flexwork.modules.teams.service.WorkflowTransitionService;
 import io.flexwork.modules.teams.service.dto.WorkflowDTO;
 import io.flexwork.modules.teams.service.dto.WorkflowStateDTO;
 import java.util.List;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/api/workflows")
@@ -15,12 +23,12 @@ public class WorkflowController {
 
     private final WorkflowService workflowService;
 
-    private final WorkflowStateService workflowStateService;
+    private final WorkflowTransitionService workflowTransitionService;
 
     public WorkflowController(
-            WorkflowService workflowService, WorkflowStateService workflowStateService) {
+            WorkflowService workflowService, WorkflowTransitionService workflowTransitionService) {
         this.workflowService = workflowService;
-        this.workflowStateService = workflowStateService;
+        this.workflowTransitionService = workflowTransitionService;
     }
 
     @PostMapping
@@ -77,14 +85,22 @@ public class WorkflowController {
     }
 
     /**
-     * Retrieve all workflow states for a given workflow ID.
+     * Endpoint to retrieve all valid target states for a given workflow and current state ID, with
+     * an option to include the current state itself.
      *
      * @param workflowId the ID of the workflow
-     * @return a list of workflow states
+     * @param workflowStateId the ID of the current workflow state
+     * @param includeSelf whether to include the current state in the results
+     * @return a list of valid target WorkflowState objects
      */
-    @GetMapping("/{workflowId}/states")
-    public ResponseEntity<List<WorkflowStateDTO>> getWorkflowStates(@PathVariable Long workflowId) {
-        List<WorkflowStateDTO> states = workflowStateService.getStatesByWorkflowId(workflowId);
-        return ResponseEntity.ok(states);
+    @GetMapping("/{workflowId}/transitions")
+    public ResponseEntity<List<WorkflowStateDTO>> getValidTargetStates(
+            @PathVariable Long workflowId,
+            @RequestParam Long workflowStateId,
+            @RequestParam(defaultValue = "false") boolean includeSelf) {
+        List<WorkflowStateDTO> validTargetStates =
+                workflowTransitionService.getValidTargetWorkflowStates(
+                        workflowId, workflowStateId, includeSelf);
+        return ResponseEntity.ok(validTargetStates);
     }
 }

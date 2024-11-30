@@ -108,6 +108,7 @@ public class TeamRequestService {
 
     @Transactional
     public TeamRequestDTO updateTeamRequest(TeamRequestDTO teamRequestDTO) {
+
         TeamRequest existingTeamRequest =
                 teamRequestRepository
                         .findById(teamRequestDTO.getId())
@@ -120,6 +121,16 @@ public class TeamRequestService {
         Long previousState = previousTeamRequest.getCurrentStateId();
 
         teamRequestMapper.updateEntity(teamRequestDTO, existingTeamRequest);
+
+        boolean isStateChanged = (previousState != teamRequestDTO.getCurrentStateId());
+        existingTeamRequest.setIsNew(!isStateChanged);
+        if (isStateChanged) {
+            boolean finalState =
+                    workflowStateRepository.isFinalState(
+                            teamRequestDTO.getWorkflowId(), teamRequestDTO.getCurrentStateId());
+            existingTeamRequest.setIsCompleted(finalState);
+        }
+
         TeamRequestDTO savedTeamRequest =
                 teamRequestMapper.toDto(teamRequestRepository.save(existingTeamRequest));
         eventPublisher.publishEvent(

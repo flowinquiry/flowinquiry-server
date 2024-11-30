@@ -12,4 +12,11 @@ public interface WorkflowStateRepository extends JpaRepository<WorkflowState, Lo
     @Query(
             "SELECT ws FROM WorkflowState ws WHERE ws.workflow.id = :workflowId AND ws.isInitial = true")
     WorkflowState findInitialStateByWorkflowId(@Param("workflowId") Long workflowId);
+
+    @Query(
+            "SELECT CASE WHEN COUNT(ws) > 0 THEN TRUE ELSE FALSE END "
+                    + "FROM WorkflowState ws "
+                    + "WHERE ws.workflow.id = :workflowId AND ws.id = :workflowStateId AND ws.isFinal = TRUE")
+    boolean isFinalState(
+            @Param("workflowId") Long workflowId, @Param("workflowStateId") Long workflowStateId);
 }

@@ -6,6 +6,7 @@ import jakarta.persistence.criteria.Join;
 import jakarta.persistence.criteria.JoinType;
 import jakarta.persistence.criteria.Predicate;
 import jakarta.persistence.criteria.Root;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -18,17 +19,65 @@ public class QueryUtils {
                         dto ->
                                 (Specification<Entity>)
                                         (root, query, cb) -> {
-                                            List<Predicate> predicates =
-                                                    dto.getFilters().stream()
-                                                            .map(
-                                                                    filter ->
-                                                                            createPredicate(
-                                                                                    filter, root,
-                                                                                    cb))
-                                                            .collect(Collectors.toList());
-                                            return cb.and(predicates.toArray(new Predicate[0]));
+                                            if (dto.getGroups() != null) {
+                                                // Process group-based queries
+                                                List<Predicate> groupPredicates =
+                                                        dto.getGroups().stream()
+                                                                .map(
+                                                                        group ->
+                                                                                createGroupPredicate(
+                                                                                        group, root,
+                                                                                        cb))
+                                                                .collect(Collectors.toList());
+                                                return cb.and(
+                                                        groupPredicates.toArray(new Predicate[0]));
+                                            } else if (dto.getFilters() != null) {
+                                                // Backward compatibility: process simple filters
+                                                List<Predicate> predicates =
+                                                        dto.getFilters().stream()
+                                                                .map(
+                                                                        filter ->
+                                                                                createPredicate(
+                                                                                        filter,
+                                                                                        root, cb))
+                                                                .collect(Collectors.toList());
+                                                return cb.and(predicates.toArray(new Predicate[0]));
+                                            }
+                                            return cb.conjunction(); // Return a no-op predicate
                                         })
                 .orElse(null); // Return null if queryDTO is not present
+    }
+
+    private static <Entity> Predicate createGroupPredicate(
+            GroupFilter groupFilter, Root<Entity> root, CriteriaBuilder cb) {
+
+        List<Predicate> predicates = new ArrayList<>();
+
+        // Process simple filters
+        if (groupFilter.getFilters() != null) {
+            predicates.addAll(
+                    groupFilter.getFilters().stream()
+                            .map(filter -> createPredicate(filter, root, cb))
+                            .collect(Collectors.toList()));
+        }
+
+        // Process nested groups
+        if (groupFilter.getGroups() != null) {
+            predicates.addAll(
+                    groupFilter.getGroups().stream()
+                            .map(nestedGroup -> createGroupPredicate(nestedGroup, root, cb))
+                            .collect(Collectors.toList()));
+        }
+
+        // Combine predicates based on the logical operator
+        if ("AND".equalsIgnoreCase(groupFilter.getLogicalOperator())) {
+            return cb.and(predicates.toArray(new Predicate[0]));
+        } else if ("OR".equalsIgnoreCase(groupFilter.getLogicalOperator())) {
+            return cb.or(predicates.toArray(new Predicate[0]));
+        } else {
+            throw new IllegalArgumentException(
+                    "Invalid logical operator: " + groupFilter.getLogicalOperator());
+        }
     }
 
     private static <Entity> Predicate createPredicate(

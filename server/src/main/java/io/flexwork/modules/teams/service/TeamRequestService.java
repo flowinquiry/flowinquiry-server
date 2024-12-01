@@ -14,6 +14,7 @@ import io.flexwork.modules.teams.service.dto.TicketDistributionDTO;
 import io.flexwork.modules.teams.service.event.NewTeamRequestCreatedEvent;
 import io.flexwork.modules.teams.service.event.TeamRequestWorkStateTransitionEvent;
 import io.flexwork.modules.teams.service.mapper.TeamRequestMapper;
+import io.flexwork.query.GroupFilter;
 import io.flexwork.query.QueryDTO;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityNotFoundException;
@@ -154,11 +155,48 @@ public class TeamRequestService {
     }
 
     private static boolean hasTeamIdFilter(QueryDTO queryDTO) {
-        return queryDTO != null
-                && queryDTO.getFilters() != null
-                && queryDTO.getFilters().stream()
-                        .filter(Objects::nonNull)
-                        .anyMatch(filter -> "team.id".equals(filter.getField()));
+        if (queryDTO == null || queryDTO.getGroups() == null) {
+            return false;
+        }
+
+        // Check for "team.id" in filters at the top level
+        if (queryDTO.getFilters() != null) {
+            boolean hasTeamIdInFilters =
+                    queryDTO.getFilters().stream()
+                            .filter(Objects::nonNull)
+                            .anyMatch(filter -> "team.id".equals(filter.getField()));
+            if (hasTeamIdInFilters) {
+                return true;
+            }
+        }
+
+        // Check for "team.id" recursively in groups
+        return queryDTO.getGroups().stream().anyMatch(group -> containsTeamIdFilterInGroup(group));
+    }
+
+    private static boolean containsTeamIdFilterInGroup(GroupFilter groupFilter) {
+        if (groupFilter == null) {
+            return false;
+        }
+
+        // Check for "team.id" in filters in the current group
+        if (groupFilter.getFilters() != null) {
+            boolean hasTeamIdInFilters =
+                    groupFilter.getFilters().stream()
+                            .filter(Objects::nonNull)
+                            .anyMatch(filter -> "team.id".equals(filter.getField()));
+            if (hasTeamIdInFilters) {
+                return true;
+            }
+        }
+
+        // Recursively check nested groups for "team.id"
+        if (groupFilter.getGroups() != null) {
+            return groupFilter.getGroups().stream()
+                    .anyMatch(nestedGroup -> containsTeamIdFilterInGroup(nestedGroup));
+        }
+
+        return false;
     }
 
     public Optional<TeamRequestDTO> getNextEntity(Long requestId) {

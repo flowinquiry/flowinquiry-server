@@ -8,5 +8,7 @@ import lombok.Setter;
 @Setter
 public class QueryDTO {
 
+    private List<GroupFilter> groups;
+
     private List<Filter> filters;
 }

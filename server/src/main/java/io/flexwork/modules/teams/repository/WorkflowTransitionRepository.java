@@ -25,6 +25,25 @@ public interface WorkflowTransitionRepository extends JpaRepository<WorkflowTran
     List<WorkflowState> findValidTargetStates(
             @Param("workflowId") Long workflowId, @Param("sourceStateId") Long sourceStateId);
 
+    /**
+     * @param workflowId
+     * @param sourceStateId
+     * @return
+     */
+    @Query(
+            "SELECT wt "
+                    + "FROM WorkflowTransition wt "
+                    + "WHERE wt.sourceState.id = :sourceStateId "
+                    + "AND wt.workflow.id = :workflowId")
+    List<WorkflowTransition> findTransitionsBySourceState(
+            @Param("workflowId") Long workflowId, @Param("sourceStateId") Long sourceStateId);
+
+    /**
+     * @param workflowId
+     * @param sourceStateId
+     * @param targetStateId
+     * @return
+     */
     Optional<WorkflowTransition> findByWorkflowIdAndSourceStateIdAndTargetStateId(
             Long workflowId, Long sourceStateId, Long targetStateId);
 }

@@ -254,7 +254,7 @@
 				<constraints nullable="false" />
 			</column>
 			<column name="from_state_id" type="BIGINT">
-				<constraints nullable="false" />
+				<constraints nullable="true" />
 			</column>
 			<column name="to_state_id" type="BIGINT">
 				<constraints nullable="false" />

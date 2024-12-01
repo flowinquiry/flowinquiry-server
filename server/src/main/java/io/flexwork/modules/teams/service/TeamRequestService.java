@@ -5,20 +5,27 @@ import static io.flexwork.query.QueryUtils.createSpecification;
 import io.flexwork.modules.audit.AuditLogUpdateEvent;
 import io.flexwork.modules.teams.domain.TeamRequest;
 import io.flexwork.modules.teams.domain.WorkflowState;
+import io.flexwork.modules.teams.domain.WorkflowTransition;
+import io.flexwork.modules.teams.domain.WorkflowTransitionHistory;
+import io.flexwork.modules.teams.domain.WorkflowTransitionHistoryStatus;
 import io.flexwork.modules.teams.repository.TeamRequestRepository;
-import io.flexwork.modules.teams.repository.WorkflowRepository;
 import io.flexwork.modules.teams.repository.WorkflowStateRepository;
+import io.flexwork.modules.teams.repository.WorkflowTransitionHistoryRepository;
+import io.flexwork.modules.teams.repository.WorkflowTransitionRepository;
 import io.flexwork.modules.teams.service.dto.PriorityDistributionDTO;
 import io.flexwork.modules.teams.service.dto.TeamRequestDTO;
 import io.flexwork.modules.teams.service.dto.TicketDistributionDTO;
 import io.flexwork.modules.teams.service.event.NewTeamRequestCreatedEvent;
 import io.flexwork.modules.teams.service.event.TeamRequestWorkStateTransitionEvent;
 import io.flexwork.modules.teams.service.mapper.TeamRequestMapper;
+import io.flexwork.modules.usermanagement.service.dto.TicketStatisticsDTO;
 import io.flexwork.query.GroupFilter;
 import io.flexwork.query.QueryDTO;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.persistence.PersistenceContext;
+import java.time.ZonedDateTime;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -39,20 +46,23 @@ public class TeamRequestService {
     private final TeamRequestRepository teamRequestRepository;
     private final TeamRequestMapper teamRequestMapper;
     private final WorkflowStateRepository workflowStateRepository;
-    private final WorkflowRepository workflowRepository;
+    private final WorkflowTransitionRepository workflowTransitionRepository;
+    private final WorkflowTransitionHistoryRepository workflowTransitionHistoryRepository;
     private final ApplicationEventPublisher eventPublisher;
 
     @Autowired
     public TeamRequestService(
             TeamRequestRepository teamRequestRepository,
             TeamRequestMapper teamRequestMapper,
-            WorkflowRepository workflowRepository,
+            WorkflowTransitionRepository workflowTransitionRepository,
             WorkflowStateRepository workflowStateRepository,
+            WorkflowTransitionHistoryRepository workflowTransitionHistoryRepository,
             ApplicationEventPublisher eventPublisher) {
         this.teamRequestRepository = teamRequestRepository;
         this.teamRequestMapper = teamRequestMapper;
-        this.workflowRepository = workflowRepository;
+        this.workflowTransitionRepository = workflowTransitionRepository;
         this.workflowStateRepository = workflowStateRepository;
+        this.workflowTransitionHistoryRepository = workflowTransitionHistoryRepository;
         this.eventPublisher = eventPublisher;
     }
 
@@ -98,6 +108,20 @@ public class TeamRequestService {
         // Clear the persistence context to force a reload
         entityManager.clear();
 
+        ZonedDateTime slaDueDate =
+                calculateEarliestSlaDueDate(
+                        teamRequest.getWorkflow().getId(), initialStateByWorkflowId.getId());
+
+        WorkflowTransitionHistory history = new WorkflowTransitionHistory();
+        history.setTeamRequest(teamRequest);
+        history.setFromState(null);
+        history.setToState(initialStateByWorkflowId);
+        history.setEventName("Created");
+        history.setTransitionDate(ZonedDateTime.now());
+        history.setSlaDueDate(slaDueDate);
+        history.setStatus(WorkflowTransitionHistoryStatus.In_Progress);
+        workflowTransitionHistoryRepository.save(history);
+
         teamRequest =
                 teamRequestRepository
                         .findById(teamRequest.getId())
@@ -123,7 +147,8 @@ public class TeamRequestService {
 
         teamRequestMapper.updateEntity(teamRequestDTO, existingTeamRequest);
 
-        boolean isStateChanged = (previousState != teamRequestDTO.getCurrentStateId());
+        boolean isStateChanged =
+                (!Objects.equals(previousState, teamRequestDTO.getCurrentStateId()));
         existingTeamRequest.setIsNew(!isStateChanged);
         if (isStateChanged) {
             boolean finalState =
@@ -138,7 +163,7 @@ public class TeamRequestService {
                 new AuditLogUpdateEvent(this, previousTeamRequest, teamRequestDTO));
 
         Long currentState = savedTeamRequest.getCurrentStateId();
-        if (previousState != currentState) {
+        if (!Objects.equals(previousState, currentState)) {
             eventPublisher.publishEvent(
                     new TeamRequestWorkStateTransitionEvent(
                             this, teamRequestDTO.getId(), previousState, currentState));
@@ -228,5 +253,40 @@ public class TeamRequestService {
     // Fetch ticket priority distribution
     public List<PriorityDistributionDTO> getPriorityDistribution(Long teamId) {
         return teamRequestRepository.findTicketPriorityDistributionByTeamId(teamId);
+    }
+
+    public TicketStatisticsDTO getTicketStatisticsByTeamId(Long teamId) {
+        return teamRequestRepository.getTicketStatisticsByTeamId(teamId);
+    }
+
+    private ZonedDateTime calculateEarliestSlaDueDate(Long workflowId, Long sourceStateId) {
+        // Fetch all transitions from the current state
+        List<WorkflowTransition> transitions =
+                workflowTransitionRepository.findTransitionsBySourceState(
+                        workflowId, sourceStateId);
+
+        if (transitions.isEmpty()) {
+            throw new IllegalStateException("No transitions defined for the current state.");
+        }
+
+        // Find the transition with the lowest SLA duration
+        WorkflowTransition earliestTransition =
+                transitions.stream()
+                        .filter(
+                                t ->
+                                        t.getSlaDuration()
+                                                != null) // Exclude transitions without SLA duration
+                        .min(
+                                Comparator.comparing(
+                                        WorkflowTransition
+                                                ::getSlaDuration)) // Find the minimum SLA duration
+                        .orElse(null);
+
+        if (earliestTransition == null) {
+            return null; // No SLA defined for any transition
+        }
+
+        // Calculate the SLA due date for the earliest transition
+        return ZonedDateTime.now().plusMinutes(earliestTransition.getSlaDuration());
     }
 }

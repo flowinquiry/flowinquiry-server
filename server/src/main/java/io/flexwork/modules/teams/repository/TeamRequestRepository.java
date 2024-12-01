@@ -3,6 +3,7 @@ package io.flexwork.modules.teams.repository;
 import io.flexwork.modules.teams.domain.TeamRequest;
 import io.flexwork.modules.teams.service.dto.PriorityDistributionDTO;
 import io.flexwork.modules.teams.service.dto.TicketDistributionDTO;
+import io.flexwork.modules.usermanagement.service.dto.TicketStatisticsDTO;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.data.domain.Page;
@@ -114,4 +115,13 @@ public interface TeamRequestRepository
                     + "GROUP BY r.priority")
     List<PriorityDistributionDTO> findTicketPriorityDistributionByTeamId(
             @Param("teamId") Long teamId);
+
+    @Query(
+            "SELECT new io.flexwork.modules.usermanagement.service.dto.TicketStatisticsDTO("
+                    + "COUNT(tr), "
+                    + "SUM(CASE WHEN tr.isCompleted = false THEN 1 ELSE 0 END), "
+                    + "SUM(CASE WHEN tr.isCompleted = true THEN 1 ELSE 0 END)) "
+                    + "FROM TeamRequest tr "
+                    + "WHERE tr.isDeleted = false AND tr.team.id = :teamId")
+    TicketStatisticsDTO getTicketStatisticsByTeamId(@Param("teamId") Long teamId);
 }

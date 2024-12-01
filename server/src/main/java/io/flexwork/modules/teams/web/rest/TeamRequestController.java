@@ -6,6 +6,7 @@ import io.flexwork.modules.teams.service.dto.PriorityDistributionDTO;
 import io.flexwork.modules.teams.service.dto.TeamRequestDTO;
 import io.flexwork.modules.teams.service.dto.TicketDistributionDTO;
 import io.flexwork.modules.teams.service.dto.TransitionItemCollectionDTO;
+import io.flexwork.modules.usermanagement.service.dto.TicketStatisticsDTO;
 import io.flexwork.query.QueryDTO;
 import jakarta.validation.Valid;
 import java.util.List;
@@ -126,5 +127,10 @@ public class TeamRequestController {
                 workflowTransitionHistoryService.getTransitionHistoryByTicketId(teamRequestId);
 
         return ResponseEntity.ok(ticketHistory);
+    }
+
+    @GetMapping("/statistics/{teamId}")
+    public TicketStatisticsDTO getTicketStatisticsByTeamId(@PathVariable Long teamId) {
+        return teamRequestService.getTicketStatisticsByTeamId(teamId);
     }
 }

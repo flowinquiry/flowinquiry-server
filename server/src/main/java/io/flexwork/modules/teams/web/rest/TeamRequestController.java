@@ -1,9 +1,11 @@
 package io.flexwork.modules.teams.web.rest;
 
+import io.flexwork.modules.teams.domain.TeamRequest;
 import io.flexwork.modules.teams.service.TeamRequestService;
 import io.flexwork.modules.teams.service.WorkflowTransitionHistoryService;
 import io.flexwork.modules.teams.service.dto.PriorityDistributionDTO;
 import io.flexwork.modules.teams.service.dto.TeamRequestDTO;
+import io.flexwork.modules.teams.service.dto.TicketActionCountByDateDTO;
 import io.flexwork.modules.teams.service.dto.TicketDistributionDTO;
 import io.flexwork.modules.teams.service.dto.TransitionItemCollectionDTO;
 import io.flexwork.modules.usermanagement.service.dto.TicketStatisticsDTO;
@@ -129,8 +131,25 @@ public class TeamRequestController {
         return ResponseEntity.ok(ticketHistory);
     }
 
-    @GetMapping("/statistics/{teamId}")
+    @GetMapping("/{teamId}/statistics")
     public TicketStatisticsDTO getTicketStatisticsByTeamId(@PathVariable Long teamId) {
         return teamRequestService.getTicketStatisticsByTeamId(teamId);
+    }
+
+    @GetMapping("/{teamId}/overdue")
+    public List<TeamRequest> getOverdueTickets(@PathVariable Long teamId) {
+        return teamRequestService.getOverdueTickets(teamId);
+    }
+
+    @GetMapping("/{teamId}/overdue/count")
+    public Long countOverdueTickets(@PathVariable Long teamId) {
+        return teamRequestService.countOverdueTickets(teamId);
+    }
+
+    @GetMapping("/{teamId}/ticket-creations-day-series")
+    public List<TicketActionCountByDateDTO> getTicketCreationDaySeries(
+            @PathVariable Long teamId,
+            @RequestParam(required = false, defaultValue = "7") int days) {
+        return teamRequestService.getTicketCreationTimeseries(teamId, days);
     }
 }

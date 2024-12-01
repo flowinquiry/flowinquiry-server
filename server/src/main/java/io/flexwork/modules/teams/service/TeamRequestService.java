@@ -1,5 +1,6 @@
 package io.flexwork.modules.teams.service;
 
+import static io.flexwork.modules.teams.domain.WorkflowTransitionHistoryStatus.Completed;
 import static io.flexwork.query.QueryUtils.createSpecification;
 
 import io.flexwork.modules.audit.AuditLogUpdateEvent;
@@ -14,6 +15,7 @@ import io.flexwork.modules.teams.repository.WorkflowTransitionHistoryRepository;
 import io.flexwork.modules.teams.repository.WorkflowTransitionRepository;
 import io.flexwork.modules.teams.service.dto.PriorityDistributionDTO;
 import io.flexwork.modules.teams.service.dto.TeamRequestDTO;
+import io.flexwork.modules.teams.service.dto.TicketActionCountByDateDTO;
 import io.flexwork.modules.teams.service.dto.TicketDistributionDTO;
 import io.flexwork.modules.teams.service.event.NewTeamRequestCreatedEvent;
 import io.flexwork.modules.teams.service.event.TeamRequestWorkStateTransitionEvent;
@@ -24,11 +26,16 @@ import io.flexwork.query.QueryDTO;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.persistence.PersistenceContext;
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.time.ZonedDateTime;
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.stream.Collectors;
 import org.jclouds.rest.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
@@ -288,5 +295,45 @@ public class TeamRequestService {
 
         // Calculate the SLA due date for the earliest transition
         return ZonedDateTime.now().plusMinutes(earliestTransition.getSlaDuration());
+    }
+
+    public List<TeamRequest> getOverdueTickets(Long teamId) {
+        return teamRequestRepository.findOverdueTicketsByTeamId(teamId, Completed);
+    }
+
+    public Long countOverdueTickets(Long teamId) {
+        return teamRequestRepository.countOverdueTicketsByTeamId(teamId, Completed);
+    }
+
+    public List<TicketActionCountByDateDTO> getTicketCreationTimeseries(Long teamId, int days) {
+        // Default to 7 days if no input is provided
+        if (days <= 0) {
+            days = 7;
+        }
+
+        // Calculate the start date based on the number of days
+        LocalDate startDate = LocalDate.now().minusDays(days - 1);
+
+        // Fetch data from the repository
+        List<TicketActionCountByDateDTO> results =
+                teamRequestRepository.findTicketCreationCounts(
+                        teamId, startDate.atStartOfDay(ZoneId.of("UTC")).toInstant());
+
+        // Fill gaps for dates with no tickets
+        Map<LocalDate, Long> dateToCountMap =
+                results.stream()
+                        .collect(
+                                Collectors.toMap(
+                                        TicketActionCountByDateDTO::getDate,
+                                        TicketActionCountByDateDTO::getTicketCount));
+
+        List<TicketActionCountByDateDTO> completeResults = new ArrayList<>();
+        for (int i = 0; i < days; i++) {
+            LocalDate date = startDate.plusDays(i);
+            Long count = dateToCountMap.getOrDefault(date, 0L);
+            completeResults.add(new TicketActionCountByDateDTO(date, count));
+        }
+
+        return completeResults;
     }
 }

@@ -1,9 +1,12 @@
 package io.flexwork.modules.teams.repository;
 
 import io.flexwork.modules.teams.domain.TeamRequest;
+import io.flexwork.modules.teams.domain.WorkflowTransitionHistoryStatus;
 import io.flexwork.modules.teams.service.dto.PriorityDistributionDTO;
+import io.flexwork.modules.teams.service.dto.TicketActionCountByDateDTO;
 import io.flexwork.modules.teams.service.dto.TicketDistributionDTO;
 import io.flexwork.modules.usermanagement.service.dto.TicketStatisticsDTO;
+import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.data.domain.Page;
@@ -124,4 +127,43 @@ public interface TeamRequestRepository
                     + "FROM TeamRequest tr "
                     + "WHERE tr.isDeleted = false AND tr.team.id = :teamId")
     TicketStatisticsDTO getTicketStatisticsByTeamId(@Param("teamId") Long teamId);
+
+    @Query(
+            "SELECT r "
+                    + "FROM TeamRequest r "
+                    + "JOIN WorkflowTransitionHistory h ON h.teamRequest.id = r.id "
+                    + "WHERE r.isDeleted = false "
+                    + "AND r.isCompleted = false "
+                    + "AND h.slaDueDate IS NOT NULL "
+                    + "AND h.slaDueDate < CURRENT_TIMESTAMP "
+                    + "AND h.status <> :status "
+                    + "AND r.team.id = :teamId")
+    List<TeamRequest> findOverdueTicketsByTeamId(
+            @Param("teamId") Long teamId,
+            @Param("status") WorkflowTransitionHistoryStatus completedStatus);
+
+    @Query(
+            "SELECT COUNT(r.id) "
+                    + "FROM TeamRequest r "
+                    + "JOIN WorkflowTransitionHistory h ON h.teamRequest.id = r.id "
+                    + "WHERE r.isDeleted = false "
+                    + "AND r.isCompleted = false "
+                    + "AND h.slaDueDate IS NOT NULL "
+                    + "AND h.slaDueDate < CURRENT_TIMESTAMP "
+                    + "AND h.status <> :status "
+                    + "AND r.team.id = :teamId")
+    Long countOverdueTicketsByTeamId(
+            @Param("teamId") Long teamId,
+            @Param("status") WorkflowTransitionHistoryStatus completedStatus);
+
+    @Query(
+            "SELECT new io.flexwork.modules.teams.service.dto.TicketActionCountByDateDTO(CAST(r.createdAt AS date), COUNT(r.id)) "
+                    + "FROM TeamRequest r "
+                    + "WHERE r.isDeleted = false "
+                    + "AND r.team.id = :teamId "
+                    + "AND r.createdAt >= :startDate "
+                    + "GROUP BY CAST(r.createdAt AS date) "
+                    + "ORDER BY CAST(r.createdAt AS date) ASC")
+    List<TicketActionCountByDateDTO> findTicketCreationCounts(
+            @Param("teamId") Long teamId, @Param("startDate") Instant startDate);
 }

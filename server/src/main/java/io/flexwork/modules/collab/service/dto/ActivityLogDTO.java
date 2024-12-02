@@ -14,4 +14,7 @@ public class ActivityLogDTO {
     private Long entityId;
     private String content;
     private Instant createdAt;
+    private Long createdById;
+    private String createdByName;
+    private String createdByImageUrl;
 }

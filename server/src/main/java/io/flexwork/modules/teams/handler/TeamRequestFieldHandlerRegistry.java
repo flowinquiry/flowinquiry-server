@@ -25,6 +25,9 @@ public class TeamRequestFieldHandlerRegistry extends AbstractEntityFieldHandlerR
 
     @Override
     protected void initializeFieldHandlers() {
+        addFieldHandler("requestTitle", new EntityFieldHandler<TeamRequestDTO>("Title"));
+        addFieldHandler(
+                "requestDescription", new EntityFieldHandler<TeamRequestDTO>("Description"));
         addFieldHandler("priority", new EntityFieldHandler<TeamRequestDTO>("Priority"));
         addFieldHandler(
                 "channel",

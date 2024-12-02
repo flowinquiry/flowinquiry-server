@@ -70,7 +70,7 @@ public class TeamService {
         return teamMapper.toDto(teamRepository.save(team));
     }
 
-    public Team updateTeam(TeamDTO updatedTeam) {
+    public TeamDTO updateTeam(TeamDTO updatedTeam) {
         Team existingTeam =
                 teamRepository
                         .findById(updatedTeam.getId())
@@ -80,7 +80,7 @@ public class TeamService {
                                                 "Team not found with id: " + updatedTeam.getId()));
         teamMapper.updateFromDto(updatedTeam, existingTeam);
 
-        return teamRepository.save(existingTeam);
+        return teamMapper.toDto(teamRepository.save(existingTeam));
     }
 
     public void deleteTeam(Long id) {

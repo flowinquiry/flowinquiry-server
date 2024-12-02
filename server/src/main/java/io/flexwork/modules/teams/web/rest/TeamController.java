@@ -2,7 +2,6 @@ package io.flexwork.modules.teams.web.rest;
 
 import io.flexwork.modules.fss.ResourceRemoveEvent;
 import io.flexwork.modules.fss.service.StorageService;
-import io.flexwork.modules.teams.domain.Team;
 import io.flexwork.modules.teams.service.TeamService;
 import io.flexwork.modules.teams.service.dto.TeamDTO;
 import io.flexwork.modules.usermanagement.service.dto.UserDTO;
@@ -74,7 +73,7 @@ public class TeamController {
     }
 
     @PutMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<Team> updateTeam(
+    public ResponseEntity<TeamDTO> updateTeam(
             @RequestPart("teamDTO") TeamDTO team,
             @RequestPart(value = "file", required = false) MultipartFile file)
             throws Exception {
@@ -87,7 +86,7 @@ public class TeamController {
                             "teams", UUID.randomUUID().toString(), file.getInputStream());
             team.setLogoUrl(teamLogoPath);
         }
-        Team updatedTeam = teamService.updateTeam(team);
+        TeamDTO updatedTeam = teamService.updateTeam(team);
         // Remove the old logo
         if (fileRemovedPath.isPresent()) {
             eventPublisher.publishEvent(new ResourceRemoveEvent(this, fileRemovedPath.get()));

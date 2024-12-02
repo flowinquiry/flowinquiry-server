@@ -4,6 +4,7 @@ import io.flexwork.modules.usermanagement.domain.Authority;
 import io.flexwork.modules.usermanagement.domain.User;
 import java.util.List;
 import java.util.Optional;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -31,5 +32,6 @@ public interface AuthorityRepository extends JpaRepository<Authority, String> {
             Pageable pageable);
 
     @Query("SELECT u FROM User u JOIN u.authorities a WHERE a.name = :authorityName")
-    List<User> findAllUsersByAuthority(@Param("authorityName") String authorityName);
+    Page<User> findUsersByAuthority(
+            @Param("authorityName") String authorityName, Pageable pageable);
 }

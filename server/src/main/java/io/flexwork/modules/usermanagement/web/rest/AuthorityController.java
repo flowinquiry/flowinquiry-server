@@ -105,13 +105,9 @@ public class AuthorityController {
     }
 
     @GetMapping("/{authorityName}/users")
-    public ResponseEntity<List<UserDTO>> getUsersByAuthority(@PathVariable String authorityName) {
-        List<UserDTO> users = authorityService.findAllUsersByAuthority(authorityName);
-
-        if (users.isEmpty()) {
-            return ResponseEntity.noContent().build();
-        }
-
+    public ResponseEntity<Page<UserDTO>> getUsersByAuthority(
+            @PathVariable String authorityName, Pageable pageable) {
+        Page<UserDTO> users = authorityService.findAllUsersByAuthority(authorityName, pageable);
         return ResponseEntity.ok(users);
     }
 

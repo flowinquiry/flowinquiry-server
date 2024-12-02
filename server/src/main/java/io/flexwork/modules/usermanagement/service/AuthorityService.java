@@ -10,7 +10,6 @@ import io.flexwork.modules.usermanagement.service.mapper.AuthorityMapper;
 import io.flexwork.modules.usermanagement.service.mapper.UserMapper;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -83,10 +82,10 @@ public class AuthorityService {
     }
 
     @Transactional(readOnly = true)
-    public List<UserDTO> findAllUsersByAuthority(String authorityName) {
-        return authorityRepository.findAllUsersByAuthority(authorityName).stream()
-                .map(userMapper::toDto)
-                .collect(Collectors.toList());
+    public Page<UserDTO> findAllUsersByAuthority(String authorityName, Pageable pageable) {
+        return authorityRepository
+                .findUsersByAuthority(authorityName, pageable)
+                .map(userMapper::toDto);
     }
 
     @Transactional(readOnly = true)

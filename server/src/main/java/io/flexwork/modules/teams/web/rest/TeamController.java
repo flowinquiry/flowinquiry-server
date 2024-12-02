@@ -107,7 +107,6 @@ public class TeamController {
         return ResponseEntity.noContent().build();
     }
 
-    // Find a team by ID
     @GetMapping("/{id}")
     public ResponseEntity<TeamDTO> findTeamById(@PathVariable Long id) {
         return teamService

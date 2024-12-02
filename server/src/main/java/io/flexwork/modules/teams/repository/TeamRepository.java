@@ -20,10 +20,10 @@ public interface TeamRepository extends JpaRepository<Team, Long>, JpaSpecificat
             "SELECT new io.flexwork.modules.teams.service.dto.TeamDTO(t.id, t.name, t.logoUrl, t.slogan, t.description, t.organization.id, COUNT(m.id)) "
                     + "FROM Team t LEFT JOIN t.users m "
                     + "GROUP BY t.id")
-    Page<TeamDTO> findAllDTOs(Specification<Team> spec, Pageable pageable);
+    Page<TeamDTO> findTeams(Specification<Team> spec, Pageable pageable);
 
     @Query("SELECT t FROM Team t JOIN t.users u WHERE u.id = :userId")
-    List<Team> findAllTeamsByUserId(@Param("userId") Long userId);
+    List<Team> findTeamsByUserId(@Param("userId") Long userId);
 
     @Query(
             """

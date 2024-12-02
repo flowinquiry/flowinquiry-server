@@ -105,12 +105,12 @@ public class TeamService {
     @Transactional(readOnly = true)
     public Page<TeamDTO> findTeams(Optional<QueryDTO> queryDTO, Pageable pageable) {
         Specification<Team> spec = createSpecification(queryDTO);
-        return teamRepository.findAllDTOs(spec, pageable);
+        return teamRepository.findTeams(spec, pageable);
     }
 
     @Transactional(readOnly = true)
     public List<TeamDTO> findAllTeamsByUserId(Long userId) {
-        return teamRepository.findAllTeamsByUserId(userId).stream().map(teamMapper::toDto).toList();
+        return teamRepository.findTeamsByUserId(userId).stream().map(teamMapper::toDto).toList();
     }
 
     public List<UserWithTeamRoleDTO> getUsersByTeam(Long teamId) {

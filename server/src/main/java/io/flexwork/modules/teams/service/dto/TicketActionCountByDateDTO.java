@@ -11,11 +11,13 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class TicketActionCountByDateDTO {
     private LocalDate date;
-    private Long ticketCount;
+    private Long createdCount;
+    private Long closedCount;
 
-    public TicketActionCountByDateDTO(Date creationInstant, Long ticketCount) {
+    public TicketActionCountByDateDTO(Date creationInstant, Long createdCount, Long closedCount) {
         // Convert Instant to LocalDate
         this.date = creationInstant.toLocalDate();
-        this.ticketCount = ticketCount;
+        this.createdCount = createdCount;
+        this.closedCount = closedCount;
     }
 }

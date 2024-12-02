@@ -1,6 +1,5 @@
 package io.flexwork.modules.teams.web.rest;
 
-import io.flexwork.modules.teams.domain.TeamRequest;
 import io.flexwork.modules.teams.service.TeamRequestService;
 import io.flexwork.modules.teams.service.WorkflowTransitionHistoryService;
 import io.flexwork.modules.teams.service.dto.PriorityDistributionDTO;
@@ -13,7 +12,6 @@ import io.flexwork.query.QueryDTO;
 import jakarta.validation.Valid;
 import java.util.List;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -99,15 +97,8 @@ public class TeamRequestController {
 
     // Endpoint to get unassigned tickets for a specific team
     @GetMapping("/{teamId}/unassigned-tickets")
-    public Page<TeamRequestDTO> getUnassignedTickets(
-            @PathVariable Long teamId,
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size,
-            @RequestParam(defaultValue = "priority") String sortBy,
-            @RequestParam(defaultValue = "asc") String sortDirection) {
-
-        Pageable pageable = PageRequest.of(page, size);
-        return teamRequestService.getUnassignedTickets(teamId, sortDirection, pageable);
+    public Page<TeamRequestDTO> getUnassignedTickets(@PathVariable Long teamId, Pageable pageable) {
+        return teamRequestService.getUnassignedTickets(teamId, pageable);
     }
 
     // Endpoint to get priority distribution for a specific team
@@ -136,12 +127,12 @@ public class TeamRequestController {
         return teamRequestService.getTicketStatisticsByTeamId(teamId);
     }
 
-    @GetMapping("/{teamId}/overdue")
-    public List<TeamRequest> getOverdueTickets(@PathVariable Long teamId) {
-        return teamRequestService.getOverdueTickets(teamId);
+    @GetMapping("/{teamId}/overdue-tickets")
+    public Page<TeamRequestDTO> getOverdueTickets(@PathVariable Long teamId, Pageable pageable) {
+        return teamRequestService.getOverdueTickets(teamId, pageable);
     }
 
-    @GetMapping("/{teamId}/overdue/count")
+    @GetMapping("/{teamId}/overdue-tickets/count")
     public Long countOverdueTickets(@PathVariable Long teamId) {
         return teamRequestService.countOverdueTickets(teamId);
     }

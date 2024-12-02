@@ -27,15 +27,15 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.persistence.PersistenceContext;
 import java.time.LocalDate;
-import java.time.ZoneId;
+import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.stream.Collectors;
 import org.jclouds.rest.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
@@ -162,6 +162,9 @@ public class TeamRequestService {
                     workflowStateRepository.isFinalState(
                             teamRequestDTO.getWorkflowId(), teamRequestDTO.getCurrentStateId());
             existingTeamRequest.setIsCompleted(finalState);
+            if (teamRequestDTO.getActualCompletionDate() == null) {
+                existingTeamRequest.setActualCompletionDate(LocalDate.now());
+            }
         }
 
         TeamRequestDTO savedTeamRequest =
@@ -245,15 +248,9 @@ public class TeamRequestService {
     }
 
     // Fetch unassigned tickets
-    public Page<TeamRequestDTO> getUnassignedTickets(
-            Long teamId, String sortDirection, Pageable pageable) {
-        if ("desc".equalsIgnoreCase(sortDirection)) {
-            return teamRequestRepository
-                    .findUnassignedTicketsByTeamIdDesc(teamId, pageable)
-                    .map(teamRequestMapper::toDto);
-        }
+    public Page<TeamRequestDTO> getUnassignedTickets(Long teamId, Pageable pageable) {
         return teamRequestRepository
-                .findUnassignedTicketsByTeamIdAsc(teamId, pageable)
+                .findUnassignedTicketsByTeamId(teamId, pageable)
                 .map(teamRequestMapper::toDto);
     }
 
@@ -297,8 +294,10 @@ public class TeamRequestService {
         return ZonedDateTime.now().plusMinutes(earliestTransition.getSlaDuration());
     }
 
-    public List<TeamRequest> getOverdueTickets(Long teamId) {
-        return teamRequestRepository.findOverdueTicketsByTeamId(teamId, Completed);
+    public Page<TeamRequestDTO> getOverdueTickets(Long teamId, Pageable pageable) {
+        return teamRequestRepository
+                .findOverdueTicketsByTeamId(teamId, Completed, pageable)
+                .map(teamRequestMapper::toDto);
     }
 
     public Long countOverdueTickets(Long teamId) {
@@ -306,34 +305,29 @@ public class TeamRequestService {
     }
 
     public List<TicketActionCountByDateDTO> getTicketCreationTimeseries(Long teamId, int days) {
-        // Default to 7 days if no input is provided
         if (days <= 0) {
-            days = 7;
+            days = 7; // Default to 7 days
         }
 
-        // Calculate the start date based on the number of days
         LocalDate startDate = LocalDate.now().minusDays(days - 1);
+        List<TicketActionCountByDateDTO> trends =
+                teamRequestRepository.findTicketActionByDaySeries(
+                        teamId, startDate.atStartOfDay().toInstant(ZoneOffset.UTC));
 
-        // Fetch data from the repository
-        List<TicketActionCountByDateDTO> results =
-                teamRequestRepository.findTicketCreationCounts(
-                        teamId, startDate.atStartOfDay(ZoneId.of("UTC")).toInstant());
+        // Fill missing dates with zero counts
+        Map<LocalDate, TicketActionCountByDateDTO> trendMap = new HashMap<>();
+        for (TicketActionCountByDateDTO trend : trends) {
+            trendMap.put(trend.getDate(), trend);
+        }
 
-        // Fill gaps for dates with no tickets
-        Map<LocalDate, Long> dateToCountMap =
-                results.stream()
-                        .collect(
-                                Collectors.toMap(
-                                        TicketActionCountByDateDTO::getDate,
-                                        TicketActionCountByDateDTO::getTicketCount));
-
-        List<TicketActionCountByDateDTO> completeResults = new ArrayList<>();
+        List<TicketActionCountByDateDTO> ticketByDaySeries = new ArrayList<>();
         for (int i = 0; i < days; i++) {
             LocalDate date = startDate.plusDays(i);
-            Long count = dateToCountMap.getOrDefault(date, 0L);
-            completeResults.add(new TicketActionCountByDateDTO(date, count));
+            TicketActionCountByDateDTO trend =
+                    trendMap.getOrDefault(date, new TicketActionCountByDateDTO(date, 0L, 0L));
+            ticketByDaySeries.add(trend);
         }
 
-        return completeResults;
+        return ticketByDaySeries;
     }
 }

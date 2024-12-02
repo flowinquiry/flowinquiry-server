@@ -4,8 +4,7 @@
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
-	<changeSet id="00000000000004:00-workflows-tables"
-		author="flexapp">
+	<changeSet id="001:00-workflows-tables" author="flexapp">
 
 		<!--Stores metadata about each workflow, allowing different workflows to 
 			be defined and customized by customers. -->
@@ -123,7 +122,7 @@
 			<column name="request_title" type="VARCHAR(255)" />
 			<column name="request_description" type="TEXT" />
 			<column name="channel" type="VARCHAR(50)" />
-			<column name="priority" type="VARCHAR(50)">
+			<column name="priority" type="INTEGER">
 				<constraints nullable="false" />
 			</column>
 			<column name="is_deleted" type="BOOLEAN" defaultValue="false">
@@ -320,8 +319,7 @@
 			constraintName="fw_escalation_tracking_user"
 			referencedTableName="fw_user" referencedColumnNames="id" />
 	</changeSet>
-	<changeSet author="flexapp"
-		id="00000000000004:01-insert-workflow-data">
+	<changeSet author="flexapp" id="001:01-insert-workflow-data">
 		<loadData file="config/liquibase/tenant/data/fw_workflow.csv"
 			separator=";" tableName="fw_workflow" usePreparedStatements="true">
 			<column name="id" type="numeric" />
@@ -331,7 +329,7 @@
 		</loadData>
 	</changeSet>
 	<changeSet author="flexapp"
-		id="00000000000004:02-insert-workflow-state-data">
+		id="001:02-insert-workflow-state-data">
 		<loadData
 			file="config/liquibase/tenant/data/fw_workflow_state.csv"
 			separator=";" tableName="fw_workflow_state"
@@ -344,7 +342,7 @@
 		</loadData>
 	</changeSet>
 	<changeSet author="flexapp"
-		id="00000000000004:03-insert-workflow-transition-data">
+		id="001:03-insert-workflow-transition-data">
 		<loadData
 			file="config/liquibase/tenant/data/fw_workflow_transition.csv"
 			separator=";" tableName="fw_workflow_transition"
@@ -358,7 +356,7 @@
 		</loadData>
 	</changeSet>
 	<changeSet author="flexapp"
-		id="00000000000004:04-insert-team-workflow-usage-data">
+		id="001:04-insert-team-workflow-usage-data">
 		<loadData
 			file="config/liquibase/tenant/data/fw_team_workflow_selection.csv"
 			separator=";" tableName="fw_team_workflow_selection"

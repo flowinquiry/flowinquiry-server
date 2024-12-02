@@ -118,7 +118,6 @@ dependencies {
 
     implementation("org.hibernate.orm:hibernate-core")
     implementation("org.hibernate.validator:hibernate-validator")
-    implementation(libs.bundles.spring.statemachine)
     implementation(libs.liquibase)
     implementation(libs.bundles.shedlock)
 
@@ -135,7 +134,6 @@ dependencies {
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("org.springframework.boot:spring-boot-test")
     testImplementation("org.springframework.security:spring-security-test")
-    testImplementation(libs.spring.statemachine.test)
     testCompileOnly(libs.lombok)
     testAnnotationProcessor(libs.lombok)
     testImplementation("org.jetbrains.kotlin:kotlin-test")

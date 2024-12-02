@@ -1,5 +1,8 @@
 package io.flexwork.modules.teams.service;
 
+import static io.flexwork.modules.teams.domain.WorkflowTransitionHistoryStatus.Completed;
+import static io.flexwork.modules.teams.domain.WorkflowTransitionHistoryStatus.In_Progress;
+
 import io.flexwork.modules.teams.domain.TeamRequest;
 import io.flexwork.modules.teams.domain.WorkflowTransition;
 import io.flexwork.modules.teams.domain.WorkflowTransitionHistory;
@@ -40,11 +43,10 @@ public class WorkflowTransitionHistoryService {
      * @param teamRequestId The ID of the team request
      * @param fromStateId The ID of the source state
      * @param toStateId The ID of the target state
-     * @param status The status of the transition (optional)
      */
     @Transactional
     public void recordWorkflowTransitionHistory(
-            Long teamRequestId, Long fromStateId, Long toStateId, String status) {
+            Long teamRequestId, Long fromStateId, Long toStateId) {
         // Fetch the associated entities
         TeamRequest teamRequest =
                 teamRequestRepository
@@ -78,7 +80,11 @@ public class WorkflowTransitionHistoryService {
         history.setEventName(transition.getEventName());
         history.setTransitionDate(ZonedDateTime.now(ZoneId.of("UTC")));
         history.setSlaDueDate(slaDueDate);
-        history.setStatus(status != null ? status : "PENDING");
+        if (transition.getTargetState().getIsFinal()) {
+            history.setStatus(Completed);
+        } else {
+            history.setStatus(In_Progress);
+        }
 
         workflowTransitionHistoryRepository.save(history);
     }

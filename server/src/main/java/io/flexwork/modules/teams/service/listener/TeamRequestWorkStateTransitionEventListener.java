@@ -22,9 +22,6 @@ public class TeamRequestWorkStateTransitionEventListener {
     @Transactional
     public void onWorkflowStateTransition(TeamRequestWorkStateTransitionEvent event) {
         workflowTransitionHistoryService.recordWorkflowTransitionHistory(
-                event.getTeamRequestId(),
-                event.getSourceStateId(),
-                event.getTargetStateId(),
-                "Completed");
+                event.getTeamRequestId(), event.getSourceStateId(), event.getTargetStateId());
     }
 }

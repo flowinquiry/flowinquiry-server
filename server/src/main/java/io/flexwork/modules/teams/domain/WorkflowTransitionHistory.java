@@ -2,6 +2,8 @@ package io.flexwork.modules.teams.domain;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -48,5 +50,6 @@ public class WorkflowTransitionHistory {
     private ZonedDateTime slaDueDate;
 
     @Column(name = "status")
-    private String status;
+    @Enumerated(EnumType.STRING)
+    private WorkflowTransitionHistoryStatus status;
 }

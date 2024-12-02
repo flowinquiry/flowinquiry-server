@@ -1,8 +1,12 @@
 package io.flexwork.modules.teams.repository;
 
 import io.flexwork.modules.teams.domain.TeamRequest;
+import io.flexwork.modules.teams.domain.WorkflowTransitionHistoryStatus;
 import io.flexwork.modules.teams.service.dto.PriorityDistributionDTO;
+import io.flexwork.modules.teams.service.dto.TicketActionCountByDateDTO;
 import io.flexwork.modules.teams.service.dto.TicketDistributionDTO;
+import io.flexwork.modules.usermanagement.service.dto.TicketStatisticsDTO;
+import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.data.domain.Page;
@@ -80,29 +84,8 @@ public interface TeamRequestRepository
     @Query(
             "SELECT r FROM TeamRequest r "
                     + "WHERE r.team.id = :teamId AND r.isCompleted = false AND r.isDeleted = false "
-                    + "AND r.assignUser IS NULL "
-                    + "ORDER BY CASE r.priority "
-                    + "  WHEN io.flexwork.modules.teams.domain.TeamRequestPriority.Trivial THEN 1 "
-                    + "  WHEN io.flexwork.modules.teams.domain.TeamRequestPriority.Low THEN 2 "
-                    + "  WHEN io.flexwork.modules.teams.domain.TeamRequestPriority.Medium THEN 3 "
-                    + "  WHEN io.flexwork.modules.teams.domain.TeamRequestPriority.High THEN 4 "
-                    + "  WHEN io.flexwork.modules.teams.domain.TeamRequestPriority.Critical THEN 5 "
-                    + "END ASC")
-    Page<TeamRequest> findUnassignedTicketsByTeamIdAsc(
-            @Param("teamId") Long teamId, Pageable pageable);
-
-    @Query(
-            "SELECT r FROM TeamRequest r "
-                    + "WHERE r.team.id = :teamId AND r.isCompleted = false AND r.isDeleted = false "
-                    + "AND r.assignUser IS NULL "
-                    + "ORDER BY CASE r.priority "
-                    + "  WHEN io.flexwork.modules.teams.domain.TeamRequestPriority.Trivial THEN 1 "
-                    + "  WHEN io.flexwork.modules.teams.domain.TeamRequestPriority.Low THEN 2 "
-                    + "  WHEN io.flexwork.modules.teams.domain.TeamRequestPriority.Medium THEN 3 "
-                    + "  WHEN io.flexwork.modules.teams.domain.TeamRequestPriority.High THEN 4 "
-                    + "  WHEN io.flexwork.modules.teams.domain.TeamRequestPriority.Critical THEN 5 "
-                    + "END DESC")
-    Page<TeamRequest> findUnassignedTicketsByTeamIdDesc(
+                    + "AND r.assignUser IS NULL")
+    Page<TeamRequest> findUnassignedTicketsByTeamId(
             @Param("teamId") Long teamId, Pageable pageable);
 
     // Query to count tickets by priority for a specific team
@@ -114,4 +97,64 @@ public interface TeamRequestRepository
                     + "GROUP BY r.priority")
     List<PriorityDistributionDTO> findTicketPriorityDistributionByTeamId(
             @Param("teamId") Long teamId);
+
+    @Query(
+            "SELECT new io.flexwork.modules.usermanagement.service.dto.TicketStatisticsDTO("
+                    + "COUNT(tr), "
+                    + "SUM(CASE WHEN tr.isCompleted = false THEN 1 ELSE 0 END), "
+                    + "SUM(CASE WHEN tr.isCompleted = true THEN 1 ELSE 0 END)) "
+                    + "FROM TeamRequest tr "
+                    + "WHERE tr.isDeleted = false AND tr.team.id = :teamId")
+    TicketStatisticsDTO getTicketStatisticsByTeamId(@Param("teamId") Long teamId);
+
+    @Query(
+            "SELECT r "
+                    + "FROM TeamRequest r "
+                    + "JOIN WorkflowTransitionHistory h ON h.teamRequest.id = r.id "
+                    + "WHERE r.isDeleted = false "
+                    + "AND r.isCompleted = false "
+                    + "AND h.slaDueDate IS NOT NULL "
+                    + "AND h.slaDueDate < CURRENT_TIMESTAMP "
+                    + "AND h.status <> :status "
+                    + "AND r.team.id = :teamId")
+    Page<TeamRequest> findOverdueTicketsByTeamId(
+            @Param("teamId") Long teamId,
+            @Param("status") WorkflowTransitionHistoryStatus completedStatus,
+            Pageable pageable);
+
+    @Query(
+            "SELECT COUNT(r.id) "
+                    + "FROM TeamRequest r "
+                    + "JOIN WorkflowTransitionHistory h ON h.teamRequest.id = r.id "
+                    + "WHERE r.isDeleted = false "
+                    + "AND r.isCompleted = false "
+                    + "AND h.slaDueDate IS NOT NULL "
+                    + "AND h.slaDueDate < CURRENT_TIMESTAMP "
+                    + "AND h.status <> :status "
+                    + "AND r.team.id = :teamId")
+    Long countOverdueTicketsByTeamId(
+            @Param("teamId") Long teamId,
+            @Param("status") WorkflowTransitionHistoryStatus completedStatus);
+
+    @Query(
+            "SELECT new io.flexwork.modules.teams.service.dto.TicketActionCountByDateDTO("
+                    + "CAST(r.createdAt AS date), "
+                    + "COUNT(r.id), "
+                    + "COALESCE(closedTicketCounts.closedCount, 0)) "
+                    + "FROM TeamRequest r "
+                    + "LEFT JOIN ("
+                    + "    SELECT CAST(c.actualCompletionDate AS date) AS completionDate, COUNT(c.id) AS closedCount "
+                    + "    FROM TeamRequest c "
+                    + "    WHERE c.isDeleted = false "
+                    + "    AND c.team.id = :teamId "
+                    + "    AND c.actualCompletionDate IS NOT NULL "
+                    + "    GROUP BY CAST(c.actualCompletionDate AS date)"
+                    + ") closedTicketCounts ON CAST(r.createdAt AS date) = closedTicketCounts.completionDate "
+                    + "WHERE r.isDeleted = false "
+                    + "AND r.team.id = :teamId "
+                    + "AND r.createdAt >= :startDate "
+                    + "GROUP BY CAST(r.createdAt AS date), closedTicketCounts.closedCount "
+                    + "ORDER BY CAST(r.createdAt AS date) ASC")
+    List<TicketActionCountByDateDTO> findTicketActionByDaySeries(
+            @Param("teamId") Long teamId, @Param("startDate") Instant startDate);
 }

@@ -6,8 +6,7 @@
         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
 
 
-	<changeSet id="00000000000000:01-core-tables"
-		author="flexapp">
+	<changeSet id="000:01-core-tables" author="flexapp">
 		<createSequence sequenceName="sequence_generator"
 			minValue="100" startValue="100" incrementBy="1" />
 
@@ -288,8 +287,7 @@
 			referencedColumnNames="id" />
 	</changeSet>
 
-	<changeSet author="flexapp"
-		id="00000000000000:02-table-for-tests">
+	<changeSet author="flexapp" id="000:02-table-for-tests">
 		<createTable tableName="fw_date_time_wrapper">
 			<column name="id" type="BIGINT">
 				<constraints primaryKey="true"
@@ -306,7 +304,7 @@
 	</changeSet>
 
 	<changeSet author="flexapp"
-		id="00000000000000:03-insert-default-authority-data">
+		id="000:03-insert-default-authority-data">
 		<loadData
 			file="config/liquibase/tenant/data/fw_authority.csv" separator=";"
 			tableName="fw_authority" usePreparedStatements="true">
@@ -314,7 +312,7 @@
 		</loadData>
 	</changeSet>
 	<changeSet author="flexapp"
-		id="00000000000000:04-insert-default-user-data">
+		id="000:04-insert-default-user-data">
 		<loadData file="config/liquibase/tenant/data/fw_user.csv"
 			separator=";" tableName="fw_user" usePreparedStatements="true">
 			<column name="id" type="NUMERIC" />
@@ -344,7 +342,7 @@
 		</loadData>
 	</changeSet>
 	<changeSet author="flexapp"
-		id="00000000000000:05-insert-default-user-authority-data">
+		id="000:05-insert-default-user-authority-data">
 		<loadData
 			file="config/liquibase/tenant/data/fw_user_authority.csv"
 			separator=";" tableName="fw_user_authority"
@@ -363,7 +361,7 @@
 		</loadData>
 	</changeSet>
 	<changeSet author="flexapp"
-		id="00000000000000:06-insert-default-fw-team-data">
+		id="000:06-insert-default-fw-team-data">
 		<loadData file="config/liquibase/tenant/data/fw_team.csv"
 			tableName="fw_team" separator=";">
 
@@ -376,7 +374,7 @@
 		</loadData>
 	</changeSet>
 	<changeSet author="flexapp"
-		id="00000000000000:07-insert-default-fw-team-role">
+		id="000:07-insert-default-fw-team-role">
 		<loadData
 			file="config/liquibase/tenant/data/fw_team_role.csv"
 			tableName="fw_team_role" separator=";">
@@ -385,7 +383,7 @@
 		</loadData>
 	</changeSet>
 	<changeSet author="flexapp"
-		id="00000000000000:08-insert-default-fw-user-team-data">
+		id="000:08-insert-default-fw-user-team-data">
 		<loadData
 			file="config/liquibase/tenant/data/fw_user_team.csv"
 			tableName="fw_user_team" separator=";">
@@ -395,7 +393,7 @@
 		</loadData>
 	</changeSet>
 	<changeSet author="flexapp"
-		id="00000000000000:09-insert-default-fw-resource">
+		id="000:09-insert-default-fw-resource">
 		<loadData file="config/liquibase/tenant/data/fw_resource.csv"
 			separator=";" tableName="fw_resource" usePreparedStatements="true">
 			<column name="name" type="STRING" />
@@ -403,7 +401,7 @@
 		</loadData>
 	</changeSet>
 	<changeSet author="flexapp"
-		id="00000000000000:10-insert-default-fw-authority-resource-permission">
+		id="000:10-insert-default-fw-authority-resource-permission">
 		<loadData
 			file="config/liquibase/tenant/data/fw_authority_resource_permission.csv"
 			separator=";" tableName="fw_authority_resource_permission"

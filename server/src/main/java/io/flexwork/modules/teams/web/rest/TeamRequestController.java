@@ -4,13 +4,14 @@ import io.flexwork.modules.teams.service.TeamRequestService;
 import io.flexwork.modules.teams.service.WorkflowTransitionHistoryService;
 import io.flexwork.modules.teams.service.dto.PriorityDistributionDTO;
 import io.flexwork.modules.teams.service.dto.TeamRequestDTO;
+import io.flexwork.modules.teams.service.dto.TicketActionCountByDateDTO;
 import io.flexwork.modules.teams.service.dto.TicketDistributionDTO;
 import io.flexwork.modules.teams.service.dto.TransitionItemCollectionDTO;
+import io.flexwork.modules.usermanagement.service.dto.TicketStatisticsDTO;
 import io.flexwork.query.QueryDTO;
 import jakarta.validation.Valid;
 import java.util.List;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -96,15 +97,8 @@ public class TeamRequestController {
 
     // Endpoint to get unassigned tickets for a specific team
     @GetMapping("/{teamId}/unassigned-tickets")
-    public Page<TeamRequestDTO> getUnassignedTickets(
-            @PathVariable Long teamId,
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size,
-            @RequestParam(defaultValue = "priority") String sortBy,
-            @RequestParam(defaultValue = "asc") String sortDirection) {
-
-        Pageable pageable = PageRequest.of(page, size);
-        return teamRequestService.getUnassignedTickets(teamId, sortDirection, pageable);
+    public Page<TeamRequestDTO> getUnassignedTickets(@PathVariable Long teamId, Pageable pageable) {
+        return teamRequestService.getUnassignedTickets(teamId, pageable);
     }
 
     // Endpoint to get priority distribution for a specific team
@@ -126,5 +120,27 @@ public class TeamRequestController {
                 workflowTransitionHistoryService.getTransitionHistoryByTicketId(teamRequestId);
 
         return ResponseEntity.ok(ticketHistory);
+    }
+
+    @GetMapping("/{teamId}/statistics")
+    public TicketStatisticsDTO getTicketStatisticsByTeamId(@PathVariable Long teamId) {
+        return teamRequestService.getTicketStatisticsByTeamId(teamId);
+    }
+
+    @GetMapping("/{teamId}/overdue-tickets")
+    public Page<TeamRequestDTO> getOverdueTickets(@PathVariable Long teamId, Pageable pageable) {
+        return teamRequestService.getOverdueTickets(teamId, pageable);
+    }
+
+    @GetMapping("/{teamId}/overdue-tickets/count")
+    public Long countOverdueTickets(@PathVariable Long teamId) {
+        return teamRequestService.countOverdueTickets(teamId);
+    }
+
+    @GetMapping("/{teamId}/ticket-creations-day-series")
+    public List<TicketActionCountByDateDTO> getTicketCreationDaySeries(
+            @PathVariable Long teamId,
+            @RequestParam(required = false, defaultValue = "7") int days) {
+        return teamRequestService.getTicketCreationTimeseries(teamId, days);
     }
 }

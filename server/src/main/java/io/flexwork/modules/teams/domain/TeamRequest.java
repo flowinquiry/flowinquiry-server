@@ -5,8 +5,6 @@ import io.flexwork.modules.usermanagement.domain.User;
 import jakarta.persistence.Column;
 import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -52,8 +50,8 @@ public class TeamRequest extends AbstractAuditingEntity<Long> {
 
     private String requestDescription;
 
-    @Column(nullable = false, length = 50)
-    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    @Convert(converter = TeamRequestPriorityConverter.class)
     private TeamRequestPriority priority;
 
     @Column(name = "is_deleted", nullable = false)

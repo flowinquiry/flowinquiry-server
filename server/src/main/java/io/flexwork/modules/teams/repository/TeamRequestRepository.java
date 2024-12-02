@@ -3,6 +3,7 @@ package io.flexwork.modules.teams.repository;
 import io.flexwork.modules.teams.domain.TeamRequest;
 import io.flexwork.modules.teams.domain.WorkflowTransitionHistoryStatus;
 import io.flexwork.modules.teams.service.dto.PriorityDistributionDTO;
+import io.flexwork.modules.teams.service.dto.TeamTicketPriorityDistributionDTO;
 import io.flexwork.modules.teams.service.dto.TicketActionCountByDateDTO;
 import io.flexwork.modules.teams.service.dto.TicketDistributionDTO;
 import io.flexwork.modules.usermanagement.service.dto.TicketStatisticsDTO;
@@ -123,6 +124,22 @@ public interface TeamRequestRepository
             Pageable pageable);
 
     @Query(
+            "SELECT r "
+                    + "FROM TeamRequest r "
+                    + "JOIN WorkflowTransitionHistory h ON h.teamRequest.id = r.id "
+                    + "JOIN UserTeam ut ON ut.team.id = r.team.id "
+                    + "WHERE r.isDeleted = false "
+                    + "AND r.isCompleted = false "
+                    + "AND h.slaDueDate IS NOT NULL "
+                    + "AND h.slaDueDate < CURRENT_TIMESTAMP "
+                    + "AND h.status <> :status "
+                    + "AND ut.user.id = :userId")
+    Page<TeamRequest> findOverdueTicketsByUserId(
+            @Param("userId") Long userId,
+            @Param("status") WorkflowTransitionHistoryStatus completedStatus,
+            Pageable pageable);
+
+    @Query(
             "SELECT COUNT(r.id) "
                     + "FROM TeamRequest r "
                     + "JOIN WorkflowTransitionHistory h ON h.teamRequest.id = r.id "
@@ -157,4 +174,22 @@ public interface TeamRequestRepository
                     + "ORDER BY CAST(r.createdAt AS date) ASC")
     List<TicketActionCountByDateDTO> findTicketActionByDaySeries(
             @Param("teamId") Long teamId, @Param("startDate") Instant startDate);
+
+    @Query(
+            """
+        SELECT new io.flexwork.modules.teams.service.dto.TeamTicketPriorityDistributionDTO(
+            r.team.id,
+            r.team.name,
+            r.priority,
+            COUNT(r.id)
+        )
+        FROM TeamRequest r
+        JOIN UserTeam ut ON ut.team.id = r.team.id
+        WHERE ut.user.id = :userId
+        AND r.isDeleted = false
+        AND r.isCompleted = false
+        GROUP BY r.team.id, r.team.name, r.priority
+    """)
+    List<TeamTicketPriorityDistributionDTO> findPriorityDistributionByUserId(
+            @Param("userId") Long userId);
 }

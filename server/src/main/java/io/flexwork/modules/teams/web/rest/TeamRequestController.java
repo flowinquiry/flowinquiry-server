@@ -4,6 +4,7 @@ import io.flexwork.modules.teams.service.TeamRequestService;
 import io.flexwork.modules.teams.service.WorkflowTransitionHistoryService;
 import io.flexwork.modules.teams.service.dto.PriorityDistributionDTO;
 import io.flexwork.modules.teams.service.dto.TeamRequestDTO;
+import io.flexwork.modules.teams.service.dto.TeamTicketPriorityDistributionDTO;
 import io.flexwork.modules.teams.service.dto.TicketActionCountByDateDTO;
 import io.flexwork.modules.teams.service.dto.TicketDistributionDTO;
 import io.flexwork.modules.teams.service.dto.TransitionItemCollectionDTO;
@@ -90,19 +91,19 @@ public class TeamRequestController {
     }
 
     // Endpoint to get ticket distribution for a specific team
-    @GetMapping("/{teamId}/ticket-distribution")
+    @GetMapping("/teams/{teamId}/ticket-distribution")
     public List<TicketDistributionDTO> getTicketDistribution(@PathVariable Long teamId) {
         return teamRequestService.getTicketDistribution(teamId);
     }
 
     // Endpoint to get unassigned tickets for a specific team
-    @GetMapping("/{teamId}/unassigned-tickets")
+    @GetMapping("/teams/{teamId}/unassigned-tickets")
     public Page<TeamRequestDTO> getUnassignedTickets(@PathVariable Long teamId, Pageable pageable) {
         return teamRequestService.getUnassignedTickets(teamId, pageable);
     }
 
     // Endpoint to get priority distribution for a specific team
-    @GetMapping("/{teamId}/priority-distribution")
+    @GetMapping("/teams/{teamId}/priority-distribution")
     public List<PriorityDistributionDTO> getPriorityDistribution(@PathVariable Long teamId) {
         return teamRequestService.getPriorityDistribution(teamId);
     }
@@ -122,25 +123,40 @@ public class TeamRequestController {
         return ResponseEntity.ok(ticketHistory);
     }
 
-    @GetMapping("/{teamId}/statistics")
+    @GetMapping("/teams/{teamId}/statistics")
     public TicketStatisticsDTO getTicketStatisticsByTeamId(@PathVariable Long teamId) {
         return teamRequestService.getTicketStatisticsByTeamId(teamId);
     }
 
-    @GetMapping("/{teamId}/overdue-tickets")
-    public Page<TeamRequestDTO> getOverdueTickets(@PathVariable Long teamId, Pageable pageable) {
-        return teamRequestService.getOverdueTickets(teamId, pageable);
+    @GetMapping("/teams/{teamId}/overdue-tickets")
+    public Page<TeamRequestDTO> getOverdueTicketsByTeam(
+            @PathVariable Long teamId, Pageable pageable) {
+        return teamRequestService.getOverdueTicketsByTeam(teamId, pageable);
     }
 
-    @GetMapping("/{teamId}/overdue-tickets/count")
+    @GetMapping("/teams/{teamId}/overdue-tickets/count")
     public Long countOverdueTickets(@PathVariable Long teamId) {
         return teamRequestService.countOverdueTickets(teamId);
     }
 
-    @GetMapping("/{teamId}/ticket-creations-day-series")
+    @GetMapping("/teams/{teamId}/ticket-creations-day-series")
     public List<TicketActionCountByDateDTO> getTicketCreationDaySeries(
             @PathVariable Long teamId,
             @RequestParam(required = false, defaultValue = "7") int days) {
         return teamRequestService.getTicketCreationTimeseries(teamId, days);
+    }
+
+    @GetMapping("/users/{userId}/overdue-tickets")
+    public Page<TeamRequestDTO> getOverdueTicketsByUser(
+            @PathVariable Long userId, Pageable pageable) {
+        return teamRequestService.getOverdueTicketsByUser(userId, pageable);
+    }
+
+    @GetMapping("/users/{userId}/team-tickets-priority-distribution")
+    public ResponseEntity<List<TeamTicketPriorityDistributionDTO>>
+            getTeamTicketPriorityDistributionForUser(@PathVariable Long userId) {
+        List<TeamTicketPriorityDistributionDTO> distribution =
+                teamRequestService.getPriorityDistributionForUser(userId);
+        return ResponseEntity.ok(distribution);
     }
 }

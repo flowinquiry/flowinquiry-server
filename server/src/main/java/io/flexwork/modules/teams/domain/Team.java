@@ -6,6 +6,7 @@ import jakarta.validation.constraints.Size;
 import java.util.HashSet;
 import java.util.Set;
 import lombok.*;
+import org.hibernate.annotations.Formula;
 
 @Entity
 @Table(name = "fw_team")
@@ -46,6 +47,9 @@ public class Team {
             joinColumns = @JoinColumn(name = "team_id", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"))
     private Set<User> users;
+
+    @Formula("(SELECT COUNT(ut.user_id) FROM fw_user_team ut WHERE ut.team_id = id)")
+    private Long usersCount;
 
     @EqualsAndHashCode.Exclude
     @Builder.Default

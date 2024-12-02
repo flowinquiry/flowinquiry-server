@@ -105,7 +105,7 @@ public class TeamService {
     @Transactional(readOnly = true)
     public Page<TeamDTO> findTeams(Optional<QueryDTO> queryDTO, Pageable pageable) {
         Specification<Team> spec = createSpecification(queryDTO);
-        return teamRepository.findTeams(spec, pageable);
+        return teamRepository.findAll(spec, pageable).map(teamMapper::toDto);
     }
 
     @Transactional(readOnly = true)

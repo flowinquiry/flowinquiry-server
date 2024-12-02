@@ -10,7 +10,6 @@ public class NotificationDTO {
     private Long id;
     private String content;
     private Long userId;
-    private boolean isRead;
+    private Boolean isRead;
     private Instant createdAt;
-    private Instant modifiedAt;
 }

@@ -5,9 +5,7 @@ import io.flexwork.modules.collab.repository.ActivityLogRepository;
 import io.flexwork.modules.collab.service.dto.ActivityLogDTO;
 import io.flexwork.modules.collab.service.mapper.ActivityLogMapper;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -24,17 +22,14 @@ public class ActivityLogService {
     }
 
     public Page<ActivityLogDTO> getActivityLogs(
-            EntityType entityType,
-            Long entityId,
-            int page,
-            int size,
-            String sortBy,
-            String sortDirection) {
-        Sort sort = Sort.by(Sort.Direction.fromString(sortDirection), sortBy);
-        Pageable pageable = PageRequest.of(page, size, sort);
+            EntityType entityType, Long entityId, Pageable pageable) {
 
         return activityLogRepository
                 .findByEntityTypeAndEntityId(entityType, entityId, pageable)
                 .map(activityLogMapper::toDTO);
+    }
+
+    public Page<ActivityLogDTO> getActivitiesForUser(Long userId, Pageable pageable) {
+        return activityLogRepository.findAllByUserTeams(userId, pageable);
     }
 }

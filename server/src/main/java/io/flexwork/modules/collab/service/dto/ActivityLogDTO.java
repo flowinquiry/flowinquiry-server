@@ -10,11 +10,8 @@ import lombok.Data;
 public class ActivityLogDTO {
     private Long id;
     private EntityType entityType;
+    private String entityName;
     private Long entityId;
     private String content;
     private Instant createdAt;
-    private Instant updatedAt;
-    private Long createdById;
-    private String createdByName;
-    private String createdByImageUrl;
 }

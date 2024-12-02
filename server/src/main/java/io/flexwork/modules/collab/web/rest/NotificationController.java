@@ -4,8 +4,11 @@ import io.flexwork.modules.collab.service.NotificationService;
 import io.flexwork.modules.collab.service.dto.NotificationDTO;
 import java.util.List;
 import lombok.Data;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -19,6 +22,12 @@ public class NotificationController {
 
     public NotificationController(NotificationService notificationService) {
         this.notificationService = notificationService;
+    }
+
+    @GetMapping("/user/{userId}")
+    public ResponseEntity<Page<NotificationDTO>> getUserNotifications(
+            @PathVariable Long userId, Pageable pageable) {
+        return ResponseEntity.ok(notificationService.getNotificationsForUser(userId, pageable));
     }
 
     @PostMapping("/mark-read")

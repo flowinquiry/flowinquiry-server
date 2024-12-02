@@ -36,5 +36,5 @@ public class Notification extends AbstractAuditingEntity<Long> {
     private User user;
 
     @Column(nullable = false)
-    private boolean isRead;
+    private Boolean isRead;
 }

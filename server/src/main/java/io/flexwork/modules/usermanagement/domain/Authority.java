@@ -1,7 +1,6 @@
 package io.flexwork.modules.usermanagement.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
@@ -18,6 +17,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.Formula;
 
 /** A Authority. */
 @Entity
@@ -51,8 +51,11 @@ public class Authority implements Serializable {
     private Set<User> users;
 
     @EqualsAndHashCode.Exclude
-    @OneToMany(mappedBy = "authority", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "authority")
     private Set<AuthorityResourcePermission> authorityResourcePermissions;
+
+    @Formula("(SELECT COUNT(ua.user_id) FROM fw_user_authority ua WHERE ua.authority_name = name)")
+    private Long usersCount;
 
     @Override
     public boolean equals(Object o) {

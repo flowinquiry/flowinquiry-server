@@ -130,7 +130,7 @@
 			<column name="resource_name" type="VARCHAR(50)">
 				<constraints nullable="false" primaryKey="true" />
 			</column>
-			<column name="permission" type="VARCHAR(20)">
+			<column name="permission" type="INTEGER">
 				<constraints nullable="false" primaryKey="true" />
 			</column>
 		</createTable>

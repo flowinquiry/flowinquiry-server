@@ -15,11 +15,13 @@ public class AuthorityDTO {
 
     private boolean systemRole;
 
+    private Long usersCount;
+
     public AuthorityDTO(String name) {
-        this(name, name, false);
+        this(name, name, false, 0L);
     }
 
     public AuthorityDTO(String name, String descriptiveName) {
-        this(name, descriptiveName, false);
+        this(name, descriptiveName, false, 0L);
     }
 }

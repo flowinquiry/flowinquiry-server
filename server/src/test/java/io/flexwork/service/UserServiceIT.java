@@ -171,9 +171,7 @@ class UserServiceIT {
         assertThat(result)
                 .extracting("resourceName", "permission")
                 .containsExactlyInAnyOrder(
-                        Tuple.tuple("Files", "READ"), Tuple.tuple("Accounts", "WRITE"),
-                        Tuple.tuple("Cases", "READ"), Tuple.tuple("Teams", "READ"),
-                        Tuple.tuple("Contacts", "WRITE"), Tuple.tuple("Authorities", "READ"),
+                        Tuple.tuple("Teams", "READ"), Tuple.tuple("Authorities", "READ"),
                         Tuple.tuple("Organizations", "READ"), Tuple.tuple("Users", "READ"));
     }
 }

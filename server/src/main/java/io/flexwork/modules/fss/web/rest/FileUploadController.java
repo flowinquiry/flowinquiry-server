@@ -1,6 +1,5 @@
 package io.flexwork.modules.fss.web.rest;
 
-import io.flexwork.modules.fss.service.FsObjectService;
 import io.flexwork.modules.fss.service.StorageService;
 import io.flexwork.modules.usermanagement.service.dto.UserKey;
 import io.flexwork.security.SecurityUtils;
@@ -32,12 +31,9 @@ public class FileUploadController {
                 }
             };
 
-    private final FsObjectService fsObjectService;
-
     private final StorageService storageService;
 
-    public FileUploadController(FsObjectService fsObjectService, StorageService storageService) {
-        this.fsObjectService = fsObjectService;
+    public FileUploadController(StorageService storageService) {
         this.storageService = storageService;
     }
 

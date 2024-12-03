@@ -1,6 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE configuration>
-
 <configuration scan="true">
 
 	<!-- Register the custom masking converter -->
@@ -42,9 +40,10 @@
 		resource="org/springframework/boot/logging/logback/console-appender.xml" />
 
 
-	<logger name="io.flexwork" level="DEBUG" />
+	<logger name="io.flexwork" level="INFO" />
 	<logger name="angus.activation" level="WARN" />
 	<logger name="jakarta.activation" level="WARN" />
+	<logger name="jakarta.json" level="WARN" />
 	<logger name="jakarta.mail" level="WARN" />
 	<logger name="jakarta.management.remote" level="WARN" />
 	<logger name="jakarta.xml.bind" level="WARN" />
@@ -57,10 +56,10 @@
 	<logger name="org.apache.catalina.startup.DigesterFactory"
 		level="OFF" />
 	<logger name="org.bson" level="WARN" />
-	<logger name="org.hibernate.validator" level="WARN" />
+
 	<logger name="org.hibernate" level="WARN" />
-	<logger name="org.hibernate.ejb.HibernatePersistence"
-		level="OFF" />
+	<logger name="org.hibernate.SQL" level="WARN" />
+
 	<logger name="org.postgresql" level="WARN" />
 	<logger name="org.springframework" level="WARN" />
 	<logger name="org.springframework.web" level="WARN" />
@@ -84,7 +83,9 @@
 
 	<springProperty name="log.level"
 		source="logging.level.root" defaultValue="INFO" />
-	<root level="${log.level}">
+
+	<root>
+		<level value="${log.level:INFO}" />
 		<appender-ref ref="CONSOLE" />
 		<!-- <appender-ref ref="MASKED_FILE" /> -->
 	</root>

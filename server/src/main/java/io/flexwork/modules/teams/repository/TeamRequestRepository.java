@@ -27,7 +27,15 @@ public interface TeamRequestRepository
     @EntityGraph(attributePaths = {"team", "requestUser", "assignUser", "workflow", "currentState"})
     Page<TeamRequest> findAll(Specification<TeamRequest> spec, Pageable pageable);
 
-    @EntityGraph(attributePaths = {"team", "requestUser", "assignUser", "workflow", "currentState"})
+    @EntityGraph(
+            attributePaths = {
+                "team",
+                "requestUser",
+                "assignUser",
+                "modifiedByUser",
+                "workflow",
+                "currentState"
+            })
     Optional<TeamRequest> findById(@Param("id") Long id);
 
     @EntityGraph(attributePaths = {"team", "requestUser", "assignUser", "workflow"})

@@ -1,12 +1,11 @@
 package io.flexwork.modules.collab.service.dto;
 
-import io.flexwork.modules.audit.AbstractAuditDTO;
 import io.flexwork.modules.collab.domain.EntityType;
 import java.time.Instant;
 import lombok.Data;
 
 @Data
-public class CommentDTO extends AbstractAuditDTO {
+public class CommentDTO {
 
     private Long id;
     private String content;

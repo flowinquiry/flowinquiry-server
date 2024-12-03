@@ -158,6 +158,7 @@ public class TeamRequestService {
         boolean isStateChanged =
                 (!Objects.equals(previousState, teamRequestDTO.getCurrentStateId()));
         existingTeamRequest.setIsNew(!isStateChanged);
+
         if (isStateChanged) {
             boolean finalState =
                     workflowStateRepository.isFinalState(
@@ -170,6 +171,9 @@ public class TeamRequestService {
 
         TeamRequestDTO savedTeamRequest =
                 teamRequestMapper.toDto(teamRequestRepository.save(existingTeamRequest));
+
+        entityManager.clear();
+
         eventPublisher.publishEvent(
                 new AuditLogUpdateEvent(this, previousTeamRequest, teamRequestDTO));
 
@@ -179,6 +183,7 @@ public class TeamRequestService {
                     new TeamRequestWorkStateTransitionEvent(
                             this, teamRequestDTO.getId(), previousState, currentState));
         }
+
         return savedTeamRequest;
     }
 
@@ -207,7 +212,8 @@ public class TeamRequestService {
         }
 
         // Check for "team.id" recursively in groups
-        return queryDTO.getGroups().stream().anyMatch(group -> containsTeamIdFilterInGroup(group));
+        return queryDTO.getGroups().stream()
+                .anyMatch(TeamRequestService::containsTeamIdFilterInGroup);
     }
 
     private static boolean containsTeamIdFilterInGroup(GroupFilter groupFilter) {

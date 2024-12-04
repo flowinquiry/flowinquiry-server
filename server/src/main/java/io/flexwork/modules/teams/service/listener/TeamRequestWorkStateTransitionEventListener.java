@@ -13,10 +13,10 @@ import io.flexwork.modules.teams.repository.WorkflowStateRepository;
 import io.flexwork.modules.teams.service.WorkflowTransitionHistoryService;
 import io.flexwork.modules.teams.service.event.TeamRequestWorkStateTransitionEvent;
 import jakarta.persistence.EntityNotFoundException;
-import jakarta.transaction.Transactional;
 import org.springframework.context.event.EventListener;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 @Component
 public class TeamRequestWorkStateTransitionEventListener {

@@ -1,7 +1,6 @@
 package io.flexwork.modules.usermanagement.repository;
 
 import io.flexwork.modules.usermanagement.domain.User;
-import jakarta.transaction.Transactional;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -11,6 +10,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.*;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 /** Spring Data JPA repository for the {@link User} entity. */
 @Repository

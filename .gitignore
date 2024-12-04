@@ -151,3 +151,7 @@ Desktop.ini
 ######################
 /coverage/
 /.nyc_output/
+.env.local
+/docker/volumes
+/server/build
+/tools/liquibase/build

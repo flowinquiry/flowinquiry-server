@@ -11,12 +11,12 @@ import io.flexwork.modules.teams.repository.WorkflowTransitionHistoryRepository;
 import io.flexwork.modules.teams.repository.WorkflowTransitionRepository;
 import io.flexwork.modules.teams.service.dto.TransitionItemCollectionDTO;
 import io.flexwork.modules.teams.service.mapper.WorkflowTransitionHistoryMapper;
-import jakarta.transaction.Transactional;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.Collections;
 import java.util.List;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class WorkflowTransitionHistoryService {

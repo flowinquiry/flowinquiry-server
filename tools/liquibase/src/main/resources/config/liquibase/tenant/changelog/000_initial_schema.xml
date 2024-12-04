@@ -131,7 +131,7 @@
 				<constraints nullable="false" primaryKey="true" />
 			</column>
 			<column name="permission" type="INTEGER">
-				<constraints nullable="false" primaryKey="true" />
+				<constraints nullable="false" primaryKey="false" />
 			</column>
 		</createTable>
 

@@ -8,6 +8,9 @@ logging:
   level:
     ROOT: DEBUG
     org.hibernate.SQL: DEBUG
+    org.hibernate.type.descriptor.sql.BasicBinder: TRACE
+    org.hibernate.loader.plan.exe: DEBUG
+    org.hibernate.loader.plan.collection: DEBUG
     io.flexwork: DEBUG
 
 spring:

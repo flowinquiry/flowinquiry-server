@@ -95,7 +95,6 @@ public class AuthorityController {
     @DeleteMapping("/{id}")
     @PreAuthorize("hasAnyAuthority('ROLE_ADMIN')")
     public ResponseEntity<Void> deleteAuthority(@PathVariable("id") String id) {
-        LOG.debug("REST request to delete Authority : {}", id);
         authorityService.deleteAuthority(id);
         return ResponseEntity.noContent()
                 .headers(

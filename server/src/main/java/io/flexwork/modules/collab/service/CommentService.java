@@ -5,9 +5,9 @@ import io.flexwork.modules.collab.domain.EntityType;
 import io.flexwork.modules.collab.repository.CommentRepository;
 import io.flexwork.modules.collab.service.dto.CommentDTO;
 import io.flexwork.modules.collab.service.mapper.CommentMapper;
-import jakarta.transaction.Transactional;
 import java.util.List;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @Transactional

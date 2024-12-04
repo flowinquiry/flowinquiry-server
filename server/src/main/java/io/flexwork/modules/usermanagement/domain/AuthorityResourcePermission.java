@@ -21,7 +21,6 @@ public class AuthorityResourcePermission {
 
     @Convert(converter = PermissionConverter.class)
     @Column(name = "permission", nullable = false)
-    @Id
     private Permission permission;
 
     @EqualsAndHashCode.Exclude

@@ -67,6 +67,7 @@ public class AuthorityService {
      * @param authorityName the name of the authority to delete
      */
     public void deleteAuthority(String authorityName) {
+        authorityRepository.removeAllUsersFromAuthority(authorityName);
         authorityRepository.deleteById(authorityName);
     }
 

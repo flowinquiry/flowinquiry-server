@@ -17,11 +17,13 @@ public class AuthorityDTO {
 
     private Long usersCount;
 
+    private String description;
+
     public AuthorityDTO(String name) {
-        this(name, name, false, 0L);
+        this(name, name, false, 0L, "");
     }
 
     public AuthorityDTO(String name, String descriptiveName) {
-        this(name, descriptiveName, false, 0L);
+        this(name, descriptiveName, false, 0L, "");
     }
 }

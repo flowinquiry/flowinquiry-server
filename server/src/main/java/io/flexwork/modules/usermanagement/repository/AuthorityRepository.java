@@ -7,17 +7,14 @@ import java.util.Optional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
-/** Spring Data JPA repository for the Authority entity. */
-@SuppressWarnings("unused")
 @Repository
 public interface AuthorityRepository extends JpaRepository<Authority, String> {
-    List<Authority> findByNameIn(List<String> authorityNames);
-
-    Optional<Authority> findByName(String name);
 
     Optional<Authority> findByDescriptiveName(String descriptiveName);
 
@@ -34,4 +31,9 @@ public interface AuthorityRepository extends JpaRepository<Authority, String> {
     @Query("SELECT u FROM User u JOIN u.authorities a WHERE a.name = :authorityName")
     Page<User> findUsersByAuthority(
             @Param("authorityName") String authorityName, Pageable pageable);
+
+    @Modifying
+    @Transactional
+    @Query("DELETE FROM UserAuthority ua WHERE ua.authority.name = :authorityName")
+    void removeAllUsersFromAuthority(@Param("authorityName") String authorityName);
 }

@@ -14,11 +14,11 @@ import io.flexwork.modules.usermanagement.repository.UserRepository;
 import io.flexwork.security.SecurityUtils;
 import j2html.tags.specialized.DivTag;
 import jakarta.persistence.EntityNotFoundException;
-import jakarta.transaction.Transactional;
 import java.util.List;
 import org.springframework.context.event.EventListener;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 @Component
 public class NewUserAddedIntoTeamEventListener {

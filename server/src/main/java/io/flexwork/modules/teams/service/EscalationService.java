@@ -6,10 +6,10 @@ import io.flexwork.modules.teams.repository.EscalationTrackingRepository;
 import io.flexwork.modules.teams.repository.TeamRequestRepository;
 import io.flexwork.modules.teams.repository.WorkflowRepository;
 import jakarta.persistence.EntityNotFoundException;
-import jakarta.transaction.Transactional;
 import java.time.LocalDateTime;
 import java.util.List;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class EscalationService {

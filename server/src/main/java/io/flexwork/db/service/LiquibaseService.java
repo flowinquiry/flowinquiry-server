@@ -1,6 +1,5 @@
 package io.flexwork.db.service;
 
-import jakarta.transaction.Transactional;
 import java.sql.Connection;
 import javax.sql.DataSource;
 import liquibase.Contexts;
@@ -14,6 +13,7 @@ import lombok.SneakyThrows;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class LiquibaseService {

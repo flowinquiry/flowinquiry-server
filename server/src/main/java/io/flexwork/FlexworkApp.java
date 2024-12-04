@@ -11,7 +11,6 @@ import io.flexwork.modules.usermanagement.domain.Tenant;
 import io.flexwork.modules.usermanagement.service.TenantService;
 import io.github.cdimascio.dotenv.Dotenv;
 import jakarta.annotation.PostConstruct;
-import jakarta.transaction.Transactional;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.Arrays;
@@ -26,8 +25,10 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.boot.autoconfigure.liquibase.LiquibaseProperties;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.context.annotation.EnableAspectJAutoProxy;
 import org.springframework.core.annotation.Order;
 import org.springframework.core.env.Environment;
+import org.springframework.transaction.annotation.Transactional;
 import tech.jhipster.config.DefaultProfileUtil;
 
 @SpringBootApplication
@@ -37,6 +38,7 @@ import tech.jhipster.config.DefaultProfileUtil;
     FlexworkProperties.class
 })
 @EntityScan("io.flexwork")
+@EnableAspectJAutoProxy
 @Order(1)
 public class FlexworkApp implements CommandLineRunner {
 

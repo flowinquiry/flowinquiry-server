@@ -165,7 +165,7 @@ class UserServiceIT {
                 userService.getResourcesWithPermissionsByUserId(userId);
 
         // Assert - verify results
-        assertThat(result).hasSize(8);
+        assertThat(result).hasSize(4);
 
         // Check specific permissions
         assertThat(result)

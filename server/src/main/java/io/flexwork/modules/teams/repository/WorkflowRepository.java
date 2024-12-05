@@ -3,6 +3,7 @@ package io.flexwork.modules.teams.repository;
 import io.flexwork.modules.teams.domain.Workflow;
 import java.util.List;
 import java.util.Optional;
+import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -34,4 +35,8 @@ public interface WorkflowRepository extends JpaRepository<Workflow, Long> {
     """)
     Optional<Integer> findEscalationTimeoutByLevel(
             @Param("workflowId") Long workflowId, @Param("level") int level);
+
+    @EntityGraph(attributePaths = {"states", "transitions", "owner"})
+    @Query("SELECT w FROM Workflow w WHERE w.id = :workflowId")
+    Optional<Workflow> findWithDetailsById(@Param("workflowId") Long workflowId);
 }

@@ -4,6 +4,7 @@ import io.flexwork.modules.teams.domain.Workflow;
 import io.flexwork.modules.teams.service.WorkflowService;
 import io.flexwork.modules.teams.service.WorkflowTransitionService;
 import io.flexwork.modules.teams.service.dto.WorkflowDTO;
+import io.flexwork.modules.teams.service.dto.WorkflowDetailedDTO;
 import io.flexwork.modules.teams.service.dto.WorkflowStateDTO;
 import java.util.List;
 import org.springframework.http.ResponseEntity;
@@ -102,5 +103,19 @@ public class WorkflowController {
                 workflowTransitionService.getValidTargetWorkflowStates(
                         workflowId, workflowStateId, includeSelf);
         return ResponseEntity.ok(validTargetStates);
+    }
+
+    /**
+     * Get workflow details including states and transitions.
+     *
+     * @param workflowId The ID of the workflow to retrieve.
+     * @return WorkflowDetailedDTO if found, otherwise 404.
+     */
+    @GetMapping("/{workflowId}/details")
+    public ResponseEntity<WorkflowDetailedDTO> getWorkflowDetail(@PathVariable Long workflowId) {
+        return workflowService
+                .getWorkflowDetail(workflowId)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
     }
 }

@@ -12,7 +12,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
-import java.util.List;
+import java.util.Set;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -48,11 +48,11 @@ public class Workflow {
 
     @EqualsAndHashCode.Exclude
     @OneToMany(mappedBy = "workflow", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<WorkflowState> states;
+    private Set<WorkflowState> states;
 
     @EqualsAndHashCode.Exclude
     @OneToMany(mappedBy = "workflow", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<WorkflowTransition> transitions;
+    private Set<WorkflowTransition> transitions;
 
     @Column(
             name = "level1_escalation_timeout",

@@ -3,6 +3,7 @@ package io.flexwork.modules.teams.service;
 import io.flexwork.modules.teams.domain.Workflow;
 import io.flexwork.modules.teams.repository.WorkflowRepository;
 import io.flexwork.modules.teams.service.dto.WorkflowDTO;
+import io.flexwork.modules.teams.service.dto.WorkflowDetailedDTO;
 import io.flexwork.modules.teams.service.mapper.WorkflowMapper;
 import java.util.List;
 import java.util.Optional;
@@ -69,5 +70,11 @@ public class WorkflowService {
         return workflowRepository.findAllWorkflowsByTeam(teamId).stream()
                 .map(workflowMapper::toDto)
                 .toList();
+    }
+
+    public Optional<WorkflowDetailedDTO> getWorkflowDetail(Long workflowId) {
+        return workflowRepository
+                .findWithDetailsById(workflowId)
+                .map(workflowMapper::toDetailedDTO);
     }
 }

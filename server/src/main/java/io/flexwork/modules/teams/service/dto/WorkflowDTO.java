@@ -1,5 +1,6 @@
 package io.flexwork.modules.teams.service.dto;
 
+import io.flexwork.modules.teams.domain.WorkflowVisibility;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -15,11 +16,13 @@ public class WorkflowDTO {
 
     private String name;
 
-    private String requestName;
-
     private String description;
 
-    boolean isGlobal;
+    private String requestName;
+
+    private Long ownerId; // ID of the owning team; null for global workflows
+
+    private WorkflowVisibility visibility;
 
     private Integer level1EscalationTimeout;
 

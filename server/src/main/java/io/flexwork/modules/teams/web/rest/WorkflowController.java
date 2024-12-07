@@ -118,4 +118,11 @@ public class WorkflowController {
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
+
+    @PostMapping("/details")
+    public ResponseEntity<WorkflowDetailedDTO> saveWorkflow(
+            @RequestBody WorkflowDetailedDTO workflowDetailedDTO) {
+        WorkflowDetailedDTO savedWorkflow = workflowService.saveWorkflow(workflowDetailedDTO);
+        return ResponseEntity.ok(savedWorkflow);
+    }
 }

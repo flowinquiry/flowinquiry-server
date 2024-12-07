@@ -14,5 +14,7 @@ public interface WorkflowTransitionMapper {
     @Mapping(source = "workflow.id", target = "workflowId")
     WorkflowTransitionDTO toDTO(WorkflowTransition transition);
 
+    WorkflowTransition toEntity(WorkflowTransitionDTO transitionDTO);
+
     List<WorkflowTransitionDTO> toDTOList(List<WorkflowTransition> transitions);
 }

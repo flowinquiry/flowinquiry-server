@@ -113,6 +113,7 @@ public class TeamRequestService {
 
         TeamRequest teamRequest = teamRequestMapper.toEntity(teamRequestDTO);
         teamRequest = teamRequestRepository.save(teamRequest);
+
         // Clear the persistence context to force a reload
         entityManager.clear();
 
@@ -171,8 +172,6 @@ public class TeamRequestService {
 
         TeamRequestDTO savedTeamRequest =
                 teamRequestMapper.toDto(teamRequestRepository.save(existingTeamRequest));
-
-        entityManager.clear();
 
         eventPublisher.publishEvent(
                 new AuditLogUpdateEvent(this, previousTeamRequest, teamRequestDTO));
@@ -235,7 +234,7 @@ public class TeamRequestService {
         // Recursively check nested groups for "team.id"
         if (groupFilter.getGroups() != null) {
             return groupFilter.getGroups().stream()
-                    .anyMatch(nestedGroup -> containsTeamIdFilterInGroup(nestedGroup));
+                    .anyMatch(TeamRequestService::containsTeamIdFilterInGroup);
         }
 
         return false;
@@ -317,7 +316,7 @@ public class TeamRequestService {
         return teamRequestRepository.countOverdueTicketsByTeamId(teamId, Completed);
     }
 
-    public List<TicketActionCountByDateDTO> getTicketCreationTimeseries(Long teamId, int days) {
+    public List<TicketActionCountByDateDTO> getTicketCreationTimeSeries(Long teamId, int days) {
         if (days <= 0) {
             days = 7; // Default to 7 days
         }

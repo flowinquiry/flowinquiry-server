@@ -143,7 +143,7 @@ public class TeamRequestController {
     public List<TicketActionCountByDateDTO> getTicketCreationDaySeries(
             @PathVariable Long teamId,
             @RequestParam(required = false, defaultValue = "7") int days) {
-        return teamRequestService.getTicketCreationTimeseries(teamId, days);
+        return teamRequestService.getTicketCreationTimeSeries(teamId, days);
     }
 
     @GetMapping("/users/{userId}/overdue-tickets")

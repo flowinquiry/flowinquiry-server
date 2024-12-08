@@ -6,7 +6,13 @@ import io.flexwork.modules.teams.service.WorkflowTransitionService;
 import io.flexwork.modules.teams.service.dto.WorkflowDTO;
 import io.flexwork.modules.teams.service.dto.WorkflowDetailedDTO;
 import io.flexwork.modules.teams.service.dto.WorkflowStateDTO;
+import io.flexwork.query.QueryDTO;
+import jakarta.validation.Valid;
 import java.util.List;
+import java.util.Optional;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -33,15 +39,16 @@ public class WorkflowController {
     }
 
     @PostMapping
-    public ResponseEntity<Workflow> createWorkflow(@RequestBody Workflow workflow) {
-        Workflow createdWorkflow = workflowService.createWorkflow(workflow);
+    public ResponseEntity<WorkflowDTO> createWorkflow(@RequestBody Workflow workflow) {
+        WorkflowDTO createdWorkflow = workflowService.createWorkflow(workflow);
         return ResponseEntity.ok(createdWorkflow);
     }
 
-    @GetMapping
-    public ResponseEntity<List<Workflow>> getAllWorkflows() {
-        List<Workflow> workflows = workflowService.getAllWorkflows();
-        return ResponseEntity.ok(workflows);
+    @PostMapping("/search")
+    public ResponseEntity<Page<WorkflowDTO>> findWorkflows(
+            @Valid @RequestBody Optional<QueryDTO> queryDTO, Pageable pageable) {
+        return new ResponseEntity<>(
+                workflowService.findWorkflows(queryDTO, pageable), HttpStatus.OK);
     }
 
     @GetMapping("/{id}")
@@ -53,10 +60,10 @@ public class WorkflowController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Workflow> updateWorkflow(
-            @PathVariable Long id, @RequestBody Workflow workflow) {
+    public ResponseEntity<WorkflowDTO> updateWorkflow(
+            @PathVariable Long id, @RequestBody WorkflowDTO workflow) {
         try {
-            Workflow updatedWorkflow = workflowService.updateWorkflow(id, workflow);
+            WorkflowDTO updatedWorkflow = workflowService.updateWorkflow(id, workflow);
             return ResponseEntity.ok(updatedWorkflow);
         } catch (IllegalArgumentException e) {
             return ResponseEntity.notFound().build();

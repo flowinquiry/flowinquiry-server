@@ -5,6 +5,7 @@ import io.flexwork.modules.teams.service.dto.WorkflowDTO;
 import io.flexwork.modules.teams.service.dto.WorkflowDetailedDTO;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
+import org.mapstruct.MappingTarget;
 
 @Mapper(
         componentModel = "spring",
@@ -18,5 +19,7 @@ public interface WorkflowMapper {
 
     @Mapping(source = "owner.name", target = "ownerName")
     @Mapping(source = "owner.id", target = "ownerId")
-    WorkflowDetailedDTO toDetailedDTO(Workflow workflow);
+    WorkflowDetailedDTO toDetailedDto(Workflow workflow);
+
+    Workflow updateEntity(WorkflowDTO workflowDTO, @MappingTarget Workflow workflow);
 }

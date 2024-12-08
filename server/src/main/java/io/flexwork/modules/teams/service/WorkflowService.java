@@ -1,5 +1,7 @@
 package io.flexwork.modules.teams.service;
 
+import static io.flexwork.query.QueryUtils.createSpecification;
+
 import io.flexwork.modules.teams.domain.Workflow;
 import io.flexwork.modules.teams.domain.WorkflowState;
 import io.flexwork.modules.teams.domain.WorkflowTransition;
@@ -11,9 +13,13 @@ import io.flexwork.modules.teams.service.dto.WorkflowDetailedDTO;
 import io.flexwork.modules.teams.service.mapper.WorkflowMapper;
 import io.flexwork.modules.teams.service.mapper.WorkflowStateMapper;
 import io.flexwork.modules.teams.service.mapper.WorkflowTransitionMapper;
+import io.flexwork.query.QueryDTO;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -48,13 +54,8 @@ public class WorkflowService {
     }
 
     @Transactional
-    public Workflow createWorkflow(Workflow workflow) {
-        return workflowRepository.save(workflow);
-    }
-
-    @Transactional(readOnly = true)
-    public List<Workflow> getAllWorkflows() {
-        return workflowRepository.findAll();
+    public WorkflowDTO createWorkflow(Workflow workflow) {
+        return workflowMapper.toDto(workflowRepository.save(workflow));
     }
 
     @Transactional(readOnly = true)
@@ -63,14 +64,13 @@ public class WorkflowService {
     }
 
     @Transactional
-    public Workflow updateWorkflow(Long id, Workflow updatedWorkflow) {
+    public WorkflowDTO updateWorkflow(Long id, WorkflowDTO updatedWorkflow) {
         return workflowRepository
                 .findById(id)
                 .map(
                         existingWorkflow -> {
-                            existingWorkflow.setName(updatedWorkflow.getName());
-                            existingWorkflow.setDescription(updatedWorkflow.getDescription());
-                            return workflowRepository.save(existingWorkflow);
+                            workflowMapper.updateEntity(updatedWorkflow, existingWorkflow);
+                            return workflowMapper.toDto(workflowRepository.save(existingWorkflow));
                         })
                 .orElseThrow(
                         () -> new IllegalArgumentException("Workflow not found with id: " + id));
@@ -100,7 +100,13 @@ public class WorkflowService {
     public Optional<WorkflowDetailedDTO> getWorkflowDetail(Long workflowId) {
         return workflowRepository
                 .findWithDetailsById(workflowId)
-                .map(workflowMapper::toDetailedDTO);
+                .map(workflowMapper::toDetailedDto);
+    }
+
+    @Transactional(readOnly = true)
+    public Page<WorkflowDTO> findWorkflows(Optional<QueryDTO> queryDTO, Pageable pageable) {
+        Specification<Workflow> spec = createSpecification(queryDTO);
+        return workflowRepository.findAll(spec, pageable).map(workflowMapper::toDto);
     }
 
     @Transactional
@@ -153,6 +159,6 @@ public class WorkflowService {
                         .collect(Collectors.toList());
         workflowTransitionRepository.saveAll(transitions);
 
-        return workflowMapper.toDetailedDTO(workflow);
+        return workflowMapper.toDetailedDto(workflow);
     }
 }

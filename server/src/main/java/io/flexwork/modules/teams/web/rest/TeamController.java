@@ -88,9 +88,8 @@ public class TeamController {
         }
         TeamDTO updatedTeam = teamService.updateTeam(team);
         // Remove the old logo
-        if (fileRemovedPath.isPresent()) {
-            eventPublisher.publishEvent(new ResourceRemoveEvent(this, fileRemovedPath.get()));
-        }
+        fileRemovedPath.ifPresent(
+                s -> eventPublisher.publishEvent(new ResourceRemoveEvent(this, s)));
         return ResponseEntity.ok(updatedTeam);
     }
 

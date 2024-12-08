@@ -3,3 +3,9 @@ ROLE_USER;Users;1
 ROLE_USER;Teams;1
 ROLE_USER;Organizations;1
 ROLE_USER;Authorities;1
+ROLE_USER;Workflows;0
+ROLE_ADMIN;Users;3
+ROLE_ADMIN;Teams;3
+ROLE_ADMIN;Organizations;3
+ROLE_ADMIN;Authorities;3
+ROLE_ADMIN;Workflows;3

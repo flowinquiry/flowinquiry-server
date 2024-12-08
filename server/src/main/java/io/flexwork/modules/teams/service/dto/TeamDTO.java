@@ -10,7 +10,6 @@ import lombok.experimental.SuperBuilder;
 @AllArgsConstructor
 @SuperBuilder
 public class TeamDTO {
-
     private Long id;
     private String name;
     private String logoUrl;

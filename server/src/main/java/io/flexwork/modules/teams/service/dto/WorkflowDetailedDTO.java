@@ -11,12 +11,6 @@ import lombok.experimental.SuperBuilder;
 @AllArgsConstructor
 @SuperBuilder
 public class WorkflowDetailedDTO extends WorkflowDTO {
-
-    private String
-            ownerName; // return the team name that own this workflow, if workflow is global then
-    // its value is null
-
     private List<WorkflowStateDTO> states;
-
     private List<WorkflowTransitionDTO> transitions;
 }

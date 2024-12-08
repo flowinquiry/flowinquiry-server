@@ -118,7 +118,7 @@ public class WorkflowController {
      * @param workflowId The ID of the workflow to retrieve.
      * @return WorkflowDetailedDTO if found, otherwise 404.
      */
-    @GetMapping("/{workflowId}/details")
+    @GetMapping("/details/{workflowId}")
     public ResponseEntity<WorkflowDetailedDTO> getWorkflowDetail(@PathVariable Long workflowId) {
         return workflowService
                 .getWorkflowDetail(workflowId)
@@ -131,5 +131,15 @@ public class WorkflowController {
             @RequestBody WorkflowDetailedDTO workflowDetailedDTO) {
         WorkflowDetailedDTO savedWorkflow = workflowService.saveWorkflow(workflowDetailedDTO);
         return ResponseEntity.ok(savedWorkflow);
+    }
+
+    @PutMapping("/details/{workflowId}")
+    public ResponseEntity<WorkflowDetailedDTO> updateWorkflow(
+            @PathVariable Long workflowId,
+            @Valid @RequestBody WorkflowDetailedDTO workflowDetailedDTO) {
+        WorkflowDetailedDTO updatedWorkflow =
+                workflowService.updateWorkflow(workflowId, workflowDetailedDTO);
+
+        return ResponseEntity.ok(updatedWorkflow);
     }
 }

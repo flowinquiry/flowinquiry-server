@@ -1,6 +1,7 @@
 package io.flexwork.modules.teams.repository;
 
 import io.flexwork.modules.teams.domain.WorkflowState;
+import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -19,4 +20,6 @@ public interface WorkflowStateRepository extends JpaRepository<WorkflowState, Lo
                     + "WHERE ws.workflow.id = :workflowId AND ws.id = :workflowStateId AND ws.isFinal = TRUE")
     boolean isFinalState(
             @Param("workflowId") Long workflowId, @Param("workflowStateId") Long workflowStateId);
+
+    List<WorkflowState> findByWorkflowId(Long workflowId);
 }

@@ -10,12 +10,16 @@ import io.flexwork.modules.teams.repository.WorkflowStateRepository;
 import io.flexwork.modules.teams.repository.WorkflowTransitionRepository;
 import io.flexwork.modules.teams.service.dto.WorkflowDTO;
 import io.flexwork.modules.teams.service.dto.WorkflowDetailedDTO;
+import io.flexwork.modules.teams.service.dto.WorkflowStateDTO;
+import io.flexwork.modules.teams.service.dto.WorkflowTransitionDTO;
 import io.flexwork.modules.teams.service.mapper.WorkflowMapper;
 import io.flexwork.modules.teams.service.mapper.WorkflowStateMapper;
 import io.flexwork.modules.teams.service.mapper.WorkflowTransitionMapper;
 import io.flexwork.query.QueryDTO;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -160,5 +164,148 @@ public class WorkflowService {
         workflowTransitionRepository.saveAll(transitions);
 
         return workflowMapper.toDetailedDto(workflow);
+    }
+
+    @Transactional
+    public WorkflowDetailedDTO updateWorkflow(
+            Long workflowId, WorkflowDetailedDTO updatedWorkflow) {
+        Workflow existingWorkflow =
+                workflowRepository
+                        .findById(workflowId)
+                        .orElseThrow(
+                                () ->
+                                        new IllegalArgumentException(
+                                                "Workflow not found for id: " + workflowId));
+
+        // Update Workflow properties
+        existingWorkflow.setName(updatedWorkflow.getName());
+        existingWorkflow.setRequestName(updatedWorkflow.getRequestName());
+        existingWorkflow.setDescription(updatedWorkflow.getDescription());
+        existingWorkflow.setVisibility(updatedWorkflow.getVisibility());
+
+        // Save updated workflow
+        workflowRepository.save(existingWorkflow);
+
+        // Handle states
+        updateStates(existingWorkflow, updatedWorkflow.getStates());
+
+        // Handle transitions
+        updateTransitions(existingWorkflow, updatedWorkflow.getTransitions());
+
+        // Return the updated DTO
+        return workflowMapper.toDetailedDto(existingWorkflow);
+    }
+
+    private void updateStates(Workflow workflow, List<WorkflowStateDTO> updatedStates) {
+        List<WorkflowState> existingStates =
+                workflowStateRepository.findByWorkflowId(workflow.getId());
+
+        // Convert to maps for easy lookup
+        Set<Long> updatedStateIds =
+                updatedStates.stream()
+                        .map(WorkflowStateDTO::getId)
+                        .filter(Objects::nonNull)
+                        .collect(Collectors.toSet());
+
+        // Update existing states
+        existingStates.forEach(
+                existingState -> {
+                    if (updatedStateIds.contains(existingState.getId())) {
+                        WorkflowStateDTO updatedState =
+                                updatedStates.stream()
+                                        .filter(
+                                                state ->
+                                                        state.getId().equals(existingState.getId()))
+                                        .findFirst()
+                                        .orElseThrow();
+                        existingState.setStateName(updatedState.getStateName());
+                        existingState.setIsInitial(updatedState.getIsInitial());
+                        existingState.setIsFinal(updatedState.getIsFinal());
+                        workflowStateRepository.save(existingState);
+                    } else {
+                        // Remove deleted states
+                        workflowStateRepository.delete(existingState);
+                    }
+                });
+
+        // Add new states
+        updatedStates.stream()
+                .filter(state -> state.getId() == null)
+                .forEach(
+                        newState -> {
+                            WorkflowState state = new WorkflowState();
+                            state.setWorkflow(workflow);
+                            state.setStateName(newState.getStateName());
+                            state.setIsInitial(newState.getIsInitial());
+                            state.setIsFinal(newState.getIsFinal());
+                            workflowStateRepository.save(state);
+                        });
+    }
+
+    private void updateTransitions(
+            Workflow workflow, List<WorkflowTransitionDTO> updatedTransitions) {
+        List<WorkflowTransition> existingTransitions =
+                workflowTransitionRepository.findByWorkflowId(workflow.getId());
+
+        // Convert to maps for easy lookup
+        Set<Long> updatedTransitionIds =
+                updatedTransitions.stream()
+                        .map(WorkflowTransitionDTO::getId)
+                        .filter(Objects::nonNull)
+                        .collect(Collectors.toSet());
+
+        // Update existing transitions
+        existingTransitions.forEach(
+                existingTransition -> {
+                    if (updatedTransitionIds.contains(existingTransition.getId())) {
+                        WorkflowTransitionDTO updatedTransition =
+                                updatedTransitions.stream()
+                                        .filter(
+                                                transition ->
+                                                        transition
+                                                                .getId()
+                                                                .equals(existingTransition.getId()))
+                                        .findFirst()
+                                        .orElseThrow();
+                        existingTransition.setEventName(updatedTransition.getEventName());
+                        existingTransition.setSourceState(
+                                WorkflowState.builder()
+                                        .id(updatedTransition.getSourceStateId())
+                                        .build());
+                        existingTransition.setTargetState(
+                                WorkflowState.builder()
+                                        .id(updatedTransition.getTargetStateId())
+                                        .build());
+                        existingTransition.setSlaDuration(updatedTransition.getSlaDuration());
+                        existingTransition.setEscalateOnViolation(
+                                updatedTransition.isEscalateOnViolation());
+                        workflowTransitionRepository.save(existingTransition);
+                    } else {
+                        // Remove deleted transitions
+                        workflowTransitionRepository.delete(existingTransition);
+                    }
+                });
+
+        // Add new transitions
+        updatedTransitions.stream()
+                .filter(transition -> transition.getId() == null)
+                .forEach(
+                        newTransition -> {
+                            WorkflowTransition transition = new WorkflowTransition();
+                            transition.setWorkflow(workflow);
+                            transition.setEventName(newTransition.getEventName());
+                            transition.setSourceState(
+                                    WorkflowState.builder()
+                                            .id(newTransition.getSourceStateId())
+                                            .build());
+                            transition.setTargetState(
+                                    WorkflowState.builder()
+                                            .id(newTransition.getTargetStateId())
+                                            .build());
+                            transition.setSlaDuration(newTransition.getSlaDuration());
+                            transition.setEscalateOnViolation(
+                                    newTransition.isEscalateOnViolation());
+                            workflowTransitionRepository.save(transition);
+                        });
     }
 }

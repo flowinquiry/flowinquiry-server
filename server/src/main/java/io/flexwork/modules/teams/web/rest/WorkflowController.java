@@ -93,6 +93,19 @@ public class WorkflowController {
     }
 
     /**
+     * Get global workflows not linked to a specific team.
+     *
+     * @param teamId the ID of the team
+     * @return List of WorkflowDTOs representing global workflows not linked to the team
+     */
+    @GetMapping("/teams/{teamId}/global-workflows-not-linked-yet")
+    public ResponseEntity<List<WorkflowDTO>> getGlobalWorkflowsNotLinkedToTeam(
+            @RequestParam Long teamId) {
+        List<WorkflowDTO> workflows = workflowService.listGlobalWorkflowsNotLinkedToTeam(teamId);
+        return ResponseEntity.ok(workflows);
+    }
+
+    /**
      * Endpoint to retrieve all valid target states for a given workflow and current state ID, with
      * an option to include the current state itself.
      *

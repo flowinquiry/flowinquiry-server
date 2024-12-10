@@ -13,6 +13,7 @@ import org.mapstruct.MappingTarget;
 public interface WorkflowMapper {
 
     @Mapping(source = "owner.id", target = "ownerId")
+    @Mapping(source = "parentWorkflow.id", target = "parentWorkflowId")
     WorkflowDTO toDto(Workflow workflow);
 
     Workflow toEntity(WorkflowDTO workflowDTO);

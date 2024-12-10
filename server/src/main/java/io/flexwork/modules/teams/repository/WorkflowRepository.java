@@ -41,4 +41,17 @@ public interface WorkflowRepository
     @EntityGraph(attributePaths = {"states", "transitions", "owner"})
     @Query("SELECT w FROM Workflow w WHERE w.id = :workflowId")
     Optional<Workflow> findWithDetailsById(@Param("workflowId") Long workflowId);
+
+    @Query(
+            """
+        SELECT w
+        FROM Workflow w
+        WHERE w.visibility = 'PUBLIC'
+        AND w.id NOT IN (
+            SELECT tws.workflow.id
+            FROM TeamWorkflowSelection tws
+            WHERE tws.team.id = :teamId
+        )
+    """)
+    List<Workflow> findGlobalWorkflowsNotLinkedToTeam(@Param("teamId") Long teamId);
 }

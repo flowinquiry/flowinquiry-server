@@ -1,17 +1,7 @@
 package io.flexwork.modules.teams.domain;
 
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.Table;
+import io.flexwork.modules.audit.AbstractAuditingEntity;
+import jakarta.persistence.*;
 import java.util.Set;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -19,13 +9,14 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
+@EqualsAndHashCode(callSuper = false)
 @Entity
 @Table(name = "fw_workflow")
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class Workflow {
+public class Workflow extends AbstractAuditingEntity<Long> {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -71,4 +62,16 @@ public class Workflow {
             nullable = false,
             columnDefinition = "INT DEFAULT 1000000")
     private Integer level3EscalationTimeout;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(
+            name = "parent_workflow_id",
+            foreignKey = @ForeignKey(name = "fk_workflow_parent_workflow"))
+    private Workflow parentWorkflow; // Reference to the parent workflow
+
+    @Column(name = "cloned_from_global", nullable = false)
+    private boolean clonedFromGlobal;
+
+    @Column(columnDefinition = "TEXT")
+    private String tags;
 }

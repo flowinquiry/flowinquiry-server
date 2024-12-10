@@ -50,6 +50,25 @@
 				defaultValue="1000000">
 				<constraints nullable="false" />
 			</column>
+			<!--To support cloning and referencing global workflows -->
+			<!--If a workflow is cloned from another workflow, this column stores 
+				the id of the original workflow. -->
+			<!--If the workflow is created from scratch, the value is NULL. -->
+			<column name="parent_workflow_id" type="BIGINT">
+				<constraints nullable="true" />
+			</column>
+			<!--To track if a workflow is cloned from a global workflow for better 
+				visibility -->
+			<column name="cloned_from_global" type="BOOLEAN"
+				defaultValue="false">
+				<constraints nullable="false" />
+			</column>
+			<!--To support tagging workflows for better categorization and searchability -->
+			<column name="tags" type="TEXT" />
+			<column name="created_by" type="bigint" />
+			<column name="created_at" type="timestamptz" />
+			<column name="modified_by" type="bigint" />
+			<column name="modified_at" type="timestamptz" />
 		</createTable>
 
 		<!-- Add foreign key constraint to fw_team for owner_id -->
@@ -57,6 +76,21 @@
 			baseTableName="fw_workflow" baseColumnNames="owner_id"
 			referencedTableName="fw_team" referencedColumnNames="id"
 			onDelete="CASCADE" constraintName="fk_workflow_owner_team" />
+
+		<addForeignKeyConstraint
+			baseTableName="fw_workflow" baseColumnNames="parent_workflow_id"
+			referencedTableName="fw_workflow" referencedColumnNames="id"
+			constraintName="fk_workflow_parent_workflow" />
+
+		<addForeignKeyConstraint
+			baseTableName="fw_workflow" baseColumnNames="created_by"
+			referencedTableName="fw_user" referencedColumnNames="id"
+			constraintName="fk_workflow_created_by_user" />
+
+		<addForeignKeyConstraint
+			baseTableName="fw_workflow" baseColumnNames="modified_by"
+			referencedTableName="fw_user" referencedColumnNames="id"
+			constraintName="fk_workflow_last_modified_by_user" />
 
 		<createTable tableName="fw_team_workflow_selection">
 			<column name="id" type="BIGINT" autoIncrement="true">

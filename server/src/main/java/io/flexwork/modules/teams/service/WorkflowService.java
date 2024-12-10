@@ -317,4 +317,16 @@ public class WorkflowService {
 
         return updatedWorkflow;
     }
+
+    /**
+     * List global workflows not linked to the given team.
+     *
+     * @param teamId the ID of the team
+     * @return List of WorkflowDTOs representing the global workflows
+     */
+    public List<WorkflowDTO> listGlobalWorkflowsNotLinkedToTeam(Long teamId) {
+        return workflowRepository.findGlobalWorkflowsNotLinkedToTeam(teamId).stream()
+                .map(workflowMapper::toDto)
+                .toList();
+    }
 }

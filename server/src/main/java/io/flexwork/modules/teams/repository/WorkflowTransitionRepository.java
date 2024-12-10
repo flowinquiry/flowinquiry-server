@@ -5,9 +5,11 @@ import io.flexwork.modules.teams.domain.WorkflowTransition;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 @Repository
 public interface WorkflowTransitionRepository extends JpaRepository<WorkflowTransition, Long> {
@@ -48,4 +50,14 @@ public interface WorkflowTransitionRepository extends JpaRepository<WorkflowTran
             Long workflowId, Long sourceStateId, Long targetStateId);
 
     List<WorkflowTransition> findByWorkflowId(Long workflowId);
+
+    @Transactional
+    @Modifying
+    @Query(
+            "DELETE FROM WorkflowTransition t "
+                    + "WHERE t.sourceState.id IN :sourceStateIds "
+                    + "OR t.targetState.id IN :targetStateIds")
+    void deleteBySourceStateIdInOrTargetStateIdIn(
+            @Param("sourceStateIds") List<Long> sourceStateIds,
+            @Param("targetStateIds") List<Long> targetStateIds);
 }

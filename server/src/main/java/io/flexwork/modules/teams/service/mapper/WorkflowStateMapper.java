@@ -2,9 +2,9 @@ package io.flexwork.modules.teams.service.mapper;
 
 import io.flexwork.modules.teams.domain.WorkflowState;
 import io.flexwork.modules.teams.service.dto.WorkflowStateDTO;
-import java.util.List;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
+import org.mapstruct.MappingTarget;
 
 @Mapper(componentModel = "spring")
 public interface WorkflowStateMapper {
@@ -15,5 +15,6 @@ public interface WorkflowStateMapper {
     @Mapping(source = "workflowId", target = "workflow.id")
     WorkflowState toEntity(WorkflowStateDTO workflowStateDTO);
 
-    List<WorkflowStateDTO> toDTOList(List<WorkflowState> states);
+    void updateEntity(
+            WorkflowStateDTO workflowStateDTO, @MappingTarget WorkflowState workflowState);
 }

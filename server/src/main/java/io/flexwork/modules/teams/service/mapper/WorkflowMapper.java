@@ -21,5 +21,5 @@ public interface WorkflowMapper {
     @Mapping(source = "owner.id", target = "ownerId")
     WorkflowDetailedDTO toDetailedDto(Workflow workflow);
 
-    Workflow updateEntity(WorkflowDTO workflowDTO, @MappingTarget Workflow workflow);
+    void updateEntity(WorkflowDTO workflowDTO, @MappingTarget Workflow workflow);
 }

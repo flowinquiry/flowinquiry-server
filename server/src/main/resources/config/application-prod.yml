@@ -5,6 +5,7 @@
 # ===================================================================
 
 logging:
+  structured.format.console: logstash
   level:
     ROOT: INFO
     io.flexwork: INFO

@@ -155,4 +155,25 @@ public class WorkflowController {
 
         return ResponseEntity.ok(updatedWorkflow);
     }
+
+    @PostMapping("/create-workflow-reference")
+    public ResponseEntity<WorkflowDetailedDTO> createWorkflowByReference(
+            @PathVariable Long teamId,
+            @RequestParam Long referencedWorkflowId,
+            @RequestBody WorkflowDTO workflowDTO) {
+        WorkflowDetailedDTO createdWorkflow =
+                workflowService.createWorkflowByReference(
+                        teamId, referencedWorkflowId, workflowDTO);
+        return ResponseEntity.status(HttpStatus.CREATED).body(createdWorkflow);
+    }
+
+    @PostMapping("/create-workflow-clone")
+    public ResponseEntity<WorkflowDetailedDTO> createWorkflowByCloning(
+            @PathVariable Long teamId,
+            @RequestParam Long workflowToCloneId,
+            @RequestBody WorkflowDTO workflowDTO) {
+        WorkflowDetailedDTO clonedWorkflow =
+                workflowService.createWorkflowByCloning(teamId, workflowToCloneId, workflowDTO);
+        return ResponseEntity.status(HttpStatus.CREATED).body(clonedWorkflow);
+    }
 }

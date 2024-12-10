@@ -11,8 +11,6 @@ plugins {
     id "org.jetbrains.kotlin.jvm"
 }
 
-version = "0.0.1-SNAPSHOT"
-
 description = ""
 
 assert System.properties["java.specification.version"] == "21" || "22" || "23"

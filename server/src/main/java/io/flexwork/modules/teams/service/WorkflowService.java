@@ -2,9 +2,13 @@ package io.flexwork.modules.teams.service;
 
 import static io.flexwork.query.QueryUtils.createSpecification;
 
+import io.flexwork.modules.teams.domain.Team;
+import io.flexwork.modules.teams.domain.TeamWorkflowSelection;
 import io.flexwork.modules.teams.domain.Workflow;
 import io.flexwork.modules.teams.domain.WorkflowState;
 import io.flexwork.modules.teams.domain.WorkflowTransition;
+import io.flexwork.modules.teams.domain.WorkflowVisibility;
+import io.flexwork.modules.teams.repository.TeamWorkflowSelectionRepository;
 import io.flexwork.modules.teams.repository.WorkflowRepository;
 import io.flexwork.modules.teams.repository.WorkflowStateRepository;
 import io.flexwork.modules.teams.repository.WorkflowTransitionRepository;
@@ -35,6 +39,8 @@ public class WorkflowService {
 
     private final WorkflowTransitionRepository workflowTransitionRepository;
 
+    private final TeamWorkflowSelectionRepository teamWorkflowSelectionRepository;
+
     private final WorkflowMapper workflowMapper;
 
     private final WorkflowStateMapper workflowStateMapper;
@@ -45,12 +51,14 @@ public class WorkflowService {
             WorkflowRepository workflowRepository,
             WorkflowStateRepository workflowStateRepository,
             WorkflowTransitionRepository workflowTransitionRepository,
+            TeamWorkflowSelectionRepository teamWorkflowSelectionRepository,
             WorkflowMapper workflowMapper,
             WorkflowStateMapper workflowStateMapper,
             WorkflowTransitionMapper workflowTransitionMapper) {
         this.workflowRepository = workflowRepository;
         this.workflowStateRepository = workflowStateRepository;
         this.workflowTransitionRepository = workflowTransitionRepository;
+        this.teamWorkflowSelectionRepository = teamWorkflowSelectionRepository;
         this.workflowMapper = workflowMapper;
         this.workflowStateMapper = workflowStateMapper;
         this.workflowTransitionMapper = workflowTransitionMapper;
@@ -328,5 +336,158 @@ public class WorkflowService {
         return workflowRepository.findGlobalWorkflowsNotLinkedToTeam(teamId).stream()
                 .map(workflowMapper::toDto)
                 .toList();
+    }
+
+    @Transactional
+    public WorkflowDetailedDTO createWorkflowByReference(
+            Long teamId, Long referencedWorkflowId, WorkflowDTO workflowDTO) {
+        // Fetch the referenced workflow
+        Workflow referencedWorkflow =
+                workflowRepository
+                        .findById(referencedWorkflowId)
+                        .orElseThrow(
+                                () ->
+                                        new EntityNotFoundException(
+                                                "Referenced workflow not found with id: "
+                                                        + referencedWorkflowId));
+
+        // Validate that the referenced workflow is either PUBLIC or TEAM visibility
+        if (!referencedWorkflow.getVisibility().equals(WorkflowVisibility.PUBLIC)
+                && !referencedWorkflow.getVisibility().equals(WorkflowVisibility.TEAM)) {
+            throw new IllegalStateException("Only PUBLIC or TEAM workflows can be referenced.");
+        }
+
+        // Create the new workflow
+        Workflow newWorkflow = new Workflow();
+        newWorkflow.setName(workflowDTO.getName());
+        newWorkflow.setRequestName(workflowDTO.getRequestName());
+        newWorkflow.setDescription(workflowDTO.getDescription());
+        newWorkflow.setOwner(Team.builder().id(teamId).build());
+        newWorkflow.setVisibility(
+                WorkflowVisibility.PRIVATE); // New workflows default to PRIVATE visibility
+        newWorkflow.setParentWorkflow(Workflow.builder().id(referencedWorkflow.getId()).build());
+        newWorkflow.setClonedFromGlobal(false); // It's a reference, not a clone
+        newWorkflow.setLevel1EscalationTimeout(referencedWorkflow.getLevel1EscalationTimeout());
+        newWorkflow.setLevel2EscalationTimeout(referencedWorkflow.getLevel2EscalationTimeout());
+        newWorkflow.setLevel3EscalationTimeout(referencedWorkflow.getLevel3EscalationTimeout());
+        workflowRepository.save(newWorkflow);
+
+        // Link the new workflow with the team in fw_team_workflow_selection
+        TeamWorkflowSelection teamWorkflowSelection = new TeamWorkflowSelection();
+        teamWorkflowSelection.setTeam(Team.builder().id(teamId).build());
+        teamWorkflowSelection.setWorkflow(Workflow.builder().id(newWorkflow.getId()).build());
+        teamWorkflowSelectionRepository.save(teamWorkflowSelection);
+
+        // Fetch states and transitions of the referenced workflow
+        List<WorkflowState> referencedStates =
+                workflowStateRepository.findByWorkflowId(referencedWorkflow.getId());
+        List<WorkflowTransition> referencedTransitions =
+                workflowTransitionRepository.findByWorkflowId(referencedWorkflow.getId());
+
+        // Map the referenced workflow to WorkflowDetailedDTO
+        WorkflowDetailedDTO result = workflowMapper.toDetailedDto(newWorkflow);
+        result.setStates(referencedStates.stream().map(workflowStateMapper::toDto).toList());
+        result.setTransitions(
+                referencedTransitions.stream().map(workflowTransitionMapper::toDto).toList());
+
+        return result;
+    }
+
+    @Transactional
+    public WorkflowDetailedDTO createWorkflowByCloning(
+            Long teamId, Long workflowToCloneId, WorkflowDTO workflowDTO) {
+        // Fetch the workflow to be cloned
+        Workflow workflowToClone =
+                workflowRepository
+                        .findById(workflowToCloneId)
+                        .orElseThrow(
+                                () ->
+                                        new EntityNotFoundException(
+                                                "Workflow to clone not found with id: "
+                                                        + workflowToCloneId));
+
+        // Validate that the workflow to clone is either PUBLIC or TEAM visibility
+        if (!workflowToClone.getVisibility().equals(WorkflowVisibility.PUBLIC)
+                && !workflowToClone.getVisibility().equals(WorkflowVisibility.TEAM)) {
+            throw new IllegalStateException("Only PUBLIC or TEAM workflows can be cloned.");
+        }
+
+        // Step 1: Create the new workflow
+        Workflow newWorkflow = new Workflow();
+        newWorkflow.setName(workflowDTO.getName());
+        newWorkflow.setRequestName(workflowDTO.getRequestName());
+        newWorkflow.setDescription(workflowDTO.getDescription());
+        newWorkflow.setOwner(Team.builder().id(teamId).build());
+        newWorkflow.setVisibility(
+                WorkflowVisibility.PRIVATE); // Cloned workflows default to PRIVATE visibility
+        newWorkflow.setParentWorkflow(
+                Workflow.builder()
+                        .id(workflowToClone.getId())
+                        .build()); // Reference the parent workflow
+        newWorkflow.setClonedFromGlobal(true); // Mark as cloned
+        newWorkflow.setLevel1EscalationTimeout(workflowToClone.getLevel1EscalationTimeout());
+        newWorkflow.setLevel2EscalationTimeout(workflowToClone.getLevel2EscalationTimeout());
+        newWorkflow.setLevel3EscalationTimeout(workflowToClone.getLevel3EscalationTimeout());
+        workflowRepository.save(newWorkflow);
+
+        // Link the new workflow with the team in fw_team_workflow_selection
+        TeamWorkflowSelection teamWorkflowSelection = new TeamWorkflowSelection();
+        teamWorkflowSelection.setTeam(Team.builder().id(teamId).build());
+        teamWorkflowSelection.setWorkflow(Workflow.builder().id(newWorkflow.getId()).build());
+        teamWorkflowSelectionRepository.save(teamWorkflowSelection);
+
+        // Step 2: Clone the states
+        List<WorkflowState> statesToClone =
+                workflowStateRepository.findByWorkflowId(workflowToClone.getId());
+        Map<Long, WorkflowState> clonedStatesMap = new HashMap<>();
+        for (WorkflowState state : statesToClone) {
+            WorkflowState clonedState = new WorkflowState();
+            clonedState.setWorkflow(newWorkflow);
+            clonedState.setStateName(state.getStateName());
+            clonedState.setIsInitial(state.getIsInitial());
+            clonedState.setIsFinal(state.getIsFinal());
+            workflowStateRepository.save(clonedState);
+            clonedStatesMap.put(state.getId(), clonedState); // Map old state ID to new state
+        }
+
+        // Step 3: Clone the transitions
+        List<WorkflowTransition> transitionsToClone =
+                workflowTransitionRepository.findByWorkflowId(workflowToClone.getId());
+        for (WorkflowTransition transition : transitionsToClone) {
+            WorkflowTransition clonedTransition = new WorkflowTransition();
+            clonedTransition.setWorkflow(newWorkflow);
+            clonedTransition.setSourceState(
+                    clonedStatesMap.get(transition.getSourceState().getId()));
+            clonedTransition.setTargetState(
+                    clonedStatesMap.get(transition.getTargetState().getId()));
+            clonedTransition.setEventName(transition.getEventName());
+            clonedTransition.setSlaDuration(transition.getSlaDuration());
+            clonedTransition.setEscalateOnViolation(transition.isEscalateOnViolation());
+            workflowTransitionRepository.save(clonedTransition);
+        }
+
+        // Step 4: Map the cloned workflow to WorkflowDetailedDTO
+        WorkflowDetailedDTO clonedWorkflow = workflowMapper.toDetailedDto(newWorkflow);
+        clonedWorkflow.setStates(
+                clonedStatesMap.values().stream().map(workflowStateMapper::toDto).toList());
+        clonedWorkflow.setTransitions(
+                transitionsToClone.stream()
+                        .map(
+                                transition -> {
+                                    WorkflowTransitionDTO dto =
+                                            workflowTransitionMapper.toDto(transition);
+                                    dto.setSourceStateId(
+                                            clonedStatesMap
+                                                    .get(transition.getSourceState().getId())
+                                                    .getId());
+                                    dto.setTargetStateId(
+                                            clonedStatesMap
+                                                    .get(transition.getTargetState().getId())
+                                                    .getId());
+                                    return dto;
+                                })
+                        .toList());
+
+        return clonedWorkflow;
     }
 }

@@ -95,7 +95,11 @@ public class SecurityConfiguration {
                                         .requestMatchers(mvc.pattern("/management/prometheus"))
                                         .permitAll()
                                         .requestMatchers(mvc.pattern("/management/**"))
-                                        .hasAuthority(AuthoritiesConstants.ADMIN))
+                                        .hasAuthority(
+                                                AuthoritiesConstants.ADMIN)) // Enforces ROLE_ADMIN
+                .httpBasic(withDefaults()) // Enable Basic Authentication
+                .oauth2ResourceServer(
+                        oauth2 -> oauth2.jwt(withDefaults())) // Enable OAuth2 Resource Server
                 .sessionManagement(
                         session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .exceptionHandling(
@@ -103,8 +107,7 @@ public class SecurityConfiguration {
                                 exceptions
                                         .authenticationEntryPoint(
                                                 new BearerTokenAuthenticationEntryPoint())
-                                        .accessDeniedHandler(new BearerTokenAccessDeniedHandler()))
-                .oauth2ResourceServer(oauth2 -> oauth2.jwt(withDefaults()));
+                                        .accessDeniedHandler(new BearerTokenAccessDeniedHandler()));
         return http.build();
     }
 

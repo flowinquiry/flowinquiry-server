@@ -4,13 +4,13 @@
 # http://docs.spring.io/spring-boot/docs/current/reference/html/common-application-properties.html
 # ===================================================================
 
+
 logging:
+  structured.format.console: logstash
   level:
-    ROOT: DEBUG
-    org.hibernate.SQL: DEBUG
-    org.hibernate.type.descriptor.sql.BasicBinder: TRACE
-    org.hibernate.loader.plan.exe: DEBUG
-    org.hibernate.loader.plan.collection: DEBUG
+    ROOT: WARN
+    sql: DEBUG # built-in group sql include org.springframework.jdbc.core, org.hibernate.SQL
+    io.undertow: ERROR
     io.flexwork: DEBUG
 
 spring:

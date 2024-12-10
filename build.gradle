@@ -2,9 +2,9 @@ plugins {
     id "base"
     id "idea"
     id "com.gorylenko.gradle-git-properties"
+    id "com.github.ben-manes.versions" version "0.51.0"
 }
 
-version = "0.0.1-SNAPSHOT"
 description = "The flexible configurable crm service"
 
 assert System.properties["java.specification.version"] == "21" || "22" || "23"

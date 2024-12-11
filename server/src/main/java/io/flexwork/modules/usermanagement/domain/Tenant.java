@@ -17,8 +17,7 @@ import lombok.*;
 @AllArgsConstructor
 public class Tenant extends AbstractAuditingEntity<Long> implements Serializable {
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "sequenceGenerator")
-    @SequenceGenerator(name = "sequenceGenerator")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Size(max = 256)

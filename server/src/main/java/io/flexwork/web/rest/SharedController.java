@@ -5,7 +5,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.TimeZone;
 import java.util.concurrent.TimeUnit;
-import org.jetbrains.annotations.NotNull;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -45,7 +44,7 @@ public class SharedController {
 
     public record ZoneInfo(String zoneId, String offset) implements Comparable<ZoneInfo> {
         @Override
-        public int compareTo(@NotNull ZoneInfo o) {
+        public int compareTo(ZoneInfo o) {
             return this.offset.compareTo(o.offset);
         }
     }

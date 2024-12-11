@@ -100,7 +100,7 @@ public class WorkflowController {
      */
     @GetMapping("/teams/{teamId}/global-workflows-not-linked-yet")
     public ResponseEntity<List<WorkflowDTO>> getGlobalWorkflowsNotLinkedToTeam(
-            @RequestParam Long teamId) {
+            @PathVariable Long teamId) {
         List<WorkflowDTO> workflows = workflowService.listGlobalWorkflowsNotLinkedToTeam(teamId);
         return ResponseEntity.ok(workflows);
     }
@@ -156,10 +156,10 @@ public class WorkflowController {
         return ResponseEntity.ok(updatedWorkflow);
     }
 
-    @PostMapping("/create-workflow-reference")
+    @PostMapping("/{referencedWorkflowId}/teams/{teamId}/create-workflow-reference")
     public ResponseEntity<WorkflowDetailedDTO> createWorkflowByReference(
             @PathVariable Long teamId,
-            @RequestParam Long referencedWorkflowId,
+            @PathVariable Long referencedWorkflowId,
             @RequestBody WorkflowDTO workflowDTO) {
         WorkflowDetailedDTO createdWorkflow =
                 workflowService.createWorkflowByReference(
@@ -167,10 +167,10 @@ public class WorkflowController {
         return ResponseEntity.status(HttpStatus.CREATED).body(createdWorkflow);
     }
 
-    @PostMapping("/create-workflow-clone")
+    @PostMapping("/{workflowToCloneId}/teams/{teamId}/create-workflow-clone")
     public ResponseEntity<WorkflowDetailedDTO> createWorkflowByCloning(
             @PathVariable Long teamId,
-            @RequestParam Long workflowToCloneId,
+            @PathVariable Long workflowToCloneId,
             @RequestBody WorkflowDTO workflowDTO) {
         WorkflowDetailedDTO clonedWorkflow =
                 workflowService.createWorkflowByCloning(teamId, workflowToCloneId, workflowDTO);

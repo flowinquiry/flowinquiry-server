@@ -40,47 +40,6 @@
 		resource="org/springframework/boot/logging/logback/console-appender.xml" />
 
 
-	<logger name="io.flexwork" level="INFO" />
-	<logger name="angus.activation" level="WARN" />
-	<logger name="jakarta.activation" level="WARN" />
-	<logger name="jakarta.json" level="WARN" />
-	<logger name="jakarta.mail" level="WARN" />
-	<logger name="jakarta.management.remote" level="WARN" />
-	<logger name="jakarta.xml.bind" level="WARN" />
-	<logger name="jdk.event.security" level="INFO" />
-	<logger name="com.sun" level="WARN" />
-	<logger name="com.zaxxer" level="WARN" />
-	<logger name="io.undertow" level="WARN" />
-	<logger name="io.undertow.websockets.jsr" level="ERROR" />
-	<logger name="org.apache" level="WARN" />
-	<logger name="org.apache.catalina.startup.DigesterFactory"
-		level="OFF" />
-	<logger name="org.bson" level="WARN" />
-
-	<logger name="org.hibernate" level="WARN" />
-	<logger name="org.hibernate.SQL" level="WARN" />
-
-	<logger name="org.postgresql" level="WARN" />
-	<logger name="org.springframework" level="WARN" />
-	<logger name="org.springframework.web" level="WARN" />
-	<logger name="org.springframework.security" level="INFO" />
-	<logger name="org.springframework.boot.autoconfigure.logging"
-		level="INFO" />
-	<logger name="org.springframework.cache" level="WARN" />
-	<logger name="org.thymeleaf" level="WARN" />
-	<logger name="org.xnio" level="WARN" />
-	<logger name="io.swagger.v3" level="INFO" />
-	<logger name="sun.rmi" level="WARN" />
-	<logger name="sun.rmi.transport" level="WARN" />
-	<logger name="javax.management.remote.rmi" level="WARN" />
-
-	<logger name="Validator" level="INFO" />
-	<logger
-		name="_org.springframework.web.servlet.HandlerMapping.Mappings"
-		level="INFO" />
-	<logger name="liquibase" level="WARN" />
-	<logger name="LiquibaseSchemaResolver" level="INFO" />
-
 	<springProperty name="log.level"
 		source="logging.level.root" defaultValue="INFO" />
 

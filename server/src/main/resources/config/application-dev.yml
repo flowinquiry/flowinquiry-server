@@ -6,7 +6,6 @@
 
 
 logging:
-  structured.format.console: logstash
   level:
     ROOT: WARN
     sql: DEBUG # built-in group sql include org.springframework.jdbc.core, org.hibernate.SQL

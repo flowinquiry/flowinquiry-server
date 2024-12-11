@@ -9,7 +9,7 @@
 		<!--Stores metadata about each workflow, allowing different workflows to 
 			be defined and customized by customers. -->
 		<createTable tableName="fw_workflow">
-			<column name="id" type="BIGINT" autoIncrement="true">
+			<column name="id" type="BIGSERIAL" autoIncrement="true">
 				<constraints primaryKey="true" nullable="false" />
 			</column>
 			<column name="name" type="VARCHAR(255)">
@@ -93,7 +93,7 @@
 			constraintName="fk_workflow_last_modified_by_user" />
 
 		<createTable tableName="fw_team_workflow_selection">
-			<column name="id" type="BIGINT" autoIncrement="true">
+			<column name="id" type="BIGSERIAL" autoIncrement="true">
 				<constraints primaryKey="true" nullable="false" />
 			</column>
 			<column name="team_id" type="BIGINT">
@@ -117,7 +117,7 @@
 
 
 		<createTable tableName="fw_workflow_state">
-			<column name="id" type="BIGINT" autoIncrement="true">
+			<column name="id" type="BIGSERIAL" autoIncrement="true">
 				<constraints primaryKey="true" nullable="false" />
 			</column>
 			<column name="workflow_id" type="BIGINT">
@@ -138,7 +138,7 @@
 		<!--This table stores each customer request associated with a team, linking 
 			the request to a specific workflow and tracking the current state. -->
 		<createTable tableName="fw_team_request">
-			<column name="id" type="BIGINT" autoIncrement="true">
+			<column name="id" type="BIGSERIAL" autoIncrement="true">
 				<constraints primaryKey="true" nullable="false" />
 			</column>
 			<column name="team_id" type="BIGINT">
@@ -218,7 +218,7 @@
 			the event name that triggers each transition, along with the SLA duration 
 			for each transition. -->
 		<createTable tableName="fw_workflow_transition">
-			<column name="id" type="BIGINT" autoIncrement="true">
+			<column name="id" type="BIGSERIAL" autoIncrement="true">
 				<constraints primaryKey="true" nullable="false" />
 			</column>
 			<column name="workflow_id" type="BIGINT">
@@ -260,7 +260,7 @@
 		<!--Specifies actions to be taken when a transition is triggered, allowing 
 			for dynamic escalation actions, notifications, or custom business logic. -->
 		<createTable tableName="fw_workflow_actions">
-			<column name="id" type="BIGINT" autoIncrement="true">
+			<column name="id" type="BIGSERIAL" autoIncrement="true">
 				<constraints primaryKey="true" nullable="false" />
 			</column>
 			<column name="transition_id" type="BIGINT">
@@ -280,7 +280,7 @@
 		<!--Tracks the history of each request as it progresses through its workflow, 
 			including timestamps, status, and SLA due dates. -->
 		<createTable tableName="fw_workflow_transition_history">
-			<column name="id" type="BIGINT" autoIncrement="true">
+			<column name="id" type="BIGSERIAL" autoIncrement="true">
 				<constraints primaryKey="true" nullable="false" />
 			</column>
 			<column name="team_request_id" type="BIGINT">
@@ -325,7 +325,7 @@
 
 
 		<createTable tableName="fw_escalation_tracking">
-			<column name="id" type="BIGINT" autoIncrement="true">
+			<column name="id" type="BIGSERIAL" autoIncrement="true">
 				<constraints primaryKey="true" nullable="false" />
 			</column>
 			<column name="team_request_id" type="BIGINT">
@@ -361,6 +361,8 @@
 			<column name="description" type="string" />
 			<column name="owner_id" type="numeric" />
 		</loadData>
+		<sql>SELECT setval('fw_workflow_id_seq', (SELECT MAX(id) FROM
+			fw_workflow));</sql>
 	</changeSet>
 	<changeSet author="flexapp"
 		id="001:02-insert-workflow-state-data">
@@ -374,6 +376,8 @@
 			<column name="is_initial" type="boolean" />
 			<column name="is_final" type="boolean" />
 		</loadData>
+		<sql>SELECT setval('fw_workflow_state_id_seq', (SELECT MAX(id) FROM
+			fw_workflow_state));</sql>
 	</changeSet>
 	<changeSet author="flexapp"
 		id="001:03-insert-workflow-transition-data">
@@ -388,6 +392,8 @@
 			<column name="event_name" type="string" />
 			<column name="sla_duration" type="numeric" />
 		</loadData>
+		<sql>SELECT setval('fw_workflow_transition_id_seq', (SELECT MAX(id)
+			FROM fw_workflow_transition));</sql>
 	</changeSet>
 	<changeSet author="flexapp"
 		id="001:04-insert-team-workflow-usage-data">
@@ -399,5 +405,7 @@
 			<column name="workflow_id" type="numeric" />
 			<column name="team_id" type="numeric" />
 		</loadData>
+		<sql>SELECT setval('fw_team_workflow_selection_id_seq', (SELECT
+			MAX(id) FROM fw_team_workflow_selection));</sql>
 	</changeSet>
 </databaseChangeLog>

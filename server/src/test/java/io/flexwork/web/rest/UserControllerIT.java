@@ -326,7 +326,7 @@ class UserControllerIT {
                 });
     }
 
-    private static @NotNull UserDTO getAdminUserDTO(User updatedUser) {
+    private static UserDTO getAdminUserDTO(User updatedUser) {
         UserDTO userDTO = new UserDTO();
         userDTO.setId(updatedUser.getId());
         userDTO.setFirstName(UPDATED_FIRSTNAME);

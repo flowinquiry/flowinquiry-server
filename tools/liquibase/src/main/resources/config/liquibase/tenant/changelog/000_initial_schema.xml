@@ -276,24 +276,8 @@
 			referencedColumnNames="id" />
 	</changeSet>
 
-	<changeSet author="flexapp" id="000:02-table-for-tests">
-		<createTable tableName="fw_date_time_wrapper">
-			<column name="id" type="BIGINT">
-				<constraints primaryKey="true"
-					primaryKeyName="fw_date_time_wrapperPK" />
-			</column>
-			<column name="instant" type="timestamptz" />
-			<column name="local_date_time" type="timestamptz" />
-			<column name="offset_date_time" type="timestamptz" />
-			<column name="zoned_date_time" type="timestamptz" />
-			<column name="local_time" type="time" />
-			<column name="offset_time" type="time" />
-			<column name="local_date" type="date" />
-		</createTable>
-	</changeSet>
-
 	<changeSet author="flexapp"
-		id="000:03-insert-default-authority-data">
+		id="000:03-insert-default-authority-data" runAlways="true">
 		<loadData
 			file="config/liquibase/tenant/data/fw_authority.csv" separator=";"
 			tableName="fw_authority" usePreparedStatements="true">
@@ -301,7 +285,7 @@
 		</loadData>
 	</changeSet>
 	<changeSet author="flexapp"
-		id="000:04-insert-default-user-data">
+		id="000:04-insert-default-user-data" context="dev,test">
 		<loadData file="config/liquibase/tenant/data/fw_user.csv"
 			separator=";" tableName="fw_user" usePreparedStatements="true">
 			<column name="id" type="NUMERIC" />
@@ -332,7 +316,7 @@
 		<sql>SELECT setval('fw_user_id_seq', (SELECT MAX(id) FROM fw_user));</sql>
 	</changeSet>
 	<changeSet author="flexapp"
-		id="000:05-insert-default-user-authority-data">
+		id="000:05-insert-default-user-authority-data" context="dev,test">
 		<loadData
 			file="config/liquibase/tenant/data/fw_user_authority.csv"
 			separator=";" tableName="fw_user_authority"
@@ -353,7 +337,7 @@
 			fw_organization));</sql>
 	</changeSet>
 	<changeSet author="flexapp"
-		id="000:06-insert-default-fw-team-data">
+		id="000:06-insert-default-fw-team-data" context="dev,test">
 		<loadData file="config/liquibase/tenant/data/fw_team.csv"
 			tableName="fw_team" separator=";">
 			<column name="id" type="NUMERIC" />
@@ -366,7 +350,7 @@
 		<sql>SELECT setval('fw_team_id_seq', (SELECT MAX(id) FROM fw_team));</sql>
 	</changeSet>
 	<changeSet author="flexapp"
-		id="000:07-insert-default-fw-team-role">
+		id="000:07-insert-default-fw-team-role" runAlways="true">
 		<loadData
 			file="config/liquibase/tenant/data/fw_team_role.csv"
 			tableName="fw_team_role" separator=";">
@@ -375,7 +359,7 @@
 		</loadData>
 	</changeSet>
 	<changeSet author="flexapp"
-		id="000:08-insert-default-fw-user-team-data">
+		id="000:08-insert-default-fw-user-team-data" context="dev,test">
 		<loadData
 			file="config/liquibase/tenant/data/fw_user_team.csv"
 			tableName="fw_user_team" separator=";">
@@ -385,7 +369,7 @@
 		</loadData>
 	</changeSet>
 	<changeSet author="flexapp"
-		id="000:09-insert-default-fw-resource">
+		id="000:09-insert-default-fw-resource" runAlways="true">
 		<loadData file="config/liquibase/tenant/data/fw_resource.csv"
 			separator=";" tableName="fw_resource" usePreparedStatements="true">
 			<column name="name" type="STRING" />
@@ -393,7 +377,8 @@
 		</loadData>
 	</changeSet>
 	<changeSet author="flexapp"
-		id="000:10-insert-default-fw-authority-resource-permission">
+		id="000:10-insert-default-fw-authority-resource-permission"
+		runAlways="true">
 		<loadData
 			file="config/liquibase/tenant/data/fw_authority_resource_permission.csv"
 			separator=";" tableName="fw_authority_resource_permission"

@@ -58,8 +58,6 @@ public class SecurityConfiguration {
                                         .permitAll()
                                         .requestMatchers(mvc.pattern("/content/**"))
                                         .permitAll()
-                                        .requestMatchers(mvc.pattern("/swagger-ui/**"))
-                                        .permitAll()
                                         .requestMatchers(mvc.pattern(HttpMethod.POST, "/api/login"))
                                         .permitAll()
                                         .requestMatchers(
@@ -84,8 +82,6 @@ public class SecurityConfiguration {
                                         .hasAuthority(AuthoritiesConstants.ADMIN)
                                         .requestMatchers(mvc.pattern("/api/**"))
                                         .authenticated()
-                                        .requestMatchers(mvc.pattern("/v3/api-docs/**"))
-                                        .hasAuthority(AuthoritiesConstants.ADMIN)
                                         .requestMatchers(mvc.pattern("/management/health"))
                                         .permitAll()
                                         .requestMatchers(mvc.pattern("/management/health/**"))

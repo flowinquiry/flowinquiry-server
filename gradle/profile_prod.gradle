@@ -12,11 +12,7 @@ dependencies {
 }
 
 ext {
-    springProfiles = "prod" + springProfiles
-
-    if (project.hasProperty("api-docs")) {
-        springProfiles += ",api-docs"
-    }
+    springProfiles = "prod"
 }
 
 springBoot {

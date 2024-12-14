@@ -72,12 +72,6 @@ public class FlexworkApp implements CommandLineRunner {
                     "You have misconfigured your application! It should not run "
                             + "with both the 'dev' and 'prod' profiles at the same time.");
         }
-        if (activeProfiles.contains(FlexworkProfiles.SPRING_PROFILE_DEVELOPMENT)
-                && activeProfiles.contains(FlexworkProfiles.SPRING_PROFILE_CLOUD)) {
-            LOG.error(
-                    "You have misconfigured your application! It should not "
-                            + "run with both the 'dev' and 'cloud' profiles at the same time.");
-        }
     }
 
     /**

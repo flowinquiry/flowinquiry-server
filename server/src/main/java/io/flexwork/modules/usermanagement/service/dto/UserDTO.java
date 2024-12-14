@@ -62,5 +62,7 @@ public class UserDTO implements Serializable {
 
     private String resetKey;
 
-    private Instant resetDate = null;
+    private Instant resetDate;
+
+    private String activationKey;
 }

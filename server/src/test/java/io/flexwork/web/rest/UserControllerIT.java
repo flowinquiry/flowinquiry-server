@@ -299,7 +299,7 @@ class UserControllerIT {
 
         restUserMockMvc
                 .perform(
-                        multipart("/api/admin/users")
+                        multipart("/api/users")
                                 .file(userDTOFile)
                                 .contentType(MediaType.MULTIPART_FORM_DATA_VALUE)
                                 .with(
@@ -378,7 +378,7 @@ class UserControllerIT {
 
         restUserMockMvc
                 .perform(
-                        multipart("/api/admin/users")
+                        multipart("/api/users")
                                 .file(userDTOFile)
                                 .contentType(MediaType.MULTIPART_FORM_DATA_VALUE)
                                 .with(
@@ -448,7 +448,7 @@ class UserControllerIT {
 
         restUserMockMvc
                 .perform(
-                        multipart("/api/admin/users")
+                        multipart("/api/users")
                                 .file(userDTOFile)
                                 .contentType(MediaType.MULTIPART_FORM_DATA_VALUE)
                                 .with(

@@ -23,6 +23,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
+import org.jclouds.rest.ResourceNotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -90,7 +91,7 @@ public class UserService {
                         });
     }
 
-    public Optional<User> requestPasswordReset(String mail) {
+    public Optional<UserDTO> requestPasswordReset(String mail) {
         return userRepository
                 .findOneByEmailIgnoreCase(mail)
                 .filter(User::isActivated)
@@ -99,7 +100,8 @@ public class UserService {
                             user.setResetKey(RandomUtil.generateResetKey());
                             user.setResetDate(Instant.now());
                             return user;
-                        });
+                        })
+                .map(userMapper::toDto);
     }
 
     public User registerUser(UserDTO userDTO, String password) {
@@ -199,37 +201,23 @@ public class UserService {
      * @param userDTO user to update.
      * @return updated user.
      */
-    public Optional<User> updateUser(UserDTO userDTO) {
-        return Optional.of(userRepository.findById(userDTO.getId()))
-                .filter(Optional::isPresent)
-                .map(Optional::get)
-                .map(
-                        user -> {
-                            user.setFirstName(userDTO.getFirstName());
-                            user.setLastName(userDTO.getLastName());
-                            if (userDTO.getEmail() != null) {
-                                user.setEmail(userDTO.getEmail().toLowerCase());
-                            }
-                            user.setImageUrl(userDTO.getImageUrl());
-                            user.setActivated(userDTO.isActivated());
-                            user.setLangKey(userDTO.getLangKey());
-                            Set<Authority> managedAuthorities = user.getAuthorities();
-                            if (userDTO.getAuthorities() != null) {
-                                managedAuthorities.clear();
-                                userDTO.getAuthorities().stream()
-                                        .map(
-                                                authorityDTO ->
-                                                        authorityRepository.findById(
-                                                                authorityDTO.getName()))
-                                        .filter(Optional::isPresent)
-                                        .map(Optional::get)
-                                        .forEach(managedAuthorities::add);
-                            }
+    public UserDTO updateUser(UserDTO userDTO) {
+        User existingUser =
+                userRepository
+                        .findById(userDTO.getId())
+                        .orElseThrow(() -> new ResourceNotFoundException("User not found"));
+        userMapper.updateEntity(userDTO, existingUser);
+        Set<Authority> managedAuthorities = existingUser.getAuthorities();
+        if (userDTO.getAuthorities() != null) {
+            managedAuthorities.clear();
+            userDTO.getAuthorities().stream()
+                    .map(authorityDTO -> authorityRepository.findById(authorityDTO.getName()))
+                    .filter(Optional::isPresent)
+                    .map(Optional::get)
+                    .forEach(managedAuthorities::add);
+        }
 
-                            userRepository.save(user);
-                            LOG.debug("Changed Information for User: {}", user);
-                            return user;
-                        });
+        return userMapper.toDto(userRepository.save(existingUser));
     }
 
     public void deleteUserByEmail(String email) {
@@ -305,11 +293,6 @@ public class UserService {
                         ((root, query, criteriaBuilder) ->
                                 criteriaBuilder.isTrue(root.get(User_.ACTIVATED))));
         return userRepository.findAll(spec, pageable).map(userMapper::toDto);
-    }
-
-    @Transactional(readOnly = true)
-    public Optional<User> getUserWithAuthoritiesByEmail(String email) {
-        return userRepository.findOneWithAuthoritiesByEmailIgnoreCase(email);
     }
 
     @Transactional(readOnly = true)

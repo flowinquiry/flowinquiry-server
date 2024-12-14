@@ -59,4 +59,8 @@ public class UserDTO implements Serializable {
     private Long lastModifiedBy;
 
     private Instant modifiedAt;
+
+    private String resetKey;
+
+    private Instant resetDate = null;
 }

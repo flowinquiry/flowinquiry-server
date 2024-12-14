@@ -67,7 +67,9 @@ public class UserAccountController {
         if (isPasswordLengthInvalid(managedUserVM.getPassword())) {
             throw new InvalidPasswordException();
         }
-        User user = userService.registerUser(managedUserVM, managedUserVM.getPassword());
+        UserDTO user =
+                userMapper.toDto(
+                        userService.registerUser(managedUserVM, managedUserVM.getPassword()));
         mailService.sendActivationEmail(user);
     }
 
@@ -115,7 +117,7 @@ public class UserAccountController {
                         .orElseThrow(
                                 () -> new AccountResourceException("Current user login not found"));
         Optional<User> user = userRepository.findOneByEmailIgnoreCase(userLogin);
-        if (!user.isPresent()) {
+        if (user.isEmpty()) {
             throw new AccountResourceException("User could not be found");
         }
         if (!user.get().getEmail().equals(userDTO.getEmail())) {
@@ -151,7 +153,7 @@ public class UserAccountController {
      */
     @GetMapping(path = "/account/reset-password/init")
     public void requestPasswordReset(@RequestParam("email") @Email String email) {
-        Optional<User> user = userService.requestPasswordReset(email);
+        Optional<UserDTO> user = userService.requestPasswordReset(email);
         if (user.isPresent()) {
             mailService.sendPasswordResetMail(user.orElseThrow());
         } else {

@@ -1,8 +1,6 @@
 package io.flexwork.modules.usermanagement.web.rest;
 
-import com.flexwork.platform.utils.Obfuscator;
 import io.flexwork.modules.collab.service.MailService;
-import io.flexwork.modules.fss.service.StorageService;
 import io.flexwork.modules.usermanagement.AuthoritiesConstants;
 import io.flexwork.modules.usermanagement.domain.User;
 import io.flexwork.modules.usermanagement.repository.UserRepository;
@@ -11,7 +9,6 @@ import io.flexwork.modules.usermanagement.service.dto.UserDTO;
 import io.flexwork.modules.usermanagement.service.mapper.UserMapper;
 import io.flexwork.modules.usermanagement.web.rest.errors.BadRequestAlertException;
 import io.flexwork.modules.usermanagement.web.rest.errors.EmailAlreadyUsedException;
-import io.flexwork.modules.usermanagement.web.rest.errors.LoginAlreadyUsedException;
 import io.flexwork.query.QueryDTO;
 import io.flexwork.security.Constants;
 import jakarta.validation.Valid;
@@ -28,23 +25,17 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import tech.jhipster.web.util.HeaderUtil;
 import tech.jhipster.web.util.PaginationUtil;
-import tech.jhipster.web.util.ResponseUtil;
 
 /**
  * REST controller for managing users.
@@ -98,23 +89,19 @@ public class UserController {
 
     private final UserRepository userRepository;
 
-    private UserMapper userMapper;
+    private final UserMapper userMapper;
 
     private final MailService mailService;
-
-    private final StorageService storageService;
 
     public UserController(
             UserService userService,
             UserRepository userRepository,
             UserMapper userMapper,
-            MailService mailService,
-            StorageService storageService) {
+            MailService mailService) {
         this.userService = userService;
         this.userRepository = userRepository;
         this.userMapper = userMapper;
         this.mailService = mailService;
-        this.storageService = storageService;
     }
 
     /**
@@ -132,7 +119,7 @@ public class UserController {
      */
     @PostMapping("/users")
     @PreAuthorize("hasAuthority(\"" + AuthoritiesConstants.ADMIN + "\")")
-    public ResponseEntity<User> createUser(@Valid @RequestBody UserDTO userDTO)
+    public ResponseEntity<UserDTO> createUser(@Valid @RequestBody UserDTO userDTO)
             throws URISyntaxException {
         LOG.debug("REST request to save User : {}", userDTO);
 
@@ -143,7 +130,7 @@ public class UserController {
         } else if (userRepository.findOneByEmailIgnoreCase(userDTO.getEmail()).isPresent()) {
             throw new EmailAlreadyUsedException();
         } else {
-            User newUser = userService.createUser(userDTO);
+            UserDTO newUser = userMapper.toDto(userService.createUser(userDTO));
             mailService.sendCreationEmail(newUser);
             return ResponseEntity.created(new URI("/api/admin/users/" + newUser.getEmail()))
                     .headers(
@@ -151,52 +138,6 @@ public class UserController {
                                     applicationName, "userManagement.created", newUser.getEmail()))
                     .body(newUser);
         }
-    }
-
-    /**
-     * {@code PUT /users} : Updates an existing User.
-     *
-     * @param userDTO the user to update.
-     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the updated
-     *     user.
-     * @throws EmailAlreadyUsedException {@code 400 (Bad Request)} if the email is already in use.
-     * @throws LoginAlreadyUsedException {@code 400 (Bad Request)} if the email is already in use.
-     */
-    @PutMapping(
-            value = {"/users"},
-            consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<UserDTO> updateUser(
-            @RequestPart("userDTO") UserDTO userDTO,
-            @RequestParam(value = "file", required = false) MultipartFile avatarFile)
-            throws Exception {
-        LOG.debug("REST request to update User : {}", userDTO);
-        Optional<User> existingUser = userRepository.findOneByEmailIgnoreCase(userDTO.getEmail());
-        if (existingUser.isPresent()
-                && (!existingUser.orElseThrow().getId().equals(userDTO.getId()))) {
-            throw new EmailAlreadyUsedException();
-        }
-        existingUser = userRepository.findOneByEmailIgnoreCase(userDTO.getEmail().toLowerCase());
-        if (existingUser.isPresent()
-                && (!existingUser.orElseThrow().getId().equals(userDTO.getId()))) {
-            throw new LoginAlreadyUsedException();
-        }
-
-        // Handle the avatar file upload, if present
-        if (avatarFile != null && !avatarFile.isEmpty()) {
-            String avatarPath =
-                    storageService.uploadImage(
-                            "avatar",
-                            Obfuscator.obfuscate(userDTO.getId()),
-                            avatarFile.getInputStream());
-            userDTO.setImageUrl(avatarPath);
-        }
-
-        Optional<UserDTO> updatedUser = userService.updateUser(userDTO).map(userMapper::toDto);
-
-        return ResponseUtil.wrapOrNotFound(
-                updatedUser,
-                HeaderUtil.createAlert(
-                        applicationName, "userManagement.updated", userDTO.getEmail()));
     }
 
     /**

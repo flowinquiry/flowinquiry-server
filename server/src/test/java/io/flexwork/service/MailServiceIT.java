@@ -12,7 +12,7 @@ import static org.mockito.Mockito.when;
 import io.flexwork.IntegrationTest;
 import io.flexwork.config.FlexworkProperties;
 import io.flexwork.modules.collab.service.MailService;
-import io.flexwork.modules.usermanagement.domain.User;
+import io.flexwork.modules.usermanagement.service.dto.UserDTO;
 import io.flexwork.security.Constants;
 import jakarta.mail.Multipart;
 import jakarta.mail.Session;
@@ -126,7 +126,7 @@ class MailServiceIT {
 
     @Test
     void testSendEmailFromTemplate() throws Exception {
-        User user = new User();
+        UserDTO user = new UserDTO();
         user.setLangKey(Constants.DEFAULT_LANGUAGE);
         user.setEmail("john.doe@example.com");
         mailService.sendEmailFromTemplate(user, "mail/testEmail", "email.test.title");
@@ -143,7 +143,7 @@ class MailServiceIT {
 
     @Test
     void testSendActivationEmail() throws Exception {
-        User user = new User();
+        UserDTO user = new UserDTO();
         user.setLangKey(Constants.DEFAULT_LANGUAGE);
         user.setEmail("john.doe@example.com");
         mailService.sendActivationEmail(user);
@@ -157,7 +157,7 @@ class MailServiceIT {
 
     @Test
     void testCreationEmail() throws Exception {
-        User user = new User();
+        UserDTO user = new UserDTO();
         user.setLangKey(Constants.DEFAULT_LANGUAGE);
         user.setEmail("john.doe@example.com");
         mailService.sendCreationEmail(user);
@@ -171,7 +171,7 @@ class MailServiceIT {
 
     @Test
     void testSendPasswordResetMail() throws Exception {
-        User user = new User();
+        UserDTO user = new UserDTO();
         user.setLangKey(Constants.DEFAULT_LANGUAGE);
         user.setEmail("john.doe@example.com");
         mailService.sendPasswordResetMail(user);
@@ -196,7 +196,7 @@ class MailServiceIT {
 
     @Test
     void testSendLocalizedEmailForAllSupportedLanguages() throws Exception {
-        User user = new User();
+        UserDTO user = new UserDTO();
         user.setEmail("john.doe@example.com");
         for (String langKey : languages) {
             user.setLangKey(langKey);

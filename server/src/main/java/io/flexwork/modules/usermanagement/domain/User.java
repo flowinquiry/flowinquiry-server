@@ -16,6 +16,7 @@ import java.time.ZoneOffset;
 import java.util.HashSet;
 import java.util.Set;
 import lombok.*;
+import org.hibernate.annotations.BatchSize;
 
 /** A user. */
 @Entity
@@ -113,6 +114,7 @@ public class User extends AbstractAuditingEntity<Long> implements Serializable {
     @JsonIgnore
     @EqualsAndHashCode.Exclude
     @ManyToMany
+    @BatchSize(size = 20)
     @JoinTable(
             name = "fw_user_team",
             joinColumns = @JoinColumn(name = "user_id"),
@@ -122,6 +124,7 @@ public class User extends AbstractAuditingEntity<Long> implements Serializable {
     @JsonIgnore
     @EqualsAndHashCode.Exclude
     @ManyToMany
+    @BatchSize(size = 20)
     @JoinTable(
             name = "fw_user_authority",
             joinColumns = {@JoinColumn(name = "user_id", referencedColumnName = "id")},
@@ -131,6 +134,7 @@ public class User extends AbstractAuditingEntity<Long> implements Serializable {
     private Set<Authority> authorities = new HashSet<>();
 
     @EqualsAndHashCode.Exclude
+    @BatchSize(size = 20)
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<UserTeam> userTeams = new HashSet<>();
 

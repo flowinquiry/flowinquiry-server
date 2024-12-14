@@ -8,6 +8,7 @@ import io.flexwork.modules.usermanagement.domain.User;
 import io.flexwork.modules.usermanagement.repository.UserRepository;
 import io.flexwork.modules.usermanagement.service.UserService;
 import io.flexwork.modules.usermanagement.service.dto.ResourcePermissionDTO;
+import io.flexwork.modules.usermanagement.service.dto.UserDTO;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
@@ -83,7 +84,7 @@ class UserServiceIT {
     @Transactional
     void assertThatUserMustExistToResetPassword() {
         userRepository.saveAndFlush(user);
-        Optional<User> maybeUser = userService.requestPasswordReset("invalid.login@localhost");
+        Optional<UserDTO> maybeUser = userService.requestPasswordReset("invalid.login@localhost");
         assertThat(maybeUser).isNotPresent();
 
         maybeUser = userService.requestPasswordReset(user.getEmail());
@@ -99,7 +100,7 @@ class UserServiceIT {
         user.setActivated(false);
         userRepository.saveAndFlush(user);
 
-        Optional<User> maybeUser = userService.requestPasswordReset(user.getEmail());
+        Optional<UserDTO> maybeUser = userService.requestPasswordReset(user.getEmail());
         assertThat(maybeUser).isNotPresent();
         userRepository.delete(user);
     }

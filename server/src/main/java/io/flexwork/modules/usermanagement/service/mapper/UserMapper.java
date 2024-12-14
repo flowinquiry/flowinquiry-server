@@ -3,9 +3,7 @@ package io.flexwork.modules.usermanagement.service.mapper;
 import io.flexwork.modules.usermanagement.domain.User;
 import io.flexwork.modules.usermanagement.service.dto.UserDTO;
 import java.util.List;
-import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
-import org.mapstruct.Named;
+import org.mapstruct.*;
 
 @Mapper(componentModel = "spring")
 public interface UserMapper {
@@ -14,6 +12,9 @@ public interface UserMapper {
     @Mapping(source = "manager", target = "managerName", qualifiedByName = "mapManagerName")
     @Mapping(target = "managerImageUrl", source = "manager.imageUrl")
     UserDTO toDto(User user);
+
+    @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
+    void updateEntity(UserDTO userDTO, @MappingTarget User user);
 
     User toEntity(UserDTO userDTO);
 

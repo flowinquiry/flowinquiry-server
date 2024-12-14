@@ -1,7 +1,7 @@
 package io.flexwork.modules.collab.service;
 
 import io.flexwork.config.FlexworkProperties;
-import io.flexwork.modules.usermanagement.domain.User;
+import io.flexwork.modules.usermanagement.service.dto.UserDTO;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import java.nio.charset.StandardCharsets;
@@ -87,7 +87,7 @@ public class MailService {
     }
 
     @Async
-    public void sendEmailFromTemplate(User user, String templateName, String titleKey) {
+    public void sendEmailFromTemplate(UserDTO user, String templateName, String titleKey) {
         if (user.getEmail() == null) {
             LOG.debug("Email doesn't exist for user '{}'", user);
             return;
@@ -103,19 +103,19 @@ public class MailService {
     }
 
     @Async
-    public void sendActivationEmail(User user) {
+    public void sendActivationEmail(UserDTO user) {
         LOG.debug("Sending activation email to '{}'", user.getEmail());
         this.sendEmailFromTemplate(user, "mail/activationEmail", "email.activation.title");
     }
 
     @Async
-    public void sendCreationEmail(User user) {
+    public void sendCreationEmail(UserDTO user) {
         LOG.debug("Sending creation email to '{}'", user.getEmail());
         this.sendEmailFromTemplate(user, "mail/creationEmail", "email.activation.title");
     }
 
     @Async
-    public void sendPasswordResetMail(User user) {
+    public void sendPasswordResetMail(UserDTO user) {
         LOG.debug("Sending password reset email to '{}'", user.getEmail());
         this.sendEmailFromTemplate(user, "mail/passwordResetEmail", "email.reset.title");
     }

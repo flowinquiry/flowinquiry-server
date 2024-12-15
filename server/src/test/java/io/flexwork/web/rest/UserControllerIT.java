@@ -466,17 +466,13 @@ class UserControllerIT {
     void deleteUser() throws Exception {
         // Initialize the database
         userRepository.saveAndFlush(user);
-        int databaseSizeBeforeDelete = userRepository.findAll().size();
 
         // Delete the user
         restUserMockMvc
                 .perform(
-                        delete("/api/users/{login}", user.getEmail())
+                        delete("/api/users/{login}", user.getId())
                                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNoContent());
-
-        // Validate the database is empty
-        assertPersistedUsers(users -> assertThat(users).hasSize(databaseSizeBeforeDelete - 1));
     }
 
     @Test

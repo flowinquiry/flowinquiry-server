@@ -80,7 +80,7 @@ public class UserAccountController {
             return;
         }
         UserDTO userDTO = userMapper.toDto(user.get());
-        mailService.sendActivationEmail(userDTO);
+        mailService.sendCreationEmail(userDTO);
     }
 
     /**

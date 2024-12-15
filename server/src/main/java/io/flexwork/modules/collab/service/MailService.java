@@ -53,7 +53,11 @@ public class MailService {
             String to, String subject, String content, boolean isMultipart, boolean isHtml) {
         javaMailSender.ifPresentOrElse(
                 sender -> sendEmailSync(sender, to, subject, content, isMultipart, isHtml),
-                () -> LOG.warn("Mail sending is disabled. Skipping email to '{}'", to));
+                () ->
+                        LOG.warn(
+                                "Mail sending is disabled. Skipping email to '{}' with content {}",
+                                to,
+                                content));
     }
 
     private void sendEmailSync(

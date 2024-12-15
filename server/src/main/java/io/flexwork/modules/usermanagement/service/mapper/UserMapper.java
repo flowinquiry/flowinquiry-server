@@ -51,9 +51,13 @@ public interface UserMapper {
 
     @Named("authorityToStringSet")
     default Set<String> authorityToStringSet(Set<Authority> authorities) {
-        return authorities != null
-                ? authorities.stream().map(Authority::getName).collect(Collectors.toSet())
-                : null;
+        try {
+            return authorities != null
+                    ? authorities.stream().map(Authority::getName).collect(Collectors.toSet())
+                    : null;
+        } catch (Exception e) {
+            return null;
+        }
     }
 
     @Named("stringToAuthoritySet")

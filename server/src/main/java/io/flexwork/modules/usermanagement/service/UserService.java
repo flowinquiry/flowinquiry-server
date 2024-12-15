@@ -163,7 +163,7 @@ public class UserService {
         user.setPassword(encryptedPassword);
         user.setResetKey(RandomUtil.generateResetKey());
         user.setResetDate(Instant.now());
-        user.setStatus(UserStatus.ACTIVE);
+        user.setStatus(UserStatus.PENDING);
 
         // Due to client when construct the authority, it passes the Authority object with the name
         // and descriptiveName have both actual value

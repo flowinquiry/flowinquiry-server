@@ -3,8 +3,6 @@ package io.flexwork.web.rest;
 import static io.flexwork.db.DbConstants.DEFAULT_TENANT;
 import static io.flexwork.db.TenantConstants.HEADER_TENANT_ID;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.hamcrest.Matchers.hasEntry;
-import static org.hamcrest.Matchers.hasItems;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -18,7 +16,6 @@ import io.flexwork.modules.usermanagement.domain.UserStatus;
 import io.flexwork.modules.usermanagement.repository.AuthorityRepository;
 import io.flexwork.modules.usermanagement.repository.UserRepository;
 import io.flexwork.modules.usermanagement.service.UserService;
-import io.flexwork.modules.usermanagement.service.dto.AuthorityDTO;
 import io.flexwork.modules.usermanagement.service.dto.PasswordChangeDTO;
 import io.flexwork.modules.usermanagement.service.dto.UserDTO;
 import io.flexwork.modules.usermanagement.service.mapper.UserMapper;
@@ -27,7 +24,6 @@ import io.flexwork.modules.usermanagement.web.rest.ManagedUserVM;
 import io.flexwork.modules.usermanagement.web.rest.UserAccountController;
 import io.flexwork.security.Constants;
 import java.time.Instant;
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
@@ -109,8 +105,6 @@ class UserAccountControllerIT {
     @Test
     @WithMockUser(TEST_USER_LOGIN_EMAIL)
     void testGetExistingAccount() throws Exception {
-        Set<AuthorityDTO> authorities = new HashSet<>();
-        authorities.add(new AuthorityDTO(AuthoritiesConstants.ADMIN, "Administrator"));
 
         UserDTO user = new UserDTO();
         user.setFirstName("john");
@@ -118,7 +112,7 @@ class UserAccountControllerIT {
         user.setEmail(TEST_USER_LOGIN_EMAIL);
         user.setImageUrl("http://placehold.it/50x50");
         user.setLangKey("en");
-        user.setAuthorities(authorities);
+        user.setAuthorities(Set.of(AuthoritiesConstants.ADMIN));
         userService.createUser(user);
 
         restAccountMockMvc
@@ -133,12 +127,7 @@ class UserAccountControllerIT {
                 .andExpect(jsonPath("$.email").value(TEST_USER_LOGIN_EMAIL))
                 .andExpect(jsonPath("$.imageUrl").value("http://placehold.it/50x50"))
                 .andExpect(jsonPath("$.langKey").value("en"))
-                .andExpect(
-                        jsonPath("$.authorities")
-                                .value(
-                                        hasItems(
-                                                hasEntry("name", "ROLE_ADMIN"),
-                                                hasEntry("descriptiveName", "Administrator"))));
+                .andExpect(jsonPath("$.authorities").value(AuthoritiesConstants.ADMIN));
         userService.deleteUserByEmail(TEST_USER_LOGIN_EMAIL);
     }
 
@@ -162,8 +151,7 @@ class UserAccountControllerIT {
         validUser.setEmail("test-register-valid@example.com");
         validUser.setImageUrl("http://placehold.it/50x50");
         validUser.setLangKey(Constants.DEFAULT_LANGUAGE);
-        validUser.setAuthorities(
-                Collections.singleton(new AuthorityDTO(AuthoritiesConstants.ADMIN, "Admin")));
+        validUser.setAuthorities(Set.of(AuthoritiesConstants.ADMIN));
         assertThat(userRepository.findOneByEmailIgnoreCase("test-register-valid@example.com"))
                 .isEmpty();
 
@@ -192,8 +180,7 @@ class UserAccountControllerIT {
         invalidUser.setStatus(UserStatus.ACTIVE);
         invalidUser.setImageUrl("http://placehold.it/50x50");
         invalidUser.setLangKey(Constants.DEFAULT_LANGUAGE);
-        invalidUser.setAuthorities(
-                Collections.singleton(new AuthorityDTO(AuthoritiesConstants.USER, "User")));
+        invalidUser.setAuthorities(Set.of(AuthoritiesConstants.USER));
 
         restAccountMockMvc
                 .perform(
@@ -257,8 +244,7 @@ class UserAccountControllerIT {
         invalidUser.setStatus(userStatus);
         invalidUser.setImageUrl("http://placehold.it/50x50");
         invalidUser.setLangKey(Constants.DEFAULT_LANGUAGE);
-        invalidUser.setAuthorities(
-                Collections.singleton(new AuthorityDTO(AuthoritiesConstants.USER, "User")));
+        invalidUser.setAuthorities(Set.of(AuthoritiesConstants.USER));
         return invalidUser;
     }
 
@@ -273,8 +259,7 @@ class UserAccountControllerIT {
         firstUser.setEmail("test-register-duplicate-email@example.com");
         firstUser.setImageUrl("http://placehold.it/50x50");
         firstUser.setLangKey(Constants.DEFAULT_LANGUAGE);
-        firstUser.setAuthorities(
-                Collections.singleton(new AuthorityDTO(AuthoritiesConstants.USER, "User")));
+        firstUser.setAuthorities(Set.of(AuthoritiesConstants.USER));
 
         // Register first user
         restAccountMockMvc
@@ -334,8 +319,7 @@ class UserAccountControllerIT {
         validUser.setStatus(UserStatus.ACTIVE);
         validUser.setImageUrl("http://placehold.it/50x50");
         validUser.setLangKey(Constants.DEFAULT_LANGUAGE);
-        validUser.setAuthorities(
-                Collections.singleton(new AuthorityDTO(AuthoritiesConstants.USER)));
+        validUser.setAuthorities(Set.of(AuthoritiesConstants.USER));
 
         restAccountMockMvc
                 .perform(
@@ -407,7 +391,7 @@ class UserAccountControllerIT {
         userDTO.setStatus(UserStatus.PENDING);
         userDTO.setImageUrl("http://placehold.it/50x50");
         userDTO.setLangKey(Constants.DEFAULT_LANGUAGE);
-        userDTO.setAuthorities(Collections.singleton(new AuthorityDTO(AuthoritiesConstants.ADMIN)));
+        userDTO.setAuthorities(Set.of(AuthoritiesConstants.ADMIN));
 
         restAccountMockMvc
                 .perform(
@@ -451,7 +435,7 @@ class UserAccountControllerIT {
         userDTO.setStatus(UserStatus.PENDING);
         userDTO.setImageUrl("http://placehold.it/50x50");
         userDTO.setLangKey(Constants.DEFAULT_LANGUAGE);
-        userDTO.setAuthorities(Collections.singleton(new AuthorityDTO(AuthoritiesConstants.ADMIN)));
+        userDTO.setAuthorities(Set.of(AuthoritiesConstants.ADMIN));
 
         restAccountMockMvc
                 .perform(
@@ -490,7 +474,7 @@ class UserAccountControllerIT {
         userDTO.setStatus(UserStatus.PENDING);
         userDTO.setImageUrl("http://placehold.it/50x50");
         userDTO.setLangKey(Constants.DEFAULT_LANGUAGE);
-        userDTO.setAuthorities(Collections.singleton(new AuthorityDTO(AuthoritiesConstants.ADMIN)));
+        userDTO.setAuthorities(Set.of(AuthoritiesConstants.ADMIN));
 
         restAccountMockMvc
                 .perform(
@@ -521,7 +505,7 @@ class UserAccountControllerIT {
         userDTO.setStatus(UserStatus.PENDING);
         userDTO.setImageUrl("http://placehold.it/50x50");
         userDTO.setLangKey(Constants.DEFAULT_LANGUAGE);
-        userDTO.setAuthorities(Collections.singleton(new AuthorityDTO(AuthoritiesConstants.ADMIN)));
+        userDTO.setAuthorities(Set.of(AuthoritiesConstants.ADMIN));
 
         restAccountMockMvc
                 .perform(
@@ -775,7 +759,7 @@ class UserAccountControllerIT {
     @Transactional
     void testFinishPasswordResetTooSmall() throws Exception {
         User user = new User();
-        user.setPassword(RandomStringUtils.randomAlphanumeric(60));
+        user.setPassword(RandomStringUtils.secure().nextAlphabetic(60));
         user.setEmail("finish-password-reset-too-small@example.com");
         user.setResetDate(Instant.now().plusSeconds(60));
         user.setResetKey("reset key too small");

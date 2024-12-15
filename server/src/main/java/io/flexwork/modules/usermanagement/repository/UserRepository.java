@@ -37,6 +37,8 @@ public interface UserRepository extends JpaRepository<User, Long>, JpaSpecificat
      */
     List<User> findByManagerId(Long managerId);
 
+    Optional<User> findUserByEmailEqualsIgnoreCase(String email);
+
     @Modifying
     @Transactional
     @Query("UPDATE User u SET u.lastLoginTime = :lastLoginTime WHERE u.email = :userEmail")

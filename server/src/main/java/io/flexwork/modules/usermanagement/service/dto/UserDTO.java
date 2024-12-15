@@ -35,7 +35,7 @@ public class UserDTO implements Serializable {
 
     private LocalDateTime lastLoginTime;
 
-    private Set<AuthorityDTO> authorities;
+    private Set<String> authorities;
 
     private Long managerId;
 

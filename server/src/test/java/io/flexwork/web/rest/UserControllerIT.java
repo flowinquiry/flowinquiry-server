@@ -13,12 +13,11 @@ import io.flexwork.modules.usermanagement.domain.User;
 import io.flexwork.modules.usermanagement.domain.UserStatus;
 import io.flexwork.modules.usermanagement.repository.UserRepository;
 import io.flexwork.modules.usermanagement.service.UserService;
-import io.flexwork.modules.usermanagement.service.dto.AuthorityDTO;
 import io.flexwork.modules.usermanagement.service.dto.UserDTO;
 import io.flexwork.modules.usermanagement.service.mapper.UserMapper;
 import jakarta.persistence.EntityManager;
-import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 import java.util.function.Consumer;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.jupiter.api.AfterEach;
@@ -130,8 +129,7 @@ class UserControllerIT {
         userDTO.setStatus(UserStatus.ACTIVE);
         userDTO.setImageUrl(DEFAULT_IMAGEURL);
         userDTO.setLangKey(DEFAULT_LANGKEY);
-        userDTO.setAuthorities(
-                Collections.singleton(new AuthorityDTO(AuthoritiesConstants.USER, "User")));
+        userDTO.setAuthorities(Set.of(AuthoritiesConstants.USER));
 
         var returnedUserDTO =
                 om.readValue(
@@ -169,8 +167,7 @@ class UserControllerIT {
         ;
         userDTO.setImageUrl(DEFAULT_IMAGEURL);
         userDTO.setLangKey(DEFAULT_LANGKEY);
-        userDTO.setAuthorities(
-                Collections.singleton(new AuthorityDTO(AuthoritiesConstants.USER, "User")));
+        userDTO.setAuthorities(Set.of(AuthoritiesConstants.USER));
 
         // An entity with an existing ID cannot be created, so this API call must fail
         restUserMockMvc
@@ -199,8 +196,7 @@ class UserControllerIT {
         ;
         userDTO.setImageUrl(DEFAULT_IMAGEURL);
         userDTO.setLangKey(DEFAULT_LANGKEY);
-        userDTO.setAuthorities(
-                Collections.singleton(new AuthorityDTO(AuthoritiesConstants.USER, "User")));
+        userDTO.setAuthorities(Set.of(AuthoritiesConstants.USER));
 
         // Create the User
         restUserMockMvc
@@ -229,8 +225,7 @@ class UserControllerIT {
         ;
         userDTO.setImageUrl(DEFAULT_IMAGEURL);
         userDTO.setLangKey(DEFAULT_LANGKEY);
-        userDTO.setAuthorities(
-                Collections.singleton(new AuthorityDTO(AuthoritiesConstants.USER, "User")));
+        userDTO.setAuthorities(Set.of(AuthoritiesConstants.USER));
 
         // Create the User
         restUserMockMvc
@@ -340,8 +335,7 @@ class UserControllerIT {
         userDTO.setCreatedAt(updatedUser.getCreatedAt());
         userDTO.setLastModifiedBy(updatedUser.getModifiedBy());
         userDTO.setModifiedAt(updatedUser.getModifiedAt());
-        userDTO.setAuthorities(
-                Collections.singleton(new AuthorityDTO(AuthoritiesConstants.USER, "User")));
+        userDTO.setAuthorities(Set.of(AuthoritiesConstants.USER));
         return userDTO;
     }
 
@@ -367,8 +361,7 @@ class UserControllerIT {
         userDTO.setCreatedAt(updatedUser.getCreatedAt());
         userDTO.setLastModifiedBy(updatedUser.getModifiedBy());
         userDTO.setModifiedAt(updatedUser.getModifiedAt());
-        userDTO.setAuthorities(
-                Collections.singleton(new AuthorityDTO(AuthoritiesConstants.USER, "User")));
+        userDTO.setAuthorities(Set.of(AuthoritiesConstants.USER));
 
         MockMultipartFile userDTOFile =
                 new MockMultipartFile(
@@ -413,7 +406,7 @@ class UserControllerIT {
         userRepository.saveAndFlush(user);
 
         User anotherUser = new User();
-        anotherUser.setPassword(RandomStringUtils.randomAlphanumeric(60));
+        anotherUser.setPassword(RandomStringUtils.secure().nextAlphanumeric(60));
         anotherUser.setStatus(UserStatus.ACTIVE);
         ;
         anotherUser.setEmail(UPDATED_EMAIL);
@@ -438,8 +431,7 @@ class UserControllerIT {
         userDTO.setCreatedAt(updatedUser.getCreatedAt());
         userDTO.setLastModifiedBy(updatedUser.getModifiedBy());
         userDTO.setModifiedAt(updatedUser.getModifiedAt());
-        userDTO.setAuthorities(
-                Collections.singleton(new AuthorityDTO(AuthoritiesConstants.USER, "User")));
+        userDTO.setAuthorities(Set.of(AuthoritiesConstants.USER));
 
         MockMultipartFile userDTOFile =
                 new MockMultipartFile(

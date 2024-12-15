@@ -38,7 +38,7 @@ public class UserAccountController {
 
     private final UserService userService;
 
-    private UserMapper userMapper;
+    private final UserMapper userMapper;
 
     private final MailService mailService;
 
@@ -70,6 +70,17 @@ public class UserAccountController {
                 userMapper.toDto(
                         userService.registerUser(managedUserVM, managedUserVM.getPassword()));
         mailService.sendActivationEmail(user);
+    }
+
+    @GetMapping("/{email}/resend-activation-email")
+    public void resendActivationEmail(@Valid @PathVariable @Email String email) {
+        Optional<User> user = userRepository.findUserByEmailEqualsIgnoreCase(email);
+        if (user.isEmpty()) {
+            log.warn("User with email {} not found", email);
+            return;
+        }
+        UserDTO userDTO = userMapper.toDto(user.get());
+        mailService.sendActivationEmail(userDTO);
     }
 
     /**
@@ -179,7 +190,7 @@ public class UserAccountController {
                 userService.completePasswordReset(
                         keyAndPassword.getNewPassword(), keyAndPassword.getKey());
 
-        if (!user.isPresent()) {
+        if (user.isEmpty()) {
             throw new AccountResourceException("No user was found for this reset key");
         }
     }

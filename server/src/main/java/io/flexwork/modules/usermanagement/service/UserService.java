@@ -172,10 +172,7 @@ public class UserService {
         if (userDTO.getAuthorities() != null) {
             Set<Authority> authorities =
                     userDTO.getAuthorities().stream()
-                            .map(
-                                    authorityDTO ->
-                                            authorityRepository.findByDescriptiveName(
-                                                    authorityDTO.getDescriptiveName()))
+                            .map(authorityRepository::findById)
                             .filter(Optional::isPresent)
                             .map(Optional::get)
                             .collect(Collectors.toSet());
@@ -202,7 +199,7 @@ public class UserService {
         if (userDTO.getAuthorities() != null) {
             managedAuthorities.clear();
             userDTO.getAuthorities().stream()
-                    .map(authorityDTO -> authorityRepository.findById(authorityDTO.getName()))
+                    .map(authorityRepository::findById)
                     .filter(Optional::isPresent)
                     .map(Optional::get)
                     .forEach(managedAuthorities::add);

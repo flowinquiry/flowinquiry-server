@@ -56,7 +56,11 @@
 			<column name="country" type="VARCHAR(100)">
 				<constraints nullable="true" />
 			</column>
-			<column name="activated" type="BOOLEAN" valueBoolean="false">
+			<column name="status" type="VARCHAR(20)"
+				defaultValue="PENDING">
+				<constraints nullable="false" />
+			</column>
+			<column name="is_deleted" type="BOOLEAN" valueBoolean="false">
 				<constraints nullable="false" />
 			</column>
 			<column name="lang_key" type="VARCHAR(10)" />
@@ -299,7 +303,8 @@
 			<column name="role" type="STRING" />
 			<column name="title" type="STRING" />
 			<column name="manager_id" type="NUMERIC" />
-			<column name="activated" type="BOOLEAN" />
+			<column name="status" type="STRING" />
+			<column name="is_deleted" type="BOOLEAN" />
 			<column name="lang_key" type="STRING" />
 			<column name="activation_key" type="STRING" />
 			<column name="reset_key" type="STRING" />

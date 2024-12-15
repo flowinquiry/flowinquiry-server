@@ -5,6 +5,7 @@ import static org.mockito.Mockito.when;
 
 import io.flexwork.IntegrationTest;
 import io.flexwork.modules.usermanagement.domain.User;
+import io.flexwork.modules.usermanagement.domain.UserStatus;
 import io.flexwork.modules.usermanagement.repository.UserRepository;
 import io.flexwork.modules.usermanagement.service.UserService;
 import io.flexwork.modules.usermanagement.service.dto.ResourcePermissionDTO;
@@ -62,7 +63,7 @@ class UserServiceIT {
     public void init() {
         user = new User();
         user.setPassword(RandomStringUtils.randomAlphanumeric(60));
-        user.setActivated(true);
+        user.setStatus(UserStatus.ACTIVE);
         user.setEmail(DEFAULT_EMAIL);
         user.setFirstName(DEFAULT_FIRSTNAME);
         user.setLastName(DEFAULT_LASTNAME);
@@ -97,7 +98,7 @@ class UserServiceIT {
     @Test
     @Transactional
     void assertThatOnlyActivatedUserCanRequestPasswordReset() {
-        user.setActivated(false);
+        user.setStatus(UserStatus.PENDING);
         userRepository.saveAndFlush(user);
 
         Optional<UserDTO> maybeUser = userService.requestPasswordReset(user.getEmail());
@@ -110,7 +111,7 @@ class UserServiceIT {
     void assertThatResetKeyMustNotBeOlderThan24Hours() {
         Instant daysAgo = Instant.now().minus(25, ChronoUnit.HOURS);
         String resetKey = RandomUtil.generateResetKey();
-        user.setActivated(true);
+        user.setStatus(UserStatus.ACTIVE);
         user.setResetDate(daysAgo);
         user.setResetKey(resetKey);
         userRepository.saveAndFlush(user);
@@ -125,7 +126,7 @@ class UserServiceIT {
     @Transactional
     void assertThatResetKeyMustBeValid() {
         Instant daysAgo = Instant.now().minus(25, ChronoUnit.HOURS);
-        user.setActivated(true);
+        user.setStatus(UserStatus.ACTIVE);
         user.setResetDate(daysAgo);
         user.setResetKey("1234");
         userRepository.saveAndFlush(user);
@@ -142,7 +143,7 @@ class UserServiceIT {
         String oldPassword = user.getPassword();
         Instant daysAgo = Instant.now().minus(2, ChronoUnit.HOURS);
         String resetKey = RandomUtil.generateResetKey();
-        user.setActivated(true);
+        user.setStatus(UserStatus.ACTIVE);
         user.setResetDate(daysAgo);
         user.setResetKey(resetKey);
         userRepository.saveAndFlush(user);

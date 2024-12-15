@@ -10,12 +10,12 @@ import io.flexwork.DefaultTenantContext;
 import io.flexwork.IntegrationTest;
 import io.flexwork.modules.usermanagement.AuthoritiesConstants;
 import io.flexwork.modules.usermanagement.domain.User;
+import io.flexwork.modules.usermanagement.domain.UserStatus;
 import io.flexwork.modules.usermanagement.repository.UserRepository;
 import io.flexwork.modules.usermanagement.service.UserService;
 import io.flexwork.modules.usermanagement.service.dto.AuthorityDTO;
 import io.flexwork.modules.usermanagement.service.dto.UserDTO;
 import io.flexwork.modules.usermanagement.service.mapper.UserMapper;
-import io.flexwork.modules.usermanagement.web.rest.UserController;
 import jakarta.persistence.EntityManager;
 import java.util.Collections;
 import java.util.List;
@@ -94,7 +94,7 @@ class UserControllerIT {
     public static User createEntity(EntityManager em) {
         User persistUser = new User();
         persistUser.setPassword(RandomStringUtils.randomAlphanumeric(60));
-        persistUser.setActivated(true);
+        persistUser.setStatus(UserStatus.ACTIVE);
         persistUser.setEmail(RandomStringUtils.randomAlphabetic(5) + DEFAULT_EMAIL);
         persistUser.setFirstName(DEFAULT_FIRSTNAME);
         persistUser.setLastName(DEFAULT_LASTNAME);
@@ -127,7 +127,7 @@ class UserControllerIT {
         userDTO.setFirstName(DEFAULT_FIRSTNAME);
         userDTO.setLastName(DEFAULT_LASTNAME);
         userDTO.setEmail(DEFAULT_EMAIL);
-        userDTO.setActivated(true);
+        userDTO.setStatus(UserStatus.ACTIVE);
         userDTO.setImageUrl(DEFAULT_IMAGEURL);
         userDTO.setLangKey(DEFAULT_LANGKEY);
         userDTO.setAuthorities(
@@ -137,7 +137,7 @@ class UserControllerIT {
                 om.readValue(
                         restUserMockMvc
                                 .perform(
-                                        post("/api/admin/users")
+                                        post("/api/users")
                                                 .contentType(MediaType.APPLICATION_JSON)
                                                 .content(om.writeValueAsBytes(userDTO)))
                                 .andExpect(status().isCreated())
@@ -165,7 +165,8 @@ class UserControllerIT {
         userDTO.setFirstName(DEFAULT_FIRSTNAME);
         userDTO.setLastName(DEFAULT_LASTNAME);
         userDTO.setEmail(DEFAULT_EMAIL);
-        userDTO.setActivated(true);
+        userDTO.setStatus(UserStatus.ACTIVE);
+        ;
         userDTO.setImageUrl(DEFAULT_IMAGEURL);
         userDTO.setLangKey(DEFAULT_LANGKEY);
         userDTO.setAuthorities(
@@ -174,7 +175,7 @@ class UserControllerIT {
         // An entity with an existing ID cannot be created, so this API call must fail
         restUserMockMvc
                 .perform(
-                        post("/api/admin/users")
+                        post("/api/users")
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .content(om.writeValueAsBytes(userDTO)))
                 .andExpect(status().isBadRequest());
@@ -194,7 +195,8 @@ class UserControllerIT {
         userDTO.setFirstName(DEFAULT_FIRSTNAME);
         userDTO.setLastName(DEFAULT_LASTNAME);
         userDTO.setEmail(DEFAULT_EMAIL);
-        userDTO.setActivated(true);
+        userDTO.setStatus(UserStatus.ACTIVE);
+        ;
         userDTO.setImageUrl(DEFAULT_IMAGEURL);
         userDTO.setLangKey(DEFAULT_LANGKEY);
         userDTO.setAuthorities(
@@ -203,7 +205,7 @@ class UserControllerIT {
         // Create the User
         restUserMockMvc
                 .perform(
-                        post("/api/admin/users")
+                        post("/api/users")
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .content(om.writeValueAsBytes(userDTO)))
                 .andExpect(status().isBadRequest());
@@ -223,7 +225,8 @@ class UserControllerIT {
         userDTO.setFirstName(DEFAULT_FIRSTNAME);
         userDTO.setLastName(DEFAULT_LASTNAME);
         userDTO.setEmail(DEFAULT_EMAIL); // this email should already be used
-        userDTO.setActivated(true);
+        userDTO.setStatus(UserStatus.ACTIVE);
+        ;
         userDTO.setImageUrl(DEFAULT_IMAGEURL);
         userDTO.setLangKey(DEFAULT_LANGKEY);
         userDTO.setAuthorities(
@@ -232,7 +235,7 @@ class UserControllerIT {
         // Create the User
         restUserMockMvc
                 .perform(
-                        post("/api/admin/users")
+                        post("/api/users")
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .content(om.writeValueAsBytes(userDTO)))
                 .andExpect(status().isBadRequest());
@@ -249,16 +252,14 @@ class UserControllerIT {
 
         // Get all the users
         restUserMockMvc
-                .perform(
-                        post("/api/admin/users/search?sort=id,desc")
-                                .accept(MediaType.APPLICATION_JSON))
+                .perform(post("/api/users/search?sort=id,desc").accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
-                .andExpect(jsonPath("$.[*].firstName").value(hasItem(DEFAULT_FIRSTNAME)))
-                .andExpect(jsonPath("$.[*].lastName").value(hasItem(DEFAULT_LASTNAME)))
-                .andExpect(jsonPath("$.[*].email").value(hasItem(DEFAULT_EMAIL)))
-                .andExpect(jsonPath("$.[*].imageUrl").value(hasItem(DEFAULT_IMAGEURL)))
-                .andExpect(jsonPath("$.[*].langKey").value(hasItem(DEFAULT_LANGKEY)));
+                .andExpect(jsonPath("$.content.[*].firstName").value(hasItem(DEFAULT_FIRSTNAME)))
+                .andExpect(jsonPath("$.content.[*].lastName").value(hasItem(DEFAULT_LASTNAME)))
+                .andExpect(jsonPath("$.content.[*].email").value(hasItem(DEFAULT_EMAIL)))
+                .andExpect(jsonPath("$.content.[*].imageUrl").value(hasItem(DEFAULT_IMAGEURL)))
+                .andExpect(jsonPath("$.content.[*].langKey").value(hasItem(DEFAULT_LANGKEY)));
     }
 
     @Test
@@ -332,7 +333,7 @@ class UserControllerIT {
         userDTO.setFirstName(UPDATED_FIRSTNAME);
         userDTO.setLastName(UPDATED_LASTNAME);
         userDTO.setEmail(UPDATED_EMAIL);
-        userDTO.setActivated(updatedUser.isActivated());
+        userDTO.setStatus(updatedUser.getStatus());
         userDTO.setImageUrl(UPDATED_IMAGEURL);
         userDTO.setLangKey(UPDATED_LANGKEY);
         userDTO.setCreatedBy(updatedUser.getCreatedBy());
@@ -359,7 +360,7 @@ class UserControllerIT {
         userDTO.setFirstName(UPDATED_FIRSTNAME);
         userDTO.setLastName(UPDATED_LASTNAME);
         userDTO.setEmail(UPDATED_EMAIL);
-        userDTO.setActivated(updatedUser.isActivated());
+        userDTO.setStatus(updatedUser.getStatus());
         userDTO.setImageUrl(UPDATED_IMAGEURL);
         userDTO.setLangKey(UPDATED_LANGKEY);
         userDTO.setCreatedBy(updatedUser.getCreatedBy());
@@ -413,7 +414,8 @@ class UserControllerIT {
 
         User anotherUser = new User();
         anotherUser.setPassword(RandomStringUtils.randomAlphanumeric(60));
-        anotherUser.setActivated(true);
+        anotherUser.setStatus(UserStatus.ACTIVE);
+        ;
         anotherUser.setEmail(UPDATED_EMAIL);
         anotherUser.setFirstName("java");
         anotherUser.setLastName("hipster");
@@ -429,7 +431,7 @@ class UserControllerIT {
         userDTO.setFirstName(updatedUser.getFirstName());
         userDTO.setLastName(updatedUser.getLastName());
         userDTO.setEmail(UPDATED_EMAIL); // this email should already be used by anotherUser
-        userDTO.setActivated(updatedUser.isActivated());
+        userDTO.setStatus(updatedUser.getStatus());
         userDTO.setImageUrl(updatedUser.getImageUrl());
         userDTO.setLangKey(updatedUser.getLangKey());
         userDTO.setCreatedBy(updatedUser.getCreatedBy());
@@ -469,7 +471,7 @@ class UserControllerIT {
         // Delete the user
         restUserMockMvc
                 .perform(
-                        delete("/api/admin/users/{login}", user.getEmail())
+                        delete("/api/users/{login}", user.getEmail())
                                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNoContent());
 

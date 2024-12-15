@@ -3,29 +3,25 @@ package io.flexwork.modules.usermanagement.service;
 import static io.flexwork.query.QueryUtils.createSpecification;
 
 import io.flexwork.modules.usermanagement.AuthoritiesConstants;
-import io.flexwork.modules.usermanagement.domain.Authority;
-import io.flexwork.modules.usermanagement.domain.Permission;
-import io.flexwork.modules.usermanagement.domain.User;
-import io.flexwork.modules.usermanagement.domain.User_;
+import io.flexwork.modules.usermanagement.domain.*;
 import io.flexwork.modules.usermanagement.repository.AuthorityRepository;
 import io.flexwork.modules.usermanagement.repository.UserRepository;
 import io.flexwork.modules.usermanagement.service.dto.ResourcePermissionDTO;
 import io.flexwork.modules.usermanagement.service.dto.UserDTO;
 import io.flexwork.modules.usermanagement.service.dto.UserKey;
+import io.flexwork.modules.usermanagement.service.event.DeleteUserEvent;
 import io.flexwork.modules.usermanagement.service.mapper.UserMapper;
 import io.flexwork.query.QueryDTO;
 import io.flexwork.security.Constants;
 import io.flexwork.security.SecurityUtils;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 import org.jclouds.rest.ResourceNotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -49,15 +45,19 @@ public class UserService {
 
     private final UserMapper userMapper;
 
+    private final ApplicationEventPublisher eventPublisher;
+
     public UserService(
             UserRepository userRepository,
             PasswordEncoder passwordEncoder,
             AuthorityRepository authorityRepository,
-            UserMapper userMapper) {
+            UserMapper userMapper,
+            ApplicationEventPublisher eventPublisher) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.authorityRepository = authorityRepository;
         this.userMapper = userMapper;
+        this.eventPublisher = eventPublisher;
     }
 
     public Optional<User> activateRegistration(String key) {
@@ -67,7 +67,7 @@ public class UserService {
                 .map(
                         user -> {
                             // activate given user for the registration key.
-                            user.setActivated(true);
+                            user.setStatus(UserStatus.ACTIVE);
                             user.setActivationKey(null);
                             LOG.debug("Activated user: {}", user);
                             return user;
@@ -94,7 +94,7 @@ public class UserService {
     public Optional<UserDTO> requestPasswordReset(String mail) {
         return userRepository
                 .findOneByEmailIgnoreCase(mail)
-                .filter(User::isActivated)
+                .filter(user -> Objects.equals(user.getStatus(), UserStatus.ACTIVE))
                 .map(
                         user -> {
                             user.setResetKey(RandomUtil.generateResetKey());
@@ -126,7 +126,7 @@ public class UserService {
         newUser.setImageUrl(userDTO.getImageUrl());
         newUser.setLangKey(userDTO.getLangKey());
         // new user is not active
-        newUser.setActivated(false);
+        newUser.setStatus(UserStatus.PENDING);
         // new user gets registration key
         newUser.setActivationKey(RandomUtil.generateActivationKey());
         Set<Authority> authorities = new HashSet<>();
@@ -138,7 +138,7 @@ public class UserService {
     }
 
     private boolean removeNonActivatedUser(User existingUser) {
-        if (existingUser.isActivated()) {
+        if (existingUser.getStatus().equals(UserStatus.ACTIVE)) {
             return false;
         }
         userRepository.delete(existingUser);
@@ -146,7 +146,7 @@ public class UserService {
         return true;
     }
 
-    public User createUser(UserDTO userDTO) {
+    public UserDTO createUser(UserDTO userDTO) {
         User user = new User();
         user.setFirstName(userDTO.getFirstName());
         user.setLastName(userDTO.getLastName());
@@ -163,7 +163,7 @@ public class UserService {
         user.setPassword(encryptedPassword);
         user.setResetKey(RandomUtil.generateResetKey());
         user.setResetDate(Instant.now());
-        user.setActivated(true);
+        user.setStatus(UserStatus.ACTIVE);
 
         // Due to client when construct the authority, it passes the Authority object with the name
         // and descriptiveName have both actual value
@@ -183,7 +183,7 @@ public class UserService {
         }
         userRepository.save(user);
         LOG.debug("Created Information for User: {}", user);
-        return user;
+        return userMapper.toDto(user);
     }
 
     /**
@@ -219,6 +219,18 @@ public class UserService {
                             userRepository.delete(user);
                             LOG.debug("Deleted User: {}", user);
                         });
+    }
+
+    public void softDeleteUserById(Long userId) {
+        userRepository
+                .findById(userId)
+                .ifPresent(
+                        user -> {
+                            user.setIsDeleted(true);
+                            userRepository.save(user);
+                            LOG.debug("Soft deleted User: {}", user);
+                        });
+        eventPublisher.publishEvent(new DeleteUserEvent(this, userId));
     }
 
     /**
@@ -279,10 +291,10 @@ public class UserService {
         if (spec == null) {
             spec = Specification.where(null);
         }
-        spec.and(((root, query, criteriaBuilder) -> criteriaBuilder.isNotNull(root.get(User_.ID))))
+        spec.and((root, query, criteriaBuilder) -> criteriaBuilder.isNotNull(root.get(User_.ID)))
                 .and(
-                        ((root, query, criteriaBuilder) ->
-                                criteriaBuilder.isTrue(root.get(User_.ACTIVATED))));
+                        (root, query, criteriaBuilder) ->
+                                criteriaBuilder.equal(root.get(User_.STATUS), UserStatus.ACTIVE));
         return userRepository.findAll(spec, pageable).map(userMapper::toDto);
     }
 

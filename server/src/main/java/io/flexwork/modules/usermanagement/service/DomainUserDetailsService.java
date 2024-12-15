@@ -3,6 +3,7 @@ package io.flexwork.modules.usermanagement.service;
 import io.flexwork.modules.usermanagement.UserNotActivatedException;
 import io.flexwork.modules.usermanagement.domain.Authority;
 import io.flexwork.modules.usermanagement.domain.User;
+import io.flexwork.modules.usermanagement.domain.UserStatus;
 import io.flexwork.modules.usermanagement.repository.UserRepository;
 import io.flexwork.modules.usermanagement.service.dto.FwUserDetails;
 import java.util.List;
@@ -49,7 +50,7 @@ public class DomainUserDetailsService implements UserDetailsService {
     }
 
     private FwUserDetails createSpringSecurityUser(String lowercaseLogin, User user) {
-        if (!user.isActivated()) {
+        if (!user.getStatus().equals(UserStatus.ACTIVE)) {
             throw new UserNotActivatedException("User " + lowercaseLogin + " was not activated");
         }
         List<SimpleGrantedAuthority> grantedAuthorities =

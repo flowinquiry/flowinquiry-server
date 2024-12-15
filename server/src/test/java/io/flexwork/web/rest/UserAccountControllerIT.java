@@ -14,6 +14,7 @@ import io.flexwork.DefaultTenantContext;
 import io.flexwork.IntegrationTest;
 import io.flexwork.modules.usermanagement.AuthoritiesConstants;
 import io.flexwork.modules.usermanagement.domain.User;
+import io.flexwork.modules.usermanagement.domain.UserStatus;
 import io.flexwork.modules.usermanagement.repository.AuthorityRepository;
 import io.flexwork.modules.usermanagement.repository.UserRepository;
 import io.flexwork.modules.usermanagement.service.UserService;
@@ -188,7 +189,7 @@ class UserAccountControllerIT {
         invalidUser.setFirstName("Funky");
         invalidUser.setLastName("One");
         invalidUser.setEmail("funky@example.com");
-        invalidUser.setActivated(true);
+        invalidUser.setStatus(UserStatus.ACTIVE);
         invalidUser.setImageUrl("http://placehold.it/50x50");
         invalidUser.setLangKey(Constants.DEFAULT_LANGUAGE);
         invalidUser.setAuthorities(
@@ -209,15 +210,20 @@ class UserAccountControllerIT {
 
     static Stream<ManagedUserVM> invalidUsers() {
         return Stream.of(
-                createInvalidUser("password", "Bob", "Green", "invalid", true), // <-- invalid
+                createInvalidUser(
+                        "password", "Bob", "Green", "invalid", UserStatus.ACTIVE), // <-- invalid
                 createInvalidUser(
                         "123",
                         "Bob",
                         "Green",
                         "bob@example.com",
-                        true), // password with only 3 digits
+                        UserStatus.ACTIVE), // password with only 3 digits
                 createInvalidUser(
-                        null, "Bob", "Green", "bob@example.com", true) // invalid null password
+                        null,
+                        "Bob",
+                        "Green",
+                        "bob@example.com",
+                        UserStatus.ACTIVE) // invalid null password
                 );
     }
 
@@ -238,13 +244,17 @@ class UserAccountControllerIT {
     }
 
     private static ManagedUserVM createInvalidUser(
-            String password, String firstName, String lastName, String email, boolean activated) {
+            String password,
+            String firstName,
+            String lastName,
+            String email,
+            UserStatus userStatus) {
         ManagedUserVM invalidUser = new ManagedUserVM();
         invalidUser.setPassword(password);
         invalidUser.setFirstName(firstName);
         invalidUser.setLastName(lastName);
         invalidUser.setEmail(email);
-        invalidUser.setActivated(activated);
+        invalidUser.setStatus(userStatus);
         invalidUser.setImageUrl("http://placehold.it/50x50");
         invalidUser.setLangKey(Constants.DEFAULT_LANGUAGE);
         invalidUser.setAuthorities(
@@ -307,7 +317,7 @@ class UserAccountControllerIT {
         assertThat(testUser4.orElseThrow().getEmail())
                 .isEqualTo("test-register-duplicate-email@example.com");
 
-        testUser4.orElseThrow().setActivated(true);
+        testUser4.orElseThrow().setStatus(UserStatus.ACTIVE);
         userService.updateUser(userMapper.toDto(testUser4.orElseThrow()));
 
         userService.deleteUserByEmail("test-register-duplicate-email@example.com");
@@ -321,7 +331,7 @@ class UserAccountControllerIT {
         validUser.setFirstName("Bad");
         validUser.setLastName("Guy");
         validUser.setEmail("badguy@example.com");
-        validUser.setActivated(true);
+        validUser.setStatus(UserStatus.ACTIVE);
         validUser.setImageUrl("http://placehold.it/50x50");
         validUser.setLangKey(Constants.DEFAULT_LANGUAGE);
         validUser.setAuthorities(
@@ -353,7 +363,7 @@ class UserAccountControllerIT {
         User user = new User();
         user.setEmail("activate-account@example.com");
         user.setPassword(RandomStringUtils.randomAlphanumeric(60));
-        user.setActivated(false);
+        user.setStatus(UserStatus.ACTIVE);
         user.setActivationKey(activationKey);
 
         userRepository.saveAndFlush(user);
@@ -365,7 +375,7 @@ class UserAccountControllerIT {
                 .andExpect(status().isOk());
 
         user = userRepository.findOneByEmailIgnoreCase(user.getEmail()).orElse(null);
-        assertThat(user.isActivated()).isTrue();
+        assertThat(user.getStatus()).isEqualTo(UserStatus.ACTIVE);
 
         userService.deleteUserByEmail("activate-account@example.com");
     }
@@ -387,14 +397,14 @@ class UserAccountControllerIT {
         User user = new User();
         user.setEmail("save-account@example.com");
         user.setPassword(RandomStringUtils.randomAlphanumeric(60));
-        user.setActivated(true);
+        user.setStatus(UserStatus.ACTIVE);
         userRepository.saveAndFlush(user);
 
         UserDTO userDTO = new UserDTO();
         userDTO.setFirstName("firstname");
         userDTO.setLastName("lastname");
         userDTO.setEmail("save-account@example.com");
-        userDTO.setActivated(false);
+        userDTO.setStatus(UserStatus.PENDING);
         userDTO.setImageUrl("http://placehold.it/50x50");
         userDTO.setLangKey(Constants.DEFAULT_LANGUAGE);
         userDTO.setAuthorities(Collections.singleton(new AuthorityDTO(AuthoritiesConstants.ADMIN)));
@@ -417,7 +427,7 @@ class UserAccountControllerIT {
         assertThat(updatedUser.getLangKey()).isEqualTo(userDTO.getLangKey());
         assertThat(updatedUser.getPassword()).isEqualTo(user.getPassword());
         assertThat(updatedUser.getImageUrl()).isEqualTo(userDTO.getImageUrl());
-        assertThat(updatedUser.isActivated()).isTrue();
+        assertThat(updatedUser.getStatus()).isEqualTo(UserStatus.ACTIVE);
         assertThat(updatedUser.getAuthorities()).isEmpty();
 
         userService.deleteUserByEmail("save-account@example.com");
@@ -430,7 +440,7 @@ class UserAccountControllerIT {
         User user = new User();
         user.setEmail("save-invalid-email@example.com");
         user.setPassword(RandomStringUtils.randomAlphanumeric(60));
-        user.setActivated(true);
+        user.setStatus(UserStatus.ACTIVE);
 
         userRepository.saveAndFlush(user);
 
@@ -438,7 +448,7 @@ class UserAccountControllerIT {
         userDTO.setFirstName("firstname");
         userDTO.setLastName("lastname");
         userDTO.setEmail("invalid email");
-        userDTO.setActivated(false);
+        userDTO.setStatus(UserStatus.PENDING);
         userDTO.setImageUrl("http://placehold.it/50x50");
         userDTO.setLangKey(Constants.DEFAULT_LANGUAGE);
         userDTO.setAuthorities(Collections.singleton(new AuthorityDTO(AuthoritiesConstants.ADMIN)));
@@ -463,13 +473,13 @@ class UserAccountControllerIT {
         User user = new User();
         user.setEmail("save-existing-email@example.com");
         user.setPassword(RandomStringUtils.randomAlphanumeric(60));
-        user.setActivated(true);
+        user.setStatus(UserStatus.ACTIVE);
         userRepository.saveAndFlush(user);
 
         User anotherUser = new User();
         anotherUser.setEmail("save-existing-email2@example.com");
         anotherUser.setPassword(RandomStringUtils.randomAlphanumeric(60));
-        anotherUser.setActivated(true);
+        anotherUser.setStatus(UserStatus.ACTIVE);
 
         userRepository.saveAndFlush(anotherUser);
 
@@ -477,7 +487,7 @@ class UserAccountControllerIT {
         userDTO.setFirstName("firstname");
         userDTO.setLastName("lastname");
         userDTO.setEmail("save-existing-email2@example.com");
-        userDTO.setActivated(false);
+        userDTO.setStatus(UserStatus.PENDING);
         userDTO.setImageUrl("http://placehold.it/50x50");
         userDTO.setLangKey(Constants.DEFAULT_LANGUAGE);
         userDTO.setAuthorities(Collections.singleton(new AuthorityDTO(AuthoritiesConstants.ADMIN)));
@@ -501,14 +511,14 @@ class UserAccountControllerIT {
         User user = new User();
         user.setEmail("save-existing-email-and-login@example.com");
         user.setPassword(RandomStringUtils.randomAlphanumeric(60));
-        user.setActivated(true);
+        user.setStatus(UserStatus.ACTIVE);
         userRepository.saveAndFlush(user);
 
         UserDTO userDTO = new UserDTO();
         userDTO.setFirstName("firstname");
         userDTO.setLastName("lastname");
         userDTO.setEmail("save-existing-email-and-login@example.com");
-        userDTO.setActivated(false);
+        userDTO.setStatus(UserStatus.PENDING);
         userDTO.setImageUrl("http://placehold.it/50x50");
         userDTO.setLangKey(Constants.DEFAULT_LANGUAGE);
         userDTO.setAuthorities(Collections.singleton(new AuthorityDTO(AuthoritiesConstants.ADMIN)));
@@ -688,7 +698,7 @@ class UserAccountControllerIT {
     void testRequestPasswordReset() throws Exception {
         User user = new User();
         user.setPassword(RandomStringUtils.randomAlphanumeric(60));
-        user.setActivated(true);
+        user.setStatus(UserStatus.ACTIVE);
         user.setEmail("password-reset@example.com");
         user.setLangKey("en");
         userRepository.saveAndFlush(user);
@@ -707,7 +717,7 @@ class UserAccountControllerIT {
     void testRequestPasswordResetUpperCaseEmail() throws Exception {
         User user = new User();
         user.setPassword(RandomStringUtils.randomAlphanumeric(60));
-        user.setActivated(true);
+        user.setStatus(UserStatus.ACTIVE);
         user.setEmail("password-reset-upper-case@example.com");
         user.setLangKey("en");
         userRepository.saveAndFlush(user);

@@ -54,8 +54,11 @@ public class User extends AbstractAuditingEntity<Long> implements Serializable {
     private String email;
 
     @NotNull @Column(nullable = false)
-    @Builder.Default
-    private boolean activated = false;
+    @Enumerated(EnumType.STRING)
+    private UserStatus status = UserStatus.PENDING;
+
+    @Column(name = "is_deleted", nullable = false)
+    private Boolean isDeleted = false;
 
     @Size(min = 2, max = 10)
     @Column(name = "lang_key", length = 10)

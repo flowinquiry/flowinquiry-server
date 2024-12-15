@@ -1,5 +1,6 @@
 package io.flexwork.modules.usermanagement.service.dto;
 
+import io.flexwork.modules.usermanagement.domain.UserStatus;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import java.io.Serializable;
@@ -26,7 +27,9 @@ public class UserDTO implements Serializable {
 
     private String imageUrl;
 
-    private boolean activated = false;
+    private UserStatus status;
+
+    private Boolean isDeleted;
 
     private String langKey;
 

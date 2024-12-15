@@ -5,9 +5,9 @@ import org.springframework.context.ApplicationEvent;
 
 @Getter
 public class RemoveUserOutOfTeamEvent extends ApplicationEvent {
-    private Long teamId;
+    private final Long teamId;
 
-    private Long userId;
+    private final Long userId;
 
     public RemoveUserOutOfTeamEvent(Object source, Long teamId, Long userId) {
         super(source);

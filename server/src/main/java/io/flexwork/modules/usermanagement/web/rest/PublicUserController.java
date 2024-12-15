@@ -1,15 +1,22 @@
 package io.flexwork.modules.usermanagement.web.rest;
 
 import com.flexwork.platform.utils.Obfuscator;
+import io.flexwork.modules.collab.service.MailService;
 import io.flexwork.modules.fss.service.StorageService;
+import io.flexwork.modules.usermanagement.AuthoritiesConstants;
 import io.flexwork.modules.usermanagement.domain.User;
 import io.flexwork.modules.usermanagement.repository.UserRepository;
 import io.flexwork.modules.usermanagement.service.UserService;
 import io.flexwork.modules.usermanagement.service.dto.ResourcePermissionDTO;
 import io.flexwork.modules.usermanagement.service.dto.UserDTO;
+import io.flexwork.modules.usermanagement.web.rest.errors.BadRequestAlertException;
 import io.flexwork.modules.usermanagement.web.rest.errors.EmailAlreadyUsedException;
+import io.flexwork.query.Filter;
 import io.flexwork.query.QueryDTO;
 import jakarta.validation.Valid;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import org.slf4j.Logger;
@@ -21,6 +28,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -39,12 +47,17 @@ public class PublicUserController {
     private final UserRepository userRepository;
     private final UserService userService;
     private final StorageService storageService;
+    private final MailService mailService;
 
     public PublicUserController(
-            UserService userService, UserRepository userRepository, StorageService storageService) {
+            UserService userService,
+            UserRepository userRepository,
+            StorageService storageService,
+            MailService mailService) {
         this.userService = userService;
         this.userRepository = userRepository;
         this.storageService = storageService;
+        this.mailService = mailService;
     }
 
     /**
@@ -58,10 +71,27 @@ public class PublicUserController {
     public ResponseEntity<Page<UserDTO>> searchAllPublicUsers(
             @Valid @RequestBody Optional<QueryDTO> queryDTO, Pageable pageable) {
         LOG.debug("REST request to get all public User names");
+
+        // Check for allowed properties in pageable
         if (!onlyContainsAllowedProperties(pageable)) {
             return ResponseEntity.badRequest().build();
         }
 
+        // Handle queryDTO presence and filters
+        if (queryDTO.isPresent()) {
+            QueryDTO existingQuery = queryDTO.get();
+            if (existingQuery.getFilters() == null) {
+                existingQuery.setFilters(new ArrayList<>());
+            }
+            existingQuery.getFilters().add(new Filter("isDeleted", "eq", Boolean.FALSE));
+        } else {
+            QueryDTO defaultQuery = new QueryDTO();
+            List<Filter> filters = List.of(new Filter("isDeleted", "eq", Boolean.FALSE));
+            defaultQuery.setFilters(filters);
+            queryDTO = Optional.of(defaultQuery);
+        }
+
+        // Fetch public users and generate pagination headers
         final Page<UserDTO> page = userService.findAllPublicUsers(queryDTO, pageable);
         HttpHeaders headers =
                 PaginationUtil.generatePaginationHttpHeaders(
@@ -126,5 +156,51 @@ public class PublicUserController {
         return pageable.getSort().stream()
                 .map(Sort.Order::getProperty)
                 .allMatch(ALLOWED_ORDERED_PROPERTIES::contains);
+    }
+
+    /**
+     * {@code POST /admin/users} : Creates a new user.
+     *
+     * <p>Creates a new user if the login and email are not already used, and sends an mail with an
+     * activation link. The user needs to be activated on creation.
+     *
+     * @param userDTO the user to create.
+     * @return the {@link ResponseEntity} with status {@code 201 (Created)} and with body the new
+     *     user, or with status {@code 400 (Bad Request)} if the login or email is already in use.
+     * @throws URISyntaxException if the Location URI syntax is incorrect.
+     * @throws BadRequestAlertException {@code 400 (Bad Request)} if the login or email is already
+     *     in use.
+     */
+    @PostMapping
+    @PreAuthorize("hasAuthority(\"" + AuthoritiesConstants.ADMIN + "\")")
+    public ResponseEntity<UserDTO> createUser(@Valid @RequestBody UserDTO userDTO)
+            throws URISyntaxException {
+        LOG.debug("REST request to save User : {}", userDTO);
+
+        if (userDTO.getId() != null) {
+            throw new BadRequestAlertException(
+                    "A new user cannot already have an ID", "userManagement", "idexists");
+            // Lowercase the user login before comparing with database
+        } else if (userRepository.findOneByEmailIgnoreCase(userDTO.getEmail()).isPresent()) {
+            throw new EmailAlreadyUsedException();
+        } else {
+            UserDTO newUser = userService.createUser(userDTO);
+            mailService.sendCreationEmail(newUser);
+            return ResponseEntity.created(new URI("/api/users/" + newUser.getEmail()))
+                    .body(newUser);
+        }
+    }
+
+    /**
+     * {@code DELETE /admin/users/:email} : delete the "email" User.
+     *
+     * @param userId the userId of the user to delete.
+     * @return the {@link ResponseEntity} with status {@code 204 (NO_CONTENT)}.
+     */
+    @DeleteMapping("/{userId}")
+    public ResponseEntity<Void> deleteUser(@PathVariable("userId") Long userId) {
+        LOG.debug("REST request to delete User: {}", userId);
+        userService.softDeleteUserById(userId);
+        return ResponseEntity.noContent().build();
     }
 }

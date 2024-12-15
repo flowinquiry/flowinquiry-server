@@ -7,6 +7,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.flexwork.IntegrationTest;
 import io.flexwork.modules.usermanagement.domain.User;
+import io.flexwork.modules.usermanagement.domain.UserStatus;
 import io.flexwork.modules.usermanagement.repository.UserRepository;
 import io.flexwork.modules.usermanagement.web.rest.AuthenticateController;
 import io.flexwork.modules.usermanagement.web.rest.LoginVM;
@@ -36,7 +37,7 @@ class AuthenticateControllerIT {
     void testAuthorize() throws Exception {
         User user = new User();
         user.setEmail("user-jwt-controller@example.com");
-        user.setActivated(true);
+        user.setStatus(UserStatus.ACTIVE);
         user.setPassword(passwordEncoder.encode("test"));
 
         userRepository.saveAndFlush(user);
@@ -60,7 +61,7 @@ class AuthenticateControllerIT {
     void testAuthorizeWithRememberMe() throws Exception {
         User user = new User();
         user.setEmail("user-jwt-controller-remember-me@example.com");
-        user.setActivated(true);
+        user.setStatus(UserStatus.ACTIVE);
         user.setPassword(passwordEncoder.encode("test"));
 
         userRepository.saveAndFlush(user);

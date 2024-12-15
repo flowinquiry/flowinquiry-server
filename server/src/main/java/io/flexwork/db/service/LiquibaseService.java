@@ -1,6 +1,7 @@
 package io.flexwork.db.service;
 
 import java.sql.Connection;
+import java.util.Collection;
 import javax.sql.DataSource;
 import liquibase.Contexts;
 import liquibase.LabelExpression;
@@ -31,7 +32,8 @@ public class LiquibaseService {
     }
 
     @SneakyThrows
-    private void updateLiquibaseSchema(String classpathChangeset, String schema) {
+    private void updateLiquibaseSchema(
+            String classpathChangeset, String schema, Collection<String> activeProfiles) {
         try (Connection connection = dataSource.getConnection()) {
             LOG.info("Going to create a schema {}", schema);
             connection.prepareCall("CREATE SCHEMA IF NOT EXISTS " + schema).execute();
@@ -42,18 +44,20 @@ public class LiquibaseService {
             database.setDefaultSchemaName(schema);
             Liquibase liquibase =
                     new Liquibase(classpathChangeset, new ClassLoaderResourceAccessor(), database);
-            liquibase.update(new Contexts(), new LabelExpression());
+            Contexts contexts = new Contexts();
+            activeProfiles.forEach(contexts::add);
+            liquibase.update(contexts, new LabelExpression());
             liquibase.close();
         }
     }
 
     @Transactional
-    public void createTenantDbSchema(String schema) {
-        updateLiquibaseSchema(TENANT_CHANGESET, schema);
+    public void createTenantDbSchema(String schema, Collection<String> activeProfiles) {
+        updateLiquibaseSchema(TENANT_CHANGESET, schema, activeProfiles);
     }
 
     @Transactional
-    public void updateMasterDbSchema(String schema) {
-        updateLiquibaseSchema(MASTER_CHANGESET, schema);
+    public void updateMasterDbSchema(String schema, Collection<String> activeProfiles) {
+        updateLiquibaseSchema(MASTER_CHANGESET, schema, activeProfiles);
     }
 }

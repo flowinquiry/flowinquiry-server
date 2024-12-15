@@ -2,12 +2,11 @@ package io.flexwork.modules.usermanagement.service;
 
 import static io.flexwork.db.DbConstants.DEFAULT_TENANT;
 
+import io.flexwork.config.FlexworkProfiles;
 import io.flexwork.db.service.LiquibaseService;
 import io.flexwork.modules.usermanagement.domain.Tenant;
 import io.flexwork.modules.usermanagement.repository.TenantRepository;
-import java.util.Optional;
-import java.util.Random;
-import java.util.UUID;
+import java.util.*;
 import lombok.SneakyThrows;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -60,7 +59,8 @@ public class TenantService {
         tenant.setNameId(uuid);
 
         tenantRepository.save(tenant);
-        liquibaseService.createTenantDbSchema(tenant.getNameId());
+        liquibaseService.createTenantDbSchema(
+                tenant.getNameId(), List.of(FlexworkProfiles.SPRING_PROFILE_PRODUCTION));
         return tenant;
     }
 

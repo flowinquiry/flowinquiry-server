@@ -277,7 +277,7 @@
 	</changeSet>
 
 	<changeSet author="flexapp"
-		id="000:03-insert-default-authority-data" runAlways="true">
+		id="000:03-insert-default-authority-data">
 		<loadData
 			file="config/liquibase/tenant/data/fw_authority.csv" separator=";"
 			tableName="fw_authority" usePreparedStatements="true">
@@ -350,7 +350,7 @@
 		<sql>SELECT setval('fw_team_id_seq', (SELECT MAX(id) FROM fw_team));</sql>
 	</changeSet>
 	<changeSet author="flexapp"
-		id="000:07-insert-default-fw-team-role" runAlways="true">
+		id="000:07-insert-default-fw-team-role">
 		<loadData
 			file="config/liquibase/tenant/data/fw_team_role.csv"
 			tableName="fw_team_role" separator=";">
@@ -369,7 +369,7 @@
 		</loadData>
 	</changeSet>
 	<changeSet author="flexapp"
-		id="000:09-insert-default-fw-resource" runAlways="true">
+		id="000:09-insert-default-fw-resource">
 		<loadData file="config/liquibase/tenant/data/fw_resource.csv"
 			separator=";" tableName="fw_resource" usePreparedStatements="true">
 			<column name="name" type="STRING" />
@@ -377,8 +377,7 @@
 		</loadData>
 	</changeSet>
 	<changeSet author="flexapp"
-		id="000:10-insert-default-fw-authority-resource-permission"
-		runAlways="true">
+		id="000:10-insert-default-fw-authority-resource-permission">
 		<loadData
 			file="config/liquibase/tenant/data/fw_authority_resource_permission.csv"
 			separator=";" tableName="fw_authority_resource_permission"

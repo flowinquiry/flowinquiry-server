@@ -19,7 +19,6 @@ import java.util.Optional;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
@@ -40,13 +39,13 @@ import tech.jhipster.config.DefaultProfileUtil;
 @EntityScan("io.flexwork")
 @EnableAspectJAutoProxy
 @Order(1)
-public class FlexworkApp implements CommandLineRunner {
+public class FlexworkApp {
 
     private static final Logger LOG = LoggerFactory.getLogger(FlexworkApp.class);
 
-    private TenantService tenantService;
+    private final TenantService tenantService;
 
-    private LiquibaseService liquibaseService;
+    private final LiquibaseService liquibaseService;
 
     private final Environment env;
 
@@ -72,6 +71,7 @@ public class FlexworkApp implements CommandLineRunner {
                     "You have misconfigured your application! It should not run "
                             + "with both the 'dev' and 'prod' profiles at the same time.");
         }
+        migrateDatabases(activeProfiles);
     }
 
     /**
@@ -80,10 +80,10 @@ public class FlexworkApp implements CommandLineRunner {
      * @param args the command line arguments.
      */
     public static void main(String[] args) {
-        SpringApplication app = new SpringApplication(FlexworkApp.class);
-
         loadEnvVariablesFromEnvFile(".");
         loadEnvVariablesFromEnvFile("..");
+
+        SpringApplication app = new SpringApplication(FlexworkApp.class);
 
         DefaultProfileUtil.addDefaultProfile(app);
         Environment env = app.run(args).getEnvironment();
@@ -132,12 +132,11 @@ public class FlexworkApp implements CommandLineRunner {
     }
 
     @Transactional
-    @Override
-    public void run(String... args) throws Exception {
-        liquibaseService.updateMasterDbSchema(MASTER_SCHEMA);
+    void migrateDatabases(Collection<String> activeProfiles) {
+        liquibaseService.updateMasterDbSchema(MASTER_SCHEMA, activeProfiles);
         Tenant defaultTenant = tenantService.getDefaultTenant();
         LOG.debug("Default tenant: {}", defaultTenant);
-        liquibaseService.createTenantDbSchema(defaultTenant.getName());
+        liquibaseService.createTenantDbSchema(defaultTenant.getName(), activeProfiles);
         TenantContext.setCurrentTenant(defaultTenant.getName());
     }
 }

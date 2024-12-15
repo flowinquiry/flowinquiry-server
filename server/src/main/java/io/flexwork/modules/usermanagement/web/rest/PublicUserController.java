@@ -8,7 +8,6 @@ import io.flexwork.modules.usermanagement.service.UserService;
 import io.flexwork.modules.usermanagement.service.dto.ResourcePermissionDTO;
 import io.flexwork.modules.usermanagement.service.dto.UserDTO;
 import io.flexwork.modules.usermanagement.web.rest.errors.EmailAlreadyUsedException;
-import io.flexwork.modules.usermanagement.web.rest.errors.LoginAlreadyUsedException;
 import io.flexwork.query.QueryDTO;
 import jakarta.validation.Valid;
 import java.util.List;
@@ -77,7 +76,6 @@ public class PublicUserController {
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the updated
      *     user.
      * @throws EmailAlreadyUsedException {@code 400 (Bad Request)} if the email is already in use.
-     * @throws LoginAlreadyUsedException {@code 400 (Bad Request)} if the email is already in use.
      */
     @PutMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<UserDTO> updateUser(
@@ -88,11 +86,6 @@ public class PublicUserController {
         if (existingUser.isPresent()
                 && (!existingUser.orElseThrow().getId().equals(userDTO.getId()))) {
             throw new EmailAlreadyUsedException();
-        }
-        existingUser = userRepository.findOneByEmailIgnoreCase(userDTO.getEmail().toLowerCase());
-        if (existingUser.isPresent()
-                && (!existingUser.orElseThrow().getId().equals(userDTO.getId()))) {
-            throw new LoginAlreadyUsedException();
         }
 
         // Handle the avatar file upload, if present

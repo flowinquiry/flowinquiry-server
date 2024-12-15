@@ -106,15 +106,6 @@ public class UserService {
 
     public User registerUser(UserDTO userDTO, String password) {
         userRepository
-                .findOneByEmailIgnoreCase(userDTO.getEmail().toLowerCase())
-                .ifPresent(
-                        existingUser -> {
-                            boolean removed = removeNonActivatedUser(existingUser);
-                            if (!removed) {
-                                throw new UsernameAlreadyUsedException();
-                            }
-                        });
-        userRepository
                 .findOneByEmailIgnoreCase(userDTO.getEmail())
                 .ifPresent(
                         existingUser -> {

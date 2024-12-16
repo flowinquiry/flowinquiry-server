@@ -10,7 +10,8 @@ import org.hibernate.annotations.Formula;
 
 @Entity
 @Table(name = "fw_team")
-@Data
+@Getter
+@Setter
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor

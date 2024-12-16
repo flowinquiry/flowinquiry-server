@@ -6,7 +6,8 @@ import lombok.*;
 
 @Entity
 @Table(name = "fw_organization")
-@Data
+@Getter
+@Setter
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor

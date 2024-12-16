@@ -21,7 +21,9 @@ import org.hibernate.annotations.BatchSize;
 /** A user. */
 @Entity
 @Table(name = "fw_user")
-@Data
+@Getter
+@Setter
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor

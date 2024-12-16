@@ -3,7 +3,9 @@ package io.flexwork.modules.usermanagement.domain;
 import jakarta.persistence.*;
 import lombok.*;
 
-@Data
+@Getter
+@Setter
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
@@ -11,10 +13,12 @@ import lombok.*;
 @Table(name = "fw_authority_resource_permission")
 @IdClass(AuthorityResourcePermissionId.class) // Composite key class
 public class AuthorityResourcePermission {
+    @EqualsAndHashCode.Include
     @Id
     @Column(name = "authority_name")
     private String authorityName;
 
+    @EqualsAndHashCode.Include
     @Id
     @Column(name = "resource_name")
     private String resourceName;
@@ -23,12 +27,10 @@ public class AuthorityResourcePermission {
     @Column(name = "permission", nullable = false)
     private Permission permission;
 
-    @EqualsAndHashCode.Exclude
     @ManyToOne
     @JoinColumn(name = "authority_name", insertable = false, updatable = false)
     private Authority authority;
 
-    @EqualsAndHashCode.Exclude
     @ManyToOne
     @JoinColumn(name = "resource_name", insertable = false, updatable = false)
     private Resource resource;

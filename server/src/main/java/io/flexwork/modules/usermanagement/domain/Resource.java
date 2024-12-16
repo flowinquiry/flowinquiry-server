@@ -7,12 +7,15 @@ import lombok.*;
 
 @Entity
 @Table(name = "fw_resource")
-@Data
+@Getter
+@Setter
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
 public class Resource {
 
+    @EqualsAndHashCode.Include
     @Id
     @Column(name = "name", nullable = false, unique = true, length = 50)
     private String name;

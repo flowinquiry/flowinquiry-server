@@ -11,11 +11,15 @@ import lombok.*;
 
 @Entity
 @Table(name = "fw_tenant", schema = MASTER_SCHEMA)
-@Data
+@Getter
+@Setter
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
 public class Tenant extends AbstractAuditingEntity<Long> implements Serializable {
+
+    @EqualsAndHashCode.Include
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

@@ -10,17 +10,21 @@ import jakarta.persistence.MapsId;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity
 @Table(name = "fw_user_team")
-@Data
+@Getter
+@Setter
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
 public class UserTeam {
-    @EmbeddedId private UserTeamId id;
+    @EqualsAndHashCode.Include @EmbeddedId private UserTeamId id;
 
     @ManyToOne
     @MapsId("userId")

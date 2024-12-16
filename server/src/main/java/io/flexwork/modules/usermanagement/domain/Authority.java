@@ -10,20 +10,21 @@ import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import java.io.Serializable;
-import java.util.Objects;
 import java.util.Set;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.hibernate.annotations.Formula;
 
-/** A Authority. */
 @Entity
 @Table(name = "fw_authority")
 @JsonIgnoreProperties(value = {"new", "id"})
-@Data
+@Getter
+@Setter
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
@@ -31,6 +32,7 @@ public class Authority implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
+    @EqualsAndHashCode.Include
     @NotNull @Size(max = 50)
     @Id
     @Column(name = "name", length = 50, nullable = false)
@@ -56,26 +58,4 @@ public class Authority implements Serializable {
 
     @Formula("(SELECT COUNT(ua.user_id) FROM fw_user_authority ua WHERE ua.authority_name = name)")
     private Long usersCount;
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (!(o instanceof Authority)) {
-            return false;
-        }
-        return getName() != null && getName().equals(((Authority) o).getName());
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hashCode(getName());
-    }
-
-    // prettier-ignore
-    @Override
-    public String toString() {
-        return "Authority{" + "name=" + getName() + "}";
-    }
 }

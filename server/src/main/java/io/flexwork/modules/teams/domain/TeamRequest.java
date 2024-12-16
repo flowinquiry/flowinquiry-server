@@ -18,7 +18,8 @@ import lombok.*;
 @EqualsAndHashCode(callSuper = false)
 @Entity
 @Table(name = "fw_team_request")
-@Data
+@Getter
+@Setter
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor

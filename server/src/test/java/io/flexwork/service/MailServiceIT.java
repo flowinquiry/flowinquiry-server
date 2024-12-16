@@ -34,9 +34,9 @@ import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.mail.MailSendException;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 
 /** Integration tests for {@link MailService}. */
 @IntegrationTest
@@ -49,7 +49,7 @@ class MailServiceIT {
 
     @Autowired private FlexworkProperties flexworkProperties;
 
-    @MockBean private JavaMailSender javaMailSender;
+    @MockitoBean private JavaMailSender javaMailSender;
 
     @Captor private ArgumentCaptor<MimeMessage> messageCaptor;
 

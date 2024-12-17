@@ -1,4 +1,4 @@
-local.flexwork.io, localhost {
+local.flowinquiry.io, localhost {
     @http {
         protocol http
     }

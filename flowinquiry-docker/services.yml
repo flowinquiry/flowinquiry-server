@@ -1,13 +1,13 @@
 # This configuration is intended for development purpose, it's **your** responsibility to harden it for production
-name: flexwork
+name: flowinquiry
 services:
   back-end:
-    image: theflexwork/flexwork-server:latest
+    image: flowinquiry/flowinquiry-server:latest
     environment:
       - JAVA_OPTIONS=-Xmx512m -Xms256m
       - SPRING_PROFILES_ACTIVE=prod
-      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgresql:5432/flexwork
-      - SPRING_DATASOURCE_USERNAME=flexwork
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgresql:5432/flowinquiry
+      - SPRING_DATASOURCE_USERNAME=flowinquiry
       - SPRING_DATASOURCE_PASSWORD=${POSTGRES_PASSWORD}
     healthcheck:
       test:
@@ -23,7 +23,7 @@ services:
     env_file:
       - ./.backend.env
   front-end:
-    image: theflexwork/flexwork-frontend:latest
+    image: flowinquiry/flowinquiry-frontend:latest
     environment:
       - AUTH_TRUST_HOST=true
       - BACK_END_SERVER=http://back-end:8080
@@ -36,8 +36,8 @@ services:
     volumes:
       - ./volumes/postgresql/:/var/lib/postgresql/data/
     environment:
-      - POSTGRES_DB=flexwork
-      - POSTGRES_USER=flexwork
+      - POSTGRES_DB=flowinquiry
+      - POSTGRES_USER=flowinquiry
       - POSTGRES_HOST_AUTH_METHOD=trust
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
     healthcheck:

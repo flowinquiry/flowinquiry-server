@@ -97,8 +97,8 @@ add_or_update_env_var "spring.mail.properties.mail.smtp.port" "$smtp_port"
 add_or_update_env_var "spring.mail.username" "$smtp_username"
 add_or_update_env_var "spring.mail.password" "$smtp_password"
 add_or_update_env_var "spring.mail.properties.mail.smtp.auth" "true"
-add_or_update_env_var "flexwork.mail.from" $sender_email
-add_or_update_env_var "flexwork.mail.base_url" $base_url_email
+add_or_update_env_var "flowinquiry.mail.from" $sender_email
+add_or_update_env_var "flowinquiry.mail.base_url" $base_url_email
 
 # Add STARTTLS settings if required
 if [[ "$requires_starttls" == "y" ]]; then

@@ -10,7 +10,7 @@ logging:
     ROOT: WARN
     sql: DEBUG # built-in group sql include org.springframework.jdbc.core, org.hibernate.SQL
     io.undertow: ERROR
-    io.flexwork: DEBUG
+    io.flowinquiry: DEBUG
 
 spring:
   devtools:
@@ -24,8 +24,8 @@ spring:
       indent-output: true
   datasource:
     type: com.zaxxer.hikari.HikariDataSource
-    url: jdbc:postgresql://localhost:5432/flexwork
-    username: flexwork
+    url: jdbc:postgresql://localhost:5432/flowinquiry
+    username: flowinquiry
     password: ${POSTGRES_PASSWORD}
     hikari:
       poolName: Hikari
@@ -39,9 +39,9 @@ server:
   port: 8080
 
 
-flexwork:
+flowinquiry:
   mail:
-    from: flexwork-app@localhost.com
+    from: flowinquiry-app@localhost.com
     base_url: http://127.0.0.1:3000
   # CORS is only enabled by default with the "dev" profile
   cors:

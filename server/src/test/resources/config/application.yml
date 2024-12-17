@@ -55,9 +55,9 @@ management:
 # Add your own application properties here, see the ApplicationProperties class
 # to have type-safe configuration
 # ===================================================================
-flexwork:
+flowinquiry:
   mail:
-    from: flexwork-app@localhost.com
+    from: flowinquiry-app@localhost.com
     base-url: http://127.0.0.1:8080
   security:
     authentication:

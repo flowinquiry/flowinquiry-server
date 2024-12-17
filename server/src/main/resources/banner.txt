@@ -9,5 +9,5 @@ ${AnsiColor.GREEN}░░░░░       ░░░░░  ░░░░░░  ░
 
 
 
-${AnsiColor.BRIGHT_BLUE}:: Flexwork 🤓  :: Running Spring Boot ${spring-boot.version} :: Startup profile(s) ${spring.profiles.active} ::
-:: https://www.flexwork.io ::${AnsiColor.DEFAULT}
+${AnsiColor.BRIGHT_BLUE}:: FlowInquiry 🤓  :: Running Spring Boot ${spring-boot.version} :: Startup profile(s) ${spring.profiles.active} ::
+:: https://www.flowinquiry.io ::${AnsiColor.DEFAULT}

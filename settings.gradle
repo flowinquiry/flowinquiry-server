@@ -8,7 +8,7 @@ pluginManagement {
     }
 }
 
-rootProject.name = "flexwork-server"
+rootProject.name = "flowinquiry-server"
 include 'server'
 include 'tools'
 include 'tools:liquibase'

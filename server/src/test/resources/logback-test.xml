@@ -14,7 +14,7 @@
 	<include
 		resource="org/springframework/boot/logging/logback/console-appender.xml" />
 
-	<logger name="io.flexwork" level="DEBUG" />
+	<logger name="io.flowinquiry" level="DEBUG" />
 
 	<!-- https://www.testcontainers.org/supported_docker_environment/logging_config/ -->
 	<logger name="org.testcontainers" level="INFO" />

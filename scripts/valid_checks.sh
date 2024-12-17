@@ -11,7 +11,7 @@ run_script "docker_check.sh"
 
 # After running all scripts, check if any failed
 if [ ${#failed_scripts[@]} -eq 0 ]; then
-    echo "Your environments settings satisfy Flexwork's conditions"
+    echo "Your environments settings satisfy FlowInquiry's conditions"
 else
     echo "The following scripts failed:"
     for script in "${failed_scripts[@]}"; do

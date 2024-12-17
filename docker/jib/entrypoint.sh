@@ -1,6 +1,6 @@
 #!/bin/bash
 
-echo "The application will start in ${FLEXWORK_SLEEP}s..." && sleep ${FLEXWORK_SLEEP}
+echo "The application will start in ${FLOWINQUIRY_SLEEP}s..." && sleep ${FLOWINQUIRY_SLEEP}
 
 # usage: file_env VAR [DEFAULT]
 #    ie: file_env 'XYZ_DB_PASSWORD' 'example'
@@ -32,4 +32,4 @@ file_env 'SPRING_DATASOURCE_URL'
 file_env 'SPRING_DATASOURCE_USERNAME'
 file_env 'SPRING_DATASOURCE_PASSWORD'
 
-exec java ${JAVA_OPTS} -XX:+AlwaysPreTouch -Djava.security.egd=file:/dev/./urandom -cp /app/resources/:/app/classes/:/app/libs/* "io.flexwork.FlexworkApp"  "$@"
+exec java ${JAVA_OPTS} -XX:+AlwaysPreTouch -Djava.security.egd=file:/dev/./urandom -cp /app/resources/:/app/classes/:/app/libs/* "io.flowinquiry.FlowInquiryApp"  "$@"

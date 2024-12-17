@@ -5,9 +5,9 @@ plugins {
     id "com.gorylenko.gradle-git-properties"
     alias(libs.plugins.spring.boot)
     alias(libs.plugins.spring.dependency.management)
-    id "flexwork.spring-cache-conventions"
-    id "flexwork.docker-conventions"
-    id "flexwork.code-conventions"
+    id "flowinquiry.spring-cache-conventions"
+    id "flowinquiry.docker-conventions"
+    id "flowinquiry.code-conventions"
     id "org.jetbrains.kotlin.jvm"
 }
 
@@ -43,7 +43,7 @@ idea {
 defaultTasks "bootRun"
 
 springBoot {
-    mainClass = "io.flexwork.FlexworkApp"
+    mainClass = "io.flowinquiry.FlowInquiryApp"
 }
 
 test {

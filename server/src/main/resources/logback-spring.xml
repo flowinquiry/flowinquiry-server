@@ -3,7 +3,7 @@
 
 	<!-- Register the custom masking converter -->
 	<conversionRule conversionWord="mask"
-		converterClass="io.flexwork.logback.MaskingMessageConverter" />
+		converterClass="io.flowinquiry.logback.MaskingMessageConverter" />
 
 	<!-- Patterns based on https://github.com/spring-projects/spring-boot/blob/v3.0.0/spring-boot-project/spring-boot/src/main/resources/org/springframework/boot/logging/logback/defaults.xml -->
 	<property name="CONSOLE_LOG_PATTERN"

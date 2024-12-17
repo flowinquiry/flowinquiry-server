@@ -1,13 +1,13 @@
 # This configuration is intended for development purpose, it's **your** responsibility to harden it for production
-name: flexwork
+name: flowinquiry
 services:
   postgresql:
     image: postgres:16.3
     volumes:
       - ./volumes/postgresql/:/var/lib/postgresql/data/
     environment:
-      - POSTGRES_DB=flexwork
-      - POSTGRES_USER=flexwork
+      - POSTGRES_DB=flowinquiry
+      - POSTGRES_USER=flowinquiry
       - POSTGRES_HOST_AUTH_METHOD=trust
     env_file:
       - ../.env.local  # Pass the extra environment variables

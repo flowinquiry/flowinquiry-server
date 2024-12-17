@@ -10,13 +10,13 @@
 	<changeSet id="00000000000000:1-create-schema"
 		author="flexapp">
 		<sql>
-			CREATE SCHEMA IF NOT EXISTS flexwork_master;
+			CREATE SCHEMA IF NOT EXISTS flowinquiry_master;
 		</sql>
 	</changeSet>
 	<changeSet id="00000000000000:2-tenant-tables"
 		author="flexapp">
 		<createTable tableName="fw_tenant"
-			schemaName="flexwork_master">
+			schemaName="flowinquiry_master">
 			<column name="id" type="BIGSERIAL" autoIncrement="true">
 				<constraints primaryKey="true" nullable="false" />
 			</column>
@@ -40,9 +40,9 @@
 		</createTable>
 	</changeSet>
 	<changeSet id="00000000000003" author="flexapp">
-		<insert tableName="fw_tenant" schemaName="flexwork_master">
-			<column name="name" value="flexwork" />
-			<column name="name_id" value="flexwork" />
+		<insert tableName="fw_tenant" schemaName="flowinquiry_master">
+			<column name="name" value="flowinquiry" />
+			<column name="name_id" value="flowinquiry" />
 			<column name="description" value="Default tenant" />
 			<column name="domain" value="" />
 		</insert>

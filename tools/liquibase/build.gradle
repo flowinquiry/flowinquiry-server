@@ -1,9 +1,9 @@
 plugins {
     id 'java'
-    id "flexwork.code-conventions"
+    id "flowinquiry.code-conventions"
 }
 
-group = 'io.flexwork'
+group = 'io.flowinquiry'
 
 repositories {
     mavenCentral()

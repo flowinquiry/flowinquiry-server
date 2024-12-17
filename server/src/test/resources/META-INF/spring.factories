@@ -1,2 +1,2 @@
-org.springframework.test.context.ContextCustomizerFactory = io.flexwork.config.\
-    SqlTestContainersSpringContextCustomizerFactory, io.flexwork.config.KeycloakTestContainerSpringContextCustomizer
+org.springframework.test.context.ContextCustomizerFactory = io.flowinquiry.config.\
+    SqlTestContainersSpringContextCustomizerFactory, io.flowinquiry.config.KeycloakTestContainerSpringContextCustomizer

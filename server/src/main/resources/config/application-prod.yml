@@ -8,7 +8,7 @@ logging:
   structured.format.console: logstash
   level:
     ROOT: INFO
-    io.flexwork: INFO
+    io.flowinquiry: INFO
 
 management:
   prometheus:
@@ -74,7 +74,7 @@ server:
 # to have type-safe configuration
 # ===================================================================
 
-flexwork:
+flowinquiry:
   mail:
     from: <Should be set externally>
     base-url: <Should be set externally>

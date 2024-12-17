@@ -8,13 +8,13 @@
 
 
 	<changeSet id="00000000000000:1-create-schema"
-		author="flexapp">
+		author="flowinquiry">
 		<sql>
 			CREATE SCHEMA IF NOT EXISTS flowinquiry_master;
 		</sql>
 	</changeSet>
 	<changeSet id="00000000000000:2-tenant-tables"
-		author="flexapp">
+		author="flowinquiry">
 		<createTable tableName="fw_tenant"
 			schemaName="flowinquiry_master">
 			<column name="id" type="BIGSERIAL" autoIncrement="true">
@@ -39,7 +39,7 @@
 			<column name="modified_at" type="timestamptz" />
 		</createTable>
 	</changeSet>
-	<changeSet id="00000000000003" author="flexapp">
+	<changeSet id="00000000000003" author="flowinquiry">
 		<insert tableName="fw_tenant" schemaName="flowinquiry_master">
 			<column name="name" value="flowinquiry" />
 			<column name="name_id" value="flowinquiry" />

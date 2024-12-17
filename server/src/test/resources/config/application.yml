@@ -7,7 +7,7 @@
 
 spring:
   application:
-    name: flexApp
+    name: FlowInquiry
   # Replace by 'prod, faker' to add the faker context and have sample data loaded in production
   liquibase:
     contexts: test

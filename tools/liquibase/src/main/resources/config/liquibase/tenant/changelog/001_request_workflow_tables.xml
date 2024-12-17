@@ -4,7 +4,7 @@
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
-	<changeSet id="001:00-workflows-tables" author="flexapp">
+	<changeSet id="001:00-workflows-tables" author="flowinquiry">
 
 		<!--Stores metadata about each workflow, allowing different workflows to 
 			be defined and customized by customers. -->
@@ -352,7 +352,7 @@
 			constraintName="fw_escalation_tracking_user"
 			referencedTableName="fw_user" referencedColumnNames="id" />
 	</changeSet>
-	<changeSet author="flexapp" id="001:01-insert-workflow-data"
+	<changeSet author="flowinquiry" id="001:01-insert-workflow-data"
 		context="dev,test">
 		<loadData file="config/liquibase/tenant/data/fw_workflow.csv"
 			separator=";" tableName="fw_workflow" usePreparedStatements="true">
@@ -364,7 +364,7 @@
 		<sql>SELECT setval('fw_workflow_id_seq', (SELECT MAX(id) FROM
 			fw_workflow));</sql>
 	</changeSet>
-	<changeSet author="flexapp"
+	<changeSet author="flowinquiry"
 		id="001:02-insert-workflow-state-data" context="dev,test">
 		<loadData
 			file="config/liquibase/tenant/data/fw_workflow_state.csv"
@@ -380,7 +380,7 @@
 		<sql>SELECT setval('fw_workflow_state_id_seq', (SELECT MAX(id) FROM
 			fw_workflow_state));</sql>
 	</changeSet>
-	<changeSet author="flexapp"
+	<changeSet author="flowinquiry"
 		id="001:03-insert-workflow-transition-data" context="dev,test">
 		<loadData
 			file="config/liquibase/tenant/data/fw_workflow_transition.csv"
@@ -396,7 +396,7 @@
 		<sql>SELECT setval('fw_workflow_transition_id_seq', (SELECT MAX(id)
 			FROM fw_workflow_transition));</sql>
 	</changeSet>
-	<changeSet author="flexapp"
+	<changeSet author="flowinquiry"
 		id="001:04-insert-team-workflow-usage-data" context="dev,test">
 		<loadData
 			file="config/liquibase/tenant/data/fw_team_workflow_selection.csv"

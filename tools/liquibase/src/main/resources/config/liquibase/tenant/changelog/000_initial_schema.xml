@@ -6,7 +6,7 @@
         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
 
 
-	<changeSet id="000:01-core-tables" author="flexapp">
+	<changeSet id="000:01-core-tables" author="flowinquiry">
 
 		<!--Table for shedLock, a distributed lock for spring scheduling service -->
 		<createTable tableName="shedlock">
@@ -280,7 +280,7 @@
 			referencedColumnNames="id" />
 	</changeSet>
 
-	<changeSet author="flexapp"
+	<changeSet author="flowinquiry"
 		id="000:03-insert-default-authority-data">
 		<loadData
 			file="config/liquibase/tenant/data/fw_authority.csv" separator=";"
@@ -288,7 +288,7 @@
 			<column name="name" type="string" />
 		</loadData>
 	</changeSet>
-	<changeSet author="flexapp"
+	<changeSet author="flowinquiry"
 		id="000:04-insert-default-user-data" context="dev,test">
 		<loadData file="config/liquibase/tenant/data/fw_user.csv"
 			separator=";" tableName="fw_user" usePreparedStatements="true">
@@ -320,7 +320,7 @@
 		</loadData>
 		<sql>SELECT setval('fw_user_id_seq', (SELECT MAX(id) FROM fw_user));</sql>
 	</changeSet>
-	<changeSet author="flexapp"
+	<changeSet author="flowinquiry"
 		id="000:04-insert-default-user-data-prod" context="prod">
 		<loadData
 			file="config/liquibase/tenant/data/fw_user_prod.csv" separator=";"
@@ -354,7 +354,7 @@
 		<sql>SELECT setval('fw_user_id_seq', (SELECT MAX(id) FROM fw_user));</sql>
 	</changeSet>
 
-	<changeSet author="flexapp"
+	<changeSet author="flowinquiry"
 		id="000:05-insert-default-user-authority-data" context="dev,test">
 		<loadData
 			file="config/liquibase/tenant/data/fw_user_authority.csv"
@@ -375,7 +375,7 @@
 		<sql>SELECT setval('fw_organization_id_seq', (SELECT MAX(id) FROM
 			fw_organization));</sql>
 	</changeSet>
-	<changeSet author="flexapp"
+	<changeSet author="flowinquiry"
 		id="000:05-insert-default-user-authority-data-prod" context="prod">
 		<loadData
 			file="config/liquibase/tenant/data/fw_user_authority_prod.csv"
@@ -396,7 +396,7 @@
 		<sql>SELECT setval('fw_organization_id_seq', (SELECT MAX(id) FROM
 			fw_organization));</sql>
 	</changeSet>
-	<changeSet author="flexapp"
+	<changeSet author="flowinquiry"
 		id="000:06-insert-default-fw-team-data" context="dev,test">
 		<loadData file="config/liquibase/tenant/data/fw_team.csv"
 			tableName="fw_team" separator=";">
@@ -409,7 +409,7 @@
 		</loadData>
 		<sql>SELECT setval('fw_team_id_seq', (SELECT MAX(id) FROM fw_team));</sql>
 	</changeSet>
-	<changeSet author="flexapp"
+	<changeSet author="flowinquiry"
 		id="000:07-insert-default-fw-team-role">
 		<loadData
 			file="config/liquibase/tenant/data/fw_team_role.csv"
@@ -418,7 +418,7 @@
 			<column name="description" type="STRING" />
 		</loadData>
 	</changeSet>
-	<changeSet author="flexapp"
+	<changeSet author="flowinquiry"
 		id="000:08-insert-default-fw-user-team-data" context="dev,test">
 		<loadData
 			file="config/liquibase/tenant/data/fw_user_team.csv"
@@ -428,7 +428,7 @@
 			<column name="role_name" type="STRING" />
 		</loadData>
 	</changeSet>
-	<changeSet author="flexapp"
+	<changeSet author="flowinquiry"
 		id="000:09-insert-default-fw-resource">
 		<loadData file="config/liquibase/tenant/data/fw_resource.csv"
 			separator=";" tableName="fw_resource" usePreparedStatements="true">
@@ -436,7 +436,7 @@
 			<column name="description" type="STRING" />
 		</loadData>
 	</changeSet>
-	<changeSet author="flexapp"
+	<changeSet author="flowinquiry"
 		id="000:10-insert-default-fw-authority-resource-permission">
 		<loadData
 			file="config/liquibase/tenant/data/fw_authority_resource_permission.csv"

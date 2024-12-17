@@ -5,15 +5,15 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.pulumi</groupId>
-    <artifactId>flexwork-k8s</artifactId>
+    <artifactId>flowinquiry-k8s</artifactId>
     <version>1.0-SNAPSHOT</version>
 
     <properties>
         <encoding>UTF-8</encoding>
-        <maven.compiler.source>11</maven.compiler.source>
-        <maven.compiler.target>11</maven.compiler.target>
-        <maven.compiler.release>11</maven.compiler.release>
-        <mainClass>myproject.App</mainClass>
+        <maven.compiler.source>21</maven.compiler.source>
+        <maven.compiler.target>21</maven.compiler.target>
+        <maven.compiler.release>21</maven.compiler.release>
+        <mainClass>io.flowinquiry.K8sDeployment</mainClass>
         <mainArgs/>
     </properties>
 

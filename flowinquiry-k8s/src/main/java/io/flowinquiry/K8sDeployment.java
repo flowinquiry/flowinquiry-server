@@ -1,4 +1,4 @@
-package myproject;
+package io.flowinquiry;
 
 import com.pulumi.Pulumi;
 import com.pulumi.kubernetes.apps.v1.Deployment;
@@ -13,7 +13,7 @@ import com.pulumi.kubernetes.meta.v1.inputs.ObjectMetaArgs;
 
 import java.util.Map;
 
-public class App {
+public class K8sDeployment {
     public static void main(String[] args) {
         Pulumi.run(ctx -> {
             var labels = Map.of("app", "nginx");

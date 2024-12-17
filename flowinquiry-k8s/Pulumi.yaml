@@ -1,5 +1,5 @@
-name: flexwork-k8s
-description: Flexwork deployment for k8s
+name: flowinquiry-k8s
+description: FlowInquiry deployment for k8s
 runtime: java
 config:
   pulumi:tags:

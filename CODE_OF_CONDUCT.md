@@ -36,7 +36,7 @@ This Code of Conduct applies within all community spaces, and it also applies wh
 
 ## Enforcement
 
-Instances of abusive, harassing, or otherwise unacceptable behavior may be reported to the community leaders responsible for enforcement at **[contact@theflexwork.io][email_contact]**. All complaints will be reviewed and investigated promptly and fairly.
+Instances of abusive, harassing, or otherwise unacceptable behavior may be reported to the community leaders responsible for enforcement at **[contact@flowinquiry.io][email_contact]**. All complaints will be reviewed and investigated promptly and fairly.
 
 All community leaders are obligated to respect the privacy and security of the reporter of any incident.
 
@@ -77,4 +77,4 @@ Community Impact Guidelines were inspired by [Mozilla's code of conduct enforcem
 For answers to common questions about this code of conduct, see the FAQ at [https://www.contributor-covenant.org/faq](https://www.contributor-covenant.org/faq). Translations are available at [https://www.contributor-covenant.org/translations](https://www.contributor-covenant.org/translations).
 
 [homepage]: https://www.contributor-covenant.org
-[email_contact]: contact@theflexwork.io
+[email_contact]: contact@flowinquiry.io

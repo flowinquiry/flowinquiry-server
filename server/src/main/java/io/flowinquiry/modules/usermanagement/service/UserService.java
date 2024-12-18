@@ -312,8 +312,7 @@ public class UserService {
                                         (String) result[0], // resourceName
                                         (result[1] == null)
                                                 ? Permission.NONE.toString()
-                                                : (String) result[1] // permission
-                                        ))
+                                                : Permission.fromCode((int) result[1]).toString()))
                 .collect(Collectors.toList());
     }
 

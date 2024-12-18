@@ -12,12 +12,8 @@ FlowInquiry Server is the back-end component of the FlowInquiry platform, a mode
 
 ## Screenshots
 
-[![Team Dashboard](assets/team_dashboard_thumbnail.png)](assets/team_dashboard.png)
-[![Team Dashboard](assets/team_members_thumbnail.png)](assets/team_members.png)
-[![Team Dashboard](assets/ticket_view_thumbnail.png)](assets/ticket_view.png)
-[![Team Dashboard](assets/user_view_thumbnail.png)](assets/user_view.png)
-[![Team Dashboard](assets/workflow_customization_thumbnail.png)](assets/workflow_customization.png)
-[![Team Dashboard](assets/workspace_dashboard_thumbnail.png)](assets/workspace_dashboard.png)
+| [![Team Dashboard](assets/team_dashboard_thumbnail.png)](assets/team_dashboard.png) | [![Team Members](assets/team_members_thumbnail.png)](assets/team_members.png) | [![Ticket View](assets/ticket_view_thumbnail.png)](assets/ticket_view.png) |
+| [![User View](assets/user_view_thumbnail.png)](assets/user_view.png) | [![Workflow Customization](assets/workflow_customization_thumbnail.png)](assets/workflow_customization.png) | [![Workspace Dashboard](assets/workspace_dashboard_thumbnail.png)](assets/workspace_dashboard.png) |
 
 
 ## Getting Started

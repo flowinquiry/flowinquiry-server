@@ -172,6 +172,7 @@ public interface TeamRequestRepository
                     + "    FROM TeamRequest c "
                     + "    WHERE c.isDeleted = false "
                     + "    AND c.team.id = :teamId "
+                    + "    AND c.isCompleted = true "
                     + "    AND c.actualCompletionDate IS NOT NULL "
                     + "    GROUP BY CAST(c.actualCompletionDate AS date)"
                     + ") closedTicketCounts ON CAST(r.createdAt AS date) = closedTicketCounts.completionDate "

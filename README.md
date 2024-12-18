@@ -10,6 +10,16 @@ FlowInquiry Server is the back-end component of the FlowInquiry platform, a mode
 * **Scalable Architecture**: Designed to handle high concurrency and diverse workloads, making it suitable for enterprise use.
 * **Secure**: Implements industry-standard security practices, including authentication and role-based access control.
 
+## Screenshots
+
+[![Team Dashboard](assets/team_dashboard_thumbnail.png)](assets/team_dashboard.png)
+[![Team Dashboard](assets/team_members_thumbnail.png)](assets/team_members.png)
+[![Team Dashboard](assets/ticket_view_thumbnail.png)](assets/ticket_view.png)
+[![Team Dashboard](assets/user_view_thumbnail.png)](assets/user_view.png)
+[![Team Dashboard](assets/workflow_customization_thumbnail.png)](assets/workflow_customization.png)
+[![Team Dashboard](assets/workspace_dashboard_thumbnail.png)](assets/workspace_dashboard.png)
+
+
 ## Getting Started
 
 ### Prerequisites

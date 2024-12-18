@@ -12,8 +12,42 @@ FlowInquiry Server is the back-end component of the FlowInquiry platform, a mode
 
 ## Screenshots
 
-| [![Team Dashboard](assets/team_dashboard_thumbnail.png)](assets/team_dashboard.png) | [![Team Members](assets/team_members_thumbnail.png)](assets/team_members.png) | [![Ticket View](assets/ticket_view_thumbnail.png)](assets/ticket_view.png) |
-| [![User View](assets/user_view_thumbnail.png)](assets/user_view.png) | [![Workflow Customization](assets/workflow_customization_thumbnail.png)](assets/workflow_customization.png) | [![Workspace Dashboard](assets/workspace_dashboard_thumbnail.png)](assets/workspace_dashboard.png) |
+<table>
+  <tr>
+    <td style="padding: 10px; text-align: center;">
+      <a href="assets/team_dashboard.png">
+        <img src="assets/team_dashboard_thumbnail.png" alt="Team Dashboard">
+      </a>
+    </td>
+    <td style="padding: 10px; text-align: center;">
+      <a href="assets/team_members.png">
+        <img src="assets/team_members_thumbnail.png" alt="Team Members">
+      </a>
+    </td>
+    <td style="padding: 10px; text-align: center;">
+      <a href="assets/ticket_view.png">
+        <img src="assets/ticket_view_thumbnail.png" alt="Ticket View">
+      </a>
+    </td>
+  </tr>
+  <tr>
+    <td style="padding: 10px; text-align: center;">
+      <a href="assets/user_view.png">
+        <img src="assets/user_view_thumbnail.png" alt="User View">
+      </a>
+    </td>
+    <td style="padding: 10px; text-align: center;">
+      <a href="assets/workflow_customization.png">
+        <img src="assets/workflow_customization_thumbnail.png" alt="Workflow Customization">
+      </a>
+    </td>
+    <td style="padding: 10px; text-align: center;">
+      <a href="assets/workspace_dashboard.png">
+        <img src="assets/workspace_dashboard_thumbnail.png" alt="Workspace Dashboard">
+      </a>
+    </td>
+  </tr>
+</table>
 
 
 ## Getting Started

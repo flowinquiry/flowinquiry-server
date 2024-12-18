@@ -54,33 +54,29 @@ From the root folder, run the command:
 It may take some time before the server APIs are accessible on the default port 8080
 ```bash
 ➜  flowinquiry-server git:(main) ./gradlew :server:bootRun
-Starting a Gradle Daemon, 1 incompatible Daemon could not be reused, use --status for details
- 
-> Task :server:bootRun
- ███████████ ████                                                          █████
-░░███░░░░░░█░░███                                                         ░░███
- ░███   █ ░  ░███   ██████  █████ █████ █████ ███ █████  ██████  ████████  ░███ █████
- ░███████    ░███  ███░░███░░███ ░░███ ░░███ ░███░░███  ███░░███░░███░░███ ░███░░███
- ░███░░░█    ░███ ░███████  ░░░█████░   ░███ ░███ ░███ ░███ ░███ ░███ ░░░  ░██████░
- ░███  ░     ░███ ░███░░░    ███░░░███  ░░███████████  ░███ ░███ ░███      ░███░░███
- █████       █████░░██████  █████ █████  ░░████░████   ░░██████  █████     ████ █████
-░░░░░       ░░░░░  ░░░░░░  ░░░░░ ░░░░░    ░░░░ ░░░░     ░░░░░░  ░░░░░     ░░░░ ░░░░░
- 
- 
- 
-:: FlowInquiry 🤓  :: Running Spring Boot 3.3.1 :: Startup profile(s) dev ::
+INFO in org.springframework.boot.logging.logback.SpringBootJoranConfigurator@5618d5e5 - Registering current configuration as safe fallback point
+
+______ _             _____                  _
+|  ___| |           |_   _|                (_)
+| |_  | | _____      _| | _ __   __ _ _   _ _ _ __ _   _
+|  _| | |/ _ \ \ /\ / / || '_ \ / _` | | | | | '__| | | |
+| |   | | (_) \ V  V /| || | | | (_| | |_| | | |  | |_| |
+\_|   |_|\___/ \_/\_/\___/_| |_|\__, |\__,_|_|_|   \__, |
+                                   | |              __/ |
+                                   |_|             |___/
+
+
+
+:: FlowInquiry 🤓  :: Running Spring Boot 3.4.0 :: Startup profile(s) dev ::
 :: https://www.flowinquiry.io ::
- 
-2024-10-01T21:51:52.677-07:00 DEBUG 25048 --- [kground-preinit] org.jboss.logging.logProvider:164 : Logging Provider: org.jboss.logging.Slf4jLoggerProvider found via system property 
-2024-10-01T21:51:52.708-07:00  INFO 25048 --- [  restartedMain] io.flowinquiry.FlowInquiryApp.logStarting:50 : Starting FlowInquiryApp using Java 17.0.11 with PID 25048 (~/Projects/flowinquiry-server/server/build/classes/java/main started by <user> in ~/Projects/flowinquiry-server/server) 
-2024-10-01T21:51:52.708-07:00 DEBUG 25048 --- [  restartedMain] io.flowinquiry.FlowInquiryApp.logStarting:51 : Running with Spring Boot v3.3.1, Spring v6.1.10 
-2024-10-01T21:51:52.708-07:00  INFO 25048 --- [  restartedMain] io.flowinquiry.FlowInquiryApp.logStartupProfileInfo:660 : The following 2 profiles are active: "dev", "api-docs" 
-2024-10-01T21:51:52.733-07:00  INFO 25048 --- [  restartedMain] org.springframework.boot.devtools.restart.ChangeableUrls.logTo:252 : The Class-Path manifest attribute in ~/.gradle/caches/modules-2/files-2.1/com.sun.xml.bind/jaxb-impl/4.0.5/b70ad3db43ee72d7a35ae3c4d1d6d2e08ce7623/jaxb-impl-4.0.5.jar referenced one or more files that do not exist: file:~/.gradle/caches/modules-2/files-2.1/com.sun.xml.bind/jaxb-impl/4.0.5/b70ad3db43ee72d7a35ae3c4d1d6d2e08ce7623/jaxb-core.jar,file:~/.gradle/caches/modules-2/files-2.1/com.sun.xml.bind/jaxb-impl/4.0.5/b70ad3db43ee72d7a35ae3c4d1d6d2e08ce7623/angus-activation.jar 
-2024-10-01T21:51:52.733-07:00  INFO 25048 --- [  restartedMain] org.springframework.boot.devtools.restart.ChangeableUrls.logTo:252 : The Class-Path manifest attribute in ~/.gradle/caches/modules-2/files-2.1/com.sun.xml.bind/jaxb-core/4.0.5/ad427d8777ae2495bfcb37069d611e8379867e6d/jaxb-core-4.0.5.jar referenced one or more files that do not exist: file:~/.gradle/caches/modules-2/files-2.1/com.sun.xml.bind/jaxb-core/4.0.5/ad427d8777ae2495bfcb37069d611e8379867e6d/jakarta.activation-api.jar,file:~/.gradle/caches/modules-2/files-2.1/com.sun.xml.bind/jaxb-core/4.0.5/ad427d8777ae2495bfcb37069d611e8379867e6d/jakarta.xml.bind-api.jar 
- 
+
+INFO 35926 --- [  restartedMain] io.flowinquiry.FlowInquiryApp.logStarting:53 : Starting FlowInquiryApp using Java 21.0.5 with PID 35926 (/Users/hainguyen/Projects/flowinquiry-server/server/build/classes/java/main started by hainguyen in /Users/hainguyen/Projects/flowinquiry-server) 
+DEBUG 35926 --- [  restartedMain] io.flowinquiry.FlowInquiryApp.logStarting:54 : Running with Spring Boot v3.4.0, Spring v6.2.0 
+INFO 35926 --- [  restartedMain] io.flowinquiry.FlowInquiryApp.logStartupProfileInfo:658 : The following 1 profile is active: "dev" 
+DEBUG 35926 --- [  restartedMain] io.flowinquiry.config.WebConfigurer.corsFilter:88 : Registering CORS filter 
 ```
 ## Related Information
-- [FlowInquiry document](https://flowinquiry.github.io/flowinquiry-docs): The centralized document for FlowInquiry products
+- [FlowInquiry document](https://docs.flowinquiry.io): The centralized document for FlowInquiry products
 - [FlowInquiry Server](https://github.com/flowinquiry/flowinquiry-server): Back-end services for FlowInquiry.
 - [FlowInquiry Client](https://github.com/flowinquiry/flowinquiry-frontend): Front-end application.
 - [FlowInquiry Ops](https://github.com/flowinquiry/flowinquiry-ops): Deployment and operational scripts.

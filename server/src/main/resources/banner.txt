@@ -1,11 +1,11 @@
-${AnsiColor.GREEN} ███████████ ████                      ${AnsiColor.CYAN}                                    █████
-${AnsiColor.GREEN}░░███░░░░░░█░░███                      ${AnsiColor.CYAN}                                   ░░███
-${AnsiColor.GREEN} ░███   █ ░  ░███   ██████  █████ █████${AnsiColor.CYAN} █████ ███ █████  ██████  ████████  ░███ █████
-${AnsiColor.GREEN} ░███████    ░███  ███░░███░░███ ░░███ ${AnsiColor.CYAN}░░███ ░███░░███  ███░░███░░███░░███ ░███░░███
-${AnsiColor.GREEN} ░███░░░█    ░███ ░███████  ░░░█████░  ${AnsiColor.CYAN} ░███ ░███ ░███ ░███ ░███ ░███ ░░░  ░██████░
-${AnsiColor.GREEN} ░███  ░     ░███ ░███░░░    ███░░░███ ${AnsiColor.CYAN} ░░███████████  ░███ ░███ ░███      ░███░░███
-${AnsiColor.GREEN} █████       █████░░██████  █████ █████${AnsiColor.CYAN}  ░░████░████   ░░██████  █████     ████ █████
-${AnsiColor.GREEN}░░░░░       ░░░░░  ░░░░░░  ░░░░░ ░░░░░ ${AnsiColor.CYAN}   ░░░░ ░░░░     ░░░░░░  ░░░░░     ░░░░ ░░░░░
+${AnsiColor.GREEN}______ _             _____ ${AnsiColor.CYAN}                 _
+${AnsiColor.GREEN}|  ___| |           |_   _|${AnsiColor.CYAN}                (_)
+${AnsiColor.GREEN}| |_  | | _____      _| | _${AnsiColor.CYAN} __   __ _ _   _ _ _ __ _   _
+${AnsiColor.GREEN}|  _| | |/ _ \ \ /\ / / || ${AnsiColor.CYAN}'_ \ / _` | | | | | '__| | | |
+${AnsiColor.GREEN}| |   | | (_) \ V  V /| || ${AnsiColor.CYAN}| | | (_| | |_| | | |  | |_| |
+${AnsiColor.GREEN}\_|   |_|\___/ \_/\_/\___/_${AnsiColor.CYAN}| |_|\__, |\__,_|_|_|   \__, |
+${AnsiColor.GREEN}                           ${AnsiColor.CYAN}        | |              __/ |
+${AnsiColor.GREEN}                           ${AnsiColor.CYAN}        |_|             |___/
 
 
 

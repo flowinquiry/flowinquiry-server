@@ -201,4 +201,6 @@ public interface TeamRequestRepository
     """)
     List<TeamTicketPriorityDistributionDTO> findPriorityDistributionByUserId(
             @Param("userId") Long userId);
+
+    boolean existsByWorkflowIdAndIsDeletedFalse(Long workflowId);
 }

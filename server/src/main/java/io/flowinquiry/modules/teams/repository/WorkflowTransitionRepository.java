@@ -60,4 +60,11 @@ public interface WorkflowTransitionRepository extends JpaRepository<WorkflowTran
     void deleteBySourceStateIdInOrTargetStateIdIn(
             @Param("sourceStateIds") List<Long> sourceStateIds,
             @Param("targetStateIds") List<Long> targetStateIds);
+
+    @Modifying
+    @Transactional
+    @Query(
+            value = "DELETE FROM fw_workflow_transition WHERE workflow_id = :workflowId",
+            nativeQuery = true)
+    void deleteByWorkflowId(Long workflowId);
 }

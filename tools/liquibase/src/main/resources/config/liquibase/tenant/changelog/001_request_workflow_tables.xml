@@ -133,7 +133,8 @@
 		<addForeignKeyConstraint
 			baseTableName="fw_workflow_state" baseColumnNames="workflow_id"
 			constraintName="fk_workflow_states_workflow"
-			referencedTableName="fw_workflow" referencedColumnNames="id" />
+			referencedTableName="fw_workflow" referencedColumnNames="id"
+			onDelete="CASCADE" />
 
 		<!--This table stores each customer request associated with a team, linking 
 			the request to a specific workflow and tracking the current state. -->

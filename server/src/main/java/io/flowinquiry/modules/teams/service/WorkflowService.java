@@ -8,10 +8,7 @@ import io.flowinquiry.modules.teams.domain.Workflow;
 import io.flowinquiry.modules.teams.domain.WorkflowState;
 import io.flowinquiry.modules.teams.domain.WorkflowTransition;
 import io.flowinquiry.modules.teams.domain.WorkflowVisibility;
-import io.flowinquiry.modules.teams.repository.TeamWorkflowSelectionRepository;
-import io.flowinquiry.modules.teams.repository.WorkflowRepository;
-import io.flowinquiry.modules.teams.repository.WorkflowStateRepository;
-import io.flowinquiry.modules.teams.repository.WorkflowTransitionRepository;
+import io.flowinquiry.modules.teams.repository.*;
 import io.flowinquiry.modules.teams.service.dto.WorkflowDTO;
 import io.flowinquiry.modules.teams.service.dto.WorkflowDetailedDTO;
 import io.flowinquiry.modules.teams.service.dto.WorkflowStateDTO;
@@ -41,6 +38,8 @@ public class WorkflowService {
 
     private final TeamWorkflowSelectionRepository teamWorkflowSelectionRepository;
 
+    private final TeamRequestRepository teamRequestRepository;
+
     private final WorkflowMapper workflowMapper;
 
     private final WorkflowStateMapper workflowStateMapper;
@@ -52,6 +51,7 @@ public class WorkflowService {
             WorkflowStateRepository workflowStateRepository,
             WorkflowTransitionRepository workflowTransitionRepository,
             TeamWorkflowSelectionRepository teamWorkflowSelectionRepository,
+            TeamRequestRepository teamRequestRepository,
             WorkflowMapper workflowMapper,
             WorkflowStateMapper workflowStateMapper,
             WorkflowTransitionMapper workflowTransitionMapper) {
@@ -59,6 +59,7 @@ public class WorkflowService {
         this.workflowStateRepository = workflowStateRepository;
         this.workflowTransitionRepository = workflowTransitionRepository;
         this.teamWorkflowSelectionRepository = teamWorkflowSelectionRepository;
+        this.teamRequestRepository = teamRequestRepository;
         this.workflowMapper = workflowMapper;
         this.workflowStateMapper = workflowStateMapper;
         this.workflowTransitionMapper = workflowTransitionMapper;
@@ -85,15 +86,6 @@ public class WorkflowService {
                         })
                 .orElseThrow(
                         () -> new IllegalArgumentException("Workflow not found with id: " + id));
-    }
-
-    @Transactional
-    public void deleteWorkflow(Long id) {
-        if (workflowRepository.existsById(id)) {
-            workflowRepository.deleteById(id);
-        } else {
-            throw new IllegalArgumentException("Workflow not found with id: " + id);
-        }
     }
 
     /**
@@ -489,5 +481,37 @@ public class WorkflowService {
                         .toList());
 
         return clonedWorkflow;
+    }
+
+    @Transactional
+    public void deleteWorkflow(Long workflowId) {
+        Workflow workflow =
+                workflowRepository
+                        .findById(workflowId)
+                        .orElseThrow(
+                                () ->
+                                        new EntityNotFoundException(
+                                                "Workflow not found with id: " + workflowId));
+
+        // Check if the workflow is referenced by other workflows
+        boolean isReferenced = workflowRepository.existsByParentWorkflowId(workflowId);
+        if (isReferenced) {
+            throw new IllegalStateException(
+                    "Cannot delete a workflow that is referenced by another workflow.");
+        }
+
+        // Check if there are any active team requests associated with this workflow
+        boolean hasActiveRequests =
+                teamRequestRepository.existsByWorkflowIdAndIsDeletedFalse(workflowId);
+        if (hasActiveRequests) {
+            throw new IllegalStateException("Cannot delete a workflow with active requests.");
+        }
+
+        workflowStateRepository.deleteByWorkflowId(workflowId);
+        workflowTransitionRepository.deleteByWorkflowId(workflowId);
+
+        teamWorkflowSelectionRepository.deleteByWorkflowId(workflowId);
+
+        workflowRepository.delete(workflow);
     }
 }

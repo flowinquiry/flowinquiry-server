@@ -54,4 +54,6 @@ public interface WorkflowRepository
         )
     """)
     List<Workflow> findGlobalWorkflowsNotLinkedToTeam(@Param("teamId") Long teamId);
+
+    boolean existsByParentWorkflowId(Long parentWorkflowId);
 }

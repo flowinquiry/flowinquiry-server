@@ -6,6 +6,7 @@ import jakarta.servlet.ServletContext;
 import java.io.File;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Paths;
+import java.util.Objects;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.web.server.WebServerFactory;
@@ -69,7 +70,9 @@ public class WebConfigurer
     /** Resolve path prefix to static resources. */
     private String resolvePathPrefix() {
         String fullExecutablePath =
-                decode(this.getClass().getResource("").getPath(), StandardCharsets.UTF_8);
+                decode(
+                        Objects.requireNonNull(this.getClass().getResource("")).getPath(),
+                        StandardCharsets.UTF_8);
         String rootPath = Paths.get(".").toUri().normalize().getPath();
         String extractedPath = fullExecutablePath.replace(rootPath, "");
         int extractionEndIndex = extractedPath.indexOf("build/");

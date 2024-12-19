@@ -71,7 +71,7 @@ public class LoginController {
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
         UserDTO adminUserDTO =
-                userService.getUserWithAuthorities().orElseThrow(() -> new InvalidLoginException());
+                userService.getUserWithAuthorities().orElseThrow(InvalidLoginException::new);
 
         String jwt = this.createToken(authentication, loginVM.isRememberMe());
         HttpHeaders httpHeaders = new HttpHeaders();

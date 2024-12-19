@@ -34,6 +34,9 @@ public class FileDownloadController {
         final HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.setContentType(
                 MediaTypeFactory.getMediaType(fileName).orElse(MediaType.APPLICATION_OCTET_STREAM));
+        httpHeaders.setCacheControl("max-age=3600, must-revalidate"); // Cache for 1 hour
+        httpHeaders.setExpires(System.currentTimeMillis() + 3600 * 1000); // Set expiry
+        httpHeaders.setETag("\"" + byteArrayOutputStream.size() + "\""); // ETag for revalidation
 
         return new ResponseEntity<>(
                 byteArrayOutputStream.toByteArray(), httpHeaders, HttpStatus.OK);

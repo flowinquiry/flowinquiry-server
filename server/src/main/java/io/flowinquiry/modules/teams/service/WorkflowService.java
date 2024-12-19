@@ -38,6 +38,8 @@ public class WorkflowService {
 
     private final TeamWorkflowSelectionRepository teamWorkflowSelectionRepository;
 
+    private final TeamRepository teamRepository;
+
     private final TeamRequestRepository teamRequestRepository;
 
     private final WorkflowMapper workflowMapper;
@@ -51,6 +53,7 @@ public class WorkflowService {
             WorkflowStateRepository workflowStateRepository,
             WorkflowTransitionRepository workflowTransitionRepository,
             TeamWorkflowSelectionRepository teamWorkflowSelectionRepository,
+            TeamRepository teamRepository,
             TeamRequestRepository teamRequestRepository,
             WorkflowMapper workflowMapper,
             WorkflowStateMapper workflowStateMapper,
@@ -59,15 +62,11 @@ public class WorkflowService {
         this.workflowStateRepository = workflowStateRepository;
         this.workflowTransitionRepository = workflowTransitionRepository;
         this.teamWorkflowSelectionRepository = teamWorkflowSelectionRepository;
+        this.teamRepository = teamRepository;
         this.teamRequestRepository = teamRequestRepository;
         this.workflowMapper = workflowMapper;
         this.workflowStateMapper = workflowStateMapper;
         this.workflowTransitionMapper = workflowTransitionMapper;
-    }
-
-    @Transactional
-    public WorkflowDTO createWorkflow(Workflow workflow) {
-        return workflowMapper.toDto(workflowRepository.save(workflow));
     }
 
     @Transactional(readOnly = true)
@@ -115,21 +114,58 @@ public class WorkflowService {
     @Transactional
     public WorkflowDetailedDTO saveWorkflow(WorkflowDetailedDTO dto) {
         Workflow workflow = workflowMapper.toEntity(dto);
+
+        // Set default values for escalation timeouts if they are null
+        if (workflow.getLevel1EscalationTimeout() == null) {
+            workflow.setLevel1EscalationTimeout(1000000);
+        }
+        if (workflow.getLevel2EscalationTimeout() == null) {
+            workflow.setLevel2EscalationTimeout(1000000);
+        }
+        if (workflow.getLevel3EscalationTimeout() == null) {
+            workflow.setLevel3EscalationTimeout(1000000);
+        }
+
+        // Retrieve the team if ownerId is present, otherwise null
+        Team team =
+                dto.getOwnerId() != null
+                        ? teamRepository
+                                .findById(dto.getOwnerId())
+                                .orElseThrow(
+                                        () ->
+                                                new IllegalArgumentException(
+                                                        "Team not found with ID: "
+                                                                + dto.getOwnerId()))
+                        : null;
+
+        // Set the owner if the team exists
+        workflow.setOwner(team);
+
+        // Save the workflow
         Workflow savedWorkflow = workflowRepository.save(workflow);
 
-        // Save states
-        List<WorkflowState> states =
-                dto.getStates().stream()
-                        .map(
-                                stateDto -> {
-                                    WorkflowState state = workflowStateMapper.toEntity(stateDto);
-                                    state.setWorkflow(savedWorkflow);
-                                    return state;
-                                })
-                        .collect(Collectors.toList());
-        workflowStateRepository.saveAll(states);
+        // If ownerId is not null, create a TeamWorkflowSelection entry
+        if (team != null) {
+            TeamWorkflowSelection teamWorkflowSelection = new TeamWorkflowSelection();
+            teamWorkflowSelection.setTeam(team);
+            teamWorkflowSelection.setWorkflow(savedWorkflow);
+            teamWorkflowSelectionRepository.save(teamWorkflowSelection);
+        }
 
-        // Save transitions
+        // Save states one by one to maintain ID mapping
+        Map<Long, Long> idMapping = new HashMap<>(); // Old state ID -> New state ID mapping
+        List<WorkflowState> savedStates = new ArrayList<>();
+        for (WorkflowStateDTO stateDto : dto.getStates()) {
+            WorkflowState state = workflowStateMapper.toEntity(stateDto);
+            Long oldId = state.getId(); // Keep track of the old ID
+            state.setId(null); // Set ID to null for Hibernate to generate a new ID
+            state.setWorkflow(savedWorkflow); // Associate the state with the saved workflow
+            WorkflowState savedState = workflowStateRepository.save(state); // Save the state
+            idMapping.put(oldId, savedState.getId()); // Map old ID to the new ID
+            savedStates.add(savedState);
+        }
+
+        // Save transitions using the new state IDs
         List<WorkflowTransition> transitions =
                 dto.getTransitions().stream()
                         .map(
@@ -137,32 +173,40 @@ public class WorkflowService {
                                     WorkflowTransition transition =
                                             workflowTransitionMapper.toEntity(transitionDto);
                                     transition.setWorkflow(savedWorkflow);
-                                    transition.setSourceState(
-                                            states.stream()
+
+                                    // Map source and target state IDs to the newly saved states
+                                    WorkflowState sourceState =
+                                            savedStates.stream()
                                                     .filter(
                                                             state ->
                                                                     state.getId()
                                                                             .equals(
-                                                                                    transitionDto
-                                                                                            .getSourceStateId()))
+                                                                                    idMapping.get(
+                                                                                            transitionDto
+                                                                                                    .getSourceStateId())))
                                                     .findFirst()
-                                                    .orElse(null));
-                                    transition.setTargetState(
-                                            states.stream()
+                                                    .orElse(null);
+                                    WorkflowState targetState =
+                                            savedStates.stream()
                                                     .filter(
                                                             state ->
                                                                     state.getId()
                                                                             .equals(
-                                                                                    transitionDto
-                                                                                            .getTargetStateId()))
+                                                                                    idMapping.get(
+                                                                                            transitionDto
+                                                                                                    .getTargetStateId())))
                                                     .findFirst()
-                                                    .orElse(null));
+                                                    .orElse(null);
+
+                                    transition.setSourceState(sourceState);
+                                    transition.setTargetState(targetState);
+
                                     return transition;
                                 })
                         .collect(Collectors.toList());
         workflowTransitionRepository.saveAll(transitions);
 
-        return workflowMapper.toDetailedDto(workflow);
+        return workflowMapper.toDetailedDto(savedWorkflow);
     }
 
     @Transactional

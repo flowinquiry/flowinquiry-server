@@ -39,12 +39,6 @@ public class WorkflowController {
         this.workflowTransitionService = workflowTransitionService;
     }
 
-    @PostMapping
-    public ResponseEntity<WorkflowDTO> createWorkflow(@RequestBody Workflow workflow) {
-        WorkflowDTO createdWorkflow = workflowService.createWorkflow(workflow);
-        return ResponseEntity.ok(createdWorkflow);
-    }
-
     @PostMapping("/search")
     public ResponseEntity<Page<WorkflowDTO>> findWorkflows(
             @Valid @RequestBody Optional<QueryDTO> queryDTO, Pageable pageable) {

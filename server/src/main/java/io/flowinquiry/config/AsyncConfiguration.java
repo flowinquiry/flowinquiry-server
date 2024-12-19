@@ -18,7 +18,7 @@ import tech.jhipster.async.ExceptionHandlingAsyncTaskExecutor;
 
 @Configuration
 @EnableAsync
-@Profile("!testdev & !testprod")
+@Profile("!test")
 public class AsyncConfiguration implements AsyncConfigurer {
 
     private static final Logger LOG = LoggerFactory.getLogger(AsyncConfiguration.class);

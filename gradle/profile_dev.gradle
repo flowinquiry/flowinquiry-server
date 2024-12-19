@@ -49,7 +49,7 @@ task integrationTest(type: Test) {
         events 'FAILED', 'SKIPPED'
         exceptionFormat "full"
     }
-    systemProperty('spring.profiles.active', 'testdev')
+    systemProperty('spring.profiles.active', 'test')
     systemProperty('java.security.egd', 'file:/dev/./urandom')
     // ignoreFailures true
     reports.html.required = false

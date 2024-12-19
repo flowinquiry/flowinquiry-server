@@ -62,7 +62,7 @@ class UserServiceIT {
     @BeforeEach
     public void init() {
         user = new User();
-        user.setPassword(RandomStringUtils.randomAlphanumeric(60));
+        user.setPassword(RandomStringUtils.secure().nextAlphanumeric(60));
         user.setStatus(UserStatus.ACTIVE);
         user.setEmail(DEFAULT_EMAIL);
         user.setFirstName(DEFAULT_FIRSTNAME);
@@ -161,10 +161,10 @@ class UserServiceIT {
     @Test
     @Transactional
     void testFindResourcesWithHighestPermissionsByUserId() {
+        User user = userRepository.findOneByEmailIgnoreCase("admin@flowinquiry.io").orElseThrow();
         // Act - call the method to test
-        Long userId = 1001L; // This ID is set in the SQL file
         List<ResourcePermissionDTO> result =
-                userService.getResourcesWithPermissionsByUserId(userId);
+                userService.getResourcesWithPermissionsByUserId(user.getId());
 
         // Assert - verify results
         assertThat(result).hasSize(5);

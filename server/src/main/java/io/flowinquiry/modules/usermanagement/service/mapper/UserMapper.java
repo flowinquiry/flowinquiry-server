@@ -34,6 +34,7 @@ public abstract class UserMapper {
         }
     }
 
+    @Mapping(target = "manager", source = "managerId", qualifiedByName = "mapManagerIdToUser")
     @Mapping(
             target = "authorities",
             source = "authorities",
@@ -41,6 +42,7 @@ public abstract class UserMapper {
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
     public abstract void updateEntity(UserDTO userDTO, @MappingTarget User user);
 
+    @Mapping(target = "manager", source = "managerId", qualifiedByName = "mapManagerIdToUser")
     @Mapping(
             target = "authorities",
             source = "authorities",
@@ -86,6 +88,16 @@ public abstract class UserMapper {
                                 })
                         .collect(Collectors.toSet())
                 : null;
+    }
+
+    @Named("mapManagerIdToUser")
+    protected User mapManagerIdToUser(Long managerId) {
+        if (managerId == null) {
+            return null;
+        }
+        User manager = new User();
+        manager.setId(managerId);
+        return manager;
     }
 
     public static class Context {

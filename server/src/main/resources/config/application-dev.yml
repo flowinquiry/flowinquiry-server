@@ -11,7 +11,7 @@ logging:
     sql: DEBUG # built-in group sql include org.springframework.jdbc.core, org.hibernate.SQL
     io.undertow: ERROR
     io.flowinquiry: DEBUG
-    org.springframework.web: DEBUG
+#    org.springframework.web: DEBUG
 
 spring:
   devtools:

@@ -6,12 +6,10 @@ import io.flowinquiry.modules.teams.domain.Workflow;
 import io.flowinquiry.modules.teams.domain.WorkflowState;
 import io.flowinquiry.modules.teams.service.dto.TeamRequestDTO;
 import io.flowinquiry.modules.usermanagement.domain.User;
-import org.mapstruct.BeanMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
 import org.mapstruct.Named;
-import org.mapstruct.NullValuePropertyMappingStrategy;
 
 @Mapper(componentModel = "spring")
 public interface TeamRequestMapper {
@@ -76,7 +74,6 @@ public interface TeamRequestMapper {
         return (firstName + " " + lastName).trim();
     }
 
-    @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
     @Mapping(target = "team", source = "teamId", qualifiedByName = "toTeam")
     @Mapping(target = "workflow", source = "workflowId", qualifiedByName = "toWorkflow")
     @Mapping(target = "assignUser", source = "assignUserId", qualifiedByName = "toUser")

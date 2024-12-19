@@ -336,6 +336,7 @@ class UserControllerIT {
         userDTO.setLastModifiedBy(updatedUser.getModifiedBy());
         userDTO.setModifiedAt(updatedUser.getModifiedAt());
         userDTO.setAuthorities(Set.of(AuthoritiesConstants.USER));
+        userDTO.setIsDeleted(false);
         return userDTO;
     }
 
@@ -357,6 +358,7 @@ class UserControllerIT {
         userDTO.setStatus(updatedUser.getStatus());
         userDTO.setImageUrl(UPDATED_IMAGEURL);
         userDTO.setLangKey(UPDATED_LANGKEY);
+        userDTO.setIsDeleted(false);
         userDTO.setCreatedBy(updatedUser.getCreatedBy());
         userDTO.setCreatedAt(updatedUser.getCreatedAt());
         userDTO.setLastModifiedBy(updatedUser.getModifiedBy());

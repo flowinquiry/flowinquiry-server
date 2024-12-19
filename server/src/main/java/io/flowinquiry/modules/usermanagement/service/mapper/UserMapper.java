@@ -39,6 +39,7 @@ public abstract class UserMapper {
             target = "authorities",
             source = "authorities",
             qualifiedByName = "stringToAuthoritySet")
+    //    @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
     public abstract void updateEntity(UserDTO userDTO, @MappingTarget User user);
 
     @Mapping(target = "manager", source = "managerId", qualifiedByName = "mapManagerIdToUser")

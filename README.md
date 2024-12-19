@@ -1,16 +1,29 @@
 # FlowInquiry Server
 [![Build Status](https://github.com/flowinquiry/flowinquiry-server/actions/workflows/gradle.yml/badge.svg)](https://github.com/flowinquiry/flowinquiry-server/actions/workflows/gradle.yml)
 
-## Overview
-FlowInquiry Server is the back-end component of the FlowInquiry platform, a modern solution for managing workflows and team collaboration. Built with Spring Boot, this server provides a robust and scalable REST API to power the FlowInquiry front-end application and integrates seamlessly with external services.
+## What is FlowInquiry
 
-## Key Features
-* **Comprehensive REST API**: Supports the FlowInquiry front-end client with endpoints for managing workflows, teams, requests, and more.
-* **External Integrations**: Integrates with third-party services for enhanced functionality and interoperability.
-* **Scalable Architecture**: Designed to handle high concurrency and diverse workloads, making it suitable for enterprise use.
-* **Secure**: Implements industry-standard security practices, including authentication and role-based access control.
+FlowInquiry is a service designed to streamline the management of cases, tickets, and requests for teams handling both internal and external inquiries. It bridges communication gaps across teams and ensures timely resolution of customer or interdepartmental requests. By enabling organizations to define custom workflows with tailored Service Level Agreements (SLAs) for each state, FlowInquiry ensures teams can meet deadlines and respond promptly to requests. This structured approach enhances accountability, efficiency, and satisfaction for all parties involved, fostering smoother collaboration and better outcomes.
 
-## Screenshots
+### Problems FlowInquiry Solves with Specific Use Cases
+
+FlowInquiry addresses several challenges faced by organizations in managing cases, tickets, and team communication. Here are some specific use cases:
+
+**On-Call System Management**
+In an on-call system, teams often face challenges in managing incoming requests or incidents, particularly when multiple shifts or team members are involved. FlowInquiry ensures that each request follows a well-defined workflow, with SLAs for escalation and resolution. This helps reduce response times, avoids missed escalations, and provides clear accountability for handling incidents.
+
+**Case Management in CRM Applications**
+CRM applications often struggle to manage customer cases effectively, especially when handling inquiries, complaints, or service requests. FlowInquiry enables teams to define custom workflows tailored to specific case types, such as refunds, escalations, or product inquiries. SLAs for each workflow stage ensure customers receive timely updates and resolutions, enhancing customer satisfaction and loyalty.
+
+**Team Communication and Collaboration**
+Effective communication within and across teams can be difficult in large organizations, especially when requests involve multiple departments or external stakeholders. FlowInquiry acts as a centralized platform where requests are logged, tracked, and routed through clearly defined workflows. This reduces miscommunication, prevents delays, and ensures all parties are aligned on priorities.
+
+**Service Request Tracking for IT Teams**
+IT teams managing internal service requests often encounter bottlenecks due to unclear processes or manual tracking. FlowInquiry allows IT departments to automate workflows for common requests such as software installation, access management, or issue resolution. The system ensures each request is assigned, processed, and resolved within agreed SLAs.
+
+By tailoring workflows to these and other scenarios, FlowInquiry empowers teams to streamline operations, meet deadlines, and deliver exceptional service to both internal and external stakeholders.
+
+### Screenshots
 
 <table>
   <tr>
@@ -48,6 +61,24 @@ FlowInquiry Server is the back-end component of the FlowInquiry platform, a mode
     </td>
   </tr>
 </table>
+
+## FlowInquiry Server
+
+FlowInquiry Server serves as the back-end component of the FlowInquiry service, a Java-based platform designed to manage workflows and enhance team collaboration. Developed with Spring Boot, the server provides a reliable and scalable REST API to support the FlowInquiry front-end application. It also facilitates workflow management, runs scheduler programs for task automation, handles data caching for efficient performance, and ensures seamless data persistence to the database
+
+### Technologies
+
+* **Spring Boot:** Acts as the backbone of the back-end, orchestrating various components. It handles the creation and management of REST APIs, service layers, and controllers to facilitate business logic. Spring Boot also integrates seamlessly with the database through JPA and Hibernate and provides hooks for adding essential services like logging, tracing, and monitoring to ensure a well-rounded and maintainable application architecture.
+
+* **Hibernate:** Serves as the ORM (Object-Relational Mapping) framework, facilitating seamless interaction between Java objects and the database.
+
+* **PostgreSQL:** Acts as the primary relational database, offering reliability, scalability, and robust support for complex queries.
+
+* **Liquibase:** Manages database schema changes through version-controlled migration scripts, ensuring consistency across environments.
+
+* **MapStruct:** Simplifies object mapping by generating type-safe and efficient mappers between Java objects (e.g., DTOs and entities).
+
+* **Docker:** Provides containerization for consistent application deployment across environments, enabling scalability and portability.
 
 
 ## Getting Started

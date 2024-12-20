@@ -8,6 +8,7 @@ import io.flowinquiry.modules.usermanagement.repository.UserRepository;
 import io.flowinquiry.modules.usermanagement.service.UserService;
 import io.flowinquiry.modules.usermanagement.service.dto.ResourcePermissionDTO;
 import io.flowinquiry.modules.usermanagement.service.dto.UserDTO;
+import io.flowinquiry.modules.usermanagement.service.dto.UserHierarchyDTO;
 import io.flowinquiry.modules.usermanagement.web.rest.errors.BadRequestAlertException;
 import io.flowinquiry.modules.usermanagement.web.rest.errors.EmailAlreadyUsedException;
 import io.flowinquiry.platform.utils.Obfuscator;
@@ -202,5 +203,15 @@ public class PublicUserController {
         LOG.debug("REST request to delete User: {}", userId);
         userService.softDeleteUserById(userId);
         return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/{userId}/hierarchy")
+    public ResponseEntity<UserHierarchyDTO> getUserHierarchy(@PathVariable Long userId) {
+        return ResponseEntity.ok(userService.getUserHierarchyWithSubordinates(userId));
+    }
+
+    @GetMapping("/orgChart")
+    public ResponseEntity<UserHierarchyDTO> getOrgChart() {
+        return ResponseEntity.ok(userService.getOrgChart());
     }
 }

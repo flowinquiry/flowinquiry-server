@@ -222,7 +222,7 @@ class UserControllerIT {
         userDTO.setLastName(DEFAULT_LASTNAME);
         userDTO.setEmail(DEFAULT_EMAIL); // this email should already be used
         userDTO.setStatus(UserStatus.ACTIVE);
-        ;
+
         userDTO.setImageUrl(DEFAULT_IMAGEURL);
         userDTO.setLangKey(DEFAULT_LANGKEY);
         userDTO.setAuthorities(Set.of(AuthoritiesConstants.USER));

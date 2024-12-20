@@ -8,12 +8,14 @@ import io.flowinquiry.modules.usermanagement.repository.AuthorityRepository;
 import io.flowinquiry.modules.usermanagement.repository.UserRepository;
 import io.flowinquiry.modules.usermanagement.service.dto.ResourcePermissionDTO;
 import io.flowinquiry.modules.usermanagement.service.dto.UserDTO;
+import io.flowinquiry.modules.usermanagement.service.dto.UserHierarchyDTO;
 import io.flowinquiry.modules.usermanagement.service.dto.UserKey;
 import io.flowinquiry.modules.usermanagement.service.event.DeleteUserEvent;
 import io.flowinquiry.modules.usermanagement.service.mapper.UserMapper;
 import io.flowinquiry.query.QueryDTO;
 import io.flowinquiry.security.Constants;
 import io.flowinquiry.security.SecurityUtils;
+import jakarta.persistence.EntityNotFoundException;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
@@ -325,5 +327,51 @@ public class UserService {
     public List<UserDTO> getDirectReports(Long managerId) {
         List<User> directReports = userRepository.findByManagerId(managerId);
         return directReports.stream().map(userMapper::toDto).collect(Collectors.toList());
+    }
+
+    public UserHierarchyDTO getOrgChart() {
+        List<UserHierarchyDTO> topLevelUsers = userRepository.findAllTopLevelUsers();
+
+        if (topLevelUsers.size() > 1) {
+            UserHierarchyDTO dummyRoot = new UserHierarchyDTO();
+            dummyRoot.setId(-1L);
+            dummyRoot.setName("");
+            dummyRoot.setImageUrl(null);
+            dummyRoot.setManagerId(null);
+            dummyRoot.setManagerName(null);
+            dummyRoot.setManagerImageUrl(null);
+            dummyRoot.setSubordinates(topLevelUsers);
+            return dummyRoot;
+        }
+
+        // Handle case with a single top-level user
+        if (!topLevelUsers.isEmpty()) {
+            UserHierarchyDTO rootUser = topLevelUsers.getFirst();
+            List<UserHierarchyDTO> subordinates =
+                    userRepository.findAllSubordinates(rootUser.getId());
+            rootUser.setSubordinates(subordinates);
+            return rootUser;
+        }
+
+        // Handle case with no users
+        return null;
+    }
+
+    public UserHierarchyDTO getUserHierarchyWithSubordinates(Long userId) {
+        // Fetch user hierarchy
+        UserHierarchyDTO userHierarchy =
+                userRepository
+                        .findUserHierarchyById(userId)
+                        .orElseThrow(
+                                () ->
+                                        new EntityNotFoundException(
+                                                "User not found with id: " + userId));
+
+        // Fetch subordinates
+        List<UserHierarchyDTO> subordinates = userRepository.findAllSubordinates(userId);
+
+        userHierarchy.setSubordinates(subordinates);
+
+        return userHierarchy;
     }
 }

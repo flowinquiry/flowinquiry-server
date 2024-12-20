@@ -1,6 +1,7 @@
 package io.flowinquiry.modules.usermanagement.repository;
 
 import io.flowinquiry.modules.usermanagement.domain.User;
+import io.flowinquiry.modules.usermanagement.service.dto.UserHierarchyDTO;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -78,4 +79,51 @@ public interface UserRepository extends JpaRepository<User, Long>, JpaSpecificat
     """,
             nativeQuery = true)
     List<Object[]> findResourcesWithHighestPermissionsByUserId(@Param("userId") Long userId);
+
+    @Query(
+            """
+    SELECT new io.flowinquiry.modules.usermanagement.service.dto.UserHierarchyDTO(
+        u.id,
+        CONCAT(u.firstName, ' ', u.lastName),
+        u.imageUrl,
+        null,
+        null,
+        null
+    )
+    FROM User u
+    WHERE u.manager IS NULL
+""")
+    List<UserHierarchyDTO> findAllTopLevelUsers();
+
+    @Query(
+            """
+    SELECT new io.flowinquiry.modules.usermanagement.service.dto.UserHierarchyDTO(
+        u.id,
+        CONCAT(u.firstName, ' ', u.lastName),
+        u.imageUrl,
+        m.id,
+        CONCAT(m.firstName, ' ', m.lastName),
+        m.imageUrl
+    )
+    FROM User u
+    LEFT JOIN u.manager m
+    WHERE u.id = :userId
+    """)
+    Optional<UserHierarchyDTO> findUserHierarchyById(@Param("userId") Long userId);
+
+    @Query(
+            """
+    SELECT new io.flowinquiry.modules.usermanagement.service.dto.UserHierarchyDTO(
+        u.id,
+        CONCAT(u.firstName, ' ', u.lastName),
+        u.imageUrl,
+        m.id,
+        CONCAT(m.firstName, ' ', m.lastName),
+        m.imageUrl
+    )
+    FROM User u
+    LEFT JOIN u.manager m
+    WHERE m.id = :userId
+    """)
+    List<UserHierarchyDTO> findAllSubordinates(@Param("userId") Long userId);
 }

@@ -155,3 +155,5 @@ Desktop.ini
 /docker/volumes1
 /server/build
 /tools/liquibase/build
+docker/volumes
+storage

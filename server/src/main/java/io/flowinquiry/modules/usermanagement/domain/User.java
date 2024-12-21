@@ -23,7 +23,7 @@ import org.hibernate.annotations.BatchSize;
 @Table(name = "fw_user")
 @Getter
 @Setter
-@EqualsAndHashCode(onlyExplicitlyIncluded = true)
+@EqualsAndHashCode(onlyExplicitlyIncluded = true, callSuper = false)
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
@@ -117,7 +117,6 @@ public class User extends AbstractAuditingEntity<Long> implements Serializable {
     private LocalDateTime lastLoginTime;
 
     @JsonIgnore
-    @EqualsAndHashCode.Exclude
     @ManyToMany
     @BatchSize(size = 20)
     @JoinTable(
@@ -127,7 +126,6 @@ public class User extends AbstractAuditingEntity<Long> implements Serializable {
     private Set<Team> teams;
 
     @JsonIgnore
-    @EqualsAndHashCode.Exclude
     @ManyToMany
     @BatchSize(size = 20)
     @JoinTable(
@@ -138,7 +136,6 @@ public class User extends AbstractAuditingEntity<Long> implements Serializable {
             })
     private Set<Authority> authorities = new HashSet<>();
 
-    @EqualsAndHashCode.Exclude
     @BatchSize(size = 20)
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<UserTeam> userTeams = new HashSet<>();

@@ -9,6 +9,5 @@ repositories {
 dependencies {
     implementation libs.jib.plugin
     implementation libs.nohttp.plugin
-    implementation libs.node.gradle
     implementation libs.splotless.plugin
 }

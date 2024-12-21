@@ -12,6 +12,7 @@ import io.flowinquiry.modules.usermanagement.service.dto.UserHierarchyDTO;
 import io.flowinquiry.modules.usermanagement.service.dto.UserKey;
 import io.flowinquiry.modules.usermanagement.service.event.DeleteUserEvent;
 import io.flowinquiry.modules.usermanagement.service.mapper.UserMapper;
+import io.flowinquiry.platform.utils.Random;
 import io.flowinquiry.query.QueryDTO;
 import io.flowinquiry.security.Constants;
 import io.flowinquiry.security.SecurityUtils;
@@ -30,7 +31,6 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import tech.jhipster.security.RandomUtil;
 
 /** Service class for managing users. */
 @Service
@@ -99,7 +99,7 @@ public class UserService {
                 .filter(user -> Objects.equals(user.getStatus(), UserStatus.ACTIVE))
                 .map(
                         user -> {
-                            user.setResetKey(RandomUtil.generateResetKey());
+                            user.setResetKey(Random.generateResetKey());
                             user.setResetDate(Instant.now());
                             return user;
                         })
@@ -130,7 +130,7 @@ public class UserService {
         // new user is not active
         newUser.setStatus(UserStatus.PENDING);
         // new user gets registration key
-        newUser.setActivationKey(RandomUtil.generateActivationKey());
+        newUser.setActivationKey(Random.generateActivationKey());
         Set<Authority> authorities = new HashSet<>();
         authorityRepository.findById(AuthoritiesConstants.USER).ifPresent(authorities::add);
         newUser.setAuthorities(authorities);
@@ -161,9 +161,9 @@ public class UserService {
         } else {
             user.setLangKey(userDTO.getLangKey());
         }
-        String encryptedPassword = passwordEncoder.encode(RandomUtil.generatePassword());
+        String encryptedPassword = passwordEncoder.encode(Random.generatePassword());
         user.setPassword(encryptedPassword);
-        user.setResetKey(RandomUtil.generateResetKey());
+        user.setResetKey(Random.generateResetKey());
         user.setResetDate(Instant.now());
         user.setStatus(UserStatus.PENDING);
 

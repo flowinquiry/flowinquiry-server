@@ -10,6 +10,7 @@ repositories {
 
 dependencies {
     implementation(libs.bundles.logback)
+    implementation("org.apache.commons:commons-lang3:3.17.0")
 
     testImplementation platform(libs.junit.bom)
     testImplementation(libs.bundles.junit)

@@ -14,7 +14,6 @@ import org.springframework.scheduling.annotation.AsyncConfigurer;
 import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.security.task.DelegatingSecurityContextTaskExecutor;
-import tech.jhipster.async.ExceptionHandlingAsyncTaskExecutor;
 
 @Configuration
 @EnableAsync
@@ -38,7 +37,7 @@ public class AsyncConfiguration implements AsyncConfigurer {
         executor.setMaxPoolSize(taskExecutionProperties.getPool().getMaxSize());
         executor.setQueueCapacity(taskExecutionProperties.getPool().getQueueCapacity());
         executor.setThreadNamePrefix(taskExecutionProperties.getThreadNamePrefix());
-        return new ExceptionHandlingAsyncTaskExecutor(executor);
+        return executor;
     }
 
     @Bean(name = "auditLogExecutor")

@@ -10,6 +10,7 @@ import io.flowinquiry.modules.usermanagement.repository.UserRepository;
 import io.flowinquiry.modules.usermanagement.service.UserService;
 import io.flowinquiry.modules.usermanagement.service.dto.ResourcePermissionDTO;
 import io.flowinquiry.modules.usermanagement.service.dto.UserDTO;
+import io.flowinquiry.platform.utils.Random;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
@@ -25,7 +26,6 @@ import org.springframework.data.auditing.AuditingHandler;
 import org.springframework.data.auditing.DateTimeProvider;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.transaction.annotation.Transactional;
-import tech.jhipster.security.RandomUtil;
 
 /** Integration tests for {@link UserService}. */
 @IntegrationTest
@@ -110,7 +110,7 @@ class UserServiceIT {
     @Transactional
     void assertThatResetKeyMustNotBeOlderThan24Hours() {
         Instant daysAgo = Instant.now().minus(25, ChronoUnit.HOURS);
-        String resetKey = RandomUtil.generateResetKey();
+        String resetKey = Random.generateResetKey();
         user.setStatus(UserStatus.ACTIVE);
         user.setResetDate(daysAgo);
         user.setResetKey(resetKey);
@@ -142,7 +142,7 @@ class UserServiceIT {
     void assertThatUserCanResetPassword() {
         String oldPassword = user.getPassword();
         Instant daysAgo = Instant.now().minus(2, ChronoUnit.HOURS);
-        String resetKey = RandomUtil.generateResetKey();
+        String resetKey = Random.generateResetKey();
         user.setStatus(UserStatus.ACTIVE);
         user.setResetDate(daysAgo);
         user.setResetKey(resetKey);

@@ -15,6 +15,7 @@ import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Map;
 import java.util.Optional;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -28,7 +29,6 @@ import org.springframework.context.annotation.EnableAspectJAutoProxy;
 import org.springframework.core.annotation.Order;
 import org.springframework.core.env.Environment;
 import org.springframework.transaction.annotation.Transactional;
-import tech.jhipster.config.DefaultProfileUtil;
 
 @SpringBootApplication
 @EnableConfigurationProperties({
@@ -85,7 +85,8 @@ public class FlowInquiryApp {
 
         SpringApplication app = new SpringApplication(FlowInquiryApp.class);
 
-        DefaultProfileUtil.addDefaultProfile(app);
+        app.setDefaultProperties(
+                Map.of("spring.profiles.default", FlowInquiryProfiles.SPRING_PROFILE_DEVELOPMENT));
         Environment env = app.run(args).getEnvironment();
         logApplicationStartup(env);
     }

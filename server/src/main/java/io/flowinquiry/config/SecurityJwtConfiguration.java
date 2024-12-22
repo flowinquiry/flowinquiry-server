@@ -28,8 +28,7 @@ public class SecurityJwtConfiguration {
                 NimbusJwtDecoder.withSecretKey(getSecretKey()).macAlgorithm(JWT_ALGORITHM).build();
         return token -> {
             try {
-                //                return jwtDecoder.decode(token);
-                throw new JwtException("Jwt expired at");
+                return jwtDecoder.decode(token);
             } catch (Exception e) {
                 if (e.getMessage().contains("Invalid signature")) {
                     metersService.trackTokenInvalidSignature();

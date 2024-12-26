@@ -1,10 +1,20 @@
 local.flowinquiry.io, localhost {
+    # Redirect HTTP to HTTPS
     @http {
         protocol http
     }
     redir @http https://{host}{uri}
 
+    # Enable HTTPS with internal TLS
     tls internal
-    # Reverse proxy for the front-end
+
+    # Match and reverse proxy for API routes (except /api/auth)
+    @apiNotAuth {
+        path /api/*
+        not path /api/auth/*
+    }
+    reverse_proxy @apiNotAuth back-end:8080
+
+    # Reverse proxy all other requests to the front-end
     reverse_proxy /* front-end:3000
 }

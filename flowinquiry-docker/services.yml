@@ -15,16 +15,14 @@ services:
       - postgresql
     env_file:
       - ./.backend.env
+    extra_hosts:
+      - "localhost:host-gateway"
   front-end:
-    image: flowinquiry/flowinquiry-frontend:0.8.17
+    image: flowinquiry/flowinquiry-frontend:latest
     environment:
       - HOSTNAME=0.0.0.0
-      - AUTH_TRUST_HOST=true
-      - NEXT_PUBLIC_API_URL=https://localhost
-      - BACK_END_URL=http://back-end:8080
-      - AUTH_SECRET=L+SFrX2ap/RFt6mi1CcHjvkNvbtw32ZhxemYbMIFeH4=
-    ports:
-      - '3000:3000'
+      - NEXT_PUBLIC_BASE_URL=https://localhost
+      - BACK_END_URL=http://back-end:8080  # this value is the internal host of the back-end server that the front-end server side (NextJS server action) communicate with the back-end component
     env_file:
       - ./.frontend.env
   postgresql:
@@ -41,6 +39,8 @@ services:
       interval: 5s
       timeout: 5s
       retries: 10
+    env_file:
+      - ./.backend.env
   caddy:
     container_name: caddy
     image: caddy:alpine
@@ -50,5 +50,3 @@ services:
       - ./caddy/certificate-authority:/data/caddy/pki/authorities/local
     ports:
       - '443:443'
-    extra_hosts:
-      - "front-end:host-gateway"

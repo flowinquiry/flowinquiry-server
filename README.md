@@ -1,5 +1,6 @@
 # FlowInquiry Server
 [![Build Status](https://github.com/flowinquiry/flowinquiry-server/actions/workflows/gradle.yml/badge.svg)](https://github.com/flowinquiry/flowinquiry-server/actions/workflows/gradle.yml)
+![License](https://img.shields.io/badge/License-AGPLv3-blue)
 
 ## What is FlowInquiry
 

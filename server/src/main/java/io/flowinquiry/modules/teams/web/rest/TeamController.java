@@ -80,7 +80,7 @@ public class TeamController {
         Optional<String> fileRemovedPath = Optional.empty();
 
         if (file != null && !file.isEmpty()) {
-            fileRemovedPath = Optional.of(team.getLogoUrl());
+            fileRemovedPath = Optional.ofNullable(team.getLogoUrl());
             String teamLogoPath =
                     storageService.uploadImage(
                             "teams", UUID.randomUUID().toString(), file.getInputStream());

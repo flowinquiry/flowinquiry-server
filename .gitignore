@@ -2,3 +2,4 @@ flowinquiry-docker/caddy
 flowinquiry-docker/volumes
 .frontend.env
 .backend.env
+.backend.env.bak

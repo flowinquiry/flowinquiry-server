@@ -15,8 +15,6 @@ services:
       - postgresql
     env_file:
       - ./.backend.env
-    extra_hosts:
-      - "localhost:host-gateway"
   front-end:
     image: flowinquiry/flowinquiry-frontend:latest
     environment:

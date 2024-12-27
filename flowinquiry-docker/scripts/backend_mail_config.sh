@@ -26,7 +26,7 @@ done
 read -p "Enter your username: " smtp_username
 
 # Prompt the user to enter the username
-read -p "Enter your password: " smtp_password
+read -sp "Enter your password: " smtp_password
 
 # Ask if SMTP requires STARTTLS
 read -p "Does SMTP require STARTTLS (y/n)? " requires_starttls

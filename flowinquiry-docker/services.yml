@@ -3,32 +3,26 @@ name: flowinquiry
 services:
   back-end:
     image: flowinquiry/flowinquiry-server:latest
+    volumes:
+      - ./volumes/storage/:/storage
     environment:
       - JAVA_OPTIONS=-Xmx512m -Xms256m
       - SPRING_PROFILES_ACTIVE=prod
       - SPRING_DATASOURCE_URL=jdbc:postgresql://postgresql:5432/flowinquiry
       - SPRING_DATASOURCE_USERNAME=flowinquiry
       - SPRING_DATASOURCE_PASSWORD=${POSTGRES_PASSWORD}
-    healthcheck:
-      test:
-        - CMD
-        - curl
-        - -f
-        - http://localhost:8080/management/health
-      interval: 5s
-      timeout: 5s
-      retries: 40
     depends_on:
       - postgresql
     env_file:
       - ./.backend.env
+    extra_hosts:
+      - "localhost:host-gateway"
   front-end:
     image: flowinquiry/flowinquiry-frontend:latest
     environment:
-      - AUTH_TRUST_HOST=true
-      - BACK_END_SERVER=http://back-end:8080
-    ports:
-      - '3000:3000'
+      - HOSTNAME=0.0.0.0
+      - NEXT_PUBLIC_BASE_URL=https://localhost
+      - BACK_END_URL=http://back-end:8080  # this value is the internal host of the back-end server that the front-end server side (NextJS server action) communicate with the back-end component
     env_file:
       - ./.frontend.env
   postgresql:
@@ -45,6 +39,8 @@ services:
       interval: 5s
       timeout: 5s
       retries: 10
+    env_file:
+      - ./.backend.env
   caddy:
     container_name: caddy
     image: caddy:alpine
@@ -54,5 +50,3 @@ services:
       - ./caddy/certificate-authority:/data/caddy/pki/authorities/local
     ports:
       - '443:443'
-    extra_hosts:
-      - "front-end:host-gateway"

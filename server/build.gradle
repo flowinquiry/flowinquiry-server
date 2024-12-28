@@ -65,7 +65,6 @@ dependencies {
 
     implementation(libs.dot.env)
     implementation("org.apache.commons:commons-lang3")
-    implementation("org.springframework.boot:spring-boot-starter-data-jpa")
 
     testImplementation("org.testcontainers:jdbc")
     testImplementation("org.testcontainers:junit-jupiter")

@@ -1,5 +1,5 @@
 plugins {
-    id 'java'
+    id 'java-library'
     alias(libs.plugins.spring.dependency.management)
 }
 
@@ -17,44 +17,44 @@ dependencyManagement {
 
 dependencies {
     compileOnly(libs.lombok)
-    implementation(libs.bundles.json)
-    implementation(libs.bundles.shedlock)
-    implementation(libs.j2html)
-    implementation(libs.jclouds) {
+    api(libs.bundles.json)
+    api(libs.bundles.shedlock)
+    api(libs.j2html)
+    api(libs.jclouds) {
         exclude group: "com.sun.xml.bind"
     }
-    implementation(libs.jhipster.framework)
-    implementation(libs.liquibase)
+    api(libs.jhipster.framework)
+    api(libs.liquibase)
 
 
-    implementation("com.fasterxml.jackson.module:jackson-module-jaxb-annotations")
-    implementation("com.fasterxml.jackson.datatype:jackson-datatype-hppc")
-    implementation("com.fasterxml.jackson.datatype:jackson-datatype-hibernate6")
-    implementation("com.fasterxml.jackson.datatype:jackson-datatype-jsr310")
-    implementation("com.zaxxer:HikariCP")
-    implementation("jakarta.annotation:jakarta.annotation-api")
-    implementation("org.apache.commons:commons-lang3")
-    implementation("org.hibernate.orm:hibernate-core")
-    implementation("org.hibernate.validator:hibernate-validator")
+    api("com.fasterxml.jackson.module:jackson-module-jaxb-annotations")
+    api("com.fasterxml.jackson.datatype:jackson-datatype-hppc")
+    api("com.fasterxml.jackson.datatype:jackson-datatype-hibernate6")
+    api("com.fasterxml.jackson.datatype:jackson-datatype-jsr310")
+    api("com.zaxxer:HikariCP")
+    api("jakarta.annotation:jakarta.annotation-api")
+    api("org.apache.commons:commons-lang3")
+    api("org.hibernate.orm:hibernate-core")
+    api("org.hibernate.validator:hibernate-validator")
 
-    implementation("org.springframework.boot:spring-boot-starter-actuator")
-    implementation("org.springframework.boot:spring-boot-starter-aop")
-    implementation("org.springframework.boot:spring-boot-starter-data-jpa")
-    implementation("org.springframework.boot:spring-boot-loader-tools")
-    implementation("org.springframework.boot:spring-boot-starter-logging")
-    implementation("org.springframework.boot:spring-boot-starter-mail")
-    implementation("org.springframework.boot:spring-boot-starter-oauth2-resource-server")
-    implementation("org.springframework.boot:spring-boot-starter-security")
-    implementation("org.springframework.boot:spring-boot-starter-thymeleaf")
-    implementation("org.springframework.boot:spring-boot-starter-undertow")
+    api("org.springframework.boot:spring-boot-starter-actuator")
+    api("org.springframework.boot:spring-boot-starter-aop")
+    api("org.springframework.boot:spring-boot-starter-data-jpa")
+    api("org.springframework.boot:spring-boot-loader-tools")
+    api("org.springframework.boot:spring-boot-starter-logging")
+    api("org.springframework.boot:spring-boot-starter-mail")
+    api("org.springframework.boot:spring-boot-starter-oauth2-resource-server")
+    api("org.springframework.boot:spring-boot-starter-security")
+    api("org.springframework.boot:spring-boot-starter-thymeleaf")
+    api("org.springframework.boot:spring-boot-starter-undertow")
     modules {
         module("org.springframework.boot:spring-boot-starter-tomcat") {
             replacedBy("org.springframework.boot:spring-boot-starter-undertow", "Use Undertow instead of Tomcat")
         }
     }
-    implementation("org.springframework.boot:spring-boot-starter-validation")
-    implementation("org.springframework.boot:spring-boot-starter-web")
-    implementation("org.springframework.security:spring-security-data")
+    api("org.springframework.boot:spring-boot-starter-validation")
+    api("org.springframework.boot:spring-boot-starter-web")
+    api("org.springframework.security:spring-security-data")
 
     testImplementation platform('org.junit:junit-bom:5.10.0')
     testImplementation 'org.junit.jupiter:junit-jupiter'
@@ -68,7 +68,7 @@ dependencies {
     annotationProcessor("org.glassfish.jaxb:jaxb-runtime")
     annotationProcessor(libs.lombok)
     // Keep mapstruct dependency below the lombok
-    implementation(libs.mapstruct)
+    api(libs.mapstruct)
     annotationProcessor(libs.mapstruct.processor)
 }
 

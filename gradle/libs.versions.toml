@@ -1,6 +1,5 @@
 [versions]
 mapstructVersion = "1.6.3"
-archunitJunit5Version = "1.3.0"
 lombokVersion = "1.18.36"
 liquibaseVersion = "4.30.0"
 assertJVersion = "3.26.3"
@@ -12,8 +11,8 @@ mockitoVersion = "5.2.0"
 mockitoJunitVersion = "5.14.1"
 jsonApiVersion = "2.1.3"
 parssonVersion="1.1.7"
-springbootVersion = "3.4.0"
-springDependencyManagementVersion="1.1.6"
+springbootVersion = "3.4.1"
+springDependencyManagementVersion="1.1.7"
 jhisterVersion = "8.7.1"
 j2HtmlVersion = "1.6.0"
 shedlockVersion="6.0.1"
@@ -38,6 +37,7 @@ json-api = { module = "jakarta.json:jakarta.json-api", version.ref = "jsonApiVer
 parsson = { module = "org.eclipse.parsson:parsson", version.ref = "parssonVersion" }
 shedlock = {module="net.javacrumbs.shedlock:shedlock-spring", version.ref="shedlockVersion"}
 shedlock-jdbc-provider = {module="net.javacrumbs.shedlock:shedlock-provider-jdbc-template", version.ref="shedlockVersion"}
+spring-boot-dependencies= {module="org.springframework.boot:spring-boot-dependencies", version.ref="springbootVersion"}
 
 [plugins]
 spring-boot = { id = "org.springframework.boot", version.ref = "springbootVersion" }

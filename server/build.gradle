@@ -13,8 +13,6 @@ plugins {
 
 description = ""
 
-assert System.properties["java.specification.version"] == "21" || "22" || "23"
-
 ext {
     springProfiles = ""
     if (project.hasProperty("tls")) {
@@ -31,13 +29,6 @@ if (project.hasProperty("prod")) {
     apply from: "../gradle/profile_prod.gradle"
 } else {
     apply from: "../gradle/profile_dev.gradle"
-}
-
-
-idea {
-    module {
-        excludeDirs += files("node_modules")
-    }
 }
 
 defaultTasks "bootRun"
@@ -74,6 +65,7 @@ configurations {
 }
 
 dependencies {
+    api project(":commons")
     api project(":tools:liquibase")
     api project(":tools:platform")
 
@@ -119,13 +111,6 @@ dependencies {
     implementation(libs.liquibase)
     implementation(libs.bundles.shedlock)
 
-
-//    testImplementation("com.tngtech.archunit:archunit-junit5-api:${archunitJunit5Version}") {
-//        exclude group: "org.slf4j", module: "slf4j-api"
-//    }
-//    testRuntimeOnly("com.tngtech.archunit:archunit-junit5-engine:${archunitJunit5Version}") {
-//        exclude group: "org.slf4j", module: "slf4j-api"
-//    }
     testImplementation("org.testcontainers:jdbc")
     testImplementation("org.testcontainers:junit-jupiter")
     testImplementation("org.testcontainers:testcontainers")

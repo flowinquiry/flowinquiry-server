@@ -5,7 +5,7 @@ plugins {
     id "com.github.ben-manes.versions" version "0.51.0"
 }
 
-description = "The flexible configurable crm service"
+description = "The flexible configurable ticket management"
 
 assert System.properties["java.specification.version"] == "21" || "22" || "23"
 

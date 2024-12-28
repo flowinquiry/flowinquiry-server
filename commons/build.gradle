@@ -1,0 +1,42 @@
+plugins {
+    id 'java'
+    alias(libs.plugins.spring.dependency.management)
+}
+
+group = 'io.flowinquiry'
+
+repositories {
+    mavenCentral()
+}
+
+dependencyManagement {
+    imports {
+        mavenBom "org.springframework.boot:spring-boot-dependencies:3.4.1"
+    }
+}
+
+dependencies {
+    compileOnly(libs.lombok)
+    implementation(libs.liquibase)
+
+    implementation("org.hibernate.orm:hibernate-core")
+    implementation("org.hibernate.validator:hibernate-validator")
+    implementation("org.springframework.boot:spring-boot-starter-aop")
+    implementation("org.springframework.boot:spring-boot-starter-data-jpa")
+    implementation("org.springframework.boot:spring-boot-starter-logging")
+    implementation("org.springframework.boot:spring-boot-starter-security")
+    implementation("org.springframework.boot:spring-boot-starter-thymeleaf")
+
+
+    testImplementation platform('org.junit:junit-bom:5.10.0')
+    testImplementation 'org.junit.jupiter:junit-jupiter'
+
+    testCompileOnly(libs.lombok)
+    testAnnotationProcessor(libs.lombok)
+
+    annotationProcessor(libs.lombok)
+}
+
+test {
+    useJUnitPlatform()
+}

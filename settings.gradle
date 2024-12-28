@@ -12,7 +12,6 @@ rootProject.name = "flowinquiry-server"
 include 'server'
 include 'tools'
 include 'tools:liquibase'
-findProject(':tools:liquibase')?.name = 'liquibase'
 include 'tools:platform'
-findProject(':tools:platform')?.name = 'platform'
+include 'commons'
 

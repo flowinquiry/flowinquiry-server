@@ -11,6 +11,7 @@ assert System.properties["java.specification.version"] == "21" || "22" || "23"
 
 allprojects {
     group = 'io.flowinquiry'
+    version = project.findProperty('version')
     repositories {
         mavenCentral()
     }

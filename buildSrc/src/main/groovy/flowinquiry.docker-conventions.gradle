@@ -14,7 +14,7 @@ jib {
     }
     to {
         image = "flowinquiry/flowinquiry-server"
-        tags = ['latest', findProperty('projectVersion')]
+        tags = ['latest', findProperty('version')]
     }
     container {
         entrypoint = ["bash", "-c", "/entrypoint.sh"]

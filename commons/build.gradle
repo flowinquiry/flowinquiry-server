@@ -31,11 +31,16 @@ dependencies {
     implementation("com.fasterxml.jackson.datatype:jackson-datatype-hppc")
     implementation("com.fasterxml.jackson.datatype:jackson-datatype-hibernate6")
     implementation("com.fasterxml.jackson.datatype:jackson-datatype-jsr310")
+    implementation("com.zaxxer:HikariCP")
+    implementation("jakarta.annotation:jakarta.annotation-api")
+    implementation("org.apache.commons:commons-lang3")
     implementation("org.hibernate.orm:hibernate-core")
     implementation("org.hibernate.validator:hibernate-validator")
+
     implementation("org.springframework.boot:spring-boot-starter-actuator")
     implementation("org.springframework.boot:spring-boot-starter-aop")
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
+    implementation("org.springframework.boot:spring-boot-loader-tools")
     implementation("org.springframework.boot:spring-boot-starter-logging")
     implementation("org.springframework.boot:spring-boot-starter-mail")
     implementation("org.springframework.boot:spring-boot-starter-oauth2-resource-server")
@@ -47,11 +52,13 @@ dependencies {
             replacedBy("org.springframework.boot:spring-boot-starter-undertow", "Use Undertow instead of Tomcat")
         }
     }
+    implementation("org.springframework.boot:spring-boot-starter-validation")
     implementation("org.springframework.boot:spring-boot-starter-web")
     implementation("org.springframework.security:spring-security-data")
 
     testImplementation platform('org.junit:junit-bom:5.10.0')
     testImplementation 'org.junit.jupiter:junit-jupiter'
+    testImplementation(libs.assertJ)
 
     testCompileOnly(libs.lombok)
     testAnnotationProcessor(libs.lombok)

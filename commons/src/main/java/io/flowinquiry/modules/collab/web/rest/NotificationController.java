@@ -26,7 +26,7 @@ public class NotificationController {
 
     @GetMapping("/user/{userId}")
     public ResponseEntity<Page<NotificationDTO>> getUserNotifications(
-            @PathVariable Long userId, Pageable pageable) {
+            @PathVariable("userId") Long userId, Pageable pageable) {
         return ResponseEntity.ok(notificationService.getNotificationsForUser(userId, pageable));
     }
 

@@ -48,7 +48,7 @@ public class TeamRequestController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<TeamRequestDTO> getTeamRequestById(@PathVariable Long id) {
+    public ResponseEntity<TeamRequestDTO> getTeamRequestById(@PathVariable("id") Long id) {
         return ResponseEntity.ok(teamRequestService.getTeamRequestById(id));
     }
 
@@ -61,7 +61,7 @@ public class TeamRequestController {
 
     @PutMapping("/{id}")
     public ResponseEntity<TeamRequestDTO> updateTeamRequest(
-            @PathVariable Long id, @RequestBody TeamRequestDTO teamRequestDTO) {
+            @PathVariable("id") Long id, @RequestBody TeamRequestDTO teamRequestDTO) {
         if (!id.equals(teamRequestDTO.getId())) {
             throw new IllegalArgumentException("Id in URL and payload do not match");
         }
@@ -69,13 +69,13 @@ public class TeamRequestController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteTeamRequest(@PathVariable Long id) {
+    public ResponseEntity<Void> deleteTeamRequest(@PathVariable("id") Long id) {
         teamRequestService.deleteTeamRequest(id);
         return ResponseEntity.noContent().build();
     }
 
     @GetMapping("/{currentId}/next")
-    public ResponseEntity<TeamRequestDTO> getNextEntity(@PathVariable Long currentId) {
+    public ResponseEntity<TeamRequestDTO> getNextEntity(@PathVariable("currentId") Long currentId) {
         return teamRequestService
                 .getNextEntity(currentId)
                 .map(ResponseEntity::ok)
@@ -83,7 +83,7 @@ public class TeamRequestController {
     }
 
     @GetMapping("/{currentId}/previous")
-    public ResponseEntity<TeamRequestDTO> getPreviousEntity(@PathVariable Long currentId) {
+    public ResponseEntity<TeamRequestDTO> getPreviousEntity(@PathVariable("currentId") Long currentId) {
         return teamRequestService
                 .getPreviousEntity(currentId)
                 .map(ResponseEntity::ok)
@@ -92,19 +92,19 @@ public class TeamRequestController {
 
     // Endpoint to get ticket distribution for a specific team
     @GetMapping("/teams/{teamId}/ticket-distribution")
-    public List<TicketDistributionDTO> getTicketDistribution(@PathVariable Long teamId) {
+    public List<TicketDistributionDTO> getTicketDistribution(@PathVariable("teamId") Long teamId) {
         return teamRequestService.getTicketDistribution(teamId);
     }
 
     // Endpoint to get unassigned tickets for a specific team
     @GetMapping("/teams/{teamId}/unassigned-tickets")
-    public Page<TeamRequestDTO> getUnassignedTickets(@PathVariable Long teamId, Pageable pageable) {
+    public Page<TeamRequestDTO> getUnassignedTickets(@PathVariable("teamId") Long teamId, Pageable pageable) {
         return teamRequestService.getUnassignedTickets(teamId, pageable);
     }
 
     // Endpoint to get priority distribution for a specific team
     @GetMapping("/teams/{teamId}/priority-distribution")
-    public List<PriorityDistributionDTO> getPriorityDistribution(@PathVariable Long teamId) {
+    public List<PriorityDistributionDTO> getPriorityDistribution(@PathVariable("teamId") Long teamId) {
         return teamRequestService.getPriorityDistribution(teamId);
     }
 
@@ -116,7 +116,7 @@ public class TeamRequestController {
      */
     @GetMapping("/{teamRequestId}/states-history")
     public ResponseEntity<TransitionItemCollectionDTO> getTicketStateChangesHistory(
-            @PathVariable Long teamRequestId) {
+            @PathVariable("teamRequestId") Long teamRequestId) {
         TransitionItemCollectionDTO ticketHistory =
                 workflowTransitionHistoryService.getTransitionHistoryByTicketId(teamRequestId);
 
@@ -124,37 +124,37 @@ public class TeamRequestController {
     }
 
     @GetMapping("/teams/{teamId}/statistics")
-    public TicketStatisticsDTO getTicketStatisticsByTeamId(@PathVariable Long teamId) {
+    public TicketStatisticsDTO getTicketStatisticsByTeamId(@PathVariable("teamId") Long teamId) {
         return teamRequestService.getTicketStatisticsByTeamId(teamId);
     }
 
     @GetMapping("/teams/{teamId}/overdue-tickets")
     public Page<TeamRequestDTO> getOverdueTicketsByTeam(
-            @PathVariable Long teamId, Pageable pageable) {
+            @PathVariable("teamId") Long teamId, Pageable pageable) {
         return teamRequestService.getOverdueTicketsByTeam(teamId, pageable);
     }
 
     @GetMapping("/teams/{teamId}/overdue-tickets/count")
-    public Long countOverdueTickets(@PathVariable Long teamId) {
+    public Long countOverdueTickets(@PathVariable("teamId") Long teamId) {
         return teamRequestService.countOverdueTickets(teamId);
     }
 
     @GetMapping("/teams/{teamId}/ticket-creations-day-series")
     public List<TicketActionCountByDateDTO> getTicketCreationDaySeries(
-            @PathVariable Long teamId,
-            @RequestParam(required = false, defaultValue = "7") int days) {
+            @PathVariable("teamId") Long teamId,
+            @RequestParam(value = "days", required = false, defaultValue = "7") int days) {
         return teamRequestService.getTicketCreationTimeSeries(teamId, days);
     }
 
     @GetMapping("/users/{userId}/overdue-tickets")
     public Page<TeamRequestDTO> getOverdueTicketsByUser(
-            @PathVariable Long userId, Pageable pageable) {
+            @PathVariable("userId") Long userId, Pageable pageable) {
         return teamRequestService.getOverdueTicketsByUser(userId, pageable);
     }
 
     @GetMapping("/users/{userId}/team-tickets-priority-distribution")
     public ResponseEntity<List<TeamTicketPriorityDistributionDTO>>
-            getTeamTicketPriorityDistributionForUser(@PathVariable Long userId) {
+            getTeamTicketPriorityDistributionForUser(@PathVariable("userId") Long userId) {
         List<TeamTicketPriorityDistributionDTO> distribution =
                 teamRequestService.getPriorityDistributionForUser(userId);
         return ResponseEntity.ok(distribution);

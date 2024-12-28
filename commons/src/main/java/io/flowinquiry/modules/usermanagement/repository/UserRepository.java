@@ -48,7 +48,7 @@ public interface UserRepository extends JpaRepository<User, Long>, JpaSpecificat
     @Modifying
     @Transactional
     @Query("UPDATE User u SET u.lastLoginTime = :lastLoginTime WHERE u.email = :userEmail")
-    void updateLastLoginTime(String userEmail, LocalDateTime lastLoginTime);
+    void updateLastLoginTime(@Param("userEmail") String userEmail, @Param("lastLoginTime") LocalDateTime lastLoginTime);
 
     @Query(
             value =

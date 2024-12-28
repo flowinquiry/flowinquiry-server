@@ -47,7 +47,7 @@ public class WorkflowController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Workflow> getWorkflowById(@PathVariable Long id) {
+    public ResponseEntity<Workflow> getWorkflowById(@PathVariable("id") Long id) {
         return workflowService
                 .getWorkflowById(id)
                 .map(ResponseEntity::ok)
@@ -56,7 +56,7 @@ public class WorkflowController {
 
     @PutMapping("/{id}")
     public ResponseEntity<WorkflowDTO> updateWorkflow(
-            @PathVariable Long id, @RequestBody WorkflowDTO workflow) {
+            @PathVariable("id") Long id, @RequestBody WorkflowDTO workflow) {
         try {
             WorkflowDTO updatedWorkflow = workflowService.updateWorkflow(id, workflow);
             return ResponseEntity.ok(updatedWorkflow);
@@ -66,7 +66,7 @@ public class WorkflowController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<String> deleteWorkflow(@PathVariable Long id) {
+    public ResponseEntity<String> deleteWorkflow(@PathVariable("id") Long id) {
         try {
             workflowService.deleteWorkflow(id);
             return ResponseEntity.noContent().build();
@@ -85,7 +85,7 @@ public class WorkflowController {
      * @return a list of workflows available for the team.
      */
     @GetMapping("/teams/{teamId}")
-    public ResponseEntity<List<WorkflowDTO>> getWorkflowsByTeam(@PathVariable Long teamId) {
+    public ResponseEntity<List<WorkflowDTO>> getWorkflowsByTeam(@PathVariable("teamId") Long teamId) {
         List<WorkflowDTO> workflows = workflowService.getWorkflowsForTeam(teamId);
         return ResponseEntity.ok(workflows);
     }
@@ -98,7 +98,7 @@ public class WorkflowController {
      */
     @GetMapping("/teams/{teamId}/global-workflows-not-linked-yet")
     public ResponseEntity<List<WorkflowDTO>> getGlobalWorkflowsNotLinkedToTeam(
-            @PathVariable Long teamId) {
+            @PathVariable("teamId") Long teamId) {
         List<WorkflowDTO> workflows = workflowService.listGlobalWorkflowsNotLinkedToTeam(teamId);
         return ResponseEntity.ok(workflows);
     }
@@ -114,9 +114,9 @@ public class WorkflowController {
      */
     @GetMapping("/{workflowId}/transitions")
     public ResponseEntity<List<WorkflowStateDTO>> getValidTargetStates(
-            @PathVariable Long workflowId,
-            @RequestParam Long workflowStateId,
-            @RequestParam(defaultValue = "false") boolean includeSelf) {
+            @PathVariable("workflowId") Long workflowId,
+            @RequestParam("workflowStateId") Long workflowStateId,
+            @RequestParam(value = "includeSelf", defaultValue = "false") boolean includeSelf) {
         List<WorkflowStateDTO> validTargetStates =
                 workflowTransitionService.getValidTargetWorkflowStates(
                         workflowId, workflowStateId, includeSelf);
@@ -130,7 +130,7 @@ public class WorkflowController {
      * @return WorkflowDetailedDTO if found, otherwise 404.
      */
     @GetMapping("/details/{workflowId}")
-    public ResponseEntity<WorkflowDetailedDTO> getWorkflowDetail(@PathVariable Long workflowId) {
+    public ResponseEntity<WorkflowDetailedDTO> getWorkflowDetail(@PathVariable("workflowId") Long workflowId) {
         return workflowService
                 .getWorkflowDetail(workflowId)
                 .map(ResponseEntity::ok)
@@ -146,7 +146,7 @@ public class WorkflowController {
 
     @PutMapping("/details/{workflowId}")
     public ResponseEntity<WorkflowDetailedDTO> updateWorkflow(
-            @PathVariable Long workflowId,
+            @PathVariable("workflowId") Long workflowId,
             @Valid @RequestBody WorkflowDetailedDTO workflowDetailedDTO) {
         WorkflowDetailedDTO updatedWorkflow =
                 workflowService.updateWorkflow(workflowId, workflowDetailedDTO);
@@ -156,8 +156,8 @@ public class WorkflowController {
 
     @PostMapping("/{referencedWorkflowId}/teams/{teamId}/create-workflow-reference")
     public ResponseEntity<WorkflowDetailedDTO> createWorkflowByReference(
-            @PathVariable Long teamId,
-            @PathVariable Long referencedWorkflowId,
+            @PathVariable("teamId") Long teamId,
+            @PathVariable("referencedWorkflowId") Long referencedWorkflowId,
             @RequestBody WorkflowDTO workflowDTO) {
         WorkflowDetailedDTO createdWorkflow =
                 workflowService.createWorkflowByReference(
@@ -167,8 +167,8 @@ public class WorkflowController {
 
     @PostMapping("/{workflowToCloneId}/teams/{teamId}/create-workflow-clone")
     public ResponseEntity<WorkflowDetailedDTO> createWorkflowByCloning(
-            @PathVariable Long teamId,
-            @PathVariable Long workflowToCloneId,
+            @PathVariable("teamId") Long teamId,
+            @PathVariable("workflowToCloneId") Long workflowToCloneId,
             @RequestBody WorkflowDTO workflowDTO) {
         WorkflowDetailedDTO clonedWorkflow =
                 workflowService.createWorkflowByCloning(teamId, workflowToCloneId, workflowDTO);

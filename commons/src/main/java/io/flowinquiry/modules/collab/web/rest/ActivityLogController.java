@@ -22,7 +22,7 @@ public class ActivityLogController {
 
     @GetMapping
     public ResponseEntity<Page<ActivityLogDTO>> getActivityLogs(
-            @RequestParam EntityType entityType, @RequestParam Long entityId, Pageable pageable) {
+            @RequestParam("entityType") EntityType entityType, @RequestParam("entityId") Long entityId, Pageable pageable) {
         Page<ActivityLogDTO> activityLogs =
                 activityLogService.getActivityLogs(entityType, entityId, pageable);
         return ResponseEntity.ok(activityLogs);
@@ -30,7 +30,7 @@ public class ActivityLogController {
 
     @GetMapping("/user/{userId}")
     public ResponseEntity<Page<ActivityLogDTO>> getUserActivities(
-            @PathVariable Long userId, Pageable pageable) {
+            @PathVariable("userId") Long userId, Pageable pageable) {
         Page<ActivityLogDTO> activities = activityLogService.getActivitiesForUser(userId, pageable);
         return ResponseEntity.ok(activities);
     }

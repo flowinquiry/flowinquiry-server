@@ -32,7 +32,7 @@ public class AuthorityResourcePermissionController {
      */
     @GetMapping("/{authorityName}")
     public List<AuthorityResourcePermissionDTO> getPermissionsByAuthority(
-            @PathVariable String authorityName) {
+            @PathVariable("authorityName") String authorityName) {
         return authorityResourcePermissionService.getResourcePermissionsByAuthority(authorityName);
     }
 

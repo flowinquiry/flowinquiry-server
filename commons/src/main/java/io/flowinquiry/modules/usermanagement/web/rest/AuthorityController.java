@@ -113,7 +113,7 @@ public class AuthorityController {
 
     @GetMapping("/{authorityName}/users")
     public ResponseEntity<Page<UserDTO>> getUsersByAuthority(
-            @PathVariable String authorityName, Pageable pageable) {
+            @PathVariable("authorityName") String authorityName, Pageable pageable) {
         Page<UserDTO> users = authorityService.findAllUsersByAuthority(authorityName, pageable);
         return ResponseEntity.ok(users);
     }
@@ -130,14 +130,14 @@ public class AuthorityController {
 
     @PostMapping("/{authorityName}/add-users")
     public ResponseEntity<Void> addUsersToAuthority(
-            @PathVariable String authorityName, @RequestBody List<Long> userIds) {
+            @PathVariable("authorityName") String authorityName, @RequestBody List<Long> userIds) {
         authorityService.addUsersToAuthority(userIds, authorityName);
         return ResponseEntity.ok().build();
     }
 
     @DeleteMapping("/{authorityName}/users/{userId}")
     public ResponseEntity<Void> removeUserFromAuthority(
-            @PathVariable Long userId, @PathVariable String authorityName) {
+            @PathVariable("userId") Long userId, @PathVariable String authorityName) {
         authorityService.removeUserFromAuthority(userId, authorityName);
         return ResponseEntity.noContent().build();
     }

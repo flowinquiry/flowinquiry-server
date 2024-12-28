@@ -43,21 +43,21 @@ public class OrganizationController {
     // Update an existing organization
     @PutMapping("/{id}")
     public ResponseEntity<Organization> updateOrganization(
-            @PathVariable Long id, @RequestBody Organization organization) {
+            @PathVariable("id") Long id, @RequestBody Organization organization) {
         Organization updatedOrganization = organizationService.updateOrganization(id, organization);
         return ResponseEntity.ok(updatedOrganization);
     }
 
     // Delete an organization by ID
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteOrganization(@PathVariable Long id) {
+    public ResponseEntity<Void> deleteOrganization(@PathVariable("id") Long id) {
         organizationService.deleteOrganization(id);
         return ResponseEntity.noContent().build();
     }
 
     // Find an organization by ID
     @GetMapping("/{id}")
-    public ResponseEntity<Organization> findOrganizationById(@PathVariable Long id) {
+    public ResponseEntity<Organization> findOrganizationById(@PathVariable("id") Long id) {
         Organization organization = organizationService.findOrganizationById(id);
         return ResponseEntity.ok(organization);
     }

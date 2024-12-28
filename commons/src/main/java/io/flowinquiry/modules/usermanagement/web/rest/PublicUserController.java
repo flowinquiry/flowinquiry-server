@@ -151,14 +151,14 @@ public class PublicUserController {
 
     @GetMapping("/permissions/{userId}")
     public ResponseEntity<List<ResourcePermissionDTO>> getUserResourcesWithPermissions(
-            @PathVariable Long userId) {
+            @PathVariable("userId") Long userId) {
         List<ResourcePermissionDTO> resourcesWithPermissions =
                 userService.getResourcesWithPermissionsByUserId(userId);
         return ResponseEntity.ok(resourcesWithPermissions);
     }
 
     @GetMapping("/{managerId}/direct-reports")
-    public ResponseEntity<List<UserDTO>> getDirectReports(@PathVariable Long managerId) {
+    public ResponseEntity<List<UserDTO>> getDirectReports(@PathVariable("managerId") Long managerId) {
         List<UserDTO> directReports = userService.getDirectReports(managerId);
         return ResponseEntity.ok(directReports);
     }
@@ -216,7 +216,7 @@ public class PublicUserController {
     }
 
     @GetMapping("/{userId}/hierarchy")
-    public ResponseEntity<UserHierarchyDTO> getUserHierarchy(@PathVariable Long userId) {
+    public ResponseEntity<UserHierarchyDTO> getUserHierarchy(@PathVariable("userId") Long userId) {
         return ResponseEntity.ok(userService.getUserHierarchyWithSubordinates(userId));
     }
 

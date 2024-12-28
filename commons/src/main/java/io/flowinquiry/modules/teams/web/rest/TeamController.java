@@ -95,7 +95,7 @@ public class TeamController {
 
     // Delete a team by ID
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteTeam(@PathVariable Long id) {
+    public ResponseEntity<Void> deleteTeam(@PathVariable("id") Long id) {
         teamService.deleteTeam(id);
         return ResponseEntity.noContent().build();
     }
@@ -107,7 +107,7 @@ public class TeamController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<TeamDTO> findTeamById(@PathVariable Long id) {
+    public ResponseEntity<TeamDTO> findTeamById(@PathVariable("id") Long id) {
         return teamService
                 .findTeamById(id)
                 .map(ResponseEntity::ok)
@@ -121,19 +121,19 @@ public class TeamController {
     }
 
     @GetMapping("/{teamId}/members")
-    public ResponseEntity<List<UserWithTeamRoleDTO>> findUsersByTeamId(@PathVariable Long teamId) {
+    public ResponseEntity<List<UserWithTeamRoleDTO>> findUsersByTeamId(@PathVariable("teamId") Long teamId) {
         return new ResponseEntity<>(teamService.getUsersByTeam(teamId), HttpStatus.OK);
     }
 
     @GetMapping("/users/{userId}")
-    public ResponseEntity<List<TeamDTO>> getTeamsByUserId(@PathVariable Long userId) {
+    public ResponseEntity<List<TeamDTO>> getTeamsByUserId(@PathVariable("userId") Long userId) {
         List<TeamDTO> teams = teamService.findAllTeamsByUserId(userId);
         return (teams.isEmpty()) ? ResponseEntity.noContent().build() : ResponseEntity.ok(teams);
     }
 
     @PostMapping("/{teamId}/add-users")
     public ResponseEntity<Void> addUsersToTeam(
-            @PathVariable Long teamId, @RequestBody ListUserIdsAndRoleDTO userIdsAndRoleDTO) {
+            @PathVariable("teamId") Long teamId, @RequestBody ListUserIdsAndRoleDTO userIdsAndRoleDTO) {
         teamService.addUsersToTeam(
                 userIdsAndRoleDTO.getUserIds(), userIdsAndRoleDTO.getRole(), teamId);
         return ResponseEntity.ok().build();
@@ -142,21 +142,21 @@ public class TeamController {
     @GetMapping("/searchUsersNotInTeam")
     public ResponseEntity<List<UserDTO>> findUsersNotInTeam(
             @RequestParam("userTerm") String searchTerm, @RequestParam("teamId") Long teamId) {
-        PageRequest pageRequest = PageRequest.of(0, 20); // Limit to 20 results
+        PageRequest pageRequest = PageRequest.of(0, 20);
         List<UserDTO> users = teamService.findUsersNotInTeam(searchTerm, teamId, pageRequest);
         return ResponseEntity.ok(users);
     }
 
     @DeleteMapping("/{teamId}/users/{userId}")
     public ResponseEntity<Void> removeUserFromTeam(
-            @PathVariable Long userId, @PathVariable Long teamId) {
+            @PathVariable("userId") Long userId, @PathVariable("teamId") Long teamId) {
         teamService.removeUserFromTeam(userId, teamId);
         return ResponseEntity.noContent().build();
     }
 
     @GetMapping("/{teamId}/users/{userId}/role")
     public ResponseEntity<String> getUserRoleInTeam(
-            @PathVariable Long teamId, @PathVariable Long userId) {
+            @PathVariable("teamId") Long teamId, @PathVariable("userId") Long userId) {
         String role = teamService.getUserRoleInTeam(userId, teamId);
         return ResponseEntity.ok(Json.createObjectBuilder().add("role", role).build().toString());
     }

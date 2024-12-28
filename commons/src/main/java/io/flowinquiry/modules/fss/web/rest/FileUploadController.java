@@ -40,8 +40,8 @@ public class FileUploadController {
     @PostMapping(value = "/singleUpload")
     public ResponseEntity<String> submit(
             @RequestParam("file") MultipartFile file,
-            @RequestParam String type,
-            @RequestParam Optional<String> parentPath)
+            @RequestParam("type") String type,
+            @RequestParam("parentPath") Optional<String> parentPath)
             throws Exception {
         String currentUser = SecurityUtils.getCurrentUserLogin().map(UserKey::getEmail).orElse("");
         LOG.debug(

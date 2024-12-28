@@ -33,20 +33,20 @@ public class CommentController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Comment> getCommentById(@PathVariable Long id) {
+    public ResponseEntity<Comment> getCommentById(@PathVariable("id") Long id) {
         Comment comment = commentService.getCommentById(id);
         return ResponseEntity.ok(comment);
     }
 
     @GetMapping
     public ResponseEntity<List<CommentDTO>> getCommentsForEntity(
-            @RequestParam EntityType entityType, @RequestParam Long entityId) {
+            @RequestParam("entityType") EntityType entityType, @RequestParam("entityId") Long entityId) {
         List<CommentDTO> comments = commentService.getCommentsForEntity(entityType, entityId);
         return ResponseEntity.ok(comments);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteComment(@PathVariable Long id) {
+    public ResponseEntity<Void> deleteComment(@PathVariable("id") Long id) {
         commentService.deleteComment(id);
         return ResponseEntity.noContent().build();
     }

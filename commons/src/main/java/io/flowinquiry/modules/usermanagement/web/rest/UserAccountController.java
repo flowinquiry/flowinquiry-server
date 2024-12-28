@@ -81,7 +81,7 @@ public class UserAccountController {
     }
 
     @GetMapping("/{email}/resend-activation-email")
-    public void resendActivationEmail(@Valid @PathVariable @Email String email) {
+    public void resendActivationEmail(@Valid @PathVariable("email") @Email String email) {
         Optional<User> user = userRepository.findUserByEmailEqualsIgnoreCase(email);
         if (user.isEmpty()) {
             log.warn("User with email {} not found", email);
@@ -99,7 +99,7 @@ public class UserAccountController {
      *     activated.
      */
     @GetMapping("/activate")
-    public void activateAccount(@RequestParam(value = "key") String key) {
+    public void activateAccount(@RequestParam("key") String key) {
         Optional<User> user = userService.activateRegistration(key);
         if (user.isEmpty()) {
             throw new AccountResourceException("No user was found for this activation key");

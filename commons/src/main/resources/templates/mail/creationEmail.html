@@ -1,20 +1,102 @@
 <!doctype html>
 <html xmlns:th="http://www.thymeleaf.org" th:lang="${#locale.language}" lang="en">
-  <head>
-    <title th:text="#{email.activation.title}">FlowInquiry creation</title>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-<!--    <link rel="icon" th:href="@{|${baseUrl}/favicon.ico|}" />-->
-  </head>
-  <body>
+<head>
+  <title th:text="#{email.activation.title}">FlowInquiry - Account Activation</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f4f4f9;
+      margin: 0;
+      padding: 0;
+    }
+    .email-container {
+      max-width: 600px;
+      margin: 20px auto;
+      background-color: #ffffff;
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+    .email-header {
+      background-color: #007bff;
+      color: #ffffff;
+      text-align: center;
+      padding: 20px;
+    }
+    .email-header img {
+      max-height: 50px;
+    }
+    .email-title {
+      font-size: 24px;
+      margin: 10px 0;
+    }
+    .email-content {
+      padding: 20px;
+      text-align: center;
+    }
+    .email-content p {
+      font-size: 16px;
+      line-height: 1.6;
+      margin: 10px 0;
+    }
+    .email-content .action-link {
+      display: inline-block;
+      margin-top: 20px;
+      padding: 12px 20px;
+      font-size: 16px;
+      font-weight: bold;
+      color: #ffffff;
+      background-color: #007bff;
+      text-decoration: none;
+      border-radius: 4px;
+    }
+    .email-footer {
+      text-align: center;
+      padding: 15px;
+      font-size: 14px;
+      background-color: #f9f9f9;
+      color: #777777;
+    }
+    .email-footer a {
+      color: #007bff;
+      text-decoration: none;
+    }
+  </style>
+</head>
+<body>
+<div class="email-container">
+  <!-- Header -->
+  <div class="email-header">
+    <img th:src="@{|${baseUrl}/images/logo.png|}" alt="FlowInquiry Logo" />
+    <div class="email-title" th:text="#{email.activation.title}">Account Activation</div>
+  </div>
+
+  <!-- Content -->
+  <div class="email-content">
     <p th:text="#{email.activation.greeting(${user.email})}">Dear</p>
-    <p th:text="#{email.creation.text1}">Your FlowInquiry account has been created, please click on the URL below to access it:</p>
-    <p>
-      <a th:with="url=(@{|${baseUrl}/account/reset/finish?key=${user.resetKey}|})" th:href="${url}" th:text="${url}">Login link</a>
+    <p th:text="#{email.creation.text1}">
+      Your FlowInquiry account has been created. Please click the button below to activate it:
     </p>
+    <a th:with="url=(@{|${baseUrl}/account/reset/finish?key=${user.resetKey}|})"
+       th:href="${url}" class="action-link" th:text="#{email.activation.action}">Activate Account</a>
+    <p>If the button above doesn't work, copy and paste the following URL into your browser:</p>
     <p>
-      <span th:text="#{email.activation.text2}">Regards, </span>
-      <br />
-      <em th:text="#{email.signature}">FlowInquiry.</em>
+      <a th:with="url=(@{|${baseUrl}/account/reset/finish?key=${user.resetKey}|})"
+         th:href="${url}" th:text="${url}">Full Activation Link</a>
     </p>
-  </body>
+  </div>
+
+  <!-- Footer -->
+  <div class="email-footer">
+    <span th:text="#{email.activation.text2}">Regards,</span>
+    <br />
+    <em th:text="#{email.signature}">FlowInquiry Team.</em>
+    <br />
+    <a th:href="@{|${baseUrl}|}" th:text="#{email.footer.website}">Visit our website</a>
+    <br />
+    <span th:text="'© ' + ${#dates.format(new java.util.Date(), 'yyyy')} + ' FlowInquiry. All rights reserved.'"></span>
+  </div>
+</div>
+</body>
 </html>

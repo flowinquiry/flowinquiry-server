@@ -19,7 +19,7 @@ import io.flowinquiry.security.Constants;
 import io.flowinquiry.security.SecurityUtils;
 import io.flowinquiry.utils.Random;
 import jakarta.persistence.EntityNotFoundException;
-import org.jclouds.rest.ResourceNotFoundException;
+import io.flowinquiry.exceptions.ResourceNotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationEventPublisher;

@@ -59,7 +59,6 @@ configurations {
 
 dependencies {
     api project(":commons")
-    api project(":tools:liquibase")
 
 
     testImplementation("org.testcontainers:jdbc")

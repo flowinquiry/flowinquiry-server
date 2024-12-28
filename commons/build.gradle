@@ -26,7 +26,7 @@ dependencies {
         exclude group: "com.sun.xml.bind"
     }
     api(libs.jhipster.framework)
-    api(libs.liquibase)
+    api project(":tools:liquibase")
 
 
     api("com.fasterxml.jackson.module:jackson-module-jaxb-annotations")
@@ -59,7 +59,6 @@ dependencies {
     api("org.springframework.security:spring-security-data")
 
 
-
     testImplementation platform('org.junit:junit-bom:5.10.0')
     testImplementation 'org.junit.jupiter:junit-jupiter'
     testImplementation(libs.assertJ)
@@ -78,22 +77,4 @@ dependencies {
 
 test {
     useJUnitPlatform()
-}
-
-publishing {
-    publications {
-        mavenJava(MavenPublication) {
-            from components.java
-        }
-    }
-    repositories {
-        maven {
-            name = "GitHubPackages"
-            url = uri("https://maven.pkg.github.com/flowinquiry/flowinquiry-server")
-            credentials {
-                username = project.findProperty("gpr.user") ?: System.getenv("GITHUB_ACTOR")
-                password = project.findProperty("gpr.token") ?: System.getenv("GITHUB_TOKEN")
-            }
-        }
-    }
 }

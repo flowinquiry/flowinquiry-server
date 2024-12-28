@@ -17,11 +17,36 @@ allprojects {
     }
 
     subprojects {
-        afterEvaluate {
-            if (it.plugins.hasPlugin('java') || it.plugins.hasPlugin('java-library')) {
-                java {
-                    sourceCompatibility=21
-                    targetCompatibility=21
+        afterEvaluate { project ->
+            if (project.plugins.hasPlugin('java') || project.plugins.hasPlugin('java-library')) {
+                project.java {
+                    sourceCompatibility = 21
+                    targetCompatibility = 21
+                }
+            }
+
+            if (project.plugins.hasPlugin('java-library')) {
+                project.apply(plugin: 'maven-publish')
+
+                project.publishing {
+                    publications {
+                        // Check if the publication already exists
+                        if (!project.publishing.publications.names.contains("${project.name}MavenJava")) {
+                            create("${project.name}MavenJava", MavenPublication) {
+                                from project.components.java
+                            }
+                        }
+                    }
+                    repositories {
+                        maven {
+                            name = "GitHubPackages"
+                            url = uri("https://maven.pkg.github.com/flowinquiry/flowinquiry-server")
+                            credentials {
+                                username = project.findProperty("gpr.user") ?: System.getenv("GITHUB_ACTOR")
+                                password = project.findProperty("gpr.token") ?: System.getenv("GITHUB_TOKEN")
+                            }
+                        }
+                    }
                 }
             }
         }

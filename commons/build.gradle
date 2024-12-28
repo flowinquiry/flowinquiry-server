@@ -20,6 +20,7 @@ dependencies {
     compileOnly(libs.lombok)
     api(libs.bundles.json)
     api(libs.bundles.shedlock)
+    api(libs.dot.env)
     api(libs.j2html)
     api(libs.jclouds) {
         exclude group: "com.sun.xml.bind"
@@ -56,6 +57,8 @@ dependencies {
     api("org.springframework.boot:spring-boot-starter-validation")
     api("org.springframework.boot:spring-boot-starter-web")
     api("org.springframework.security:spring-security-data")
+
+
 
     testImplementation platform('org.junit:junit-bom:5.10.0')
     testImplementation 'org.junit.jupiter:junit-jupiter'

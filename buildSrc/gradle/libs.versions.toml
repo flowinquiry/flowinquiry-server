@@ -1,8 +1,0 @@
-[versions]
-
-[libraries]
-jib-plugin = { module = "com.google.cloud.tools:jib-gradle-plugin", version = "3.4.4" }
-modernizer-plugin = { module = "com.github.andygoossens:gradle-modernizer-plugin", version = "1.10.0" }
-nohttp-plugin = { module = "io.spring.nohttp:nohttp-gradle", version = "0.0.11" }
-splotless-plugin = { module = "com.diffplug.spotless:spotless-plugin-gradle", version = "7.0.0.BETA4" }
-[plugins]

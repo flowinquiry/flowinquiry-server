@@ -1,6 +1,5 @@
 plugins {
     id "java"
-    id "maven-publish"
     id "idea"
     id "com.gorylenko.gradle-git-properties"
     alias(libs.plugins.spring.boot)
@@ -62,9 +61,6 @@ dependencies {
     api project(":commons")
     api project(":tools:liquibase")
 
-
-    implementation(libs.dot.env)
-    implementation("org.apache.commons:commons-lang3")
 
     testImplementation("org.testcontainers:jdbc")
     testImplementation("org.testcontainers:junit-jupiter")

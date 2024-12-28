@@ -1,4 +1,4 @@
-package io.flowinquiry.platform.utils;
+package io.flowinquiry.utils;
 
 import org.apache.commons.lang3.RandomStringUtils;
 

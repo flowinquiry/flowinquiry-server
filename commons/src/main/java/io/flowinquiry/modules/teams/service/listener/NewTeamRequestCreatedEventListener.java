@@ -1,7 +1,5 @@
 package io.flowinquiry.modules.teams.service.listener;
 
-import static j2html.TagCreator.*;
-
 import io.flowinquiry.modules.collab.domain.ActivityLog;
 import io.flowinquiry.modules.collab.domain.EntityType;
 import io.flowinquiry.modules.collab.domain.Notification;
@@ -12,12 +10,17 @@ import io.flowinquiry.modules.teams.service.dto.TeamRequestDTO;
 import io.flowinquiry.modules.teams.service.event.NewTeamRequestCreatedEvent;
 import io.flowinquiry.modules.usermanagement.domain.User;
 import io.flowinquiry.modules.usermanagement.service.dto.UserWithTeamRoleDTO;
-import io.flowinquiry.platform.utils.Obfuscator;
-import java.util.List;
+import io.flowinquiry.utils.Obfuscator;
 import org.springframework.context.event.EventListener;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+
+import static j2html.TagCreator.a;
+import static j2html.TagCreator.p;
+import static j2html.TagCreator.text;
 
 @Component
 public class NewTeamRequestCreatedEventListener {

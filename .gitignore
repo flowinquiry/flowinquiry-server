@@ -157,3 +157,4 @@ Desktop.ini
 /tools/liquibase/build
 docker/volumes
 storage
+commons/build

@@ -1,10 +1,16 @@
 package io.flowinquiry.web.rest;
 
-import static io.flowinquiry.security.domain.AuthorityAsserts.*;
+import static io.flowinquiry.security.domain.AuthorityAsserts.assertAuthorityAllPropertiesEquals;
+import static io.flowinquiry.security.domain.AuthorityAsserts.assertAuthorityAllUpdatablePropertiesEquals;
+import static io.flowinquiry.security.domain.AuthorityAsserts.assertAuthorityUpdatableFieldsEquals;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.hasItem;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.flowinquiry.DefaultTenantContext;

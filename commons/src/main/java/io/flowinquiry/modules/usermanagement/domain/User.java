@@ -3,10 +3,32 @@ package io.flowinquiry.modules.usermanagement.domain;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.flowinquiry.modules.audit.AbstractAuditingEntity;
 import io.flowinquiry.modules.teams.domain.Team;
-import jakarta.persistence.*;
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.ManyToMany;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.Table;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
+import org.hibernate.annotations.BatchSize;
+
 import java.io.Serial;
 import java.io.Serializable;
 import java.time.Instant;
@@ -15,8 +37,6 @@ import java.time.ZoneId;
 import java.time.ZoneOffset;
 import java.util.HashSet;
 import java.util.Set;
-import lombok.*;
-import org.hibernate.annotations.BatchSize;
 
 /** A user. */
 @Entity

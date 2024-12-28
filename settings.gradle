@@ -12,6 +12,5 @@ rootProject.name = "flowinquiry-server"
 include 'server'
 include 'tools'
 include 'tools:liquibase'
-include 'tools:platform'
 include 'commons'
 

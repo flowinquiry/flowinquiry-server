@@ -1,7 +1,5 @@
 package io.flowinquiry.modules.teams.service.listener;
 
-import static j2html.TagCreator.*;
-
 import io.flowinquiry.modules.collab.domain.ActivityLog;
 import io.flowinquiry.modules.collab.domain.EntityType;
 import io.flowinquiry.modules.collab.repository.ActivityLogRepository;
@@ -11,12 +9,17 @@ import io.flowinquiry.modules.teams.repository.TeamRequestRepository;
 import io.flowinquiry.modules.teams.repository.WorkflowStateRepository;
 import io.flowinquiry.modules.teams.service.WorkflowTransitionHistoryService;
 import io.flowinquiry.modules.teams.service.event.TeamRequestWorkStateTransitionEvent;
-import io.flowinquiry.platform.utils.Obfuscator;
+import io.flowinquiry.utils.Obfuscator;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.context.event.EventListener;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
+
+import static j2html.TagCreator.a;
+import static j2html.TagCreator.p;
+import static j2html.TagCreator.span;
+import static j2html.TagCreator.text;
 
 @Component
 public class TeamRequestWorkStateTransitionEventListener {

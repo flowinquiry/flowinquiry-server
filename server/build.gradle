@@ -67,7 +67,6 @@ configurations {
 dependencies {
     api project(":commons")
     api project(":tools:liquibase")
-    api project(":tools:platform")
 
     compileOnly(libs.lombok)
 

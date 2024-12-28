@@ -1,7 +1,5 @@
 package io.flowinquiry.modules.usermanagement.web.rest;
 
-import static io.flowinquiry.security.SecurityUtils.*;
-
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.flowinquiry.modules.usermanagement.repository.UserRepository;
 import io.flowinquiry.modules.usermanagement.service.UserService;
@@ -9,11 +7,6 @@ import io.flowinquiry.modules.usermanagement.service.dto.FwUserDetails;
 import io.flowinquiry.modules.usermanagement.service.dto.UserDTO;
 import io.flowinquiry.modules.usermanagement.web.rest.errors.InvalidLoginException;
 import jakarta.validation.Valid;
-import java.time.Instant;
-import java.time.LocalDateTime;
-import java.time.ZoneOffset;
-import java.time.temporal.ChronoUnit;
-import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -29,7 +22,20 @@ import org.springframework.security.oauth2.jwt.JwsHeader;
 import org.springframework.security.oauth2.jwt.JwtClaimsSet;
 import org.springframework.security.oauth2.jwt.JwtEncoder;
 import org.springframework.security.oauth2.jwt.JwtEncoderParameters;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
+import java.time.temporal.ChronoUnit;
+import java.util.stream.Collectors;
+
+import static io.flowinquiry.security.SecurityUtils.AUTHORITIES_KEY;
+import static io.flowinquiry.security.SecurityUtils.JWT_ALGORITHM;
+import static io.flowinquiry.security.SecurityUtils.USER_ID;
 
 @RestController
 @RequestMapping("/api")

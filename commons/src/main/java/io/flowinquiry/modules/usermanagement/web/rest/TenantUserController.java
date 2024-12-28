@@ -6,12 +6,17 @@ import io.flowinquiry.modules.usermanagement.service.dto.UserDTO;
 import io.flowinquiry.modules.usermanagement.service.mapper.UserMapper;
 import io.flowinquiry.query.QueryDTO;
 import jakarta.validation.Valid;
-import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/tenants")
@@ -19,12 +24,9 @@ public class TenantUserController {
 
     private static final Logger LOG = LoggerFactory.getLogger(TenantUserController.class);
 
-    private final UserMapper userMapper;
-
     private final UserService userService;
 
-    public TenantUserController(UserMapper userMapper, UserService userService) {
-        this.userMapper = userMapper;
+    public TenantUserController( UserService userService) {
         this.userService = userService;
     }
 

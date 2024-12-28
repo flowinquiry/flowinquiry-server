@@ -1,9 +1,16 @@
 package io.flowinquiry.modules.audit;
 
-import static j2html.TagCreator.*;
-
 import j2html.tags.DomContent;
+
 import java.util.List;
+
+import static j2html.TagCreator.each;
+import static j2html.TagCreator.table;
+import static j2html.TagCreator.tbody;
+import static j2html.TagCreator.td;
+import static j2html.TagCreator.th;
+import static j2html.TagCreator.thead;
+import static j2html.TagCreator.tr;
 
 public class ActivityLogUtils {
 

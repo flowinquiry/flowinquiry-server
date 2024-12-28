@@ -17,16 +17,38 @@ dependencyManagement {
 
 dependencies {
     compileOnly(libs.lombok)
+    implementation(libs.bundles.json)
+    implementation(libs.bundles.shedlock)
+    implementation(libs.j2html)
+    implementation(libs.jclouds) {
+        exclude group: "com.sun.xml.bind"
+    }
+    implementation(libs.jhipster.framework)
     implementation(libs.liquibase)
 
+
+    implementation("com.fasterxml.jackson.module:jackson-module-jaxb-annotations")
+    implementation("com.fasterxml.jackson.datatype:jackson-datatype-hppc")
+    implementation("com.fasterxml.jackson.datatype:jackson-datatype-hibernate6")
+    implementation("com.fasterxml.jackson.datatype:jackson-datatype-jsr310")
     implementation("org.hibernate.orm:hibernate-core")
     implementation("org.hibernate.validator:hibernate-validator")
+    implementation("org.springframework.boot:spring-boot-starter-actuator")
     implementation("org.springframework.boot:spring-boot-starter-aop")
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
     implementation("org.springframework.boot:spring-boot-starter-logging")
+    implementation("org.springframework.boot:spring-boot-starter-mail")
+    implementation("org.springframework.boot:spring-boot-starter-oauth2-resource-server")
     implementation("org.springframework.boot:spring-boot-starter-security")
     implementation("org.springframework.boot:spring-boot-starter-thymeleaf")
-
+    implementation("org.springframework.boot:spring-boot-starter-undertow")
+    modules {
+        module("org.springframework.boot:spring-boot-starter-tomcat") {
+            replacedBy("org.springframework.boot:spring-boot-starter-undertow", "Use Undertow instead of Tomcat")
+        }
+    }
+    implementation("org.springframework.boot:spring-boot-starter-web")
+    implementation("org.springframework.security:spring-security-data")
 
     testImplementation platform('org.junit:junit-bom:5.10.0')
     testImplementation 'org.junit.jupiter:junit-jupiter'
@@ -34,7 +56,13 @@ dependencies {
     testCompileOnly(libs.lombok)
     testAnnotationProcessor(libs.lombok)
 
+    annotationProcessor("org.springframework.boot:spring-boot-configuration-processor")
+    annotationProcessor("org.hibernate.orm:hibernate-jpamodelgen")
+    annotationProcessor("org.glassfish.jaxb:jaxb-runtime")
     annotationProcessor(libs.lombok)
+    // Keep mapstruct dependency below the lombok
+    implementation(libs.mapstruct)
+    annotationProcessor(libs.mapstruct.processor)
 }
 
 test {

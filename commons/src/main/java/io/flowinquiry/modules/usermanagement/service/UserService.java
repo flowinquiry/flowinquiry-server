@@ -1,9 +1,11 @@
 package io.flowinquiry.modules.usermanagement.service;
 
-import static io.flowinquiry.query.QueryUtils.createSpecification;
-
 import io.flowinquiry.modules.usermanagement.AuthoritiesConstants;
-import io.flowinquiry.modules.usermanagement.domain.*;
+import io.flowinquiry.modules.usermanagement.domain.Authority;
+import io.flowinquiry.modules.usermanagement.domain.Permission;
+import io.flowinquiry.modules.usermanagement.domain.User;
+import io.flowinquiry.modules.usermanagement.domain.UserStatus;
+import io.flowinquiry.modules.usermanagement.domain.User_;
 import io.flowinquiry.modules.usermanagement.repository.AuthorityRepository;
 import io.flowinquiry.modules.usermanagement.repository.UserRepository;
 import io.flowinquiry.modules.usermanagement.service.dto.ResourcePermissionDTO;
@@ -12,15 +14,11 @@ import io.flowinquiry.modules.usermanagement.service.dto.UserHierarchyDTO;
 import io.flowinquiry.modules.usermanagement.service.dto.UserKey;
 import io.flowinquiry.modules.usermanagement.service.event.DeleteUserEvent;
 import io.flowinquiry.modules.usermanagement.service.mapper.UserMapper;
-import io.flowinquiry.platform.utils.Random;
 import io.flowinquiry.query.QueryDTO;
 import io.flowinquiry.security.Constants;
 import io.flowinquiry.security.SecurityUtils;
+import io.flowinquiry.utils.Random;
 import jakarta.persistence.EntityNotFoundException;
-import java.time.Instant;
-import java.time.temporal.ChronoUnit;
-import java.util.*;
-import java.util.stream.Collectors;
 import org.jclouds.rest.ResourceNotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -32,7 +30,20 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-/** Service class for managing users. */
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
+
+import static io.flowinquiry.query.QueryUtils.createSpecification;
+
+/**
+ * Service class for managing users.
+ */
 @Service
 @Transactional
 public class UserService {
@@ -236,10 +247,10 @@ public class UserService {
      * Update basic information (first name, last name, email, language) for the current user.
      *
      * @param firstName first name of user.
-     * @param lastName last name of user.
-     * @param email email id of user.
-     * @param langKey language key.
-     * @param imageUrl image URL of user.
+     * @param lastName  last name of user.
+     * @param email     email id of user.
+     * @param langKey   language key.
+     * @param imageUrl  image URL of user.
      */
     public void updateUser(
             String firstName, String lastName, String email, String langKey, String imageUrl) {

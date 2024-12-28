@@ -1,12 +1,9 @@
 package io.flowinquiry.modules.usermanagement.service;
 
-import static io.flowinquiry.db.DbConstants.DEFAULT_TENANT;
-
 import io.flowinquiry.config.FlowInquiryProfiles;
 import io.flowinquiry.db.service.LiquibaseService;
 import io.flowinquiry.modules.usermanagement.domain.Tenant;
 import io.flowinquiry.modules.usermanagement.repository.TenantRepository;
-import java.util.*;
 import lombok.SneakyThrows;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,6 +11,13 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+import java.util.Optional;
+import java.util.Random;
+import java.util.UUID;
+
+import static io.flowinquiry.db.DbConstants.DEFAULT_TENANT;
 
 @Service
 @Transactional

@@ -1,4 +1,4 @@
-package io.flowinquiry.platform.utils;
+package io.flowinquiry.utils;
 
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;

@@ -1,7 +1,5 @@
 package io.flowinquiry.modules.teams.service.listener;
 
-import static j2html.TagCreator.*;
-
 import io.flowinquiry.modules.collab.domain.ActivityLog;
 import io.flowinquiry.modules.collab.domain.EntityType;
 import io.flowinquiry.modules.collab.repository.ActivityLogRepository;
@@ -10,15 +8,22 @@ import io.flowinquiry.modules.teams.repository.TeamRepository;
 import io.flowinquiry.modules.teams.service.event.NewUsersAddedIntoTeamEvent;
 import io.flowinquiry.modules.usermanagement.domain.User;
 import io.flowinquiry.modules.usermanagement.repository.UserRepository;
-import io.flowinquiry.platform.utils.Obfuscator;
 import io.flowinquiry.security.SecurityUtils;
+import io.flowinquiry.utils.Obfuscator;
 import j2html.tags.specialized.DivTag;
 import jakarta.persistence.EntityNotFoundException;
-import java.util.List;
 import org.springframework.context.event.EventListener;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+
+import static j2html.TagCreator.a;
+import static j2html.TagCreator.b;
+import static j2html.TagCreator.div;
+import static j2html.TagCreator.li;
+import static j2html.TagCreator.ul;
 
 @Component
 public class NewUserAddedIntoTeamEventListener {

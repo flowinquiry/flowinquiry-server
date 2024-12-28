@@ -1,14 +1,17 @@
 package io.flowinquiry.modules.teams.service;
 
-import static io.flowinquiry.query.QueryUtils.createSpecification;
-
 import io.flowinquiry.modules.teams.domain.Team;
 import io.flowinquiry.modules.teams.domain.TeamWorkflowSelection;
 import io.flowinquiry.modules.teams.domain.Workflow;
 import io.flowinquiry.modules.teams.domain.WorkflowState;
 import io.flowinquiry.modules.teams.domain.WorkflowTransition;
 import io.flowinquiry.modules.teams.domain.WorkflowVisibility;
-import io.flowinquiry.modules.teams.repository.*;
+import io.flowinquiry.modules.teams.repository.TeamRepository;
+import io.flowinquiry.modules.teams.repository.TeamRequestRepository;
+import io.flowinquiry.modules.teams.repository.TeamWorkflowSelectionRepository;
+import io.flowinquiry.modules.teams.repository.WorkflowRepository;
+import io.flowinquiry.modules.teams.repository.WorkflowStateRepository;
+import io.flowinquiry.modules.teams.repository.WorkflowTransitionRepository;
 import io.flowinquiry.modules.teams.service.dto.WorkflowDTO;
 import io.flowinquiry.modules.teams.service.dto.WorkflowDetailedDTO;
 import io.flowinquiry.modules.teams.service.dto.WorkflowStateDTO;
@@ -18,14 +21,22 @@ import io.flowinquiry.modules.teams.service.mapper.WorkflowStateMapper;
 import io.flowinquiry.modules.teams.service.mapper.WorkflowTransitionMapper;
 import io.flowinquiry.query.QueryDTO;
 import jakarta.persistence.EntityNotFoundException;
-import java.util.*;
-import java.util.function.Function;
-import java.util.stream.Collectors;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.function.Function;
+import java.util.stream.Collectors;
+
+import static io.flowinquiry.query.QueryUtils.createSpecification;
 
 @Service
 public class WorkflowService {

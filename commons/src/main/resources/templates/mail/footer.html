@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head></head>
+<body>
+<div th:fragment="footer">
+    <div style="text-align: left; padding: 15px; font-size: 14px; background-color: #f9f9f9; color: #777777;">
+        <a href="https://flowinquiry.com" style="color: #0056b3; text-decoration: none;" th:text="#{email.footer.website}">
+            Visit our website
+        </a>
+        <br />
+        <span th:text="'© ' + ${#dates.format(new java.util.Date(), 'yyyy')} + ' ' + #{email.footer.copyright}">
+            © 2024 FlowInquiry. All rights reserved.
+        </span>
+    </div>
+</div>
+</body>
+</html>

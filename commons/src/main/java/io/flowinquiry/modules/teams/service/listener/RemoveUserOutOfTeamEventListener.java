@@ -71,7 +71,6 @@ public class RemoveUserOutOfTeamEventListener {
                                         .withHref(
                                                 "/portal/teams/"
                                                         + Obfuscator.obfuscate(team.getId()))
-                                        .withTarget("_blank") // Opens the link in a new tab
                                 )
                         .withText(" team.")
                         .render();

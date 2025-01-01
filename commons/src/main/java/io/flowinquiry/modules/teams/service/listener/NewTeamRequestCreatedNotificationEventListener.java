@@ -23,12 +23,13 @@ import static j2html.TagCreator.p;
 import static j2html.TagCreator.text;
 
 @Component
-public class NewTeamRequestCreatedEventListener {
+public class NewTeamRequestCreatedNotificationEventListener {
     private final NotificationRepository notificationRepository;
     private final TeamRepository teamRepository;
     private final ActivityLogRepository activityLogRepository;
 
-    public NewTeamRequestCreatedEventListener(
+
+    public NewTeamRequestCreatedNotificationEventListener(
             NotificationRepository notificationRepository,
             TeamRepository teamRepository,
             ActivityLogRepository activityLogRepository) {

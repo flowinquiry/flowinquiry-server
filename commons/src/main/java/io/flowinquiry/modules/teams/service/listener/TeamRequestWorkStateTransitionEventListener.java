@@ -25,11 +25,8 @@ import static j2html.TagCreator.text;
 public class TeamRequestWorkStateTransitionEventListener {
 
     private final ActivityLogRepository activityLogRepository;
-
     private final TeamRequestRepository teamRequestRepository;
-
     private final WorkflowStateRepository workflowStateRepository;
-
     private final WorkflowTransitionHistoryService workflowTransitionHistoryService;
 
     public TeamRequestWorkStateTransitionEventListener(

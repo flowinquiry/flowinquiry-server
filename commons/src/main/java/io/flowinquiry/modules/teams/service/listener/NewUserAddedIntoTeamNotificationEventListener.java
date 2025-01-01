@@ -26,13 +26,13 @@ import static j2html.TagCreator.li;
 import static j2html.TagCreator.ul;
 
 @Component
-public class NewUserAddedIntoTeamEventListener {
+public class NewUserAddedIntoTeamNotificationEventListener {
 
-    private ActivityLogRepository activityLogRepository;
-    private TeamRepository teamRepository;
-    private UserRepository userRepository;
+    private final ActivityLogRepository activityLogRepository;
+    private final TeamRepository teamRepository;
+    private final UserRepository userRepository;
 
-    public NewUserAddedIntoTeamEventListener(
+    public NewUserAddedIntoTeamNotificationEventListener(
             ActivityLogRepository activityLogRepository,
             TeamRepository teamRepository,
             UserRepository userRepository) {

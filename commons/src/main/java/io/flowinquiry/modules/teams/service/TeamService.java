@@ -7,6 +7,7 @@ import io.flowinquiry.modules.teams.domain.TeamRole;
 import io.flowinquiry.modules.teams.repository.TeamRepository;
 import io.flowinquiry.modules.teams.repository.TeamRoleRepository;
 import io.flowinquiry.modules.teams.service.dto.TeamDTO;
+import io.flowinquiry.modules.teams.service.event.NewTeamCreatedEvent;
 import io.flowinquiry.modules.teams.service.event.NewUsersAddedIntoTeamEvent;
 import io.flowinquiry.modules.teams.service.event.RemoveUserOutOfTeamEvent;
 import io.flowinquiry.modules.teams.service.mapper.TeamMapper;
@@ -67,7 +68,9 @@ public class TeamService {
 
     public TeamDTO createTeam(TeamDTO teamDTO) {
         Team team = teamMapper.toEntity(teamDTO);
-        return teamMapper.toDto(teamRepository.save(team));
+        TeamDTO savedTeam = teamMapper.toDto(teamRepository.save(team));
+        eventPublisher.publishEvent(new NewTeamCreatedEvent(this, savedTeam));
+        return savedTeam;
     }
 
     public TeamDTO updateTeam(TeamDTO updatedTeam) {

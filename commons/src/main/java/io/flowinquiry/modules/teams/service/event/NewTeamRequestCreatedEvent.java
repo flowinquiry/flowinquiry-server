@@ -6,7 +6,7 @@ import org.springframework.context.ApplicationEvent;
 
 @Getter
 public class NewTeamRequestCreatedEvent extends ApplicationEvent {
-    private TeamRequestDTO teamRequest;
+    private final TeamRequestDTO teamRequest;
 
     public NewTeamRequestCreatedEvent(Object source, TeamRequestDTO teamRequest) {
         super(source);

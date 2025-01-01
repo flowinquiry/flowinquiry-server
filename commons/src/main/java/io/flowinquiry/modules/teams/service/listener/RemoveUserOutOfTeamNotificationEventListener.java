@@ -20,15 +20,13 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 @Component
-public class RemoveUserOutOfTeamEventListener {
+public class RemoveUserOutOfTeamNotificationEventListener {
 
     private final TeamRepository teamRepository;
-
     private final UserRepository userRepository;
-
     private final ActivityLogRepository activityLogRepository;
 
-    public RemoveUserOutOfTeamEventListener(
+    public RemoveUserOutOfTeamNotificationEventListener(
             TeamRepository teamRepository,
             UserRepository userRepository,
             ActivityLogRepository activityLogRepository) {

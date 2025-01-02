@@ -357,13 +357,13 @@
 	<changeSet author="flowinquiry"
 		id="000:05-insert-default-user-authority-data" context="dev,test">
 		<loadData
-			file="config/liquibase/tenant/data/fw_user_authority.csv"
+			file="config/liquibase/tenant/data/fw_user_authority_dev.csv"
 			separator=";" tableName="fw_user_authority"
 			usePreparedStatements="true">
 			<column name="user_id" type="numeric" />
 		</loadData>
 		<loadData
-			file="config/liquibase/tenant/data/fw_organization.csv"
+			file="config/liquibase/tenant/data/fw_organization_dev.csv"
 			tableName="fw_organization" usePreparedStatements="true"
 			separator=";">
 			<column name="id" type="NUMERIC" />
@@ -383,22 +383,10 @@
 			usePreparedStatements="true">
 			<column name="user_id" type="numeric" />
 		</loadData>
-		<loadData
-			file="config/liquibase/tenant/data/fw_organization.csv"
-			tableName="fw_organization" usePreparedStatements="true"
-			separator=";">
-			<column name="id" type="NUMERIC" />
-			<column name="name" type="STRING" />
-			<column name="logo_url" type="STRING" />
-			<column name="slogan" type="STRING" />
-			<column name="description" type="STRING" />
-		</loadData>
-		<sql>SELECT setval('fw_organization_id_seq', (SELECT MAX(id) FROM
-			fw_organization));</sql>
 	</changeSet>
 	<changeSet author="flowinquiry"
 		id="000:06-insert-default-fw-team-data" context="dev,test">
-		<loadData file="config/liquibase/tenant/data/fw_team.csv"
+		<loadData file="config/liquibase/tenant/data/fw_team_dev.csv"
 			tableName="fw_team" separator=";">
 			<column name="id" type="NUMERIC" />
 			<column name="name" type="STRING" />
@@ -421,7 +409,7 @@
 	<changeSet author="flowinquiry"
 		id="000:08-insert-default-fw-user-team-data" context="dev,test">
 		<loadData
-			file="config/liquibase/tenant/data/fw_user_team.csv"
+			file="config/liquibase/tenant/data/fw_user_team_dev.csv"
 			tableName="fw_user_team" separator=";">
 			<column name="user_id" type="NUMERIC" />
 			<column name="team_id" type="NUMERIC" />

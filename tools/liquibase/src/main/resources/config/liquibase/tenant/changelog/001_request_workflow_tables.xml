@@ -355,8 +355,9 @@
 	</changeSet>
 	<changeSet author="flowinquiry"
 		id="001:01-insert-workflow-data" context="dev,test">
-		<loadData file="config/liquibase/tenant/data/fw_workflow.csv"
-			separator=";" tableName="fw_workflow" usePreparedStatements="true">
+		<loadData
+			file="config/liquibase/tenant/data/fw_workflow_dev.csv" separator=";"
+			tableName="fw_workflow" usePreparedStatements="true">
 			<column name="id" type="numeric" />
 			<column name="name" type="string" />
 			<column name="description" type="string" />
@@ -368,7 +369,7 @@
 	<changeSet author="flowinquiry"
 		id="001:02-insert-workflow-state-data" context="dev,test">
 		<loadData
-			file="config/liquibase/tenant/data/fw_workflow_state.csv"
+			file="config/liquibase/tenant/data/fw_workflow_state_dev.csv"
 			separator=";" tableName="fw_workflow_state"
 
 			usePreparedStatements="true">
@@ -384,7 +385,7 @@
 	<changeSet author="flowinquiry"
 		id="001:03-insert-workflow-transition-data" context="dev,test">
 		<loadData
-			file="config/liquibase/tenant/data/fw_workflow_transition.csv"
+			file="config/liquibase/tenant/data/fw_workflow_transition_dev.csv"
 			separator=";" tableName="fw_workflow_transition"
 			usePreparedStatements="true">
 			<column name="id" type="numeric" />
@@ -400,7 +401,7 @@
 	<changeSet author="flowinquiry"
 		id="001:04-insert-team-workflow-usage-data" context="dev,test">
 		<loadData
-			file="config/liquibase/tenant/data/fw_team_workflow_selection.csv"
+			file="config/liquibase/tenant/data/fw_team_workflow_selection_dev.csv"
 			separator=";" tableName="fw_team_workflow_selection"
 			usePreparedStatements="true">
 			<column name="id" type="numeric" />

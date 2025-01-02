@@ -1,0 +1,21 @@
+plugins {
+    id 'application'
+}
+
+repositories {
+    maven { // The google mirror is less flaky than mavenCentral()
+        url("https://maven-central.storage-download.googleapis.com/maven2/")
+    }
+    mavenCentral()
+    mavenLocal()
+}
+
+dependencies {
+    implementation 'com.pulumi:pulumi:(,1.0]'
+}
+
+application {
+    mainClass = project.hasProperty("mainClass")
+            ? project.getProperty("mainClass")
+            : 'io.flowinquiry.deployment.k8s.App'
+}

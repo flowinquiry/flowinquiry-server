@@ -47,14 +47,4 @@ public class LiquibaseService {
             liquibase.close();
         }
     }
-
-//    @Transactional
-//    public void createTenantDbSchema(String schema, Collection<String> activeProfiles) {
-//        updateLiquibaseSchema(TENANT_CHANGESET, schema, activeProfiles);
-//    }
-//
-//    @Transactional
-//    public void updateMasterDbSchema(String schema, Collection<String> activeProfiles) {
-//        updateLiquibaseSchema(MASTER_CHANGESET, schema, activeProfiles);
-//    }
 }

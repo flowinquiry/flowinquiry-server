@@ -6,7 +6,6 @@ import static io.flowinquiry.db.DbConstants.TENANT_CHANGESET;
 import io.flowinquiry.config.ApplicationProperties;
 import io.flowinquiry.config.FlowInquiryProfiles;
 import io.flowinquiry.config.FlowInquiryProperties;
-import io.flowinquiry.db.TenantContext;
 import io.flowinquiry.db.service.LiquibaseService;
 import io.github.cdimascio.dotenv.Dotenv;
 import jakarta.annotation.PostConstruct;
@@ -130,6 +129,5 @@ public class FlowInquiryApp {
     @Transactional
     void migrateDatabases(Collection<String> activeProfiles) {
         liquibaseService.updateLiquibaseSchema(TENANT_CHANGESET, DEFAULT_TENANT, activeProfiles);
-        TenantContext.setCurrentTenant(DEFAULT_TENANT);
     }
 }

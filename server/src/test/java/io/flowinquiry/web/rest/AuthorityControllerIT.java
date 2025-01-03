@@ -13,7 +13,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import io.flowinquiry.DefaultTenantContext;
 import io.flowinquiry.IntegrationTest;
 import io.flowinquiry.modules.usermanagement.domain.Authority;
 import io.flowinquiry.modules.usermanagement.repository.AuthorityRepository;
@@ -34,7 +33,6 @@ import org.springframework.transaction.annotation.Transactional;
 @IntegrationTest
 @AutoConfigureMockMvc
 @WithMockUser(authorities = {"ROLE_ADMIN"})
-@DefaultTenantContext
 class AuthorityControllerIT {
 
     private static final String ENTITY_API_URL = "/api/authorities";

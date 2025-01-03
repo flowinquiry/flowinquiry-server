@@ -1,7 +1,5 @@
 package io.flowinquiry.web.rest;
 
-import static io.flowinquiry.db.DbConstants.DEFAULT_TENANT;
-import static io.flowinquiry.db.TenantConstants.HEADER_TENANT_ID;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -10,7 +8,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import io.flowinquiry.DefaultTenantContext;
 import io.flowinquiry.IntegrationTest;
 import io.flowinquiry.modules.usermanagement.AuthoritiesConstants;
 import io.flowinquiry.modules.usermanagement.domain.User;
@@ -47,7 +44,6 @@ import org.springframework.transaction.annotation.Transactional;
 /** Integration tests for the {@link UserAccountController} REST controller. */
 @AutoConfigureMockMvc
 @IntegrationTest
-@DefaultTenantContext
 class UserAccountControllerIT {
 
     static final String TEST_USER_LOGIN_EMAIL = "test@localhost.io";
@@ -83,10 +79,7 @@ class UserAccountControllerIT {
     @WithUnauthenticatedMockUser
     void testNonAuthenticatedUser() throws Exception {
         restAccountMockMvc
-                .perform(
-                        get("/api/authenticate")
-                                .header(HEADER_TENANT_ID, DEFAULT_TENANT)
-                                .accept(MediaType.APPLICATION_JSON))
+                .perform(get("/api/authenticate").accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(content().string(""));
     }
@@ -97,7 +90,6 @@ class UserAccountControllerIT {
         restAccountMockMvc
                 .perform(
                         get("/api/authenticate")
-                                .header(HEADER_TENANT_ID, DEFAULT_TENANT)
                                 .with(request -> request)
                                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
@@ -118,10 +110,7 @@ class UserAccountControllerIT {
         userService.createUser(user);
 
         restAccountMockMvc
-                .perform(
-                        get("/api/account")
-                                .header(HEADER_TENANT_ID, DEFAULT_TENANT)
-                                .accept(MediaType.APPLICATION_JSON))
+                .perform(get("/api/account").accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
                 .andExpect(jsonPath("$.firstName").value("john"))
@@ -136,10 +125,7 @@ class UserAccountControllerIT {
     @Test
     void testGetUnknownAccount() throws Exception {
         restAccountMockMvc
-                .perform(
-                        get("/api/account")
-                                .header(HEADER_TENANT_ID, DEFAULT_TENANT)
-                                .accept(MediaType.APPLICATION_PROBLEM_JSON))
+                .perform(get("/api/account").accept(MediaType.APPLICATION_PROBLEM_JSON))
                 .andExpect(status().isUnauthorized());
     }
 
@@ -160,7 +146,6 @@ class UserAccountControllerIT {
         restAccountMockMvc
                 .perform(
                         post("/api/register")
-                                .header(HEADER_TENANT_ID, DEFAULT_TENANT)
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .content(om.writeValueAsBytes(validUser)))
                 .andExpect(status().isCreated());
@@ -187,7 +172,6 @@ class UserAccountControllerIT {
         restAccountMockMvc
                 .perform(
                         post("/api/register")
-                                .header(HEADER_TENANT_ID, DEFAULT_TENANT)
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .content(om.writeValueAsBytes(invalidUser)))
                 .andExpect(status().isCreated());
@@ -223,7 +207,6 @@ class UserAccountControllerIT {
         restAccountMockMvc
                 .perform(
                         post("/api/register")
-                                .header(HEADER_TENANT_ID, DEFAULT_TENANT)
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .content(om.writeValueAsBytes(invalidUser)))
                 .andExpect(status().isBadRequest());
@@ -267,7 +250,6 @@ class UserAccountControllerIT {
         restAccountMockMvc
                 .perform(
                         post("/api/register")
-                                .header(HEADER_TENANT_ID, DEFAULT_TENANT)
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .content(om.writeValueAsBytes(firstUser)))
                 .andExpect(status().isCreated());
@@ -292,7 +274,6 @@ class UserAccountControllerIT {
         restAccountMockMvc
                 .perform(
                         post("/api/register")
-                                .header(HEADER_TENANT_ID, DEFAULT_TENANT)
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .content(om.writeValueAsBytes(userWithUpperCaseEmail)))
                 .andExpect(status().isCreated());
@@ -326,7 +307,6 @@ class UserAccountControllerIT {
         restAccountMockMvc
                 .perform(
                         post("/api/register")
-                                .header(HEADER_TENANT_ID, DEFAULT_TENANT)
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .content(om.writeValueAsBytes(validUser)))
                 .andExpect(status().isCreated());
@@ -355,9 +335,7 @@ class UserAccountControllerIT {
         userRepository.saveAndFlush(user);
 
         restAccountMockMvc
-                .perform(
-                        get("/api/activate?key={activationKey}", activationKey)
-                                .header(HEADER_TENANT_ID, DEFAULT_TENANT))
+                .perform(get("/api/activate?key={activationKey}", activationKey))
                 .andExpect(status().isOk());
 
         user = userRepository.findOneByEmailIgnoreCase(user.getEmail()).orElse(null);
@@ -370,9 +348,7 @@ class UserAccountControllerIT {
     @Transactional
     void testActivateAccountWithWrongKey() throws Exception {
         restAccountMockMvc
-                .perform(
-                        get("/api/activate?key=wrongActivationKey")
-                                .header(HEADER_TENANT_ID, DEFAULT_TENANT))
+                .perform(get("/api/activate?key=wrongActivationKey"))
                 .andExpect(status().isInternalServerError());
     }
 
@@ -398,7 +374,6 @@ class UserAccountControllerIT {
         restAccountMockMvc
                 .perform(
                         post("/api/account")
-                                .header(HEADER_TENANT_ID, DEFAULT_TENANT)
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .content(om.writeValueAsBytes(userDTO)))
                 .andExpect(status().is(200));
@@ -442,7 +417,6 @@ class UserAccountControllerIT {
         restAccountMockMvc
                 .perform(
                         post("/api/account")
-                                .header(HEADER_TENANT_ID, DEFAULT_TENANT)
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .content(om.writeValueAsBytes(userDTO)))
                 .andExpect(status().isBadRequest());
@@ -481,7 +455,6 @@ class UserAccountControllerIT {
         restAccountMockMvc
                 .perform(
                         post("/api/account")
-                                .header(HEADER_TENANT_ID, DEFAULT_TENANT)
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .content(om.writeValueAsBytes(userDTO)))
                 .andExpect(status().is(500));
@@ -512,7 +485,6 @@ class UserAccountControllerIT {
         restAccountMockMvc
                 .perform(
                         post("/api/account")
-                                .header(HEADER_TENANT_ID, DEFAULT_TENANT)
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .content(om.writeValueAsBytes(userDTO)))
                 .andExpect(status().is(200));
@@ -539,7 +511,6 @@ class UserAccountControllerIT {
         restAccountMockMvc
                 .perform(
                         post("/api/account/change-password")
-                                .header(HEADER_TENANT_ID, DEFAULT_TENANT)
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .content(
                                         om.writeValueAsBytes(
@@ -571,7 +542,6 @@ class UserAccountControllerIT {
         restAccountMockMvc
                 .perform(
                         post("/api/account/change-password")
-                                .header(HEADER_TENANT_ID, DEFAULT_TENANT)
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .content(
                                         om.writeValueAsBytes(
@@ -601,7 +571,6 @@ class UserAccountControllerIT {
         restAccountMockMvc
                 .perform(
                         post("/api/account/change-password")
-                                .header(HEADER_TENANT_ID, DEFAULT_TENANT)
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .content(
                                         om.writeValueAsBytes(
@@ -633,7 +602,6 @@ class UserAccountControllerIT {
         restAccountMockMvc
                 .perform(
                         post("/api/account/change-password")
-                                .header(HEADER_TENANT_ID, DEFAULT_TENANT)
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .content(
                                         om.writeValueAsBytes(
@@ -663,7 +631,6 @@ class UserAccountControllerIT {
         restAccountMockMvc
                 .perform(
                         post("/api/account/change-password")
-                                .header(HEADER_TENANT_ID, DEFAULT_TENANT)
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .content(
                                         om.writeValueAsBytes(
@@ -690,9 +657,7 @@ class UserAccountControllerIT {
         userRepository.saveAndFlush(user);
 
         restAccountMockMvc
-                .perform(
-                        get("/api/account/reset-password/init?email=password-reset@example.com")
-                                .header(HEADER_TENANT_ID, DEFAULT_TENANT))
+                .perform(get("/api/account/reset-password/init?email=password-reset@example.com"))
                 .andExpect(status().isOk());
 
         userService.deleteUserByEmail("password-reset@example.com");
@@ -710,8 +675,8 @@ class UserAccountControllerIT {
 
         restAccountMockMvc
                 .perform(
-                        get("/api/account/reset-password/init?email=password-reset-upper-case@EXAMPLE.COM")
-                                .header(HEADER_TENANT_ID, DEFAULT_TENANT))
+                        get(
+                                "/api/account/reset-password/init?email=password-reset-upper-case@EXAMPLE.COM"))
                 .andExpect(status().isOk());
 
         userService.deleteUserByEmail("password-reset-upper-case@example.com");
@@ -721,8 +686,8 @@ class UserAccountControllerIT {
     void testRequestPasswordResetWrongEmail() throws Exception {
         restAccountMockMvc
                 .perform(
-                        get("/api/account/reset-password/init?email=password-reset-wrong-email@example.com")
-                                .header(HEADER_TENANT_ID, DEFAULT_TENANT))
+                        get(
+                                "/api/account/reset-password/init?email=password-reset-wrong-email@example.com"))
                 .andExpect(status().isOk());
     }
 
@@ -743,7 +708,6 @@ class UserAccountControllerIT {
         restAccountMockMvc
                 .perform(
                         post("/api/account/reset-password/finish")
-                                .header(HEADER_TENANT_ID, DEFAULT_TENANT)
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .content(om.writeValueAsBytes(keyAndPassword)))
                 .andExpect(status().isOk());
@@ -774,7 +738,6 @@ class UserAccountControllerIT {
         restAccountMockMvc
                 .perform(
                         post("/api/account/reset-password/finish")
-                                .header(HEADER_TENANT_ID, DEFAULT_TENANT)
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .content(om.writeValueAsBytes(keyAndPassword)))
                 .andExpect(status().isBadRequest());
@@ -798,7 +761,6 @@ class UserAccountControllerIT {
         restAccountMockMvc
                 .perform(
                         post("/api/account/reset-password/finish")
-                                .header(HEADER_TENANT_ID, DEFAULT_TENANT)
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .content(om.writeValueAsBytes(keyAndPassword)))
                 .andExpect(status().isInternalServerError());

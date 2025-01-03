@@ -33,8 +33,6 @@ management:
           include: livenessState
         readiness:
           include: readinessState,db
-    jhimetrics:
-      enabled: true
   info:
     git:
       mode: full
@@ -79,8 +77,6 @@ spring:
     group:
       dev:
         - dev
-        # Uncomment to activate TLS for the dev profile
-        #- tls
   jmx:
     enabled: false
   data:
@@ -155,9 +151,6 @@ server:
     session:
       cookie:
         http-only: true
-
-springdoc:
-  show-actuator: true
 
 
 # ===================================================================

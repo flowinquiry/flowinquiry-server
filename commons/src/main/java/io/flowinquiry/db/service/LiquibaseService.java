@@ -21,18 +21,15 @@ public class LiquibaseService {
 
     private static final Logger LOG = LoggerFactory.getLogger(LiquibaseService.class);
 
-    private static final String MASTER_CHANGESET = "config/liquibase/master/master.xml";
-
-    private static final String TENANT_CHANGESET = "config/liquibase/tenant/master.xml";
-
     private DataSource dataSource;
 
     public LiquibaseService(DataSource dataSource) {
         this.dataSource = dataSource;
     }
 
+    @Transactional
     @SneakyThrows
-    private void updateLiquibaseSchema(
+    public void updateLiquibaseSchema(
             String classpathChangeset, String schema, Collection<String> activeProfiles) {
         try (Connection connection = dataSource.getConnection()) {
             LOG.info("Going to create a schema {}", schema);
@@ -51,13 +48,13 @@ public class LiquibaseService {
         }
     }
 
-    @Transactional
-    public void createTenantDbSchema(String schema, Collection<String> activeProfiles) {
-        updateLiquibaseSchema(TENANT_CHANGESET, schema, activeProfiles);
-    }
-
-    @Transactional
-    public void updateMasterDbSchema(String schema, Collection<String> activeProfiles) {
-        updateLiquibaseSchema(MASTER_CHANGESET, schema, activeProfiles);
-    }
+//    @Transactional
+//    public void createTenantDbSchema(String schema, Collection<String> activeProfiles) {
+//        updateLiquibaseSchema(TENANT_CHANGESET, schema, activeProfiles);
+//    }
+//
+//    @Transactional
+//    public void updateMasterDbSchema(String schema, Collection<String> activeProfiles) {
+//        updateLiquibaseSchema(MASTER_CHANGESET, schema, activeProfiles);
+//    }
 }

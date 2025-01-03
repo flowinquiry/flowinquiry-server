@@ -1,6 +1,6 @@
 package io.flowinquiry.db;
 
-import static io.flowinquiry.db.DbConstants.MASTER_SCHEMA;
+import static io.flowinquiry.db.DbConstants.DEFAULT_TENANT;
 import static org.hibernate.cfg.MultiTenancySettings.MULTI_TENANT_CONNECTION_PROVIDER;
 
 import java.sql.Connection;
@@ -23,7 +23,7 @@ public class TenantConnectionProvider<T>
 
     @Override
     public Connection getAnyConnection() throws SQLException {
-        return getConnection(MASTER_SCHEMA);
+        return getConnection(DEFAULT_TENANT);
     }
 
     @Override
@@ -41,7 +41,7 @@ public class TenantConnectionProvider<T>
     @Override
     public void releaseConnection(String tenantIdentifier, Connection connection)
             throws SQLException {
-        connection.setSchema(MASTER_SCHEMA);
+        connection.setSchema(DEFAULT_TENANT);
         releaseAnyConnection(connection);
     }
 

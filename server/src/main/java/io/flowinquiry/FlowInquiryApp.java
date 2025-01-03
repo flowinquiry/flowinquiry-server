@@ -1,14 +1,13 @@
 package io.flowinquiry;
 
-import static io.flowinquiry.db.DbConstants.MASTER_SCHEMA;
+import static io.flowinquiry.db.DbConstants.DEFAULT_TENANT;
+import static io.flowinquiry.db.DbConstants.TENANT_CHANGESET;
 
 import io.flowinquiry.config.ApplicationProperties;
 import io.flowinquiry.config.FlowInquiryProfiles;
 import io.flowinquiry.config.FlowInquiryProperties;
 import io.flowinquiry.db.TenantContext;
 import io.flowinquiry.db.service.LiquibaseService;
-import io.flowinquiry.modules.usermanagement.domain.Tenant;
-import io.flowinquiry.modules.usermanagement.service.TenantService;
 import io.github.cdimascio.dotenv.Dotenv;
 import jakarta.annotation.PostConstruct;
 import java.net.InetAddress;
@@ -43,16 +42,12 @@ public class FlowInquiryApp {
 
     private static final Logger LOG = LoggerFactory.getLogger(FlowInquiryApp.class);
 
-    private final TenantService tenantService;
-
     private final LiquibaseService liquibaseService;
 
     private final Environment env;
 
-    public FlowInquiryApp(
-            Environment env, LiquibaseService liquibaseService, TenantService tenantService) {
+    public FlowInquiryApp(Environment env, LiquibaseService liquibaseService) {
         this.env = env;
-        this.tenantService = tenantService;
         this.liquibaseService = liquibaseService;
     }
 
@@ -134,10 +129,7 @@ public class FlowInquiryApp {
 
     @Transactional
     void migrateDatabases(Collection<String> activeProfiles) {
-        liquibaseService.updateMasterDbSchema(MASTER_SCHEMA, activeProfiles);
-        Tenant defaultTenant = tenantService.getDefaultTenant();
-        LOG.debug("Default tenant: {}", defaultTenant);
-        liquibaseService.createTenantDbSchema(defaultTenant.getName(), activeProfiles);
-        TenantContext.setCurrentTenant(defaultTenant.getName());
+        liquibaseService.updateLiquibaseSchema(TENANT_CHANGESET, DEFAULT_TENANT, activeProfiles);
+        TenantContext.setCurrentTenant(DEFAULT_TENANT);
     }
 }

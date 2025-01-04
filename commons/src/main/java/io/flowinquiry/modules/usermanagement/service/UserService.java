@@ -1,5 +1,8 @@
 package io.flowinquiry.modules.usermanagement.service;
 
+import static io.flowinquiry.query.QueryUtils.createSpecification;
+
+import io.flowinquiry.exceptions.ResourceNotFoundException;
 import io.flowinquiry.modules.usermanagement.AuthoritiesConstants;
 import io.flowinquiry.modules.usermanagement.domain.Authority;
 import io.flowinquiry.modules.usermanagement.domain.Permission;
@@ -19,7 +22,14 @@ import io.flowinquiry.security.Constants;
 import io.flowinquiry.security.SecurityUtils;
 import io.flowinquiry.utils.Random;
 import jakarta.persistence.EntityNotFoundException;
-import io.flowinquiry.exceptions.ResourceNotFoundException;
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationEventPublisher;
@@ -30,20 +40,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.Instant;
-import java.time.temporal.ChronoUnit;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.Set;
-import java.util.stream.Collectors;
-
-import static io.flowinquiry.query.QueryUtils.createSpecification;
-
-/**
- * Service class for managing users.
- */
+/** Service class for managing users. */
 @Service
 @Transactional
 public class UserService {
@@ -163,6 +160,9 @@ public class UserService {
         User user = new User();
         user.setFirstName(userDTO.getFirstName());
         user.setLastName(userDTO.getLastName());
+        if (userDTO.getManagerId() != null) {
+            user.setManager(User.builder().id(userDTO.getManagerId()).build());
+        }
         if (userDTO.getEmail() != null) {
             user.setEmail(userDTO.getEmail().toLowerCase());
         }
@@ -247,10 +247,10 @@ public class UserService {
      * Update basic information (first name, last name, email, language) for the current user.
      *
      * @param firstName first name of user.
-     * @param lastName  last name of user.
-     * @param email     email id of user.
-     * @param langKey   language key.
-     * @param imageUrl  image URL of user.
+     * @param lastName last name of user.
+     * @param email email id of user.
+     * @param langKey language key.
+     * @param imageUrl image URL of user.
      */
     public void updateUser(
             String firstName, String lastName, String email, String langKey, String imageUrl) {

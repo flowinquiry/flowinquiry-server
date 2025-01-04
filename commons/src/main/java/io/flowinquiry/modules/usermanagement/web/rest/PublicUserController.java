@@ -15,6 +15,11 @@ import io.flowinquiry.query.Filter;
 import io.flowinquiry.query.QueryDTO;
 import io.flowinquiry.utils.Obfuscator;
 import jakarta.validation.Valid;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -39,12 +44,6 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import tech.jhipster.web.util.PaginationUtil;
 import tech.jhipster.web.util.ResponseUtil;
-
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/users")
@@ -158,7 +157,8 @@ public class PublicUserController {
     }
 
     @GetMapping("/{managerId}/direct-reports")
-    public ResponseEntity<List<UserDTO>> getDirectReports(@PathVariable("managerId") Long managerId) {
+    public ResponseEntity<List<UserDTO>> getDirectReports(
+            @PathVariable("managerId") Long managerId) {
         List<UserDTO> directReports = userService.getDirectReports(managerId);
         return ResponseEntity.ok(directReports);
     }

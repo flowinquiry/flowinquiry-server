@@ -9,7 +9,6 @@ pluginManagement {
 
 rootProject.name = "flowinquiry-server"
 include 'server'
-include 'tools'
 include 'tools:liquibase'
 include 'commons'
 

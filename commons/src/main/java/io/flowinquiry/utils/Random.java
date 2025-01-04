@@ -1,8 +1,7 @@
 package io.flowinquiry.utils;
 
-import org.apache.commons.lang3.RandomStringUtils;
-
 import java.security.SecureRandom;
+import org.apache.commons.lang3.RandomStringUtils;
 
 public class Random {
     private static final int DEF_COUNT = 20;
@@ -17,7 +16,7 @@ public class Random {
     private Random() {}
 
     /**
-     * <p>generateRandomAlphanumericString.</p>
+     * generateRandomAlphanumericString.
      *
      * @return a {@link java.lang.String} object.
      */

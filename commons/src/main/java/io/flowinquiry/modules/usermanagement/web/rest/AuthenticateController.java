@@ -1,9 +1,16 @@
 package io.flowinquiry.modules.usermanagement.web.rest;
 
+import static io.flowinquiry.security.SecurityUtils.AUTHORITIES_KEY;
+import static io.flowinquiry.security.SecurityUtils.JWT_ALGORITHM;
+import static io.flowinquiry.security.SecurityUtils.USER_ID;
+
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.flowinquiry.modules.usermanagement.service.dto.FwUserDetails;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
+import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -24,14 +31,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.time.Instant;
-import java.time.temporal.ChronoUnit;
-import java.util.stream.Collectors;
-
-import static io.flowinquiry.security.SecurityUtils.AUTHORITIES_KEY;
-import static io.flowinquiry.security.SecurityUtils.JWT_ALGORITHM;
-import static io.flowinquiry.security.SecurityUtils.USER_ID;
 
 /** Controller to authenticate users. */
 @RestController

@@ -3,7 +3,6 @@ package io.flowinquiry.config;
 import static org.springframework.security.config.Customizer.withDefaults;
 
 import io.flowinquiry.modules.usermanagement.AuthoritiesConstants;
-import io.flowinquiry.web.filter.SpaWebFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -15,7 +14,6 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.server.resource.web.access.BearerTokenAccessDeniedHandler;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 import org.springframework.security.web.servlet.util.matcher.MvcRequestMatcher;
 import org.springframework.web.servlet.handler.HandlerMappingIntrospector;
 
@@ -33,62 +31,23 @@ public class SecurityConfiguration {
             throws Exception {
         http.cors(withDefaults())
                 .csrf(AbstractHttpConfigurer::disable)
-                .addFilterAfter(new SpaWebFilter(), BasicAuthenticationFilter.class)
                 .authorizeHttpRequests(
                         authz ->
                                 // prettier-ignore
                                 authz.requestMatchers(
-                                                mvc.pattern("/index.html"),
-                                                mvc.pattern("/*.js"),
-                                                mvc.pattern("/*.txt"),
-                                                mvc.pattern("/*.json"),
-                                                mvc.pattern("/*.map"),
-                                                mvc.pattern("/*.css"))
-                                        .permitAll()
-                                        .requestMatchers(
-                                                mvc.pattern("/*.ico"),
-                                                mvc.pattern("/*.png"),
-                                                mvc.pattern("/*.svg"),
-                                                mvc.pattern("/*.webapp"))
-                                        .permitAll()
-                                        .requestMatchers(mvc.pattern("/app/**"))
-                                        .permitAll()
-                                        .requestMatchers(mvc.pattern("/i18n/**"))
-                                        .permitAll()
-                                        .requestMatchers(mvc.pattern("/content/**"))
-                                        .permitAll()
-                                        .requestMatchers(mvc.pattern(HttpMethod.POST, "/api/login"))
-                                        .permitAll()
-                                        .requestMatchers(
-                                                mvc.pattern(HttpMethod.POST, "/api/authenticate"))
-                                        .permitAll()
-                                        .requestMatchers(
-                                                mvc.pattern(HttpMethod.GET, "/api/authenticate"))
-                                        .permitAll()
-                                        .requestMatchers(mvc.pattern("/api/register"))
-                                        .permitAll()
-                                        .requestMatchers(mvc.pattern("/api/files/**"))
-                                        .permitAll()
-                                        .requestMatchers(mvc.pattern("/api/activate"))
-                                        .permitAll()
-                                        .requestMatchers(
-                                                mvc.pattern("/api/account/reset-password/init"))
-                                        .permitAll()
-                                        .requestMatchers(
+                                                mvc.pattern(HttpMethod.POST, "/api/login"),
+                                                mvc.pattern(HttpMethod.POST, "/api/authenticate"),
+                                                mvc.pattern(HttpMethod.GET, "/api/authenticate"),
+                                                mvc.pattern("/api/register"),
+                                                mvc.pattern("/api/files/**"),
+                                                mvc.pattern("/api/activate"),
+                                                mvc.pattern("/api/account/reset-password/init"),
                                                 mvc.pattern("/api/account/reset-password/finish"))
                                         .permitAll()
                                         .requestMatchers(mvc.pattern("/api/admin/**"))
                                         .hasAuthority(AuthoritiesConstants.ADMIN)
                                         .requestMatchers(mvc.pattern("/api/**"))
                                         .authenticated()
-                                        .requestMatchers(mvc.pattern("/management/health"))
-                                        .permitAll()
-                                        .requestMatchers(mvc.pattern("/management/health/**"))
-                                        .permitAll()
-                                        .requestMatchers(mvc.pattern("/management/info"))
-                                        .permitAll()
-                                        .requestMatchers(mvc.pattern("/management/prometheus"))
-                                        .permitAll()
                                         .requestMatchers(mvc.pattern("/management/**"))
                                         .hasAuthority(
                                                 AuthoritiesConstants.ADMIN)) // Enforces ROLE_ADMIN

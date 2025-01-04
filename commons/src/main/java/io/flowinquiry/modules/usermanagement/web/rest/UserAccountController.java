@@ -13,6 +13,7 @@ import io.flowinquiry.modules.usermanagement.web.rest.errors.InvalidPasswordExce
 import io.flowinquiry.security.SecurityUtils;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Email;
+import java.util.Optional;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,9 +27,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.Optional;
-
-/** REST controller for managing the current user's account. */
 @RestController
 @RequestMapping("/api")
 public class UserAccountController {

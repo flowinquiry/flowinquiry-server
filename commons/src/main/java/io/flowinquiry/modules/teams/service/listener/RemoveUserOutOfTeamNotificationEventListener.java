@@ -68,8 +68,7 @@ public class RemoveUserOutOfTeamNotificationEventListener {
                                 a(team.getName())
                                         .withHref(
                                                 "/portal/teams/"
-                                                        + Obfuscator.obfuscate(team.getId()))
-                                )
+                                                        + Obfuscator.obfuscate(team.getId())))
                         .withText(" team.")
                         .render();
 

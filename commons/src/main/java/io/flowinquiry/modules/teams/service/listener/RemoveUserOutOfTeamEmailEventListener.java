@@ -12,7 +12,5 @@ public class RemoveUserOutOfTeamEmailEventListener {
     @Async("auditLogExecutor")
     @EventListener
     @Transactional
-    public void onRemoveUserOutOfTeam(RemoveUserOutOfTeamEvent event) {
-
-    }
+    public void onRemoveUserOutOfTeam(RemoveUserOutOfTeamEvent event) {}
 }

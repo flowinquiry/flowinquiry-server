@@ -12,7 +12,5 @@ public class NewTeamCreatedEventListener {
     @Async("auditLogExecutor")
     @Transactional
     @EventListener
-    public void onNewTeamCreated(NewTeamRequestCreatedEvent event) {
-
-    }
+    public void onNewTeamCreated(NewTeamRequestCreatedEvent event) {}
 }

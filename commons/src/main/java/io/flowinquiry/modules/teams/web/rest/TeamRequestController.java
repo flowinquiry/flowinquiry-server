@@ -83,7 +83,8 @@ public class TeamRequestController {
     }
 
     @GetMapping("/{currentId}/previous")
-    public ResponseEntity<TeamRequestDTO> getPreviousEntity(@PathVariable("currentId") Long currentId) {
+    public ResponseEntity<TeamRequestDTO> getPreviousEntity(
+            @PathVariable("currentId") Long currentId) {
         return teamRequestService
                 .getPreviousEntity(currentId)
                 .map(ResponseEntity::ok)
@@ -98,13 +99,15 @@ public class TeamRequestController {
 
     // Endpoint to get unassigned tickets for a specific team
     @GetMapping("/teams/{teamId}/unassigned-tickets")
-    public Page<TeamRequestDTO> getUnassignedTickets(@PathVariable("teamId") Long teamId, Pageable pageable) {
+    public Page<TeamRequestDTO> getUnassignedTickets(
+            @PathVariable("teamId") Long teamId, Pageable pageable) {
         return teamRequestService.getUnassignedTickets(teamId, pageable);
     }
 
     // Endpoint to get priority distribution for a specific team
     @GetMapping("/teams/{teamId}/priority-distribution")
-    public List<PriorityDistributionDTO> getPriorityDistribution(@PathVariable("teamId") Long teamId) {
+    public List<PriorityDistributionDTO> getPriorityDistribution(
+            @PathVariable("teamId") Long teamId) {
         return teamRequestService.getPriorityDistribution(teamId);
     }
 

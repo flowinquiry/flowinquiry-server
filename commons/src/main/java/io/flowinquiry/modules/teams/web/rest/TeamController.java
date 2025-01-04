@@ -121,7 +121,8 @@ public class TeamController {
     }
 
     @GetMapping("/{teamId}/members")
-    public ResponseEntity<List<UserWithTeamRoleDTO>> findUsersByTeamId(@PathVariable("teamId") Long teamId) {
+    public ResponseEntity<List<UserWithTeamRoleDTO>> findUsersByTeamId(
+            @PathVariable("teamId") Long teamId) {
         return new ResponseEntity<>(teamService.getUsersByTeam(teamId), HttpStatus.OK);
     }
 
@@ -133,7 +134,8 @@ public class TeamController {
 
     @PostMapping("/{teamId}/add-users")
     public ResponseEntity<Void> addUsersToTeam(
-            @PathVariable("teamId") Long teamId, @RequestBody ListUserIdsAndRoleDTO userIdsAndRoleDTO) {
+            @PathVariable("teamId") Long teamId,
+            @RequestBody ListUserIdsAndRoleDTO userIdsAndRoleDTO) {
         teamService.addUsersToTeam(
                 userIdsAndRoleDTO.getUserIds(), userIdsAndRoleDTO.getRole(), teamId);
         return ResponseEntity.ok().build();

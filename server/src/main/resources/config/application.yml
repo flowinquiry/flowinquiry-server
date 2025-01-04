@@ -11,61 +11,6 @@
 # http://docs.spring.io/spring-boot/docs/current/reference/html/common-application-properties.html
 # ===================================================================
 
----
-management:
-  endpoints:
-    web:
-      base-path: /management
-      exposure:
-        include:
-          - configprops
-          - env
-          - health
-          - info
-          - prometheus
-  endpoint:
-    health:
-      roles: 'ROLE_ADMIN'
-      probes:
-        enabled: true
-      group:
-        liveness:
-          include: livenessState
-        readiness:
-          include: readinessState,db
-  info:
-    git:
-      mode: full
-    env:
-      enabled: true
-  health:
-    mail:
-      enabled: false # When using the MailService, configure an SMTP server and set this to true
-  prometheus:
-    metrics:
-      export:
-        enabled: true
-        step: 60
-  observations:
-    key-values:
-      application: ${spring.application.name}
-  metrics:
-    enable:
-      http: true
-      jvm: true
-      logback: true
-      process: true
-      system: true
-    distribution:
-      percentiles-histogram:
-        all: true
-      percentiles:
-        all: 0, 0.5, 0.75, 0.95, 0.99, 1.0
-    data:
-      repository:
-        autotime:
-          enabled: true
-
 spring:
   application:
     name: FlowInquiry

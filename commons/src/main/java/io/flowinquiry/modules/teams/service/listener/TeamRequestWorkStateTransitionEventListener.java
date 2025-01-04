@@ -1,5 +1,10 @@
 package io.flowinquiry.modules.teams.service.listener;
 
+import static j2html.TagCreator.a;
+import static j2html.TagCreator.p;
+import static j2html.TagCreator.span;
+import static j2html.TagCreator.text;
+
 import io.flowinquiry.modules.collab.domain.ActivityLog;
 import io.flowinquiry.modules.collab.domain.EntityType;
 import io.flowinquiry.modules.collab.repository.ActivityLogRepository;
@@ -15,11 +20,6 @@ import org.springframework.context.event.EventListener;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
-
-import static j2html.TagCreator.a;
-import static j2html.TagCreator.p;
-import static j2html.TagCreator.span;
-import static j2html.TagCreator.text;
 
 @Component
 public class TeamRequestWorkStateTransitionEventListener {

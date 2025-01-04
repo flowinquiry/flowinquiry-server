@@ -22,7 +22,9 @@ public class ActivityLogController {
 
     @GetMapping
     public ResponseEntity<Page<ActivityLogDTO>> getActivityLogs(
-            @RequestParam("entityType") EntityType entityType, @RequestParam("entityId") Long entityId, Pageable pageable) {
+            @RequestParam("entityType") EntityType entityType,
+            @RequestParam("entityId") Long entityId,
+            Pageable pageable) {
         Page<ActivityLogDTO> activityLogs =
                 activityLogService.getActivityLogs(entityType, entityId, pageable);
         return ResponseEntity.ok(activityLogs);

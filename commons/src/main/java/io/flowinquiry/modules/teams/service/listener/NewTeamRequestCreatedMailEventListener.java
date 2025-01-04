@@ -15,7 +15,8 @@ public class NewTeamRequestCreatedMailEventListener {
     private final MailService mailService;
     private final FlowInquiryProperties flowInquiryProperties;
 
-    public NewTeamRequestCreatedMailEventListener(MailService mailService, FlowInquiryProperties flowInquiryProperties) {
+    public NewTeamRequestCreatedMailEventListener(
+            MailService mailService, FlowInquiryProperties flowInquiryProperties) {
         this.mailService = mailService;
         this.flowInquiryProperties = flowInquiryProperties;
     }
@@ -25,6 +26,5 @@ public class NewTeamRequestCreatedMailEventListener {
     @EventListener
     public void onNewTeamRequestCreated(NewTeamRequestCreatedEvent event) {
         TeamRequestDTO teamRequestDTO = event.getTeamRequest();
-
     }
 }

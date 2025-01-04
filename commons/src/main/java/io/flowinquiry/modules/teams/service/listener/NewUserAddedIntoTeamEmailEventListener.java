@@ -12,7 +12,5 @@ public class NewUserAddedIntoTeamEmailEventListener {
     @Async("auditLogExecutor")
     @EventListener
     @Transactional
-    public void onNewUsersAddedIntoTeam(NewUsersAddedIntoTeamEvent event) {
-
-    }
+    public void onNewUsersAddedIntoTeam(NewUsersAddedIntoTeamEvent event) {}
 }

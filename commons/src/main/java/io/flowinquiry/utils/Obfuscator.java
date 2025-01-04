@@ -12,14 +12,17 @@ public class Obfuscator {
         }
 
         // Convert the value to a string, encode to Base64, and make it URL-safe
-        String base64 = Base64.getEncoder().encodeToString(value.toString().getBytes(StandardCharsets.UTF_8));
+        String base64 =
+                Base64.getEncoder()
+                        .encodeToString(value.toString().getBytes(StandardCharsets.UTF_8));
         return base64.replace("+", "-").replace("/", "_").replace("=", "");
     }
 
     // Function to deobfuscate the value (returns the original type: string or number)
     public static Object deobfuscate(String encodedValue) {
         if (encodedValue == null || encodedValue.isEmpty()) {
-            throw new IllegalArgumentException("Invalid input: encodedValue cannot be null or empty");
+            throw new IllegalArgumentException(
+                    "Invalid input: encodedValue cannot be null or empty");
         }
 
         // Decode the URL-safe Base64 string
@@ -28,7 +31,8 @@ public class Obfuscator {
             base64 += "="; // Add padding
         }
 
-        String decodedString = new String(Base64.getDecoder().decode(base64), StandardCharsets.UTF_8);
+        String decodedString =
+                new String(Base64.getDecoder().decode(base64), StandardCharsets.UTF_8);
 
         // Try to parse the decoded string as a number
         try {
@@ -38,4 +42,3 @@ public class Obfuscator {
         }
     }
 }
-

@@ -85,7 +85,8 @@ public class WorkflowController {
      * @return a list of workflows available for the team.
      */
     @GetMapping("/teams/{teamId}")
-    public ResponseEntity<List<WorkflowDTO>> getWorkflowsByTeam(@PathVariable("teamId") Long teamId) {
+    public ResponseEntity<List<WorkflowDTO>> getWorkflowsByTeam(
+            @PathVariable("teamId") Long teamId) {
         List<WorkflowDTO> workflows = workflowService.getWorkflowsForTeam(teamId);
         return ResponseEntity.ok(workflows);
     }
@@ -130,7 +131,8 @@ public class WorkflowController {
      * @return WorkflowDetailedDTO if found, otherwise 404.
      */
     @GetMapping("/details/{workflowId}")
-    public ResponseEntity<WorkflowDetailedDTO> getWorkflowDetail(@PathVariable("workflowId") Long workflowId) {
+    public ResponseEntity<WorkflowDetailedDTO> getWorkflowDetail(
+            @PathVariable("workflowId") Long workflowId) {
         return workflowService
                 .getWorkflowDetail(workflowId)
                 .map(ResponseEntity::ok)

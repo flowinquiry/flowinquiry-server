@@ -6,7 +6,6 @@ plugins {
     alias(libs.plugins.spring.dependency.management)
     id "flowinquiry.spring-cache-conventions"
     id "flowinquiry.docker-conventions"
-    id "flowinquiry.code-conventions"
 }
 
 description = ""
@@ -58,7 +57,8 @@ configurations {
 
 dependencies {
     implementation( project(":commons"))
-
+    implementation("org.springframework.boot:spring-boot-starter-actuator")
+    implementation("io.micrometer:micrometer-registry-prometheus")
 
     testImplementation("org.testcontainers:jdbc")
     testImplementation("org.testcontainers:junit-jupiter")

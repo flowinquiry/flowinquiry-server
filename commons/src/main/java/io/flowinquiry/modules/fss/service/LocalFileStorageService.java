@@ -1,5 +1,6 @@
 package io.flowinquiry.modules.fss.service;
 
+import io.flowinquiry.exceptions.ResourceNotFoundException;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileInputStream;
@@ -11,8 +12,6 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import javax.imageio.ImageIO;
-
-import io.flowinquiry.exceptions.ResourceNotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -28,6 +27,11 @@ public class LocalFileStorageService implements StorageService {
     public LocalFileStorageService(
             @Value("${application.file.rootDirectory:storage}") String rootDirectory) {
         this.rootDirectory = rootDirectory;
+        File storageDir = new File(rootDirectory);
+        if (!storageDir.exists()) {
+            storageDir.mkdirs();
+            LOG.info("Created storage folder : {}", storageDir.getAbsolutePath());
+        }
     }
 
     @Override

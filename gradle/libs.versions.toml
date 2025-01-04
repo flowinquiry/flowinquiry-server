@@ -16,6 +16,7 @@ springDependencyManagementVersion="1.1.7"
 jhisterVersion = "8.7.1"
 j2HtmlVersion = "1.6.0"
 shedlockVersion="6.0.1"
+jibVersion="3.4.4"
 
 [libraries]
 jhipster-framework = { module = "tech.jhipster:jhipster-framework", version.ref = "jhisterVersion" }
@@ -27,7 +28,7 @@ mapstruct-processor = { module = "org.mapstruct:mapstruct-processor", version.re
 jclouds = { module = "org.apache.jclouds:jclouds-all", version.ref = "jcloudsVersion" }
 dot-env = { module = "io.github.cdimascio:dotenv-java", version.ref = "dotEnvVersion" }
 j2html = {module = "com.j2html:j2html", version.ref="j2HtmlVersion"}
-jib-plugin = { module = "com.google.cloud.tools:jib-gradle-plugin", version = "3.4.4" }
+jib-plugin = { module = "com.google.cloud.tools:jib-gradle-plugin", version.ref = "jibVersion" }
 logback-classic = { module = "ch.qos.logback:logback-classic", version.ref = "logbackVersion" }
 junit-bom = { module = "org.junit:junit-bom", version.ref = "junitVersion" }
 json-api = { module = "jakarta.json:jakarta.json-api", version.ref = "jsonApiVersion" }

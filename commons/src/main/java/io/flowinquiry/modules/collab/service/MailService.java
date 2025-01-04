@@ -96,7 +96,7 @@ public class MailService {
             LOG.debug("Email doesn't exist for user '{}'", user);
             return;
         }
-        Locale locale = Locale.forLanguageTag(user.getLangKey());
+        Locale locale = Locale.forLanguageTag(user.getLangKey() != null ? user.getLangKey() : "en");
         Context context = new Context(locale);
         context.setVariable(USER, user);
         context.setVariable(BASE_URL, flowInquiryProperties.getMail().getBaseUrl());

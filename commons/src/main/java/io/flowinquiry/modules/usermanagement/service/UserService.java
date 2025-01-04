@@ -19,7 +19,6 @@ import io.flowinquiry.modules.usermanagement.service.event.CreatedUserEvent;
 import io.flowinquiry.modules.usermanagement.service.event.DeleteUserEvent;
 import io.flowinquiry.modules.usermanagement.service.mapper.UserMapper;
 import io.flowinquiry.query.QueryDTO;
-import io.flowinquiry.security.Constants;
 import io.flowinquiry.security.SecurityUtils;
 import io.flowinquiry.utils.Random;
 import jakarta.persistence.EntityNotFoundException;
@@ -96,6 +95,7 @@ public class UserService {
                 .map(
                         user -> {
                             user.setPassword(passwordEncoder.encode(newPassword));
+                            user.setStatus(UserStatus.ACTIVE);
                             user.setResetKey(null);
                             user.setResetDate(null);
                             return user;
@@ -158,21 +158,7 @@ public class UserService {
     }
 
     public UserDTO createUser(UserDTO userDTO) {
-        User user = new User();
-        user.setFirstName(userDTO.getFirstName());
-        user.setLastName(userDTO.getLastName());
-        if (userDTO.getManagerId() != null) {
-            user.setManager(User.builder().id(userDTO.getManagerId()).build());
-        }
-        if (userDTO.getEmail() != null) {
-            user.setEmail(userDTO.getEmail().toLowerCase());
-        }
-        user.setImageUrl(userDTO.getImageUrl());
-        if (userDTO.getLangKey() == null) {
-            user.setLangKey(Constants.DEFAULT_LANGUAGE); // default language
-        } else {
-            user.setLangKey(userDTO.getLangKey());
-        }
+        User user = userMapper.toEntity(userDTO);
         String encryptedPassword = passwordEncoder.encode(Random.generatePassword());
         user.setPassword(encryptedPassword);
         user.setResetKey(Random.generateResetKey());
@@ -367,7 +353,6 @@ public class UserService {
             return rootUser;
         }
 
-        // Handle case with no users
         return null;
     }
 
@@ -383,9 +368,7 @@ public class UserService {
 
         // Fetch subordinates
         List<UserHierarchyDTO> subordinates = userRepository.findAllSubordinates(userId);
-
         userHierarchy.setSubordinates(subordinates);
-
         return userHierarchy;
     }
 }

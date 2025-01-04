@@ -16,6 +16,7 @@ import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.PrePersist;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotNull;
@@ -164,5 +165,12 @@ public class User extends AbstractAuditingEntity<Long> implements Serializable {
         ZoneId userZone =
                 (timezone != null) ? ZoneId.of(timezone) : ZoneId.of("America/Los_Angeles");
         return lastLoginTime.atZone(ZoneOffset.UTC).withZoneSameInstant(userZone).toLocalDateTime();
+    }
+
+    @PrePersist
+    public void prePersist() {
+        if (isDeleted == null) {
+            isDeleted = Boolean.FALSE;
+        }
     }
 }

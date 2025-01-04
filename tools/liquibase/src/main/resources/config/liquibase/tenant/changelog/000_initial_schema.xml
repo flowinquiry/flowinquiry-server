@@ -60,7 +60,8 @@
 				defaultValue="PENDING">
 				<constraints nullable="false" />
 			</column>
-			<column name="is_deleted" type="BOOLEAN" valueBoolean="false">
+			<column name="is_deleted" type="BOOLEAN"
+				defaultValueBoolean="false">
 				<constraints nullable="false" />
 			</column>
 			<column name="lang_key" type="VARCHAR(10)" />

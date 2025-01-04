@@ -15,6 +15,7 @@ import io.flowinquiry.modules.usermanagement.service.dto.ResourcePermissionDTO;
 import io.flowinquiry.modules.usermanagement.service.dto.UserDTO;
 import io.flowinquiry.modules.usermanagement.service.dto.UserHierarchyDTO;
 import io.flowinquiry.modules.usermanagement.service.dto.UserKey;
+import io.flowinquiry.modules.usermanagement.service.event.CreatedUserEvent;
 import io.flowinquiry.modules.usermanagement.service.event.DeleteUserEvent;
 import io.flowinquiry.modules.usermanagement.service.mapper.UserMapper;
 import io.flowinquiry.query.QueryDTO;
@@ -193,7 +194,9 @@ public class UserService {
         }
         userRepository.save(user);
         LOG.debug("Created Information for User: {}", user);
-        return userMapper.toDto(user);
+        UserDTO savedUser = userMapper.toDto(user);
+        eventPublisher.publishEvent(new CreatedUserEvent(this, savedUser));
+        return savedUser;
     }
 
     /**

@@ -1,6 +1,5 @@
 package io.flowinquiry.modules.usermanagement.web.rest;
 
-import io.flowinquiry.modules.collab.service.MailService;
 import io.flowinquiry.modules.fss.service.StorageService;
 import io.flowinquiry.modules.usermanagement.AuthoritiesConstants;
 import io.flowinquiry.modules.usermanagement.domain.User;
@@ -57,17 +56,12 @@ public class PublicUserController {
     private final UserRepository userRepository;
     private final UserService userService;
     private final StorageService storageService;
-    private final MailService mailService;
 
     public PublicUserController(
-            UserService userService,
-            UserRepository userRepository,
-            StorageService storageService,
-            MailService mailService) {
+            UserService userService, UserRepository userRepository, StorageService storageService) {
         this.userService = userService;
         this.userRepository = userRepository;
         this.storageService = storageService;
-        this.mailService = mailService;
     }
 
     /**
@@ -196,7 +190,6 @@ public class PublicUserController {
             throw new EmailAlreadyUsedException();
         } else {
             UserDTO newUser = userService.createUser(userDTO);
-            mailService.sendCreationEmail(newUser);
             return ResponseEntity.created(new URI("/api/users/" + newUser.getEmail()))
                     .body(newUser);
         }

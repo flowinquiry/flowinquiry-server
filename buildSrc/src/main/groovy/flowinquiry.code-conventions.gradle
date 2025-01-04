@@ -11,10 +11,6 @@ spotless {
         formatAnnotations()
     }
 
-    kotlin {
-        ktfmt()
-    }
-
     sql {
         target 'src/test/resources/**/*.sql' // have to set manually
 

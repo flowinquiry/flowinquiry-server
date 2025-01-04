@@ -7,7 +7,6 @@ plugins {
     id "flowinquiry.spring-cache-conventions"
     id "flowinquiry.docker-conventions"
     id "flowinquiry.code-conventions"
-    id "org.jetbrains.kotlin.jvm"
 }
 
 description = ""
@@ -58,7 +57,7 @@ configurations {
 }
 
 dependencies {
-    api project(":commons")
+    project(":commons")
 
 
     testImplementation("org.testcontainers:jdbc")

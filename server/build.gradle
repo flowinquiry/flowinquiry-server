@@ -57,7 +57,7 @@ configurations {
 }
 
 dependencies {
-    project(":commons")
+    implementation( project(":commons"))
 
 
     testImplementation("org.testcontainers:jdbc")

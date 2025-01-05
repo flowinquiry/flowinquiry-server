@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head></head>
+<body>
+<div class="email-container" style="max-width: 600px; margin: auto; background-color: #ffffff; border: 1px solid #dcdcdc; border-radius: 8px;">
+    <!-- Include Header -->
+    <div th:insert="mail/header :: header('New request has been created')"></div>
+    <div style="padding: 20px; text-align: left;">
+        <p>Hi <span th:text="${user.email}">[Watcher Name]</span>,</p>
+
+        <p>A new ticket has been created.</p>
+
+        <p>Here are the details:</p>
+        <table class="details-table">
+            <tr>
+                <th>Ticket Title</th>
+                <td th:text="${ticket.requestTitle}">[Ticket Title]</td>
+            </tr>
+            <tr>
+                <th>Priority</th>
+                <td th:text="${ticket.priority}">[Ticket Priority]</td>
+            </tr>
+            <tr>
+                <th>Created By</th>
+                <td th:text="${ticket.requestUserName}">[Creator Name]</td>
+            </tr>
+            <tr>
+                <th>Summary</th>
+                <td th:text="${ticket.requestDescription}">[Brief Ticket Description]</td>
+            </tr>
+        </table>
+
+        <p>
+            <span>Regards,</span>
+            <br />
+            <span th:text="#{email.signature}">FlowInquiry Team.</span>
+        </p>
+    </div>
+    <div th:insert="mail/footer :: footer"></div>
+</div>
+</body>
+</html>

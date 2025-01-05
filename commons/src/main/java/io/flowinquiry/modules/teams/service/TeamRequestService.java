@@ -6,11 +6,13 @@ import static io.flowinquiry.query.QueryUtils.createSpecification;
 import io.flowinquiry.exceptions.ResourceNotFoundException;
 import io.flowinquiry.modules.audit.AuditLogUpdateEvent;
 import io.flowinquiry.modules.teams.domain.TeamRequest;
+import io.flowinquiry.modules.teams.domain.TeamRequestWatcher;
 import io.flowinquiry.modules.teams.domain.WorkflowState;
 import io.flowinquiry.modules.teams.domain.WorkflowTransition;
 import io.flowinquiry.modules.teams.domain.WorkflowTransitionHistory;
 import io.flowinquiry.modules.teams.domain.WorkflowTransitionHistoryStatus;
 import io.flowinquiry.modules.teams.repository.TeamRequestRepository;
+import io.flowinquiry.modules.teams.repository.TeamRequestWatcherRepository;
 import io.flowinquiry.modules.teams.repository.WorkflowStateRepository;
 import io.flowinquiry.modules.teams.repository.WorkflowTransitionHistoryRepository;
 import io.flowinquiry.modules.teams.repository.WorkflowTransitionRepository;
@@ -22,11 +24,11 @@ import io.flowinquiry.modules.teams.service.dto.TicketDistributionDTO;
 import io.flowinquiry.modules.teams.service.event.NewTeamRequestCreatedEvent;
 import io.flowinquiry.modules.teams.service.event.TeamRequestWorkStateTransitionEvent;
 import io.flowinquiry.modules.teams.service.mapper.TeamRequestMapper;
+import io.flowinquiry.modules.usermanagement.domain.User;
 import io.flowinquiry.modules.usermanagement.service.dto.TicketStatisticsDTO;
 import io.flowinquiry.query.GroupFilter;
 import io.flowinquiry.query.QueryDTO;
 import jakarta.persistence.EntityManager;
-import jakarta.persistence.EntityNotFoundException;
 import jakarta.persistence.PersistenceContext;
 import java.time.LocalDate;
 import java.time.ZoneOffset;
@@ -34,10 +36,13 @@ import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.Page;
@@ -52,6 +57,7 @@ public class TeamRequestService {
     @PersistenceContext private EntityManager entityManager;
 
     private final TeamRequestRepository teamRequestRepository;
+    private final TeamRequestWatcherRepository teamRequestWatcherRepository;
     private final TeamRequestMapper teamRequestMapper;
     private final WorkflowStateRepository workflowStateRepository;
     private final WorkflowTransitionRepository workflowTransitionRepository;
@@ -61,12 +67,14 @@ public class TeamRequestService {
     @Autowired
     public TeamRequestService(
             TeamRequestRepository teamRequestRepository,
+            TeamRequestWatcherRepository teamRequestWatcherRepository,
             TeamRequestMapper teamRequestMapper,
             WorkflowTransitionRepository workflowTransitionRepository,
             WorkflowStateRepository workflowStateRepository,
             WorkflowTransitionHistoryRepository workflowTransitionHistoryRepository,
             ApplicationEventPublisher eventPublisher) {
         this.teamRequestRepository = teamRequestRepository;
+        this.teamRequestWatcherRepository = teamRequestWatcherRepository;
         this.teamRequestMapper = teamRequestMapper;
         this.workflowTransitionRepository = workflowTransitionRepository;
         this.workflowStateRepository = workflowStateRepository;
@@ -114,6 +122,38 @@ public class TeamRequestService {
         TeamRequest teamRequest = teamRequestMapper.toEntity(teamRequestDTO);
         teamRequest = teamRequestRepository.save(teamRequest);
 
+        Long teamRequestId = teamRequest.getId();
+
+        // Construct a unique set of watchers including the ticket creator
+        Set<Long> uniqueWatcherIds = new HashSet<>();
+
+        if (teamRequestDTO.getWatchers() != null) {
+            teamRequestDTO
+                    .getWatchers()
+                    .forEach(watcherDTO -> uniqueWatcherIds.add(watcherDTO.getId()));
+        }
+
+        // Add ticket creator if not already in the watchers
+        uniqueWatcherIds.add(teamRequestDTO.getRequestUserId());
+        if (teamRequestDTO.getAssignUserId() != null) {
+            uniqueWatcherIds.add(teamRequestDTO.getAssignUserId());
+        }
+
+        List<TeamRequestWatcher> watchers =
+                uniqueWatcherIds.stream()
+                        .map(
+                                watcherId -> {
+                                    TeamRequestWatcher watcher = new TeamRequestWatcher();
+                                    watcher.setTeamRequestId(teamRequestId);
+                                    watcher.setUserId(watcherId);
+                                    watcher.setCreatedAt(ZonedDateTime.now());
+                                    watcher.setCreatedBy(teamRequestDTO.getRequestUserId());
+                                    return watcher;
+                                })
+                        .collect(Collectors.toList());
+
+        teamRequestWatcherRepository.saveAll(watchers);
+
         // Clear the persistence context to force a reload
         entityManager.clear();
 
@@ -131,10 +171,6 @@ public class TeamRequestService {
         history.setStatus(WorkflowTransitionHistoryStatus.In_Progress);
         workflowTransitionHistoryRepository.save(history);
 
-        teamRequest =
-                teamRequestRepository
-                        .findById(teamRequest.getId())
-                        .orElseThrow(() -> new EntityNotFoundException("TeamRequest not found"));
         TeamRequestDTO savedTeamRequestDTO = teamRequestMapper.toDto(teamRequest);
         eventPublisher.publishEvent(new NewTeamRequestCreatedEvent(this, savedTeamRequestDTO));
         return savedTeamRequestDTO;
@@ -167,6 +203,25 @@ public class TeamRequestService {
             existingTeamRequest.setIsCompleted(finalState);
             if (teamRequestDTO.getActualCompletionDate() == null) {
                 existingTeamRequest.setActualCompletionDate(LocalDate.now());
+            }
+        }
+
+        if (teamRequestDTO.getAssignUserId() != null) {
+            Long assignedUserId = teamRequestDTO.getAssignUserId();
+            Set<User> existingWatchers = existingTeamRequest.getWatchers();
+
+            // Check if assigned user is already a watcher
+            boolean isWatcherPresent =
+                    existingWatchers != null
+                            && existingWatchers.stream()
+                                    .anyMatch(watcher -> watcher.getId().equals(assignedUserId));
+            if (!isWatcherPresent) {
+                TeamRequestWatcher watcher = new TeamRequestWatcher();
+                watcher.setTeamRequestId(teamRequestDTO.getId());
+                watcher.setUserId(assignedUserId);
+                watcher.setCreatedAt(ZonedDateTime.now());
+                watcher.setCreatedBy(-1L);
+                teamRequestWatcherRepository.save(watcher);
             }
         }
 

@@ -63,13 +63,7 @@ public class NewTeamRequestCreatedNotificationEventListener {
                 teamRepository.findUsersByTeamId(teamRequestDTO.getTeamId());
         List<Notification> notifications =
                 usersInTeam.stream()
-                        .filter(
-                                user ->
-                                        !user.getId()
-                                                .equals(
-                                                        teamRequestDTO
-                                                                .getRequestUserId())) // Exclude
-                        // creator
+                        .filter(user -> !user.getId().equals(teamRequestDTO.getRequestUserId()))
                         .map(
                                 user ->
                                         Notification.builder()

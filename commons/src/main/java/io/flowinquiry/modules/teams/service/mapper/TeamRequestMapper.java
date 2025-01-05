@@ -7,6 +7,7 @@ import io.flowinquiry.modules.teams.domain.WorkflowState;
 import io.flowinquiry.modules.teams.service.dto.TeamRequestDTO;
 import io.flowinquiry.modules.teams.service.dto.WatcherDTO;
 import io.flowinquiry.modules.usermanagement.domain.User;
+import java.util.Collections;
 import java.util.Set;
 import java.util.stream.Collectors;
 import org.mapstruct.Mapper;
@@ -90,6 +91,9 @@ public interface TeamRequestMapper {
     void updateEntity(TeamRequestDTO dto, @MappingTarget TeamRequest entity);
 
     default Set<WatcherDTO> mapWatchers(Set<User> watchers) {
+        if (watchers == null || watchers.isEmpty()) {
+            return Collections.emptySet();
+        }
         WatcherMapper watcherMapper = Mappers.getMapper(WatcherMapper.class);
         return watchers.stream().map(watcherMapper::toDto).collect(Collectors.toSet());
     }

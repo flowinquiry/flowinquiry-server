@@ -1,6 +1,7 @@
 package io.flowinquiry.modules.collab.service;
 
 import io.flowinquiry.config.FlowInquiryProperties;
+import io.flowinquiry.modules.collab.EmailContext;
 import io.flowinquiry.modules.usermanagement.service.dto.UserDTO;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
@@ -104,6 +105,29 @@ public class MailService {
         String subject = messageSource.getMessage(titleKey, null, locale);
 
         this.sendEmail(user.getEmail(), subject, content, false, true);
+    }
+
+    @Async
+    public void sendEmail(EmailContext emailContext) {
+        if (emailContext.getToUser() == null
+                || emailContext.getToUser().getEmail() == null
+                || emailContext.getSubject() == null) {
+            LOG.debug(
+                    "Email doesn't exist for user '{}' or no subject for email context '{}'",
+                    emailContext.getToUser(),
+                    emailContext.getSubject());
+            return;
+        }
+        emailContext.addVariable(USER, emailContext.getToUser());
+        String content =
+                templateEngine.process(
+                        emailContext.getTemplate(), emailContext.getThymeleafContext());
+        this.sendEmail(
+                emailContext.getToUser().getEmail(),
+                emailContext.getSubject(),
+                content,
+                false,
+                true);
     }
 
     @Async

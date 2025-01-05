@@ -40,7 +40,7 @@ public class TeamRequestWorkStateTransitionEventListener {
         this.workflowTransitionHistoryService = workflowTransitionHistoryService;
     }
 
-    @Async("auditLogExecutor")
+    @Async("asyncTaskExecutor")
     @EventListener
     @Transactional
     public void onWorkflowStateTransition(TeamRequestWorkStateTransitionEvent event) {

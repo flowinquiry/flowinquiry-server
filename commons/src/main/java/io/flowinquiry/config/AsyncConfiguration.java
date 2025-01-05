@@ -1,6 +1,5 @@
 package io.flowinquiry.config;
 
-import java.util.concurrent.Executor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.aop.interceptor.AsyncUncaughtExceptionHandler;
@@ -28,25 +27,13 @@ public class AsyncConfiguration implements AsyncConfigurer {
         this.taskExecutionProperties = taskExecutionProperties;
     }
 
-    @Override
-    @Bean(name = "taskExecutor")
-    public Executor getAsyncExecutor() {
-        LOG.debug("Creating Async Task Executor");
+    @Bean(name = "asyncTaskExecutor")
+    public TaskExecutor auditLogTaskExecutor() {
         ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
         executor.setCorePoolSize(taskExecutionProperties.getPool().getCoreSize());
         executor.setMaxPoolSize(taskExecutionProperties.getPool().getMaxSize());
         executor.setQueueCapacity(taskExecutionProperties.getPool().getQueueCapacity());
         executor.setThreadNamePrefix(taskExecutionProperties.getThreadNamePrefix());
-        return executor;
-    }
-
-    @Bean(name = "auditLogExecutor")
-    public TaskExecutor auditLogTaskExecutor() {
-        ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
-        executor.setCorePoolSize(10);
-        executor.setMaxPoolSize(50);
-        executor.setQueueCapacity(100);
-        executor.setThreadNamePrefix("SecurityContextAsync-");
         executor.initialize();
 
         // Wrap the executor with DelegatingSecurityContextTaskExecutor

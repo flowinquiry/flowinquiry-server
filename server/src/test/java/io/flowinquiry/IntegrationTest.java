@@ -1,6 +1,5 @@
 package io.flowinquiry;
 
-import io.flowinquiry.config.AsyncSyncConfiguration;
 import io.flowinquiry.config.EmbeddedSQL;
 import io.flowinquiry.config.FlowInquiryProperties;
 import io.flowinquiry.config.JacksonConfiguration;
@@ -14,8 +13,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 /** Base composite annotation for integration tests. */
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
-@SpringBootTest(
-        classes = {FlowInquiryApp.class, JacksonConfiguration.class, AsyncSyncConfiguration.class})
+@SpringBootTest(classes = {FlowInquiryApp.class, JacksonConfiguration.class})
 @EnableConfigurationProperties({FlowInquiryProperties.class})
 @EmbeddedSQL
 public @interface IntegrationTest {}

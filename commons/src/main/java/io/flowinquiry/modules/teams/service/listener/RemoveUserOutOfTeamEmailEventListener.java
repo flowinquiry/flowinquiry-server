@@ -9,7 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Component
 public class RemoveUserOutOfTeamEmailEventListener {
 
-    @Async("auditLogExecutor")
+    @Async("asyncTaskExecutor")
     @EventListener
     @Transactional
     public void onRemoveUserOutOfTeam(RemoveUserOutOfTeamEvent event) {}

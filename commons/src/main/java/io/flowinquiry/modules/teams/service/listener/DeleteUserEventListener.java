@@ -18,7 +18,7 @@ public class DeleteUserEventListener {
         this.teamService = teamService;
     }
 
-    @Async("auditLogExecutor")
+    @Async("asyncTaskExecutor")
     @Transactional
     @EventListener
     public void onDeleteUserEvent(DeleteUserEvent event) {

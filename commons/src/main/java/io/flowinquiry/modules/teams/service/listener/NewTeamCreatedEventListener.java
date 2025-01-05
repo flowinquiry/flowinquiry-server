@@ -9,7 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Component
 public class NewTeamCreatedEventListener {
 
-    @Async("auditLogExecutor")
+    @Async("asyncTaskExecutor")
     @Transactional
     @EventListener
     public void onNewTeamCreated(NewTeamRequestCreatedEvent event) {}

@@ -32,7 +32,7 @@ public class AuditLogUpdateEventListener {
         this.applicationContext = applicationContext;
     }
 
-    @Async("auditLogExecutor")
+    @Async("asyncTaskExecutor")
     @Transactional
     @EventListener
     public void onNewTeamRequestCreated(AuditLogUpdateEvent event) {

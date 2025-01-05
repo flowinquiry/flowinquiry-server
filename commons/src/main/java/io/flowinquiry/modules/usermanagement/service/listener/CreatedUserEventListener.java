@@ -16,7 +16,7 @@ public class CreatedUserEventListener {
         this.mailService = mailService;
     }
 
-    @Async("auditLogExecutor")
+    @Async("asyncTaskExecutor")
     @Transactional
     @EventListener
     public void onCreatedUserEvent(CreatedUserEvent event) {

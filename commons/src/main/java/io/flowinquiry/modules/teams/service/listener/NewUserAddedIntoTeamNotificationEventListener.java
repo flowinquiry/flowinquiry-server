@@ -40,7 +40,7 @@ public class NewUserAddedIntoTeamNotificationEventListener {
         this.userRepository = userRepository;
     }
 
-    @Async("auditLogExecutor")
+    @Async("asyncTaskExecutor")
     @EventListener
     @Transactional
     public void onNewUsersAddedIntoTeam(NewUsersAddedIntoTeamEvent event) {

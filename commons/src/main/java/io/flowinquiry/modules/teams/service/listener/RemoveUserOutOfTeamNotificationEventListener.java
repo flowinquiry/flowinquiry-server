@@ -35,7 +35,7 @@ public class RemoveUserOutOfTeamNotificationEventListener {
         this.activityLogRepository = activityLogRepository;
     }
 
-    @Async("auditLogExecutor")
+    @Async("asyncTaskExecutor")
     @EventListener
     @Transactional
     public void onRemoveUserOutOfTeam(RemoveUserOutOfTeamEvent event) {

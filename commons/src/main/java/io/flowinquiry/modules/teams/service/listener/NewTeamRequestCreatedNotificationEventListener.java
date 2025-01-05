@@ -36,7 +36,7 @@ public class NewTeamRequestCreatedNotificationEventListener {
         this.activityLogRepository = activityLogRepository;
     }
 
-    @Async("auditLogExecutor")
+    @Async("asyncTaskExecutor")
     @Transactional
     @EventListener
     public void onNewTeamRequestCreated(NewTeamRequestCreatedEvent event) {

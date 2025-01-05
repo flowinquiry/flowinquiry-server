@@ -215,6 +215,34 @@
 			constraintName="team_request_workflow_state"
 			referencedTableName="fw_workflow_state" referencedColumnNames="id" />
 
+		<createTable tableName="fw_team_request_watchers">
+			<column name="id" type="BIGSERIAL" autoIncrement="true">
+				<constraints primaryKey="true" nullable="false" />
+			</column>
+			<column name="team_request_id" type="BIGINT">
+				<constraints nullable="false" />
+			</column>
+			<column name="user_id" type="BIGINT">
+				<constraints nullable="false" />
+			</column>
+			<column name="created_at" type="timestamptz">
+				<constraints nullable="false" />
+			</column>
+			<column name="created_by" type="BIGINT">
+				<constraints nullable="false" />
+			</column>
+		</createTable>
+
+		<addForeignKeyConstraint
+			baseTableName="fw_team_request_watchers"
+			baseColumnNames="team_request_id"
+			constraintName="fk_team_request_watchers_request_id"
+			referencedTableName="fw_team_request" referencedColumnNames="id" />
+		<addForeignKeyConstraint
+			baseTableName="fw_team_request_watchers" baseColumnNames="user_id"
+			constraintName="fk_team_request_watchers_user_id"
+			referencedTableName="fw_user" referencedColumnNames="id" />
+
 		<!--Defines the transitions between states within each workflow. It includes 
 			the event name that triggers each transition, along with the SLA duration 
 			for each transition. -->

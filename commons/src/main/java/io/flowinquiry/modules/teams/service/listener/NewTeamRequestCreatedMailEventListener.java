@@ -21,7 +21,7 @@ public class NewTeamRequestCreatedMailEventListener {
         this.flowInquiryProperties = flowInquiryProperties;
     }
 
-    @Async("auditLogExecutor")
+    @Async("asyncTaskExecutor")
     @Transactional
     @EventListener
     public void onNewTeamRequestCreated(NewTeamRequestCreatedEvent event) {

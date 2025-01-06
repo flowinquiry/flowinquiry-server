@@ -8,7 +8,6 @@ import io.flowinquiry.modules.usermanagement.service.UserService;
 import io.flowinquiry.modules.usermanagement.service.dto.ResourcePermissionDTO;
 import io.flowinquiry.modules.usermanagement.service.dto.UserDTO;
 import io.flowinquiry.modules.usermanagement.service.dto.UserHierarchyDTO;
-import io.flowinquiry.modules.usermanagement.web.rest.errors.BadRequestAlertException;
 import io.flowinquiry.modules.usermanagement.web.rest.errors.EmailAlreadyUsedException;
 import io.flowinquiry.query.Filter;
 import io.flowinquiry.query.QueryDTO;
@@ -173,7 +172,7 @@ public class PublicUserController {
      * @return the {@link ResponseEntity} with status {@code 201 (Created)} and with body the new
      *     user, or with status {@code 400 (Bad Request)} if the login or email is already in use.
      * @throws URISyntaxException if the Location URI syntax is incorrect.
-     * @throws BadRequestAlertException {@code 400 (Bad Request)} if the login or email is already
+     * @throws IllegalArgumentException {@code 400 (Bad Request)} if the login or email is already
      *     in use.
      */
     @PostMapping
@@ -183,8 +182,7 @@ public class PublicUserController {
         LOG.debug("REST request to save User : {}", userDTO);
 
         if (userDTO.getId() != null) {
-            throw new BadRequestAlertException(
-                    "A new user cannot already have an ID", "userManagement", "idexists");
+            throw new IllegalArgumentException("A new user cannot already have an ID");
             // Lowercase the user login before comparing with database
         } else if (userRepository.findOneByEmailIgnoreCase(userDTO.getEmail()).isPresent()) {
             throw new EmailAlreadyUsedException();

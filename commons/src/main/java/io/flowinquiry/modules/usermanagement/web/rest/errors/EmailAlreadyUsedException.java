@@ -1,15 +1,10 @@
 package io.flowinquiry.modules.usermanagement.web.rest.errors;
 
-@SuppressWarnings("java:S110") // Inheritance tree of classes should not be too deep
-public class EmailAlreadyUsedException extends BadRequestAlertException {
+import io.flowinquiry.exceptions.UserException;
 
-    private static final long serialVersionUID = 1L;
+public class EmailAlreadyUsedException extends UserException {
 
     public EmailAlreadyUsedException() {
-        super(
-                ErrorConstants.EMAIL_ALREADY_USED_TYPE,
-                "Email is already in use!",
-                "userManagement",
-                "emailexists");
+        super("Email is already in use!");
     }
 }

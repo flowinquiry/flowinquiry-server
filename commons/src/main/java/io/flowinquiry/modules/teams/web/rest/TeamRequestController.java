@@ -24,6 +24,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -41,37 +42,34 @@ public class TeamRequestController {
     }
 
     @PostMapping("/search")
-    public ResponseEntity<Page<TeamRequestDTO>> findTeamRequests(
+    public Page<TeamRequestDTO> findTeamRequests(
             @Valid @RequestBody QueryDTO queryDTO, Pageable pageable) {
-        Page<TeamRequestDTO> teamRequests = teamRequestService.findTeamRequests(queryDTO, pageable);
-        return new ResponseEntity<>(teamRequests, HttpStatus.OK);
+        return teamRequestService.findTeamRequests(queryDTO, pageable);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<TeamRequestDTO> getTeamRequestById(@PathVariable("id") Long id) {
-        return ResponseEntity.ok(teamRequestService.getTeamRequestById(id));
+    public TeamRequestDTO getTeamRequestById(@PathVariable("id") Long id) {
+        return teamRequestService.getTeamRequestById(id);
     }
 
     @PostMapping
-    public ResponseEntity<TeamRequestDTO> createTeamRequest(
-            @RequestBody TeamRequestDTO teamRequestDTO) {
-        TeamRequestDTO createdTeamRequest = teamRequestService.createTeamRequest(teamRequestDTO);
-        return ResponseEntity.status(HttpStatus.CREATED).body(createdTeamRequest);
+    @ResponseStatus(HttpStatus.CREATED)
+    public TeamRequestDTO createTeamRequest(@RequestBody TeamRequestDTO teamRequestDTO) {
+        return teamRequestService.createTeamRequest(teamRequestDTO);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<TeamRequestDTO> updateTeamRequest(
+    public TeamRequestDTO updateTeamRequest(
             @PathVariable("id") Long id, @RequestBody TeamRequestDTO teamRequestDTO) {
         if (!id.equals(teamRequestDTO.getId())) {
             throw new IllegalArgumentException("Id in URL and payload do not match");
         }
-        return ResponseEntity.ok(teamRequestService.updateTeamRequest(teamRequestDTO));
+        return teamRequestService.updateTeamRequest(teamRequestDTO);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteTeamRequest(@PathVariable("id") Long id) {
+    public void deleteTeamRequest(@PathVariable("id") Long id) {
         teamRequestService.deleteTeamRequest(id);
-        return ResponseEntity.noContent().build();
     }
 
     @GetMapping("/{currentId}/next")
@@ -156,10 +154,8 @@ public class TeamRequestController {
     }
 
     @GetMapping("/users/{userId}/team-tickets-priority-distribution")
-    public ResponseEntity<List<TeamTicketPriorityDistributionDTO>>
-            getTeamTicketPriorityDistributionForUser(@PathVariable("userId") Long userId) {
-        List<TeamTicketPriorityDistributionDTO> distribution =
-                teamRequestService.getPriorityDistributionForUser(userId);
-        return ResponseEntity.ok(distribution);
+    public List<TeamTicketPriorityDistributionDTO> getTeamTicketPriorityDistributionForUser(
+            @PathVariable("userId") Long userId) {
+        return teamRequestService.getPriorityDistributionForUser(userId);
     }
 }

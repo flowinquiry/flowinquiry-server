@@ -1,17 +1,9 @@
 package io.flowinquiry.modules.usermanagement.web.rest.errors;
 
-import org.springframework.http.HttpStatus;
-import org.springframework.web.ErrorResponseException;
-import tech.jhipster.web.rest.errors.ProblemDetailWithCause;
+import io.flowinquiry.exceptions.UserException;
 
-public class InvalidLoginException extends ErrorResponseException {
+public class InvalidLoginException extends UserException {
     public InvalidLoginException() {
-        super(
-                HttpStatus.BAD_REQUEST,
-                ProblemDetailWithCause.ProblemDetailWithCauseBuilder.instance()
-                        .withStatus(HttpStatus.BAD_REQUEST.value())
-                        .withTitle("Invalid login")
-                        .build(),
-                null);
+        super("Invalid login");
     }
 }

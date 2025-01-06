@@ -2,6 +2,8 @@ package io.flowinquiry.modules.teams.service;
 
 import static io.flowinquiry.query.QueryUtils.createSpecification;
 
+import io.flowinquiry.exceptions.ResourceConstraintException;
+import io.flowinquiry.exceptions.ResourceNotFoundException;
 import io.flowinquiry.modules.teams.domain.Team;
 import io.flowinquiry.modules.teams.domain.TeamWorkflowSelection;
 import io.flowinquiry.modules.teams.domain.Workflow;
@@ -544,13 +546,13 @@ public class WorkflowService {
                         .findById(workflowId)
                         .orElseThrow(
                                 () ->
-                                        new EntityNotFoundException(
+                                        new ResourceNotFoundException(
                                                 "Workflow not found with id: " + workflowId));
 
         // Check if the workflow is referenced by other workflows
         boolean isReferenced = workflowRepository.existsByParentWorkflowId(workflowId);
         if (isReferenced) {
-            throw new IllegalStateException(
+            throw new ResourceConstraintException(
                     "Cannot delete a workflow that is referenced by another workflow.");
         }
 
@@ -558,7 +560,7 @@ public class WorkflowService {
         boolean hasActiveRequests =
                 teamRequestRepository.existsByWorkflowIdAndIsDeletedFalse(workflowId);
         if (hasActiveRequests) {
-            throw new IllegalStateException("Cannot delete a workflow with active requests.");
+            throw new ResourceConstraintException("Cannot delete a workflow with active requests.");
         }
 
         workflowStateRepository.deleteByWorkflowId(workflowId);

@@ -4,6 +4,8 @@ import static io.flowinquiry.query.QueryUtils.createSpecification;
 
 import io.flowinquiry.exceptions.ResourceNotFoundException;
 import io.flowinquiry.modules.usermanagement.AuthoritiesConstants;
+import io.flowinquiry.modules.usermanagement.EmailAlreadyUsedException;
+import io.flowinquiry.modules.usermanagement.InvalidPasswordException;
 import io.flowinquiry.modules.usermanagement.domain.Authority;
 import io.flowinquiry.modules.usermanagement.domain.Permission;
 import io.flowinquiry.modules.usermanagement.domain.User;

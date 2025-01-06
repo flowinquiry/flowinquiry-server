@@ -5,11 +5,11 @@ import static io.flowinquiry.security.SecurityUtils.JWT_ALGORITHM;
 import static io.flowinquiry.security.SecurityUtils.USER_ID;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import io.flowinquiry.modules.usermanagement.InvalidLoginException;
 import io.flowinquiry.modules.usermanagement.repository.UserRepository;
 import io.flowinquiry.modules.usermanagement.service.UserService;
 import io.flowinquiry.modules.usermanagement.service.dto.FwUserDetails;
 import io.flowinquiry.modules.usermanagement.service.dto.UserDTO;
-import io.flowinquiry.modules.usermanagement.web.rest.errors.InvalidLoginException;
 import jakarta.validation.Valid;
 import java.time.Instant;
 import java.time.LocalDateTime;

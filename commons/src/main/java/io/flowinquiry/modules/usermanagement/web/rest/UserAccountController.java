@@ -1,6 +1,8 @@
 package io.flowinquiry.modules.usermanagement.web.rest;
 
 import io.flowinquiry.modules.collab.service.MailService;
+import io.flowinquiry.modules.usermanagement.EmailAlreadyUsedException;
+import io.flowinquiry.modules.usermanagement.InvalidPasswordException;
 import io.flowinquiry.modules.usermanagement.domain.User;
 import io.flowinquiry.modules.usermanagement.repository.UserRepository;
 import io.flowinquiry.modules.usermanagement.service.UserService;
@@ -8,8 +10,6 @@ import io.flowinquiry.modules.usermanagement.service.dto.PasswordChangeDTO;
 import io.flowinquiry.modules.usermanagement.service.dto.UserDTO;
 import io.flowinquiry.modules.usermanagement.service.dto.UserKey;
 import io.flowinquiry.modules.usermanagement.service.mapper.UserMapper;
-import io.flowinquiry.modules.usermanagement.web.rest.errors.EmailAlreadyUsedException;
-import io.flowinquiry.modules.usermanagement.web.rest.errors.InvalidPasswordException;
 import io.flowinquiry.security.SecurityUtils;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Email;

@@ -1,4 +1,4 @@
-package io.flowinquiry.modules.usermanagement.web.rest.errors;
+package io.flowinquiry.modules.usermanagement;
 
 import io.flowinquiry.exceptions.UserException;
 

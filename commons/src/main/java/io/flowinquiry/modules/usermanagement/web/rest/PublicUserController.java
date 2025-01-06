@@ -2,13 +2,13 @@ package io.flowinquiry.modules.usermanagement.web.rest;
 
 import io.flowinquiry.modules.fss.service.StorageService;
 import io.flowinquiry.modules.usermanagement.AuthoritiesConstants;
+import io.flowinquiry.modules.usermanagement.EmailAlreadyUsedException;
 import io.flowinquiry.modules.usermanagement.domain.User;
 import io.flowinquiry.modules.usermanagement.repository.UserRepository;
 import io.flowinquiry.modules.usermanagement.service.UserService;
 import io.flowinquiry.modules.usermanagement.service.dto.ResourcePermissionDTO;
 import io.flowinquiry.modules.usermanagement.service.dto.UserDTO;
 import io.flowinquiry.modules.usermanagement.service.dto.UserHierarchyDTO;
-import io.flowinquiry.modules.usermanagement.web.rest.errors.EmailAlreadyUsedException;
 import io.flowinquiry.query.Filter;
 import io.flowinquiry.query.QueryDTO;
 import io.flowinquiry.utils.Obfuscator;

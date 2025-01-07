@@ -1,16 +1,13 @@
 package io.flowinquiry.modules.usermanagement.service;
 
 import io.flowinquiry.modules.usermanagement.UserNotActivatedException;
-import io.flowinquiry.modules.usermanagement.domain.Authority;
 import io.flowinquiry.modules.usermanagement.domain.User;
 import io.flowinquiry.modules.usermanagement.domain.UserStatus;
 import io.flowinquiry.modules.usermanagement.repository.UserRepository;
 import io.flowinquiry.modules.usermanagement.service.dto.FwUserDetails;
-import java.util.List;
 import org.hibernate.validator.internal.constraintvalidators.hv.EmailValidator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -36,7 +33,7 @@ public class DomainUserDetailsService implements UserDetailsService {
 
         if (new EmailValidator().isValid(email, null)) {
             return userRepository
-                    .findOneWithAuthoritiesByEmailIgnoreCase(email)
+                    .findOneWithAuthoritiesAndUserAuthsByEmailIgnoreCase(email)
                     .map(user -> createSpringSecurityUser(email, user))
                     .orElseThrow(
                             () ->
@@ -53,11 +50,6 @@ public class DomainUserDetailsService implements UserDetailsService {
         if (!user.getStatus().equals(UserStatus.ACTIVE)) {
             throw new UserNotActivatedException("User " + lowercaseLogin + " was not activated");
         }
-        List<SimpleGrantedAuthority> grantedAuthorities =
-                user.getAuthorities().stream()
-                        .map(Authority::getName)
-                        .map(SimpleGrantedAuthority::new)
-                        .toList();
         return new FwUserDetails(user);
     }
 }

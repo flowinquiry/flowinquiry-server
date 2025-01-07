@@ -35,7 +35,6 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import lombok.ToString;
 import org.hibernate.annotations.BatchSize;
 
 /** A user. */
@@ -55,12 +54,6 @@ public class User extends AbstractAuditingEntity<Long> implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @EqualsAndHashCode.Include
     private Long id;
-
-    @JsonIgnore
-    @NotNull @Size(min = 60, max = 60)
-    @Column(name = "password_hash", length = 60, nullable = false)
-    @ToString.Exclude
-    private String password;
 
     @Size(max = 50)
     @Column(name = "first_name", length = 50)
@@ -135,6 +128,9 @@ public class User extends AbstractAuditingEntity<Long> implements Serializable {
 
     @Column(name = "last_login_time")
     private LocalDateTime lastLoginTime;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<UserAuth> userAuths;
 
     @JsonIgnore
     @ManyToMany

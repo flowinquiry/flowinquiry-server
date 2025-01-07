@@ -1,9 +1,11 @@
 package io.flowinquiry.modules.usermanagement.service.dto;
 
+import static io.flowinquiry.modules.usermanagement.domain.UserAuth.UP_AUTH_PROVIDER;
 import static java.util.Comparator.comparing;
 
 import io.flowinquiry.modules.usermanagement.domain.Authority;
 import io.flowinquiry.modules.usermanagement.domain.User;
+import io.flowinquiry.modules.usermanagement.domain.UserAuth;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
@@ -29,7 +31,12 @@ public class FwUserDetails implements UserDetails {
     public FwUserDetails(User user) {
         this.userId = user.getId();
         this.username = user.getEmail();
-        this.password = user.getPassword();
+        this.password =
+                user.getUserAuths().stream()
+                        .filter(auth -> UP_AUTH_PROVIDER.equalsIgnoreCase(auth.getAuthProvider()))
+                        .map(UserAuth::getPasswordHash)
+                        .findFirst()
+                        .orElse("");
 
         SortedSet<GrantedAuthority> sortedAuthorities =
                 new TreeSet<>(comparing(GrantedAuthority::getAuthority));

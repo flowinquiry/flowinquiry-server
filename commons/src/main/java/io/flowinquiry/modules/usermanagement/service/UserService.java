@@ -1,5 +1,6 @@
 package io.flowinquiry.modules.usermanagement.service;
 
+import static io.flowinquiry.modules.usermanagement.domain.UserAuth.UP_AUTH_PROVIDER;
 import static io.flowinquiry.query.QueryUtils.createSpecification;
 
 import io.flowinquiry.exceptions.ResourceNotFoundException;
@@ -9,9 +10,11 @@ import io.flowinquiry.modules.usermanagement.InvalidPasswordException;
 import io.flowinquiry.modules.usermanagement.domain.Authority;
 import io.flowinquiry.modules.usermanagement.domain.Permission;
 import io.flowinquiry.modules.usermanagement.domain.User;
+import io.flowinquiry.modules.usermanagement.domain.UserAuth;
 import io.flowinquiry.modules.usermanagement.domain.UserStatus;
 import io.flowinquiry.modules.usermanagement.domain.User_;
 import io.flowinquiry.modules.usermanagement.repository.AuthorityRepository;
+import io.flowinquiry.modules.usermanagement.repository.UserAuthRepository;
 import io.flowinquiry.modules.usermanagement.repository.UserRepository;
 import io.flowinquiry.modules.usermanagement.service.dto.ResourcePermissionDTO;
 import io.flowinquiry.modules.usermanagement.service.dto.UserDTO;
@@ -51,6 +54,8 @@ public class UserService {
 
     private final UserRepository userRepository;
 
+    private final UserAuthRepository userAuthRepository;
+
     private final PasswordEncoder passwordEncoder;
 
     private final AuthorityRepository authorityRepository;
@@ -61,11 +66,13 @@ public class UserService {
 
     public UserService(
             UserRepository userRepository,
+            UserAuthRepository userAuthRepository,
             PasswordEncoder passwordEncoder,
             AuthorityRepository authorityRepository,
             UserMapper userMapper,
             ApplicationEventPublisher eventPublisher) {
         this.userRepository = userRepository;
+        this.userAuthRepository = userAuthRepository;
         this.passwordEncoder = passwordEncoder;
         this.authorityRepository = authorityRepository;
         this.userMapper = userMapper;
@@ -92,14 +99,33 @@ public class UserService {
                 .findOneByResetKey(key)
                 .filter(
                         user ->
-                                user.getResetDate()
-                                        .isAfter(Instant.now().minus(1, ChronoUnit.DAYS)))
+                                user.getResetDate() != null
+                                        && user.getResetDate()
+                                                .isAfter(Instant.now().minus(1, ChronoUnit.DAYS)))
                 .map(
                         user -> {
-                            user.setPassword(passwordEncoder.encode(newPassword));
+                            // Find the FwUserAuth record for "local" authentication
+                            user.getUserAuths().stream()
+                                    .filter(
+                                            auth ->
+                                                    "local"
+                                                            .equalsIgnoreCase(
+                                                                    auth.getAuthProvider()))
+                                    .findFirst()
+                                    .ifPresent(
+                                            auth ->
+                                                    auth.setPasswordHash(
+                                                            passwordEncoder.encode(newPassword)));
+
+                            // Update user details
                             user.setStatus(UserStatus.ACTIVE);
                             user.setResetKey(null);
                             user.setResetDate(null);
+
+                            // Save changes to both FwUser and FwUserAuth
+                            userRepository.save(user);
+
+                            LOG.debug("Password reset successfully for user: {}", user.getEmail());
                             return user;
                         });
     }
@@ -118,6 +144,7 @@ public class UserService {
     }
 
     public User registerUser(UserDTO userDTO, String password) {
+        // Check if email is already registered
         userRepository
                 .findOneByEmailIgnoreCase(userDTO.getEmail())
                 .ifPresent(
@@ -127,10 +154,9 @@ public class UserService {
                                 throw new EmailAlreadyUsedException();
                             }
                         });
+
+        // Create new user
         User newUser = new User();
-        String encryptedPassword = passwordEncoder.encode(password);
-        // new user gets initially a generated password
-        newUser.setPassword(encryptedPassword);
         newUser.setFirstName(userDTO.getFirstName());
         newUser.setLastName(userDTO.getLastName());
         if (userDTO.getEmail() != null) {
@@ -138,14 +164,27 @@ public class UserService {
         }
         newUser.setImageUrl(userDTO.getImageUrl());
         newUser.setLangKey(userDTO.getLangKey());
-        // new user is not active
-        newUser.setStatus(UserStatus.PENDING);
-        // new user gets registration key
-        newUser.setActivationKey(Random.generateActivationKey());
+        newUser.setStatus(UserStatus.PENDING); // New user is not active
+        newUser.setActivationKey(Random.generateActivationKey()); // Registration key
+
+        // Assign default authority
         Set<Authority> authorities = new HashSet<>();
         authorityRepository.findById(AuthoritiesConstants.USER).ifPresent(authorities::add);
         newUser.setAuthorities(authorities);
+
+        // Save the user
         userRepository.save(newUser);
+
+        // Create and save the corresponding FwUserAuth record for username and passeord
+        // authentication
+        String encryptedPassword = passwordEncoder.encode(password);
+        UserAuth userAuth = new UserAuth();
+        userAuth.setUser(newUser);
+        userAuth.setAuthProvider(UP_AUTH_PROVIDER);
+        userAuth.setPasswordHash(encryptedPassword);
+
+        userAuthRepository.save(userAuth);
+
         LOG.debug("Created Information for User: {}", newUser);
         return newUser;
     }
@@ -161,8 +200,7 @@ public class UserService {
 
     public UserDTO createUser(UserDTO userDTO) {
         User user = userMapper.toEntity(userDTO);
-        String encryptedPassword = passwordEncoder.encode(Random.generatePassword());
-        user.setPassword(encryptedPassword);
+
         user.setResetKey(Random.generateResetKey());
         user.setResetDate(Instant.now());
         user.setStatus(UserStatus.PENDING);
@@ -182,6 +220,15 @@ public class UserService {
         }
         userRepository.save(user);
         LOG.debug("Created Information for User: {}", user);
+
+        // Create and save FwUserAuth for username / password authentication
+        String encryptedPassword = passwordEncoder.encode(Random.generatePassword());
+        UserAuth userAuth = new UserAuth();
+        userAuth.setUser(user);
+        userAuth.setAuthProvider(UP_AUTH_PROVIDER);
+        userAuth.setPasswordHash(encryptedPassword);
+        userAuthRepository.save(userAuth);
+
         UserDTO savedUser = userMapper.toDto(user);
         eventPublisher.publishEvent(new CreatedUserEvent(this, savedUser));
         return savedUser;
@@ -269,14 +316,34 @@ public class UserService {
                 .flatMap(userRepository::findOneByEmailIgnoreCase)
                 .ifPresent(
                         user -> {
-                            String currentEncryptedPassword = user.getPassword();
+                            // Find the FwUserAuth record for "local" authentication
+                            UserAuth localAuth =
+                                    user.getUserAuths().stream()
+                                            .filter(
+                                                    auth ->
+                                                            UP_AUTH_PROVIDER.equalsIgnoreCase(
+                                                                    auth.getAuthProvider()))
+                                            .findFirst()
+                                            .orElseThrow(
+                                                    () ->
+                                                            new InvalidPasswordException(
+                                                                    "Username password provider not found for user "
+                                                                            + user.getEmail()));
+
+                            String currentEncryptedPassword = localAuth.getPasswordHash();
                             if (!passwordEncoder.matches(
                                     currentClearTextPassword, currentEncryptedPassword)) {
-                                throw new InvalidPasswordException();
+                                throw new InvalidPasswordException("Current password is incorrect");
                             }
+
+                            // Update the password
                             String encryptedPassword = passwordEncoder.encode(newPassword);
-                            user.setPassword(encryptedPassword);
-                            LOG.debug("Changed password for User: {}", user);
+                            localAuth.setPasswordHash(encryptedPassword);
+
+                            // Save changes
+                            userAuthRepository.save(localAuth);
+
+                            LOG.debug("Changed password for User: {}", user.getEmail());
                         });
     }
 

@@ -5,7 +5,6 @@ import io.flowinquiry.modules.usermanagement.service.dto.UserHierarchyDTO;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
@@ -19,8 +18,6 @@ import org.springframework.transaction.annotation.Transactional;
 @Repository
 public interface UserRepository extends JpaRepository<User, Long>, JpaSpecificationExecutor<User> {
 
-    String USERS_BY_EMAIL_CACHE = "usersByEmail";
-
     Optional<User> findOneByActivationKey(String activationKey);
 
     Optional<User> findOneByResetKey(String resetKey);
@@ -28,8 +25,10 @@ public interface UserRepository extends JpaRepository<User, Long>, JpaSpecificat
     Optional<User> findOneByEmailIgnoreCase(String email);
 
     @EntityGraph(attributePaths = "authorities")
-    @Cacheable(cacheNames = USERS_BY_EMAIL_CACHE)
     Optional<User> findOneWithAuthoritiesByEmailIgnoreCase(String email);
+
+    @EntityGraph(attributePaths = {"authorities", "userAuths"})
+    Optional<User> findOneWithAuthoritiesAndUserAuthsByEmailIgnoreCase(String email);
 
     @EntityGraph(attributePaths = {"manager"})
     Optional<User> findOneWithManagerById(Long id);

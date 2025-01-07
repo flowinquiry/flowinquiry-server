@@ -28,7 +28,6 @@
 			<column name="id" type="BIGSERIAL" autoIncrement="true">
 				<constraints primaryKey="true" />
 			</column>
-			<column name="password_hash" type="VARCHAR(61)" />
 			<column name="first_name" type="VARCHAR(50)" />
 			<column name="last_name" type="VARCHAR(50)" />
 			<column name="email" type="VARCHAR(256)">
@@ -79,6 +78,29 @@
 			<column name="modified_at" type="timestamptz" />
 		</createTable>
 
+		<createTable tableName="fw_user_auth">
+			<column name="id" type="BIGSERIAL" autoIncrement="true">
+				<constraints primaryKey="true" />
+			</column>
+			<column name="user_id" type="BIGINT">
+				<constraints nullable="false" />
+			</column>
+			<column name="auth_provider" type="VARCHAR(50)">
+				<constraints nullable="false" />
+			</column>
+			<column name="provider_user_id" type="VARCHAR(256)">
+				<constraints nullable="true" />
+			</column>
+			<column name="password_hash" type="VARCHAR(61)">
+				<constraints nullable="true" />
+			</column>
+		</createTable>
+
+		<addForeignKeyConstraint
+			baseColumnNames="user_id" baseTableName="fw_user_auth"
+			constraintName="fk_user_auth_user" referencedColumnNames="id"
+			referencedTableName="fw_user" />
+
 		<createTable tableName="fw_authority">
 			<column name="name" type="VARCHAR(50)">
 				<constraints primaryKey="true" nullable="false" />
@@ -112,9 +134,6 @@
 			baseColumnNames="user_id" baseTableName="fw_user_authority"
 			constraintName="fk_user_id" referencedColumnNames="id"
 			referencedTableName="fw_user" onDelete="CASCADE" />
-
-		<addNotNullConstraint columnName="password_hash"
-			columnDataType="VARCHAR(60)" tableName="fw_user" />
 
 		<createTable tableName="fw_resource">
 			<column name="name" type="VARCHAR(50)">
@@ -294,7 +313,6 @@
 		<loadData file="config/liquibase/tenant/data/fw_user.csv"
 			separator=";" tableName="fw_user" usePreparedStatements="true">
 			<column name="id" type="NUMERIC" />
-			<column name="password_hash" type="STRING" />
 			<column name="first_name" type="STRING" />
 			<column name="last_name" type="STRING" />
 			<column name="email" type="STRING" />
@@ -320,39 +338,17 @@
 			<column name="state" type="STRING" />
 		</loadData>
 		<sql>SELECT setval('fw_user_id_seq', (SELECT MAX(id) FROM fw_user));</sql>
-	</changeSet>
-	<changeSet author="flowinquiry"
-		id="000:04-insert-default-user-data-prod" context="prod">
 		<loadData
-			file="config/liquibase/tenant/data/fw_user_prod.csv" separator=";"
-			tableName="fw_user" usePreparedStatements="true">
+			file="config/liquibase/tenant/data/fw_user_auth.csv" separator=";"
+			tableName="fw_user_auth" usePreparedStatements="true">
 			<column name="id" type="NUMERIC" />
+			<column name="user_id" type="NUMERIC" />
+			<column name="auth_provider" type="STRING" />
+			<column name="provider_user_id" type="STRING" />
 			<column name="password_hash" type="STRING" />
-			<column name="first_name" type="STRING" />
-			<column name="last_name" type="STRING" />
-			<column name="email" type="STRING" />
-			<column name="timezone" type="STRING" />
-			<column name="last_login_time" type="TIMESTAMP" />
-			<column name="image_url" type="STRING" />
-			<column name="role" type="STRING" />
-			<column name="title" type="STRING" />
-			<column name="manager_id" type="NUMERIC" />
-			<column name="status" type="STRING" />
-			<column name="is_deleted" type="BOOLEAN" />
-			<column name="lang_key" type="STRING" />
-			<column name="activation_key" type="STRING" />
-			<column name="reset_key" type="STRING" />
-			<column name="created_by" type="NUMBER" />
-			<column name="created_date" type="TIMESTAMP" />
-			<column name="reset_date" type="TIMESTAMP" />
-			<column name="modified_by" type="NUMBER" />
-			<column name="modified_at" type="TIMESTAMP" />
-			<column name="about" type="STRING" />
-			<column name="address" type="STRING" />
-			<column name="city" type="STRING" />
-			<column name="state" type="STRING" />
 		</loadData>
-		<sql>SELECT setval('fw_user_id_seq', (SELECT MAX(id) FROM fw_user));</sql>
+		<sql>SELECT setval('fw_user_auth_id_seq', (SELECT MAX(id) FROM
+			fw_user_auth));</sql>
 	</changeSet>
 
 	<changeSet author="flowinquiry"

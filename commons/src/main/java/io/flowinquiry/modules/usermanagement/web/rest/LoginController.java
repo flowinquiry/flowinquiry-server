@@ -4,7 +4,6 @@ import static io.flowinquiry.security.SecurityUtils.AUTHORITIES_KEY;
 import static io.flowinquiry.security.SecurityUtils.JWT_ALGORITHM;
 import static io.flowinquiry.security.SecurityUtils.USER_ID;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import io.flowinquiry.modules.usermanagement.InvalidLoginException;
 import io.flowinquiry.modules.usermanagement.repository.UserRepository;
 import io.flowinquiry.modules.usermanagement.service.UserService;
@@ -87,7 +86,7 @@ public class LoginController {
         return new ResponseEntity<>(adminUserDTO, httpHeaders, HttpStatus.OK);
     }
 
-    public String createToken(Authentication authentication, boolean rememberMe) {
+    private String createToken(Authentication authentication, boolean rememberMe) {
         String authorities =
                 authentication.getAuthorities().stream()
                         .map(GrantedAuthority::getAuthority)
@@ -101,7 +100,6 @@ public class LoginController {
             validity = now.plus(this.tokenValidityInSeconds, ChronoUnit.SECONDS);
         }
 
-        // @formatter:off
         JwtClaimsSet claims =
                 JwtClaimsSet.builder()
                         .issuedAt(now)
@@ -113,24 +111,5 @@ public class LoginController {
 
         JwsHeader jwsHeader = JwsHeader.with(JWT_ALGORITHM).build();
         return this.jwtEncoder.encode(JwtEncoderParameters.from(jwsHeader, claims)).getTokenValue();
-    }
-
-    /** Object to return as body in JWT Authentication. */
-    static class JWTToken {
-
-        private String idToken;
-
-        JWTToken(String idToken) {
-            this.idToken = idToken;
-        }
-
-        @JsonProperty("id_token")
-        String getIdToken() {
-            return idToken;
-        }
-
-        void setIdToken(String idToken) {
-            this.idToken = idToken;
-        }
     }
 }

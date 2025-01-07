@@ -95,6 +95,7 @@ public class UserService {
 
     public Optional<User> completePasswordReset(String newPassword, String key) {
         LOG.debug("Reset user password for reset key {}", key);
+
         return userRepository
                 .findOneByResetKey(key)
                 .filter(
@@ -104,25 +105,26 @@ public class UserService {
                                                 .isAfter(Instant.now().minus(1, ChronoUnit.DAYS)))
                 .map(
                         user -> {
-                            // Find the FwUserAuth record for "local" authentication
+                            // Find the FwUserAuth record for UsernameAndPAssword authentication
                             user.getUserAuths().stream()
                                     .filter(
                                             auth ->
-                                                    "local"
-                                                            .equalsIgnoreCase(
-                                                                    auth.getAuthProvider()))
+                                                    UP_AUTH_PROVIDER.equalsIgnoreCase(
+                                                            auth.getAuthProvider()))
                                     .findFirst()
                                     .ifPresent(
-                                            auth ->
-                                                    auth.setPasswordHash(
-                                                            passwordEncoder.encode(newPassword)));
+                                            auth -> {
+                                                auth.setPasswordHash(
+                                                        passwordEncoder.encode(newPassword));
+                                                userAuthRepository.save(auth);
+                                            });
 
                             // Update user details
                             user.setStatus(UserStatus.ACTIVE);
                             user.setResetKey(null);
                             user.setResetDate(null);
 
-                            // Save changes to both FwUser and FwUserAuth
+                            // Save changes to the user
                             userRepository.save(user);
 
                             LOG.debug("Password reset successfully for user: {}", user.getEmail());
@@ -316,7 +318,7 @@ public class UserService {
                 .flatMap(userRepository::findOneByEmailIgnoreCase)
                 .ifPresent(
                         user -> {
-                            // Find the FwUserAuth record for "local" authentication
+                            // Find the UserAuth record for "UsernameAndPAssword" authentication
                             UserAuth localAuth =
                                     user.getUserAuths().stream()
                                             .filter(

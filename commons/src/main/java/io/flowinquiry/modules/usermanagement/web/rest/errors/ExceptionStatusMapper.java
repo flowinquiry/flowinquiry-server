@@ -14,6 +14,7 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.web.server.ResponseStatusException;
 
+/** Mapping between exception and response status code */
 public class ExceptionStatusMapper {
 
     private static final Map<Class<? extends Throwable>, HttpStatus> exceptionToStatusMap =

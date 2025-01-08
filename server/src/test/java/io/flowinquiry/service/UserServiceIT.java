@@ -1,11 +1,14 @@
 package io.flowinquiry.service;
 
+import static io.flowinquiry.modules.usermanagement.domain.UserAuth.UP_AUTH_PROVIDER;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.when;
 
 import io.flowinquiry.IntegrationTest;
 import io.flowinquiry.modules.usermanagement.domain.User;
+import io.flowinquiry.modules.usermanagement.domain.UserAuth;
 import io.flowinquiry.modules.usermanagement.domain.UserStatus;
+import io.flowinquiry.modules.usermanagement.repository.UserAuthRepository;
 import io.flowinquiry.modules.usermanagement.repository.UserRepository;
 import io.flowinquiry.modules.usermanagement.service.UserService;
 import io.flowinquiry.modules.usermanagement.service.dto.ResourcePermissionDTO;
@@ -14,8 +17,10 @@ import io.flowinquiry.utils.Random;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.assertj.core.groups.Tuple;
 import org.junit.jupiter.api.AfterEach;
@@ -44,6 +49,8 @@ class UserServiceIT {
 
     @Autowired private UserRepository userRepository;
 
+    @Autowired private UserAuthRepository userAuthRepository;
+
     @Autowired private UserService userService;
 
     @Autowired private AuditingHandler auditingHandler;
@@ -62,7 +69,6 @@ class UserServiceIT {
     @BeforeEach
     public void init() {
         user = new User();
-        user.setPassword(RandomStringUtils.secure().nextAlphanumeric(60));
         user.setStatus(UserStatus.ACTIVE);
         user.setEmail(DEFAULT_EMAIL);
         user.setFirstName(DEFAULT_FIRSTNAME);
@@ -81,10 +87,22 @@ class UserServiceIT {
         numberOfUsers = null;
     }
 
+    private void savedUser(User user) {
+        UserAuth userAuth = new UserAuth();
+        userAuth.setUser(user);
+        userAuth.setAuthProvider(UP_AUTH_PROVIDER);
+
+        userAuth.setPasswordHash(RandomStringUtils.secure().nextAlphanumeric(60));
+        Set<UserAuth> set = new HashSet<>();
+        set.add(userAuth);
+        user.setUserAuths(set);
+        userRepository.save(user);
+    }
+
     @Test
     @Transactional
     void assertThatUserMustExistToResetPassword() {
-        userRepository.saveAndFlush(user);
+        savedUser(user);
         Optional<UserDTO> maybeUser = userService.requestPasswordReset("invalid.login@localhost");
         assertThat(maybeUser).isNotPresent();
 
@@ -99,7 +117,7 @@ class UserServiceIT {
     @Transactional
     void assertThatOnlyActivatedUserCanRequestPasswordReset() {
         user.setStatus(UserStatus.PENDING);
-        userRepository.saveAndFlush(user);
+        savedUser(user);
 
         Optional<UserDTO> maybeUser = userService.requestPasswordReset(user.getEmail());
         assertThat(maybeUser).isNotPresent();
@@ -114,7 +132,7 @@ class UserServiceIT {
         user.setStatus(UserStatus.ACTIVE);
         user.setResetDate(daysAgo);
         user.setResetKey(resetKey);
-        userRepository.saveAndFlush(user);
+        savedUser(user);
 
         Optional<User> maybeUser =
                 userService.completePasswordReset("johndoe2", user.getResetKey());
@@ -129,7 +147,7 @@ class UserServiceIT {
         user.setStatus(UserStatus.ACTIVE);
         user.setResetDate(daysAgo);
         user.setResetKey("1234");
-        userRepository.saveAndFlush(user);
+        savedUser(user);
 
         Optional<User> maybeUser =
                 userService.completePasswordReset("johndoe2", user.getResetKey());
@@ -140,20 +158,22 @@ class UserServiceIT {
     @Test
     @Transactional
     void assertThatUserCanResetPassword() {
-        String oldPassword = user.getPassword();
         Instant daysAgo = Instant.now().minus(2, ChronoUnit.HOURS);
         String resetKey = Random.generateResetKey();
         user.setStatus(UserStatus.ACTIVE);
         user.setResetDate(daysAgo);
         user.setResetKey(resetKey);
-        userRepository.saveAndFlush(user);
+        savedUser(user);
+
+        String oldPassword = user.getPasswordHash(UP_AUTH_PROVIDER);
 
         Optional<User> maybeUser =
                 userService.completePasswordReset("johndoe2", user.getResetKey());
         assertThat(maybeUser).isPresent();
         assertThat(maybeUser.orElse(null).getResetDate()).isNull();
         assertThat(maybeUser.orElse(null).getResetKey()).isNull();
-        assertThat(maybeUser.orElse(null).getPassword()).isNotEqualTo(oldPassword);
+        assertThat(maybeUser.orElse(null).getPasswordHash(UP_AUTH_PROVIDER))
+                .isNotEqualTo(oldPassword);
 
         userRepository.delete(user);
     }

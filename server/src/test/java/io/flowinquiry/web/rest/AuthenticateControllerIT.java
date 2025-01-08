@@ -1,5 +1,6 @@
 package io.flowinquiry.web.rest;
 
+import static io.flowinquiry.modules.usermanagement.domain.UserAuth.UP_AUTH_PROVIDER;
 import static org.hamcrest.Matchers.emptyString;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.not;
@@ -12,10 +13,13 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.flowinquiry.IntegrationTest;
 import io.flowinquiry.modules.usermanagement.domain.User;
+import io.flowinquiry.modules.usermanagement.domain.UserAuth;
 import io.flowinquiry.modules.usermanagement.domain.UserStatus;
+import io.flowinquiry.modules.usermanagement.repository.UserAuthRepository;
 import io.flowinquiry.modules.usermanagement.repository.UserRepository;
 import io.flowinquiry.modules.usermanagement.web.rest.AuthenticateController;
 import io.flowinquiry.modules.usermanagement.web.rest.LoginVM;
+import java.util.Set;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -33,19 +37,30 @@ class AuthenticateControllerIT {
 
     @Autowired private UserRepository userRepository;
 
+    @Autowired private UserAuthRepository userAuthRepository;
+
     @Autowired private PasswordEncoder passwordEncoder;
 
     @Autowired private MockMvc mockMvc;
 
-    @Test
+    private void savedUser(User user, String password) {
+        UserAuth userAuth = new UserAuth();
+        userAuth.setUser(user);
+        userAuth.setAuthProvider(UP_AUTH_PROVIDER);
+        userAuth.setPasswordHash(passwordEncoder.encode(password));
+
+        user.setUserAuths(Set.of(userAuth));
+        userRepository.save(user);
+    }
+
     @Transactional
+    @Test
     void testAuthorize() throws Exception {
         User user = new User();
         user.setEmail("user-jwt-controller@example.com");
         user.setStatus(UserStatus.ACTIVE);
-        user.setPassword(passwordEncoder.encode("test"));
 
-        userRepository.saveAndFlush(user);
+        savedUser(user, "test");
 
         LoginVM login = new LoginVM();
         login.setEmail("user-jwt-controller@example.com");
@@ -61,15 +76,14 @@ class AuthenticateControllerIT {
                 .andExpect(header().string("Authorization", not(is(emptyString()))));
     }
 
-    @Test
     @Transactional
+    @Test
     void testAuthorizeWithRememberMe() throws Exception {
         User user = new User();
         user.setEmail("user-jwt-controller-remember-me@example.com");
         user.setStatus(UserStatus.ACTIVE);
-        user.setPassword(passwordEncoder.encode("test"));
 
-        userRepository.saveAndFlush(user);
+        savedUser(user, "test");
 
         LoginVM login = new LoginVM();
         login.setEmail("user-jwt-controller-remember-me@example.com");

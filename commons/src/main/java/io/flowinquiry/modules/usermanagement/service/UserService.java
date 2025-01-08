@@ -174,18 +174,17 @@ public class UserService {
         authorityRepository.findById(AuthoritiesConstants.USER).ifPresent(authorities::add);
         newUser.setAuthorities(authorities);
 
-        // Save the user
-        userRepository.save(newUser);
-
-        // Create and save the corresponding FwUserAuth record for username and passeord
+        // Create and save the corresponding FwUserAuth record for username and password
         // authentication
         String encryptedPassword = passwordEncoder.encode(password);
         UserAuth userAuth = new UserAuth();
         userAuth.setUser(newUser);
         userAuth.setAuthProvider(UP_AUTH_PROVIDER);
         userAuth.setPasswordHash(encryptedPassword);
+        newUser.getUserAuths().add(userAuth);
 
-        userAuthRepository.save(userAuth);
+        // Save the user
+        userRepository.save(newUser);
 
         LOG.debug("Created Information for User: {}", newUser);
         return newUser;
@@ -220,16 +219,18 @@ public class UserService {
                             .collect(Collectors.toSet());
             user.setAuthorities(authorities);
         }
-        userRepository.save(user);
-        LOG.debug("Created Information for User: {}", user);
-
-        // Create and save FwUserAuth for username / password authentication
         String encryptedPassword = passwordEncoder.encode(Random.generatePassword());
         UserAuth userAuth = new UserAuth();
         userAuth.setUser(user);
         userAuth.setAuthProvider(UP_AUTH_PROVIDER);
         userAuth.setPasswordHash(encryptedPassword);
-        userAuthRepository.save(userAuth);
+
+        Set<UserAuth> userAuths = new HashSet<>();
+        userAuths.add(userAuth);
+        user.setUserAuths(userAuths);
+
+        userRepository.save(user);
+        LOG.debug("Created Information for User: {}", user);
 
         UserDTO savedUser = userMapper.toDto(user);
         eventPublisher.publishEvent(new CreatedUserEvent(this, savedUser));

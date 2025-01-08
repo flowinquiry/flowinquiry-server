@@ -95,7 +95,6 @@ class UserControllerIT {
      */
     public static User createEntity(EntityManager em) {
         User persistUser = new User();
-        persistUser.setPassword(RandomStringUtils.randomAlphanumeric(60));
         persistUser.setStatus(UserStatus.ACTIVE);
         persistUser.setEmail(RandomStringUtils.randomAlphabetic(5) + DEFAULT_EMAIL);
         persistUser.setFirstName(DEFAULT_FIRSTNAME);
@@ -411,9 +410,8 @@ class UserControllerIT {
         userRepository.saveAndFlush(user);
 
         User anotherUser = new User();
-        anotherUser.setPassword(RandomStringUtils.secure().nextAlphanumeric(60));
+        //        anotherUser.setPassword(RandomStringUtils.secure().nextAlphanumeric(60));
         anotherUser.setStatus(UserStatus.ACTIVE);
-        ;
         anotherUser.setEmail(UPDATED_EMAIL);
         anotherUser.setFirstName("java");
         anotherUser.setLastName("hipster");

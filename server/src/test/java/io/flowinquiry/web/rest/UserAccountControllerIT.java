@@ -1,5 +1,6 @@
 package io.flowinquiry.web.rest;
 
+import static io.flowinquiry.modules.usermanagement.domain.UserAuth.UP_AUTH_PROVIDER;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -11,6 +12,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import io.flowinquiry.IntegrationTest;
 import io.flowinquiry.modules.usermanagement.AuthoritiesConstants;
 import io.flowinquiry.modules.usermanagement.domain.User;
+import io.flowinquiry.modules.usermanagement.domain.UserAuth;
 import io.flowinquiry.modules.usermanagement.domain.UserStatus;
 import io.flowinquiry.modules.usermanagement.repository.AuthorityRepository;
 import io.flowinquiry.modules.usermanagement.repository.UserRepository;
@@ -322,17 +324,29 @@ class UserAccountControllerIT {
         userService.deleteUserByEmail("badguy@example.com");
     }
 
+    private void savedUser(User user, String password) {
+        UserAuth userAuth = new UserAuth();
+        userAuth.setUser(user);
+        userAuth.setAuthProvider(UP_AUTH_PROVIDER);
+        userAuth.setPasswordHash(passwordEncoder.encode(password));
+        user.getUserAuths().add(userAuth);
+        userRepository.save(user);
+    }
+
+    private void savedUser(User user) {
+        savedUser(user, RandomStringUtils.secure().nextAlphanumeric(60));
+    }
+
     @Test
     @Transactional
     void testActivateAccount() throws Exception {
         final String activationKey = "some activation key";
         User user = new User();
         user.setEmail("activate-account@example.com");
-        user.setPassword(RandomStringUtils.randomAlphanumeric(60));
+
         user.setStatus(UserStatus.ACTIVE);
         user.setActivationKey(activationKey);
-
-        userRepository.saveAndFlush(user);
+        savedUser(user);
 
         restAccountMockMvc
                 .perform(get("/api/activate?key={activationKey}", activationKey))
@@ -358,9 +372,8 @@ class UserAccountControllerIT {
     void testSaveAccountWithExistingEmail() throws Exception {
         User user = new User();
         user.setEmail("save-account@example.com");
-        user.setPassword(RandomStringUtils.randomAlphanumeric(60));
         user.setStatus(UserStatus.ACTIVE);
-        userRepository.saveAndFlush(user);
+        savedUser(user);
 
         UserDTO userDTO = new UserDTO();
         userDTO.setFirstName("firstname");
@@ -386,7 +399,8 @@ class UserAccountControllerIT {
         assertThat(updatedUser.getLastName()).isEqualTo(userDTO.getLastName());
         assertThat(updatedUser.getEmail()).isEqualTo(userDTO.getEmail());
         assertThat(updatedUser.getLangKey()).isEqualTo(userDTO.getLangKey());
-        assertThat(updatedUser.getPassword()).isEqualTo(user.getPassword());
+        assertThat(updatedUser.getPasswordHash(UP_AUTH_PROVIDER))
+                .isEqualTo(user.getPasswordHash(UP_AUTH_PROVIDER));
         assertThat(updatedUser.getImageUrl()).isEqualTo(userDTO.getImageUrl());
         assertThat(updatedUser.getStatus()).isEqualTo(UserStatus.ACTIVE);
         assertThat(updatedUser.getAuthorities()).isEmpty();
@@ -400,10 +414,9 @@ class UserAccountControllerIT {
     void testSaveInvalidEmail() throws Exception {
         User user = new User();
         user.setEmail("save-invalid-email@example.com");
-        user.setPassword(RandomStringUtils.randomAlphanumeric(60));
         user.setStatus(UserStatus.ACTIVE);
 
-        userRepository.saveAndFlush(user);
+        savedUser(user);
 
         UserDTO userDTO = new UserDTO();
         userDTO.setFirstName("firstname");
@@ -432,16 +445,14 @@ class UserAccountControllerIT {
     void testSaveExistingEmail() throws Exception {
         User user = new User();
         user.setEmail("save-existing-email@example.com");
-        user.setPassword(RandomStringUtils.randomAlphanumeric(60));
         user.setStatus(UserStatus.ACTIVE);
-        userRepository.saveAndFlush(user);
+        savedUser(user);
 
         User anotherUser = new User();
         anotherUser.setEmail("save-existing-email2@example.com");
-        anotherUser.setPassword(RandomStringUtils.randomAlphanumeric(60));
         anotherUser.setStatus(UserStatus.ACTIVE);
 
-        userRepository.saveAndFlush(anotherUser);
+        savedUser(anotherUser);
 
         UserDTO userDTO = new UserDTO();
         userDTO.setFirstName("firstname");
@@ -469,9 +480,8 @@ class UserAccountControllerIT {
     void testSaveExistingEmailAndLogin() throws Exception {
         User user = new User();
         user.setEmail("save-existing-email-and-login@example.com");
-        user.setPassword(RandomStringUtils.randomAlphanumeric(60));
         user.setStatus(UserStatus.ACTIVE);
-        userRepository.saveAndFlush(user);
+        savedUser(user);
 
         UserDTO userDTO = new UserDTO();
         userDTO.setFirstName("firstname");
@@ -504,9 +514,8 @@ class UserAccountControllerIT {
     void testChangePasswordWrongExistingPassword() throws Exception {
         User user = new User();
         String currentPassword = RandomStringUtils.randomAlphanumeric(60);
-        user.setPassword(passwordEncoder.encode(currentPassword));
         user.setEmail("change-password-wrong-existing-password@example.com");
-        userRepository.saveAndFlush(user);
+        savedUser(user, currentPassword);
 
         restAccountMockMvc
                 .perform(
@@ -523,8 +532,14 @@ class UserAccountControllerIT {
                         .findOneByEmailIgnoreCase(
                                 "change-password-wrong-existing-password@example.com")
                         .orElse(null);
-        assertThat(passwordEncoder.matches("new password", updatedUser.getPassword())).isFalse();
-        assertThat(passwordEncoder.matches(currentPassword, updatedUser.getPassword())).isTrue();
+        assertThat(
+                        passwordEncoder.matches(
+                                "new password", updatedUser.getPasswordHash(UP_AUTH_PROVIDER)))
+                .isFalse();
+        assertThat(
+                        passwordEncoder.matches(
+                                currentPassword, updatedUser.getPasswordHash(UP_AUTH_PROVIDER)))
+                .isTrue();
 
         userService.deleteUserByEmail("change-password-wrong-existing-password@example.com");
     }
@@ -535,9 +550,8 @@ class UserAccountControllerIT {
     void testChangePassword() throws Exception {
         User user = new User();
         String currentPassword = RandomStringUtils.randomAlphanumeric(60);
-        user.setPassword(passwordEncoder.encode(currentPassword));
         user.setEmail("change-password@example.com");
-        userRepository.saveAndFlush(user);
+        savedUser(user, currentPassword);
 
         restAccountMockMvc
                 .perform(
@@ -551,7 +565,10 @@ class UserAccountControllerIT {
 
         User updatedUser =
                 userRepository.findOneByEmailIgnoreCase("change-password@example.com").orElse(null);
-        assertThat(passwordEncoder.matches("new password", updatedUser.getPassword())).isTrue();
+        assertThat(
+                        passwordEncoder.matches(
+                                "new password", updatedUser.getPasswordHash(UP_AUTH_PROVIDER)))
+                .isTrue();
 
         userService.deleteUserByEmail("change-password@example.com");
     }
@@ -562,9 +579,8 @@ class UserAccountControllerIT {
     void testChangePasswordTooSmall() throws Exception {
         User user = new User();
         String currentPassword = RandomStringUtils.randomAlphanumeric(60);
-        user.setPassword(passwordEncoder.encode(currentPassword));
         user.setEmail("change-password-too-small@example.com");
-        userRepository.saveAndFlush(user);
+        savedUser(user, currentPassword);
 
         String newPassword = RandomStringUtils.random(ManagedUserVM.PASSWORD_MIN_LENGTH - 1);
 
@@ -582,7 +598,8 @@ class UserAccountControllerIT {
                 userRepository
                         .findOneByEmailIgnoreCase("change-password-too-small@example.com")
                         .orElse(null);
-        assertThat(updatedUser.getPassword()).isEqualTo(user.getPassword());
+        assertThat(updatedUser.getPasswordHash(UP_AUTH_PROVIDER))
+                .isEqualTo(user.getPasswordHash(UP_AUTH_PROVIDER));
 
         userService.deleteUserByEmail("change-password-too-small@example.com");
     }
@@ -593,9 +610,8 @@ class UserAccountControllerIT {
     void testChangePasswordTooLong() throws Exception {
         User user = new User();
         String currentPassword = RandomStringUtils.randomAlphanumeric(60);
-        user.setPassword(passwordEncoder.encode(currentPassword));
         user.setEmail("change-password-too-long@example.com");
-        userRepository.saveAndFlush(user);
+        savedUser(user, currentPassword);
 
         String newPassword = RandomStringUtils.random(ManagedUserVM.PASSWORD_MAX_LENGTH + 1);
 
@@ -613,7 +629,8 @@ class UserAccountControllerIT {
                 userRepository
                         .findOneByEmailIgnoreCase("change-password-too-long@example.com")
                         .orElse(null);
-        assertThat(updatedUser.getPassword()).isEqualTo(user.getPassword());
+        assertThat(updatedUser.getPasswordHash(UP_AUTH_PROVIDER))
+                .isEqualTo(user.getPasswordHash(UP_AUTH_PROVIDER));
 
         userService.deleteUserByEmail("change-password-too-long@example.com");
     }
@@ -624,9 +641,8 @@ class UserAccountControllerIT {
     void testChangePasswordEmpty() throws Exception {
         User user = new User();
         String currentPassword = RandomStringUtils.randomAlphanumeric(60);
-        user.setPassword(passwordEncoder.encode(currentPassword));
         user.setEmail("change-password-empty@example.com");
-        userRepository.saveAndFlush(user);
+        savedUser(user, currentPassword);
 
         restAccountMockMvc
                 .perform(
@@ -641,7 +657,8 @@ class UserAccountControllerIT {
                 userRepository
                         .findOneByEmailIgnoreCase("change-password-empty@example.com")
                         .orElse(null);
-        assertThat(updatedUser.getPassword()).isEqualTo(user.getPassword());
+        assertThat(updatedUser.getPasswordHash(UP_AUTH_PROVIDER))
+                .isEqualTo(user.getPasswordHash(UP_AUTH_PROVIDER));
 
         userService.deleteUserByEmail("change-password-empty@example.com");
     }
@@ -650,11 +667,10 @@ class UserAccountControllerIT {
     @Transactional
     void testRequestPasswordReset() throws Exception {
         User user = new User();
-        user.setPassword(RandomStringUtils.randomAlphanumeric(60));
         user.setStatus(UserStatus.ACTIVE);
         user.setEmail("password-reset@example.com");
         user.setLangKey("en");
-        userRepository.saveAndFlush(user);
+        savedUser(user);
 
         restAccountMockMvc
                 .perform(get("/api/account/reset-password/init?email=password-reset@example.com"))
@@ -667,11 +683,10 @@ class UserAccountControllerIT {
     @Transactional
     void testRequestPasswordResetUpperCaseEmail() throws Exception {
         User user = new User();
-        user.setPassword(RandomStringUtils.randomAlphanumeric(60));
         user.setStatus(UserStatus.ACTIVE);
         user.setEmail("password-reset-upper-case@example.com");
         user.setLangKey("en");
-        userRepository.saveAndFlush(user);
+        savedUser(user);
 
         restAccountMockMvc
                 .perform(
@@ -695,11 +710,10 @@ class UserAccountControllerIT {
     @Transactional
     void testFinishPasswordReset() throws Exception {
         User user = new User();
-        user.setPassword(RandomStringUtils.randomAlphanumeric(60));
         user.setEmail("finish-password-reset@example.com");
         user.setResetDate(Instant.now().plusSeconds(60));
         user.setResetKey("reset key");
-        userRepository.saveAndFlush(user);
+        savedUser(user);
 
         KeyAndPasswordVM keyAndPassword = new KeyAndPasswordVM();
         keyAndPassword.setKey(user.getResetKey());
@@ -715,7 +729,8 @@ class UserAccountControllerIT {
         User updatedUser = userRepository.findOneByEmailIgnoreCase(user.getEmail()).orElse(null);
         assertThat(
                         passwordEncoder.matches(
-                                keyAndPassword.getNewPassword(), updatedUser.getPassword()))
+                                keyAndPassword.getNewPassword(),
+                                updatedUser.getPasswordHash(UP_AUTH_PROVIDER)))
                 .isTrue();
 
         userService.deleteUserByEmail("finish-password-reset@example.com");
@@ -725,11 +740,10 @@ class UserAccountControllerIT {
     @Transactional
     void testFinishPasswordResetTooSmall() throws Exception {
         User user = new User();
-        user.setPassword(RandomStringUtils.secure().nextAlphabetic(60));
         user.setEmail("finish-password-reset-too-small@example.com");
         user.setResetDate(Instant.now().plusSeconds(60));
         user.setResetKey("reset key too small");
-        userRepository.saveAndFlush(user);
+        savedUser(user);
 
         KeyAndPasswordVM keyAndPassword = new KeyAndPasswordVM();
         keyAndPassword.setKey(user.getResetKey());
@@ -745,7 +759,8 @@ class UserAccountControllerIT {
         User updatedUser = userRepository.findOneByEmailIgnoreCase(user.getEmail()).orElse(null);
         assertThat(
                         passwordEncoder.matches(
-                                keyAndPassword.getNewPassword(), updatedUser.getPassword()))
+                                keyAndPassword.getNewPassword(),
+                                updatedUser.getPasswordHash(UP_AUTH_PROVIDER)))
                 .isFalse();
 
         userService.deleteUserByEmail("finish-password-reset-too-small@example.com");

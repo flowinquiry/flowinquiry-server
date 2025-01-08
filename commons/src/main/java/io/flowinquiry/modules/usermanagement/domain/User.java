@@ -130,7 +130,7 @@ public class User extends AbstractAuditingEntity<Long> implements Serializable {
     private LocalDateTime lastLoginTime;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<UserAuth> userAuths;
+    private Set<UserAuth> userAuths = new HashSet<>();
 
     @JsonIgnore
     @ManyToMany
@@ -168,5 +168,16 @@ public class User extends AbstractAuditingEntity<Long> implements Serializable {
         if (isDeleted == null) {
             isDeleted = Boolean.FALSE;
         }
+    }
+
+    public String getPasswordHash(String authProvider) {
+        return this.userAuths.stream()
+                .filter(auth -> authProvider.equalsIgnoreCase(auth.getAuthProvider()))
+                .findFirst()
+                .map(UserAuth::getPasswordHash)
+                .orElseThrow(
+                        () ->
+                                new IllegalStateException(
+                                        authProvider + " authentication not found"));
     }
 }

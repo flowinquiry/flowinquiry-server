@@ -35,6 +35,8 @@ jobs:
 
     - name: Build with Gradle Wrapper
       run: ./gradlew build
+    - name: Publish to github packages
+      run: ./gradlew publish
 
   dependency-submission:
 

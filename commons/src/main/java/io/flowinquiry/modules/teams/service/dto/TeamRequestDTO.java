@@ -39,4 +39,5 @@ public class TeamRequestDTO {
     private Instant createdAt;
     private Instant modifiedAt;
     private Set<WatcherDTO> watchers;
+    private int numberAttachments;
 }

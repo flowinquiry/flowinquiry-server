@@ -22,6 +22,7 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.Formula;
 
 @EqualsAndHashCode(callSuper = false)
 @Entity
@@ -93,4 +94,8 @@ public class TeamRequest extends AbstractAuditingEntity<Long> {
             joinColumns = @JoinColumn(name = "team_request_id"),
             inverseJoinColumns = @JoinColumn(name = "user_id"))
     private Set<User> watchers;
+
+    @Formula(
+            "(SELECT COUNT(a.id) FROM fw_entity_attachment a WHERE a.entity_type = 'Team_Request' AND a.entity_id = id)")
+    private int numberAttachments;
 }

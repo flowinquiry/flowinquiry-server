@@ -2,6 +2,8 @@ package io.flowinquiry.modules.fss.service;
 
 import io.flowinquiry.modules.fss.domain.EntityAttachment;
 import io.flowinquiry.modules.fss.repository.EntityAttachmentRepository;
+import io.flowinquiry.modules.fss.service.dto.EntityAttachmentDTO;
+import io.flowinquiry.modules.fss.service.mapper.EntityAttachmentMapper;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -11,13 +13,17 @@ import org.springframework.web.multipart.MultipartFile;
 
 @Service
 public class EntityAttachmentService {
-    private final EntityAttachmentRepository entityAttachmentRepository;
 
+    private final EntityAttachmentRepository entityAttachmentRepository;
+    private final EntityAttachmentMapper entityAttachmentMapper;
     private final StorageService storageService;
 
     public EntityAttachmentService(
-            EntityAttachmentRepository entityAttachmentRepository, StorageService storageService) {
+            EntityAttachmentRepository entityAttachmentRepository,
+            EntityAttachmentMapper entityAttachmentMapper,
+            StorageService storageService) {
         this.entityAttachmentRepository = entityAttachmentRepository;
+        this.entityAttachmentMapper = entityAttachmentMapper;
         this.storageService = storageService;
     }
 
@@ -88,8 +94,9 @@ public class EntityAttachmentService {
      * @param entityId The ID of the entity.
      * @return A list of attachments for the entity.
      */
-    public List<EntityAttachment> getAttachments(String entityType, Long entityId) {
-        return entityAttachmentRepository.findByEntityTypeAndEntityId(entityType, entityId);
+    public List<EntityAttachmentDTO> getAttachments(String entityType, Long entityId) {
+        return entityAttachmentMapper.toDtoList(
+                entityAttachmentRepository.findByEntityTypeAndEntityId(entityType, entityId));
     }
 
     /**

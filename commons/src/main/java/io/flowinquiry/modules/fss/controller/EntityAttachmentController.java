@@ -2,6 +2,7 @@ package io.flowinquiry.modules.fss.controller;
 
 import io.flowinquiry.modules.fss.domain.EntityAttachment;
 import io.flowinquiry.modules.fss.service.EntityAttachmentService;
+import io.flowinquiry.modules.fss.service.dto.EntityAttachmentDTO;
 import java.util.List;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -33,8 +34,8 @@ public class EntityAttachmentController {
      */
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<List<EntityAttachment>> uploadAttachments(
-            @RequestParam String entityType,
-            @RequestParam Long entityId,
+            @RequestParam("entityType") String entityType,
+            @RequestParam("entityId") Long entityId,
             @RequestPart("files") MultipartFile[] files)
             throws Exception {
         List<EntityAttachment> attachments =
@@ -50,10 +51,12 @@ public class EntityAttachmentController {
      * @return A list of attachments for the specified entity.
      */
     @GetMapping
-    public ResponseEntity<List<EntityAttachment>> getAttachments(
-            @RequestParam String entityType, @RequestParam Long entityId) {
+    public ResponseEntity<List<EntityAttachmentDTO>> getAttachments(
+            @RequestParam("entityType") String entityType,
+            @RequestParam("entityId") Long entityId) {
 
-        List<EntityAttachment> attachments = attachmentService.getAttachments(entityType, entityId);
+        List<EntityAttachmentDTO> attachments =
+                attachmentService.getAttachments(entityType, entityId);
         return ResponseEntity.ok(attachments);
     }
 }

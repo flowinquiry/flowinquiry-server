@@ -6,7 +6,9 @@ import io.flowinquiry.modules.fss.service.dto.EntityAttachmentDTO;
 import java.util.List;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -54,9 +56,20 @@ public class EntityAttachmentController {
     public ResponseEntity<List<EntityAttachmentDTO>> getAttachments(
             @RequestParam("entityType") String entityType,
             @RequestParam("entityId") Long entityId) {
-
         List<EntityAttachmentDTO> attachments =
                 attachmentService.getAttachments(entityType, entityId);
         return ResponseEntity.ok(attachments);
+    }
+
+    /**
+     * Deletes an attachment by its ID.
+     *
+     * @param attachmentId The ID of the attachment to delete.
+     * @return A ResponseEntity indicating the result of the deletion.
+     */
+    @DeleteMapping("/{attachmentId}")
+    public ResponseEntity<Void> deleteAttachment(@PathVariable("attachmentId") Long attachmentId) {
+        attachmentService.deleteAttachment(attachmentId);
+        return ResponseEntity.noContent().build();
     }
 }

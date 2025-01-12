@@ -7,12 +7,16 @@ import io.flowinquiry.modules.fss.service.mapper.EntityAttachmentMapper;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 @Service
 public class EntityAttachmentService {
+
+    private static final Logger LOG = LoggerFactory.getLogger(EntityAttachmentService.class);
 
     private final EntityAttachmentRepository entityAttachmentRepository;
     private final EntityAttachmentMapper entityAttachmentMapper;
@@ -105,7 +109,41 @@ public class EntityAttachmentService {
      * @param entityType The type of entity (e.g., "team_request", "comment").
      * @param entityId The ID of the entity.
      */
-    public void deleteAttachments(String entityType, Long entityId) {
-        entityAttachmentRepository.deleteByEntityTypeAndEntityId(entityType, entityId);
+    public void deleteAttachments(String entityType, Long entityId) throws Exception {
+        List<EntityAttachment> attachments =
+                entityAttachmentRepository.findByEntityTypeAndEntityId(entityType, entityId);
+
+        for (EntityAttachment attachment : attachments) {
+            if (attachment.getFileUrl() != null) {
+                storageService.deleteFile(attachment.getFileUrl());
+            }
+        }
+
+        // Delete the attachment records from the database
+        entityAttachmentRepository.deleteAll(attachments);
+    }
+
+    /**
+     * Deletes an attachment by its ID. If the attachment does not exist, it silently ignores the
+     * operation.
+     *
+     * @param attachmentId The ID of the attachment to delete.
+     */
+    @Transactional
+    public void deleteAttachment(Long attachmentId) {
+        entityAttachmentRepository
+                .findById(attachmentId)
+                .ifPresent(
+                        attachment -> {
+                            if (attachment.getFileUrl() != null) {
+                                try {
+                                    storageService.deleteFile(attachment.getFileUrl());
+                                } catch (Exception e) {
+                                    LOG.error("Can not delete file {}", attachment.getFileUrl(), e);
+                                }
+                            }
+
+                            entityAttachmentRepository.deleteById(attachmentId);
+                        });
     }
 }

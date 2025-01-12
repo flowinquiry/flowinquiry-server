@@ -5,6 +5,7 @@ import lombok.Data;
 
 @Data
 public class EntityAttachmentDTO {
+    private Long id;
     private String entityType;
     private Long entityId;
     private String fileName;

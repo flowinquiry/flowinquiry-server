@@ -4,8 +4,6 @@ import io.flowinquiry.modules.fss.service.StorageService;
 import io.flowinquiry.modules.usermanagement.service.dto.UserKey;
 import io.flowinquiry.security.SecurityUtils;
 import jakarta.json.Json;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,15 +19,6 @@ import org.springframework.web.multipart.MultipartFile;
 public class FileUploadController {
 
     private static final Logger LOG = LoggerFactory.getLogger(FileUploadController.class);
-
-    private static final String AVATAR_TYPE = "avatar";
-
-    private final Map<String, String> typeRelativePaths =
-            new HashMap<>() {
-                {
-                    put(AVATAR_TYPE, AVATAR_TYPE);
-                }
-            };
 
     private final StorageService storageService;
 
@@ -49,10 +38,10 @@ public class FileUploadController {
                 currentUser,
                 file.getOriginalFilename(),
                 type);
-
-        if (!typeRelativePaths.containsKey(type))
+        String prefixPath = storageService.getRelativePathByType(type);
+        if (prefixPath == null) {
             return ResponseEntity.badRequest().body("Not support upload with type " + type);
-        String prefixPath = typeRelativePaths.get(type);
+        }
 
         String path =
                 storageService.uploadFile(

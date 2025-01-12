@@ -2,8 +2,25 @@ package io.flowinquiry.modules.fss.service;
 
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.HashMap;
+import java.util.Map;
 
 public interface StorageService {
+
+    String AVATAR_TYPE = "avatar";
+
+    String ATTACHMENTS = "attachments";
+
+    Map<String, String> typeRelativePaths =
+            new HashMap<>() {
+                {
+                    put(AVATAR_TYPE, AVATAR_TYPE);
+                }
+            };
+
+    default String getRelativePathByType(String type) {
+        return typeRelativePaths.get(type);
+    }
 
     String uploadFile(String containerName, String blobName, InputStream inputStream)
             throws Exception;

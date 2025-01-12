@@ -9,10 +9,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import io.flowinquiry.IntegrationTest;
 import io.flowinquiry.modules.usermanagement.AuthoritiesConstants;
+import io.flowinquiry.modules.usermanagement.controller.PublicUserController;
 import io.flowinquiry.modules.usermanagement.domain.User;
 import io.flowinquiry.modules.usermanagement.repository.UserRepository;
 import io.flowinquiry.modules.usermanagement.service.UserService;
-import io.flowinquiry.modules.usermanagement.web.rest.PublicUserController;
 import jakarta.persistence.EntityManager;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;

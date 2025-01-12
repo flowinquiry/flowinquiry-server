@@ -380,6 +380,44 @@
 			baseColumnNames="escalated_to_user_id"
 			constraintName="fw_escalation_tracking_user"
 			referencedTableName="fw_user" referencedColumnNames="id" />
+
+
+
+		<createTable tableName="fw_entity_attachment">
+			<column name="id" type="BIGINT" autoIncrement="true">
+				<constraints primaryKey="true" nullable="false" />
+			</column>
+			<column name="entity_type" type="VARCHAR(50)">
+				<constraints nullable="false" />
+			</column>
+			<column name="entity_id" type="BIGINT">
+				<constraints nullable="false" />
+			</column>
+			<column name="file_name" type="VARCHAR(255)">
+				<constraints nullable="false" />
+			</column>
+			<column name="file_type" type="VARCHAR(100)" />
+			<column name="file_size" type="BIGINT" />
+			<column name="file_url" type="TEXT">
+				<constraints nullable="false" />
+			</column>
+			<column name="uploaded_at" type="TIMESTAMP">
+				<constraints nullable="false" />
+			</column>
+		</createTable>
+
+		<!-- Add unique constraint on (entity_type, entity_id, file_url) -->
+		<addUniqueConstraint
+			tableName="fw_entity_attachment"
+			columnNames="entity_type, entity_id, file_url"
+			constraintName="uq_entity_attachment" />
+
+		<!-- Add index on (entity_type, entity_id) -->
+		<createIndex tableName="fw_entity_attachment"
+			indexName="idx_entity_attachment">
+			<column name="entity_type" />
+			<column name="entity_id" />
+		</createIndex>
 	</changeSet>
 	<changeSet author="flowinquiry"
 		id="001:01-insert-workflow-data" context="dev,test">

@@ -39,7 +39,6 @@ public class SecurityConfiguration {
                                                 mvc.pattern(HttpMethod.POST, "/api/authenticate"),
                                                 mvc.pattern(HttpMethod.GET, "/api/authenticate"),
                                                 mvc.pattern("/api/register"),
-                                                mvc.pattern("/api/files/**"),
                                                 mvc.pattern("/api/activate"),
                                                 mvc.pattern("/api/account/reset-password/init"),
                                                 mvc.pattern("/api/account/reset-password/finish"))

@@ -3,6 +3,8 @@ package io.flowinquiry.modules.fss.controller;
 import io.flowinquiry.modules.fss.service.StorageService;
 import jakarta.servlet.http.HttpServletRequest;
 import java.io.ByteArrayOutputStream;
+import java.util.concurrent.TimeUnit;
+import org.springframework.http.CacheControl;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -38,8 +40,8 @@ public class FileDownloadController {
         final HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.setContentType(
                 MediaTypeFactory.getMediaType(fileName).orElse(MediaType.APPLICATION_OCTET_STREAM));
-        httpHeaders.setCacheControl("max-age=3600, must-revalidate"); // Cache for 1 hour
-        httpHeaders.setExpires(System.currentTimeMillis() + 3600 * 1000); // Set expiry
+        httpHeaders.setCacheControl(CacheControl.maxAge(1, TimeUnit.DAYS).cachePublic());
+        httpHeaders.setExpires(System.currentTimeMillis() + 3600 * 1000 * 24);
         httpHeaders.setETag("\"" + byteArrayOutputStream.size() + "\""); // ETag for revalidation
 
         return new ResponseEntity<>(

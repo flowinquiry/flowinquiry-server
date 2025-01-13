@@ -1,5 +1,7 @@
 package io.flowinquiry.modules.usermanagement.controller;
 
+import io.flowinquiry.exceptions.ResourceNotFoundException;
+import io.flowinquiry.modules.fss.ResourceRemoveEvent;
 import io.flowinquiry.modules.fss.service.StorageService;
 import io.flowinquiry.modules.usermanagement.AuthoritiesConstants;
 import io.flowinquiry.modules.usermanagement.EmailAlreadyUsedException;
@@ -11,15 +13,16 @@ import io.flowinquiry.modules.usermanagement.service.dto.UserDTO;
 import io.flowinquiry.modules.usermanagement.service.dto.UserHierarchyDTO;
 import io.flowinquiry.query.Filter;
 import io.flowinquiry.query.QueryDTO;
-import io.flowinquiry.utils.Obfuscator;
 import jakarta.validation.Valid;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -54,12 +57,17 @@ public class PublicUserController {
 
     private final UserRepository userRepository;
     private final UserService userService;
+    private final ApplicationEventPublisher eventPublisher;
     private final StorageService storageService;
 
     public PublicUserController(
-            UserService userService, UserRepository userRepository, StorageService storageService) {
+            UserService userService,
+            UserRepository userRepository,
+            ApplicationEventPublisher eventPublisher,
+            StorageService storageService) {
         this.userService = userService;
         this.userRepository = userRepository;
+        this.eventPublisher = eventPublisher;
         this.storageService = storageService;
     }
 
@@ -115,24 +123,30 @@ public class PublicUserController {
             @RequestPart("userDTO") UserDTO userDTO,
             @RequestParam(value = "file", required = false) MultipartFile avatarFile)
             throws Exception {
-        Optional<User> existingUser = userRepository.findOneByEmailIgnoreCase(userDTO.getEmail());
-        if (existingUser.isPresent()
-                && (!existingUser.orElseThrow().getId().equals(userDTO.getId()))) {
+        Optional<User> userByEmail = userRepository.findOneByEmailIgnoreCase(userDTO.getEmail());
+        if (userByEmail.isPresent()
+                && (!userByEmail.orElseThrow().getId().equals(userDTO.getId()))) {
             throw new EmailAlreadyUsedException();
         }
 
+        User existingUser =
+                userRepository
+                        .findById(userDTO.getId())
+                        .orElseThrow(() -> new ResourceNotFoundException("Can not find user"));
+        Optional<String> fileRemovedPath = Optional.empty();
+
         // Handle the avatar file upload, if present
         if (avatarFile != null && !avatarFile.isEmpty()) {
+            fileRemovedPath = Optional.ofNullable(existingUser.getImageUrl());
             String avatarPath =
                     storageService.uploadImage(
-                            "avatar",
-                            Obfuscator.obfuscate(userDTO.getId()),
-                            avatarFile.getInputStream());
+                            "avatar", UUID.randomUUID().toString(), avatarFile.getInputStream());
             userDTO.setImageUrl(avatarPath);
         }
 
         UserDTO updatedUser = userService.updateUser(userDTO);
-
+        fileRemovedPath.ifPresent(
+                s -> eventPublisher.publishEvent(new ResourceRemoveEvent(this, s)));
         return ResponseEntity.ok(updatedUser);
     }
 

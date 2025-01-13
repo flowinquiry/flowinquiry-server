@@ -39,10 +39,7 @@ allprojects {
                 }
 
                 project.afterEvaluate {
-                    // Debug information for environment variables
-                    println("GITHUB_ACTOR: ${System.getenv('GITHUB_ACTOR') ?: 'Not Set'}")
-                    println("GITHUB_TOKEN: ${System.getenv('GITHUB_TOKEN')?.take(4) ?: 'Not Set'}***") // Mask token for security
-                    
+
                     publishing {
                         publications {
                             if (!project.publishing.publications.names.contains("${project.name}MavenJava")) {
@@ -60,7 +57,7 @@ allprojects {
                                 url = uri("https://maven.pkg.github.com/flowinquiry/flowinquiry-server")
                                 credentials {
                                     username = System.getenv("GITHUB_ACTOR")
-                                    password = System.getenv("GITHUB_TOKEN")
+                                    password = System.getenv("PAT_TOKEN") ?: System.getenv("GITHUB_TOKEN")
                                 }
                             }
                             mavenLocal()

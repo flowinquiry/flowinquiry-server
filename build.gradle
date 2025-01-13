@@ -57,7 +57,7 @@ allprojects {
                                 url = uri("https://maven.pkg.github.com/flowinquiry/flowinquiry-server")
                                 credentials {
                                     username = System.getenv("GITHUB_ACTOR")
-                                    password = System.getenv("PAT_TOKEN") ?: System.getenv("GITHUB_TOKEN")
+                                    password = System.getenv("GITHUB_TOKEN") 
                                 }
                             }
                             mavenLocal()

@@ -32,7 +32,7 @@ jobs:
         run: ./gradlew publish
         env:
           GITHUB_ACTOR: ${{ github.actor }}
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.PAT_TOKEN }}
 
   dependency-submission:
     runs-on: ubuntu-latest

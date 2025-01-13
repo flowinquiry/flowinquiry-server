@@ -27,9 +27,6 @@ jobs:
 
       - name: Build with Gradle Wrapper
         run: ./gradlew build
-        env:
-          GITHUB_ACTOR: ${{ github.actor }}
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Publish to GitHub Packages
         run: ./gradlew publish
@@ -52,6 +49,3 @@ jobs:
 
       - name: Submit dependencies
         run: ./gradlew dependencies
-        env:
-          GITHUB_ACTOR: ${{ github.actor }}
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

@@ -10,6 +10,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.flowinquiry.IntegrationTest;
+import io.flowinquiry.modules.shared.Constants;
 import io.flowinquiry.modules.usermanagement.AuthoritiesConstants;
 import io.flowinquiry.modules.usermanagement.controller.KeyAndPasswordVM;
 import io.flowinquiry.modules.usermanagement.controller.ManagedUserVM;
@@ -23,7 +24,6 @@ import io.flowinquiry.modules.usermanagement.service.UserService;
 import io.flowinquiry.modules.usermanagement.service.dto.PasswordChangeDTO;
 import io.flowinquiry.modules.usermanagement.service.dto.UserDTO;
 import io.flowinquiry.modules.usermanagement.service.mapper.UserMapper;
-import io.flowinquiry.security.Constants;
 import java.time.Instant;
 import java.util.HashSet;
 import java.util.Optional;

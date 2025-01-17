@@ -1,6 +1,6 @@
 package io.flowinquiry.modules.fss.service;
 
-import io.flowinquiry.modules.fss.ResourceRemoveEvent;
+import io.flowinquiry.modules.fss.service.event.ResourceRemoveEvent;
 import org.springframework.context.event.EventListener;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;

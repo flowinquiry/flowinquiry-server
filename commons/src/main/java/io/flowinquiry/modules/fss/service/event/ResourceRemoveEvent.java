@@ -1,4 +1,4 @@
-package io.flowinquiry.modules.fss;
+package io.flowinquiry.modules.fss.service.event;
 
 import lombok.Getter;
 import org.springframework.context.ApplicationEvent;

@@ -1,4 +1,4 @@
-package io.flowinquiry.web.rest;
+package io.flowinquiry.modules.shared.controller;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/api")
-public class SharedController {
+public class TimezoneController {
 
     @GetMapping("/timezones")
     public List<ZoneInfo> getTimezones() {

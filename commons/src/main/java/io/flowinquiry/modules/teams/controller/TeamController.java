@@ -1,7 +1,7 @@
 package io.flowinquiry.modules.teams.controller;
 
-import io.flowinquiry.modules.fss.ResourceRemoveEvent;
 import io.flowinquiry.modules.fss.service.StorageService;
+import io.flowinquiry.modules.fss.service.event.ResourceRemoveEvent;
 import io.flowinquiry.modules.teams.service.TeamService;
 import io.flowinquiry.modules.teams.service.dto.TeamDTO;
 import io.flowinquiry.modules.usermanagement.service.dto.UserDTO;

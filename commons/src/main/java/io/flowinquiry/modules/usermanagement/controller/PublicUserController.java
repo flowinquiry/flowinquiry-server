@@ -1,8 +1,8 @@
 package io.flowinquiry.modules.usermanagement.controller;
 
 import io.flowinquiry.exceptions.ResourceNotFoundException;
-import io.flowinquiry.modules.fss.ResourceRemoveEvent;
 import io.flowinquiry.modules.fss.service.StorageService;
+import io.flowinquiry.modules.fss.service.event.ResourceRemoveEvent;
 import io.flowinquiry.modules.usermanagement.AuthoritiesConstants;
 import io.flowinquiry.modules.usermanagement.EmailAlreadyUsedException;
 import io.flowinquiry.modules.usermanagement.domain.User;

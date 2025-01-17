@@ -3,6 +3,7 @@ package io.flowinquiry.config;
 import static org.springframework.security.config.Customizer.withDefaults;
 
 import io.flowinquiry.modules.usermanagement.AuthoritiesConstants;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -27,6 +28,10 @@ public class SecurityConfiguration {
     }
 
     @Bean
+    @ConditionalOnProperty(
+            name = "flowinquiry.edition",
+            havingValue = "community",
+            matchIfMissing = true)
     public SecurityFilterChain filterChain(HttpSecurity http, MvcRequestMatcher.Builder mvc)
             throws Exception {
         http.cors(withDefaults())

@@ -34,11 +34,12 @@ dependencies {
     api("com.fasterxml.jackson.datatype:jackson-datatype-hibernate6")
     api("com.fasterxml.jackson.datatype:jackson-datatype-jsr310")
     api("com.zaxxer:HikariCP")
+    api("io.micrometer:micrometer-registry-prometheus")
     api("jakarta.annotation:jakarta.annotation-api")
     api("org.apache.commons:commons-lang3")
     api("org.hibernate.orm:hibernate-core")
     api("org.hibernate.validator:hibernate-validator")
-
+    api("org.springframework.boot:spring-boot-starter-actuator")
     api("org.springframework.boot:spring-boot-starter-aop")
     api("org.springframework.boot:spring-boot-starter-data-jpa")
     api("org.springframework.boot:spring-boot-loader-tools")

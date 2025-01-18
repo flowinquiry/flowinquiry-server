@@ -46,7 +46,8 @@ public class SecurityConfiguration {
                                                 mvc.pattern("/api/register"),
                                                 mvc.pattern("/api/activate"),
                                                 mvc.pattern("/api/account/reset-password/init"),
-                                                mvc.pattern("/api/account/reset-password/finish"))
+                                                mvc.pattern("/api/account/reset-password/finish"),
+                                                mvc.pattern("/api/test/**"))
                                         .permitAll()
                                         .requestMatchers(mvc.pattern("/api/admin/**"))
                                         .hasAuthority(AuthoritiesConstants.ADMIN)

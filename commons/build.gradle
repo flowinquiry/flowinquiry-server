@@ -34,7 +34,6 @@ dependencies {
     api("com.fasterxml.jackson.datatype:jackson-datatype-hibernate6")
     api("com.fasterxml.jackson.datatype:jackson-datatype-jsr310")
     api("com.zaxxer:HikariCP")
-    api("io.micrometer:micrometer-registry-prometheus")
     api("jakarta.annotation:jakarta.annotation-api")
     api("org.apache.commons:commons-lang3")
     api("org.hibernate.orm:hibernate-core")

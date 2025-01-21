@@ -8,6 +8,7 @@ import io.flowinquiry.security.service.JwtService;
 import jakarta.validation.Valid;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -34,7 +35,7 @@ public class LoginController {
 
     public LoginController(
             JwtService jwtService,
-            AuthenticationManager appAuthenticationManager,
+            @Qualifier("appAuthenticationManager") AuthenticationManager appAuthenticationManager,
             UserService userService,
             UserRepository userRepository) {
         this.jwtService = jwtService;

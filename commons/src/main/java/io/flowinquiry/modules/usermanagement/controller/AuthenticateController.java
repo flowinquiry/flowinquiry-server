@@ -6,6 +6,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -31,7 +32,8 @@ public class AuthenticateController {
     private final AuthenticationManager appAuthenticationManager;
 
     public AuthenticateController(
-            JwtService jwtService, AuthenticationManager appAuthenticationManager) {
+            JwtService jwtService,
+            @Qualifier("appAuthenticationManager") AuthenticationManager appAuthenticationManager) {
         this.jwtService = jwtService;
         this.appAuthenticationManager = appAuthenticationManager;
     }

@@ -20,7 +20,7 @@ public class NewTeamRequestCreatedMailEventListener {
 
     private final WatcherMapper watcherMapper;
     private final TeamRequestWatcherRepository teamRequestWatcherRepository;
-    private TeamRequestService teamRequestService;
+    private final TeamRequestService teamRequestService;
     private final MailService mailService;
 
     public NewTeamRequestCreatedMailEventListener(

@@ -221,6 +221,10 @@
 				<constraints primaryKey="true" nullable="false" />
 			</column>
 
+			<column name="summary" type="TEXT">
+				<constraints nullable="true" />
+			</column>
+
 			<!-- Foreign Key Reference to fw_team_request -->
 			<column name="team_request_id" type="BIGINT">
 				<constraints nullable="false" />

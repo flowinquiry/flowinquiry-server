@@ -27,6 +27,9 @@ public class TeamRequestConversationHealth {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(name = "summary")
+    private String summary;
+
     @Column(name = "conversation_health")
     private Float conversationHealth;
 

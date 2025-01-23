@@ -17,6 +17,12 @@ management:
         enabled: true
 
 spring:
+  ai:
+    openai:
+      api-key: ${OPEN_AI_API_KEY}
+      chat:
+        options:
+          model: ${OPEN_AI_CHAT_MODEL}
   devtools:
     restart:
       enabled: false

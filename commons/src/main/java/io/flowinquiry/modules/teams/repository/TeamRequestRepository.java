@@ -35,11 +35,12 @@ public interface TeamRequestRepository
                 "modifiedByUser",
                 "workflow",
                 "currentState",
-                "watchers"
+                "watchers",
+                "teamRequest"
             })
     Optional<TeamRequest> findById(@Param("id") Long id);
 
-    @EntityGraph(attributePaths = {"team", "requestUser", "assignUser", "workflow"})
+    @EntityGraph(attributePaths = {"team", "requestUser", "assignUser", "workflow", "teamRequest"})
     @Query(
             value =
                     """
@@ -56,7 +57,7 @@ public interface TeamRequestRepository
     """)
     Optional<TeamRequest> findPreviousEntity(@Param("requestId") Long requestId);
 
-    @EntityGraph(attributePaths = {"team", "requestUser", "assignUser", "workflow"})
+    @EntityGraph(attributePaths = {"team", "requestUser", "assignUser", "workflow", "teamRequest"})
     @Query(
             value =
                     """

@@ -2,6 +2,7 @@ package io.flowinquiry.modules.teams.domain;
 
 import io.flowinquiry.modules.audit.AbstractAuditingEntity;
 import io.flowinquiry.modules.usermanagement.domain.User;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
@@ -13,6 +14,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import java.time.LocalDate;
 import java.util.Set;
@@ -98,4 +100,11 @@ public class TeamRequest extends AbstractAuditingEntity<Long> {
     @Formula(
             "(SELECT COUNT(a.id) FROM fw_entity_attachment a WHERE a.entity_type = 'Team_Request' AND a.entity_id = id)")
     private int numberAttachments;
+
+    @OneToOne(
+            mappedBy = "teamRequest",
+            cascade = CascadeType.ALL,
+            fetch = FetchType.LAZY,
+            orphanRemoval = true)
+    private TeamRequestConversationHealth conversationHealth;
 }

@@ -40,4 +40,5 @@ public class TeamRequestDTO {
     private Instant modifiedAt;
     private Set<WatcherDTO> watchers;
     private int numberAttachments;
+    private TeamRequestConversationHealthDTO conversationHealth;
 }

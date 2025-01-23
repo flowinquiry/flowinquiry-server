@@ -16,7 +16,9 @@ import org.mapstruct.MappingTarget;
 import org.mapstruct.Named;
 import org.mapstruct.factory.Mappers;
 
-@Mapper(componentModel = "spring")
+@Mapper(
+        componentModel = "spring",
+        uses = {TeamRequestConversationHealthMapper.class})
 public interface TeamRequestMapper {
 
     @Mapping(target = "teamId", source = "team.id")
@@ -36,6 +38,7 @@ public interface TeamRequestMapper {
     @Mapping(target = "currentStateId", source = "currentState.id")
     @Mapping(target = "currentStateName", source = "currentState.stateName")
     @Mapping(target = "watchers", source = "watchers")
+    @Mapping(target = "conversationHealth", source = "conversationHealth")
     TeamRequestDTO toDto(TeamRequest teamRequest);
 
     @Mapping(target = "team", source = "teamId", qualifiedByName = "toTeam")
@@ -46,7 +49,19 @@ public interface TeamRequestMapper {
             target = "currentState",
             source = "currentStateId",
             qualifiedByName = "toWorkflowState")
+    @Mapping(target = "conversationHealth", source = "conversationHealth")
     TeamRequest toEntity(TeamRequestDTO teamRequestDTO);
+
+    @Mapping(target = "team", source = "teamId", qualifiedByName = "toTeam")
+    @Mapping(target = "workflow", source = "workflowId", qualifiedByName = "toWorkflow")
+    @Mapping(target = "assignUser", source = "assignUserId", qualifiedByName = "toUser")
+    @Mapping(target = "requestUser", source = "requestUserId", qualifiedByName = "toUser")
+    @Mapping(
+            target = "currentState",
+            source = "currentStateId",
+            qualifiedByName = "toWorkflowState")
+    @Mapping(target = "conversationHealth", source = "conversationHealth")
+    void updateEntity(TeamRequestDTO dto, @MappingTarget TeamRequest entity);
 
     @Named("toTeam")
     default Team toTeam(Long teamId) {
@@ -79,16 +94,6 @@ public interface TeamRequestMapper {
         String lastName = user.getLastName() != null ? user.getLastName() : "";
         return (firstName + " " + lastName).trim();
     }
-
-    @Mapping(target = "team", source = "teamId", qualifiedByName = "toTeam")
-    @Mapping(target = "workflow", source = "workflowId", qualifiedByName = "toWorkflow")
-    @Mapping(target = "assignUser", source = "assignUserId", qualifiedByName = "toUser")
-    @Mapping(target = "requestUser", source = "requestUserId", qualifiedByName = "toUser")
-    @Mapping(
-            target = "currentState",
-            source = "currentStateId",
-            qualifiedByName = "toWorkflowState")
-    void updateEntity(TeamRequestDTO dto, @MappingTarget TeamRequest entity);
 
     default Set<WatcherDTO> mapWatchers(Set<User> watchers) {
         if (watchers == null || watchers.isEmpty()) {

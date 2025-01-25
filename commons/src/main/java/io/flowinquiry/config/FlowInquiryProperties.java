@@ -13,8 +13,6 @@ public class FlowInquiryProperties {
 
     private final Http http = new Http();
 
-    private final Cache cache = new Cache();
-
     private final Security security = new Security();
 
     private final CorsConfiguration cors = new CorsConfiguration();
@@ -25,18 +23,6 @@ public class FlowInquiryProperties {
         private boolean enabled = false;
         private String from = "";
         private String baseUrl = "";
-    }
-
-    @Getter
-    public static class Cache {
-        private final Ehcache ehcache = new Ehcache();
-
-        @Getter
-        @Setter
-        public static class Ehcache {
-            private int timeToLiveSeconds = 3600;
-            private long maxEntries = 100L;
-        }
     }
 
     @Getter

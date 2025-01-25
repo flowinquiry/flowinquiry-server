@@ -1,0 +1,16 @@
+package io.flowinquiry.modules.ai.service;
+
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.stereotype.Service;
+
+@Service
+@ConditionalOnProperty(
+        name = {"OLLAMA_CHAT_MODEL", "OLLAMA_API_KEY"},
+        matchIfMissing = false)
+public class OllamaChatModelService implements ChatModelService {
+
+    @Override
+    public String call(String input) {
+        return "Response from Ollama: " + input;
+    }
+}

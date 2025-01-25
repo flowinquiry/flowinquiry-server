@@ -19,8 +19,10 @@ dependencyManagement {
 
 dependencies {
     compileOnly(libs.lombok)
+    api(libs.bundles.caffeine.cache)
     api(libs.bundles.json)
     api(libs.bundles.shedlock)
+    api(libs.bundles.spring.ai)
     api(libs.dot.env)
     api(libs.j2html)
     api(libs.jclouds) {
@@ -38,6 +40,7 @@ dependencies {
     api("jakarta.annotation:jakarta.annotation-api")
     api("org.apache.commons:commons-lang3")
     api("org.hibernate.orm:hibernate-core")
+    api("org.hibernate.orm:hibernate-jcache")
     api("org.hibernate.validator:hibernate-validator")
     api("org.springframework.boot:spring-boot-starter-actuator")
     api("org.springframework.boot:spring-boot-starter-aop")
@@ -50,8 +53,6 @@ dependencies {
     api("org.springframework.boot:spring-boot-starter-security")
     api("org.springframework.boot:spring-boot-starter-thymeleaf")
     api("org.springframework.boot:spring-boot-starter-undertow")
-    api("org.springframework.ai:spring-ai-openai-spring-boot-starter:1.0.0-M5")
-
 
     modules {
         module("org.springframework.boot:spring-boot-starter-tomcat") {

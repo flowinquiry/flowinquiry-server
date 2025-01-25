@@ -1,31 +1,29 @@
 package io.flowinquiry.modules.teams.service;
 
+import io.flowinquiry.modules.ai.service.ChatModelService;
 import io.flowinquiry.modules.teams.domain.TeamRequest;
 import io.flowinquiry.modules.teams.domain.TeamRequestConversationHealth;
 import io.flowinquiry.modules.teams.repository.TeamRequestConversationHealthRepository;
-import org.springframework.ai.openai.OpenAiChatModel;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
-@ConditionalOnProperty(
-        name = {"OPEN_AI_CHAT_MODEL", "OPEN_AI_API_KEY"},
-        matchIfMissing = false)
+@ConditionalOnBean(ChatModelService.class)
 public class TeamRequestHealthEvalService {
 
     private final TeamRequestConversationHealthRepository teamRequestConversationHealthRepository;
-    private final OpenAiChatModel chatModel;
+    private final ChatModelService chatModelService;
 
     public TeamRequestHealthEvalService(
-            OpenAiChatModel chatModel,
+            ChatModelService chatModelService,
             TeamRequestConversationHealthRepository teamRequestConversationHealthRepository) {
-        this.chatModel = chatModel;
+        this.chatModelService = chatModelService;
         this.teamRequestConversationHealthRepository = teamRequestConversationHealthRepository;
     }
 
     public String summarizeTeamRequest(String description) {
-        return chatModel.call("Summarize this text: " + description);
+        return chatModelService.call("Summarize this text: " + description);
     }
 
     /**
@@ -94,7 +92,7 @@ public class TeamRequestHealthEvalService {
         // Use OpenAI to analyze if the message resolves an issue
         String prompt =
                 "Does this message resolve an issue? Respond with 'yes' or 'no': " + newMessage;
-        String response = chatModel.call(prompt);
+        String response = chatModelService.call(prompt);
 
         // Interpret the response
         return response.trim().equalsIgnoreCase("yes");
@@ -109,7 +107,7 @@ public class TeamRequestHealthEvalService {
     private float evaluateSentiment(String newMessage) {
         // Use OpenAI to analyze sentiment
         String response =
-                chatModel.call(
+                chatModelService.call(
                         "Evaluate sentiment for this message (return a score between 0 and 1): "
                                 + newMessage);
 
@@ -131,7 +129,7 @@ public class TeamRequestHealthEvalService {
      */
     private String generateSummary(String description) {
         String prompt = "Summarize this text: " + description;
-        return chatModel.call(prompt);
+        return chatModelService.call(prompt);
     }
 
     /**

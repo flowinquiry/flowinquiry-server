@@ -43,6 +43,7 @@ dependencies {
     api("org.springframework.boot:spring-boot-starter-aop")
     api("org.springframework.boot:spring-boot-starter-data-jpa")
     api("org.springframework.boot:spring-boot-loader-tools")
+    api("org.springframework.boot:spring-boot-starter-cache")
     api("org.springframework.boot:spring-boot-starter-logging")
     api("org.springframework.boot:spring-boot-starter-mail")
     api("org.springframework.boot:spring-boot-starter-oauth2-resource-server")

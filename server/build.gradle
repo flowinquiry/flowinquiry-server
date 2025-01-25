@@ -4,7 +4,6 @@ plugins {
     id "com.gorylenko.gradle-git-properties"
     alias(libs.plugins.spring.boot)
     alias(libs.plugins.spring.dependency.management)
-    id "flowinquiry.spring-cache-conventions"
     id "flowinquiry.docker-conventions"
 }
 

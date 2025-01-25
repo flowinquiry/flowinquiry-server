@@ -1,5 +1,11 @@
 package io.flowinquiry.modules.teams.service.dto;
 
+import static io.flowinquiry.modules.teams.service.dto.TicketHealthLevel.CRITICAL;
+import static io.flowinquiry.modules.teams.service.dto.TicketHealthLevel.EXCELLENT;
+import static io.flowinquiry.modules.teams.service.dto.TicketHealthLevel.FAIR;
+import static io.flowinquiry.modules.teams.service.dto.TicketHealthLevel.GOOD;
+import static io.flowinquiry.modules.teams.service.dto.TicketHealthLevel.POOR;
+
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -28,7 +34,7 @@ public class TeamRequestConversationHealthDTO {
     @JsonProperty("healthLevel")
     public TicketHealthLevel getHealthLevel() {
         if (conversationHealth == null || cumulativeSentiment == null) {
-            return TicketHealthLevel.CRITICAL; // Default to CRITICAL if data is missing
+            return EXCELLENT; // Default to EXCELLENT if data is missing
         }
 
         // Calculate clarity ratio
@@ -39,15 +45,15 @@ public class TeamRequestConversationHealthDTO {
 
         // Determine health level based on thresholds
         if (conversationHealth > 0.9 && clarityRatio > 0.9 && cumulativeSentiment > 0.9) {
-            return TicketHealthLevel.EXCELLENT;
+            return EXCELLENT;
         } else if (conversationHealth > 0.8 && clarityRatio > 0.8 && cumulativeSentiment > 0.8) {
-            return TicketHealthLevel.GOOD;
+            return GOOD;
         } else if (conversationHealth > 0.6 && clarityRatio > 0.6 && cumulativeSentiment > 0.6) {
-            return TicketHealthLevel.FAIR;
+            return FAIR;
         } else if (conversationHealth > 0.4 && clarityRatio > 0.4 && cumulativeSentiment > 0.4) {
-            return TicketHealthLevel.POOR;
+            return POOR;
         } else {
-            return TicketHealthLevel.CRITICAL;
+            return CRITICAL;
         }
     }
 }

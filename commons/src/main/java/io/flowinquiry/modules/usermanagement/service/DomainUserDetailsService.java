@@ -29,7 +29,7 @@ public class DomainUserDetailsService implements UserDetailsService {
 
     @Override
     @Transactional(readOnly = true)
-    @Cacheable(value = "authenticatedUsers", key = "#email")
+    @Cacheable(value = "authenticatedUsers")
     public UserDetails loadUserByUsername(final String email) {
         LOG.debug("Authenticating {}", email);
 

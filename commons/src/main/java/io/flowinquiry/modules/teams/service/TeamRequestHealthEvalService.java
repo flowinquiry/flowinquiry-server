@@ -4,10 +4,14 @@ import io.flowinquiry.modules.teams.domain.TeamRequest;
 import io.flowinquiry.modules.teams.domain.TeamRequestConversationHealth;
 import io.flowinquiry.modules.teams.repository.TeamRequestConversationHealthRepository;
 import org.springframework.ai.openai.OpenAiChatModel;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
+@ConditionalOnProperty(
+        name = {"OPEN_AI_CHAT_MODEL", "OPEN_AI_API_KEY"},
+        matchIfMissing = false)
 public class TeamRequestHealthEvalService {
 
     private final TeamRequestConversationHealthRepository teamRequestConversationHealthRepository;

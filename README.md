@@ -101,6 +101,13 @@ FlowInquiry Server serves as the back-end component of the FlowInquiry service, 
 ```
 #### 2. Configure application parameters
 
+To run the FlowInquiry backend, users need to provide their input in the local configuration file .env.local. FlowInquiry offers two options for creating this configuration file:
+
+* Using Bash Scripts: Users can run provided Bash scripts, which prompt for inputs, validate the information, and then automatically generate the configuration file.
+* Editing a Template Manually: A template configuration file (.env.local.example) is provided, allowing users to manually edit and create their .env.local file. This option is recommended for Windows users who cannot run Bash scripts.
+
+##### 2.1 Creating config file using script
+
    Set up the application secrets by running the following script:
 ```bash
 scripts/create_secrets.sh
@@ -108,6 +115,10 @@ scripts/create_secrets.sh
 This script generates the secrets for the PostgreSQL database and the JWT_BASE64_SECRET, storing them in the local .env.local file.
 
 **Important**: For security reasons, ensure that .env.local is excluded from version control (e.g., by adding it to .gitignore).
+
+##### 2.2 Edit config file manually
+
+Rename the file [.env.local.example](./.env.local.example) to .env.local, and edit the file content per instructions inline
 
 #### 3. Build and run application
 

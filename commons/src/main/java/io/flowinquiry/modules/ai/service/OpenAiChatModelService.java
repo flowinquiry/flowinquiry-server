@@ -1,7 +1,6 @@
 package io.flowinquiry.modules.ai.service;
 
 import org.springframework.ai.openai.OpenAiChatModel;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Service;
 
@@ -9,7 +8,6 @@ import org.springframework.stereotype.Service;
 @ConditionalOnProperty(
         name = {"OPEN_AI_CHAT_MODEL", "OPEN_AI_API_KEY"},
         matchIfMissing = false)
-@ConditionalOnBean(OpenAiChatModel.class)
 public class OpenAiChatModelService implements ChatModelService {
 
     private final OpenAiChatModel openAiChatModel;

@@ -413,7 +413,6 @@ public class WorkflowService {
         newWorkflow.setOwner(Team.builder().id(teamId).build());
         newWorkflow.setVisibility(
                 WorkflowVisibility.PRIVATE); // New workflows default to PRIVATE visibility
-        newWorkflow.setParentWorkflow(Workflow.builder().id(referencedWorkflow.getId()).build());
         newWorkflow.setClonedFromGlobal(false); // It's a reference, not a clone
         newWorkflow.setLevel1EscalationTimeout(referencedWorkflow.getLevel1EscalationTimeout());
         newWorkflow.setLevel2EscalationTimeout(referencedWorkflow.getLevel2EscalationTimeout());
@@ -468,10 +467,6 @@ public class WorkflowService {
         newWorkflow.setOwner(Team.builder().id(teamId).build());
         newWorkflow.setVisibility(
                 WorkflowVisibility.PRIVATE); // Cloned workflows default to PRIVATE visibility
-        newWorkflow.setParentWorkflow(
-                Workflow.builder()
-                        .id(workflowToClone.getId())
-                        .build()); // Reference the parent workflow
         newWorkflow.setClonedFromGlobal(true); // Mark as cloned
         newWorkflow.setLevel1EscalationTimeout(workflowToClone.getLevel1EscalationTimeout());
         newWorkflow.setLevel2EscalationTimeout(workflowToClone.getLevel2EscalationTimeout());
@@ -549,13 +544,6 @@ public class WorkflowService {
                                         new ResourceNotFoundException(
                                                 "Workflow not found with id: " + workflowId));
 
-        // Check if the workflow is referenced by other workflows
-        boolean isReferenced = workflowRepository.existsByParentWorkflowId(workflowId);
-        if (isReferenced) {
-            throw new ResourceConstraintException(
-                    "Cannot delete a workflow that is referenced by another workflow.");
-        }
-
         // Check if there are any active team requests associated with this workflow
         boolean hasActiveRequests =
                 teamRequestRepository.existsByWorkflowIdAndIsDeletedFalse(workflowId);
@@ -565,9 +553,50 @@ public class WorkflowService {
 
         workflowStateRepository.deleteByWorkflowId(workflowId);
         workflowTransitionRepository.deleteByWorkflowId(workflowId);
-
         teamWorkflowSelectionRepository.deleteByWorkflowId(workflowId);
 
         workflowRepository.delete(workflow);
+    }
+
+    /**
+     * Deletes a workflow by its team ID and workflow ID.
+     *
+     * @param teamId The ID of the team.
+     * @param workflowId The ID of the workflow.
+     * @throws EntityNotFoundException if the workflow does not belong to the team or does not
+     *     exist.
+     */
+    public void deleteWorkflowByTeam(Long teamId, Long workflowId) {
+        // Check if the workflow is linked to the team in fw_team_workflow_selection
+        boolean exists =
+                teamWorkflowSelectionRepository.existsByTeamIdAndWorkflowId(teamId, workflowId);
+
+        if (!exists) {
+            throw new EntityNotFoundException(
+                    "Workflow does not belong to the specified team or does not exist.");
+        }
+
+        // Retrieve the workflow by ID
+        Workflow workflow =
+                workflowRepository
+                        .findById(workflowId)
+                        .orElseThrow(() -> new EntityNotFoundException("Workflow not found."));
+
+        // Check if the ownerId matches the teamId
+        if (workflow.getOwner() != null && workflow.getOwner().getId().equals(teamId)) {
+            boolean hasActiveRequests =
+                    teamRequestRepository.existsByWorkflowIdAndIsDeletedFalse(workflowId);
+            if (hasActiveRequests) {
+                throw new ResourceConstraintException(
+                        "Cannot delete a workflow with active requests.");
+            }
+            // Delete the workflow
+            workflowStateRepository.deleteByWorkflowId(workflowId);
+            workflowTransitionRepository.deleteByWorkflowId(workflowId);
+            workflowRepository.deleteById(workflowId);
+        }
+
+        // Delete the workflow from fw_team_workflow_selection
+        teamWorkflowSelectionRepository.deleteByTeamIdAndWorkflowId(teamId, workflowId);
     }
 }

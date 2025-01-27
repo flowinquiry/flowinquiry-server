@@ -16,4 +16,9 @@ public interface TeamWorkflowSelectionRepository
             value = "DELETE FROM fw_team_workflow_selection WHERE workflow_id = :workflowId",
             nativeQuery = true)
     void deleteByWorkflowId(@Param("workflowId") Long workflowId);
+
+    boolean existsByTeamIdAndWorkflowId(Long teamId, Long workflowId);
+
+    @Transactional
+    void deleteByTeamIdAndWorkflowId(Long teamId, Long workflowId);
 }

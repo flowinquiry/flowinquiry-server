@@ -27,8 +27,6 @@
 				is NULL. -->
 			<!-- PRIVATE: A workflow restricted to a specific team. owner_id references 
 				the team that owns the workflow. -->
-			<!-- TEAM: A workflow created by a team but discoverable by other teams. 
-				owner_id references the owning team. -->
 			<column name="visibility" type="VARCHAR(50)"
 				defaultValue="PRIVATE">
 				<constraints nullable="false" />
@@ -50,13 +48,6 @@
 				defaultValue="1000000">
 				<constraints nullable="false" />
 			</column>
-			<!--To support cloning and referencing global workflows -->
-			<!--If a workflow is cloned from another workflow, this column stores 
-				the id of the original workflow. -->
-			<!--If the workflow is created from scratch, the value is NULL. -->
-			<column name="parent_workflow_id" type="BIGINT">
-				<constraints nullable="true" />
-			</column>
 			<!--To track if a workflow is cloned from a global workflow for better 
 				visibility -->
 			<column name="cloned_from_global" type="BOOLEAN"
@@ -76,11 +67,6 @@
 			baseTableName="fw_workflow" baseColumnNames="owner_id"
 			referencedTableName="fw_team" referencedColumnNames="id"
 			onDelete="CASCADE" constraintName="fk_workflow_owner_team" />
-
-		<addForeignKeyConstraint
-			baseTableName="fw_workflow" baseColumnNames="parent_workflow_id"
-			referencedTableName="fw_workflow" referencedColumnNames="id"
-			constraintName="fk_workflow_parent_workflow" />
 
 		<addForeignKeyConstraint
 			baseTableName="fw_workflow" baseColumnNames="created_by"

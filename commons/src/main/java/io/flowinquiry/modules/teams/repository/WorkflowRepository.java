@@ -20,8 +20,7 @@ public interface WorkflowRepository
         FROM Workflow w
         LEFT JOIN TeamWorkflowSelection tws ON w.id = tws.workflow.id AND tws.team.id = :teamId
         WHERE w.owner.id = :teamId
-           OR w.visibility = 'PUBLIC'
-           OR (w.visibility = 'TEAM' AND tws.id IS NOT NULL)
+           OR (w.visibility = 'PUBLIC' AND tws.id IS NOT NULL)
     """)
     List<Workflow> findAllWorkflowsByTeam(@Param("teamId") Long teamId);
 
@@ -54,6 +53,4 @@ public interface WorkflowRepository
         )
     """)
     List<Workflow> findGlobalWorkflowsNotLinkedToTeam(@Param("teamId") Long teamId);
-
-    boolean existsByParentWorkflowId(Long parentWorkflowId);
 }

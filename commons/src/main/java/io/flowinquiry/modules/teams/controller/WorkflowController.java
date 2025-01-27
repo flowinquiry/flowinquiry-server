@@ -78,6 +78,13 @@ public class WorkflowController {
         }
     }
 
+    @DeleteMapping("/{workflowId}/teams/{teamId}")
+    public void deleteTeamWorkflow(
+            @PathVariable("teamId") Long teamId, @PathVariable("workflowId") Long workflowId) {
+
+        workflowService.deleteWorkflowByTeam(teamId, workflowId);
+    }
+
     /**
      * Get all workflows associated with a team.
      *

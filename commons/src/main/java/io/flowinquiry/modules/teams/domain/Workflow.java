@@ -6,8 +6,6 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.ForeignKey;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -78,12 +76,6 @@ public class Workflow extends AbstractAuditingEntity<Long> {
             nullable = false,
             columnDefinition = "INT DEFAULT 1000000")
     private Integer level3EscalationTimeout;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(
-            name = "parent_workflow_id",
-            foreignKey = @ForeignKey(name = "fk_workflow_parent_workflow"))
-    private Workflow parentWorkflow; // Reference to the parent workflow
 
     @Column(name = "cloned_from_global", nullable = false)
     private boolean clonedFromGlobal;

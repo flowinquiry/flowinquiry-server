@@ -1,5 +1,6 @@
 package io.flowinquiry.modules.ai.service;
 
+import org.springframework.ai.chat.prompt.Prompt;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Service;
 
@@ -12,5 +13,10 @@ public class OllamaChatModelService implements ChatModelService {
     @Override
     public String call(String input) {
         return "Response from Ollama: " + input;
+    }
+
+    @Override
+    public String call(Prompt prompt) {
+        return "";
     }
 }

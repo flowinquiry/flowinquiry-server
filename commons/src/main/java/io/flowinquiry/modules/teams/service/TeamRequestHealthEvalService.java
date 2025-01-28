@@ -4,6 +4,11 @@ import io.flowinquiry.modules.ai.service.ChatModelService;
 import io.flowinquiry.modules.teams.domain.TeamRequest;
 import io.flowinquiry.modules.teams.domain.TeamRequestConversationHealth;
 import io.flowinquiry.modules.teams.repository.TeamRequestConversationHealthRepository;
+import org.apache.commons.text.StringEscapeUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.ai.chat.prompt.Prompt;
+import org.springframework.ai.openai.OpenAiChatOptions;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -11,6 +16,8 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @ConditionalOnBean(ChatModelService.class)
 public class TeamRequestHealthEvalService {
+
+    private static Logger LOG = LoggerFactory.getLogger(TeamRequestHealthEvalService.class);
 
     private final TeamRequestConversationHealthRepository teamRequestConversationHealthRepository;
     private final ChatModelService chatModelService;
@@ -35,41 +42,53 @@ public class TeamRequestHealthEvalService {
     @Transactional
     public void evaluateConversationHealth(
             Long teamRequestId, String newMessage, boolean isCustomerResponse) {
+
+        String polishedMessage = polishedHtmlTagsMessage(newMessage);
+
         // Retrieve existing health record or create a new one
         TeamRequestConversationHealth health =
                 teamRequestConversationHealthRepository
                         .findByTeamRequestId(teamRequestId)
-                        .orElseGet(() -> createNewConversationHealth(teamRequestId, newMessage));
+                        .orElseGet(
+                                () -> createNewConversationHealth(teamRequestId, polishedMessage));
 
         // Evaluate the sentiment of the new message
-        float sentimentScore = evaluateSentiment(newMessage);
+        float sentimentScore = evaluateSentiment(polishedMessage);
+        LOG.debug("Message '{}' has sentiment score: {}", polishedMessage, sentimentScore);
 
-        // Check if the new message resolves the issue (only for customer responses)
-        boolean resolvesIssue = isCustomerResponse && determineIfResolved(newMessage);
+        // Check if the message resolves the issue (only for customer responses)
+        boolean isMessageResolved = determineIfResolved(polishedMessage);
+        boolean resolvesIssue = isCustomerResponse && isMessageResolved;
+        LOG.debug("Message resolved: {}, Customer response: {}", resolvesIssue, isCustomerResponse);
 
-        // Increment metrics
+        // Increment total messages
         health.setTotalMessages(health.getTotalMessages() + 1);
-        if (isCustomerResponse) {
+
+        // Check if the customer response contains a question using AI
+        if (isCustomerResponse && isQuestion(polishedMessage)) {
             health.setTotalQuestions(health.getTotalQuestions() + 1);
-            if (resolvesIssue) {
-                health.setResolvedQuestions(health.getResolvedQuestions() + 1);
-            }
         }
 
-        // Update cumulative sentiment (weigh customer responses more heavily)
+        // Increment resolved questions only if it resolves a previously asked question
+        if (resolvesIssue) {
+            health.setResolvedQuestions(health.getResolvedQuestions() + 1);
+        }
+
+        // Update cumulative sentiment with weight for customer responses
         float sentimentWeight = isCustomerResponse ? 1.5f : 1.0f;
+        float currentCumulativeSentiment = health.getCumulativeSentiment();
         health.setCumulativeSentiment(
-                (health.getCumulativeSentiment() * (health.getTotalMessages() - 1)
+                (currentCumulativeSentiment * (health.getTotalMessages() - 1)
                                 + sentimentScore * sentimentWeight)
                         / health.getTotalMessages());
 
-        // Calculate clarity score
+        // Calculate clarity score, handling cases where no questions have been asked
         float clarityScore =
                 health.getTotalQuestions() > 0
                         ? (float) health.getResolvedQuestions() / health.getTotalQuestions()
                         : 1.0f;
 
-        // Recalculate conversation health
+        // Adjust conversation health calculation
         health.setConversationHealth(
                 (0.4f * health.getCumulativeSentiment())
                         + // Sentiment contribution
@@ -82,20 +101,23 @@ public class TeamRequestHealthEvalService {
         teamRequestConversationHealthRepository.save(health);
     }
 
-    /**
-     * Determines if the new message resolves an issue based on its content.
-     *
-     * @param newMessage The content of the new message.
-     * @return True if the message resolves an issue; otherwise, false.
-     */
-    private boolean determineIfResolved(String newMessage) {
-        // Use OpenAI to analyze if the message resolves an issue
-        String prompt =
-                "Does this message resolve an issue? Respond with 'yes' or 'no': " + newMessage;
-        String response = chatModelService.call(prompt);
+    /** Determines if the message contains a question using AI. */
+    private boolean isQuestion(String message) {
+        String aiPrompt =
+                "Determine if the following message is a question. Respond with 'true' or 'false':\n\nMessage: "
+                        + message;
+        String aiResponse = chatModelService.call(aiPrompt); // Example AI service integration
+        return Boolean.parseBoolean(aiResponse.trim());
+    }
 
-        // Interpret the response
-        return response.trim().equalsIgnoreCase("yes");
+    /** Determines if the message resolves the issue. */
+    private boolean determineIfResolved(String message) {
+        // AI-assisted resolution determination (or custom logic can be implemented here)
+        String aiPrompt =
+                "Does the following message indicate that the issue has been resolved? Respond with 'true' or 'false':\n\nMessage: "
+                        + message;
+        String aiResponse = chatModelService.call(aiPrompt); // Example AI service integration
+        return Boolean.parseBoolean(aiResponse.trim());
     }
 
     /**
@@ -108,8 +130,13 @@ public class TeamRequestHealthEvalService {
         // Use OpenAI to analyze sentiment
         String response =
                 chatModelService.call(
-                        "Evaluate sentiment for this message (return a score between 0 and 1): "
-                                + newMessage);
+                        new Prompt(
+                                "Evaluate the sentiment of this message and return a score between 0 and 1. Provide only the number: "
+                                        + newMessage,
+                                OpenAiChatOptions.builder()
+                                        .temperature(0.1)
+                                        .maxCompletionTokens(10)
+                                        .build()));
 
         // Extract the sentiment score from the response (assuming response contains a parsable
         // float)
@@ -149,5 +176,10 @@ public class TeamRequestHealthEvalService {
         health.setConversationHealth(0.0f);
         health.setSummary(generateSummary(firstMessage));
         return teamRequestConversationHealthRepository.save(health);
+    }
+
+    private String polishedHtmlTagsMessage(String message) {
+        String preProcessedHtml = message.replaceAll(">(\\s*)<", "> <");
+        return StringEscapeUtils.unescapeHtml4(preProcessedHtml).replaceAll("<[^>]+>", "");
     }
 }

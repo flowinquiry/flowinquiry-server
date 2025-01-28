@@ -1,5 +1,7 @@
 package io.flowinquiry.modules.ai.service;
 
+import org.springframework.ai.chat.prompt.Prompt;
+
 /**
  * Interface representing a generic chat model service.
  *
@@ -43,4 +45,6 @@ public interface ChatModelService {
      * @throws IllegalArgumentException if the input is null or empty
      */
     String call(String input);
+
+    String call(Prompt prompt);
 }

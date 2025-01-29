@@ -10,13 +10,16 @@ import io.flowinquiry.modules.collab.domain.EntityType;
 import io.flowinquiry.modules.collab.domain.Notification;
 import io.flowinquiry.modules.collab.repository.ActivityLogRepository;
 import io.flowinquiry.modules.collab.repository.NotificationRepository;
+import io.flowinquiry.modules.collab.service.dto.CommentDTO;
+import io.flowinquiry.modules.teams.domain.TeamRequest;
 import io.flowinquiry.modules.teams.repository.TeamRepository;
-import io.flowinquiry.modules.teams.service.dto.TeamRequestDTO;
-import io.flowinquiry.modules.teams.service.event.NewTeamRequestCreatedEvent;
+import io.flowinquiry.modules.teams.repository.TeamRequestRepository;
+import io.flowinquiry.modules.teams.service.event.TeamRequestCommentCreatedEvent;
 import io.flowinquiry.modules.usermanagement.domain.User;
 import io.flowinquiry.modules.usermanagement.repository.UserRepository;
 import io.flowinquiry.modules.usermanagement.service.dto.UserWithTeamRoleDTO;
 import io.flowinquiry.utils.Obfuscator;
+import io.flowinquiry.utils.StringUtils;
 import java.util.List;
 import org.springframework.context.event.EventListener;
 import org.springframework.scheduling.annotation.Async;
@@ -24,59 +27,79 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 @Component
-public class NewTeamRequestCreatedNotificationEventListener {
-    private final NotificationRepository notificationRepository;
-    private final TeamRepository teamRepository;
-    private final ActivityLogRepository activityLogRepository;
-    private final UserRepository userRepository;
+public class TeamRequestCommentCreatedNotificationEventListener {
 
-    public NewTeamRequestCreatedNotificationEventListener(
-            NotificationRepository notificationRepository,
+    private final UserRepository userRepository;
+    private final TeamRequestRepository teamRequestRepository;
+    private final TeamRepository teamRepository;
+    private final NotificationRepository notificationRepository;
+    private final ActivityLogRepository activityLogRepository;
+
+    public TeamRequestCommentCreatedNotificationEventListener(
+            UserRepository userRepository,
+            TeamRequestRepository teamRequestRepository,
             TeamRepository teamRepository,
-            ActivityLogRepository activityLogRepository,
-            UserRepository userRepository) {
-        this.notificationRepository = notificationRepository;
-        this.teamRepository = teamRepository;
-        this.activityLogRepository = activityLogRepository;
+            NotificationRepository notificationRepository,
+            ActivityLogRepository activityLogRepository) {
         this.userRepository = userRepository;
+        this.teamRequestRepository = teamRequestRepository;
+        this.teamRepository = teamRepository;
+        this.notificationRepository = notificationRepository;
+        this.activityLogRepository = activityLogRepository;
     }
 
     @Async("asyncTaskExecutor")
     @Transactional
     @EventListener
-    public void onNewTeamRequestCreated(NewTeamRequestCreatedEvent event) {
-        TeamRequestDTO teamRequestDTO = event.getTeamRequest();
-        User requestUser =
+    public void onTeamRequestCommentCreated(TeamRequestCommentCreatedEvent event) {
+        CommentDTO commentDTO = event.getCommentDTO();
+
+        User createdUser =
                 userRepository
-                        .findOneById(teamRequestDTO.getRequestUserId())
+                        .findById(commentDTO.getCreatedById())
                         .orElseThrow(
                                 () ->
                                         new ResourceNotFoundException(
-                                                "User not found: "
-                                                        + teamRequestDTO.getRequestUserId()));
+                                                "User not found " + commentDTO.getCreatedById()));
+        TeamRequest teamRequest =
+                teamRequestRepository
+                        .findById(commentDTO.getEntityId())
+                        .orElseThrow(
+                                () ->
+                                        new ResourceNotFoundException(
+                                                "TeamRequest not found "
+                                                        + commentDTO.getEntityId()));
+
+        String commentContent = StringUtils.polishedHtmlTagsMessage(commentDTO.getContent());
+        String truncatedContent =
+                commentContent.length() > 50
+                        ? commentContent.substring(0, 50) + "..."
+                        : commentContent;
+
         String html =
                 p(
-                                a(requestUser.getFirstName() + " " + requestUser.getLastName())
+                                a(createdUser.getFirstName() + " " + createdUser.getLastName())
                                         .withHref(
                                                 "/portal/users/"
                                                         + Obfuscator.obfuscate(
-                                                                teamRequestDTO.getRequestUserId())),
-                                text(" has created a new ticket "),
-                                a(teamRequestDTO.getRequestTitle())
+                                                                createdUser.getId())),
+                                text(" has created a new comment for the request "),
+                                a(teamRequest.getRequestTitle())
                                         .withHref(
                                                 "/portal/teams/"
                                                         + Obfuscator.obfuscate(
-                                                                teamRequestDTO.getTeamId())
+                                                                teamRequest.getTeam().getId())
                                                         + "/requests/"
                                                         + Obfuscator.obfuscate(
-                                                                teamRequestDTO.getId())))
+                                                                teamRequest.getId())),
+                                text(": " + truncatedContent))
                         .render();
 
         List<UserWithTeamRoleDTO> usersInTeam =
-                teamRepository.findUsersByTeamId(teamRequestDTO.getTeamId());
+                teamRepository.findUsersByTeamId(teamRequest.getTeam().getId());
         List<Notification> notifications =
                 usersInTeam.stream()
-                        .filter(user -> !user.getId().equals(teamRequestDTO.getRequestUserId()))
+                        .filter(user -> !user.getId().equals(commentDTO.getCreatedById()))
                         .map(
                                 user ->
                                         Notification.builder()
@@ -89,7 +112,7 @@ public class NewTeamRequestCreatedNotificationEventListener {
 
         ActivityLog activityLog =
                 ActivityLog.builder()
-                        .entityId(teamRequestDTO.getTeamId())
+                        .entityId(teamRequest.getTeam().getId())
                         .entityType(EntityType.Team)
                         .content(html)
                         .build();

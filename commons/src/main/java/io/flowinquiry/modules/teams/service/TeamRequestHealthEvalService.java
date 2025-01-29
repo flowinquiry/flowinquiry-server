@@ -1,10 +1,11 @@
 package io.flowinquiry.modules.teams.service;
 
+import static io.flowinquiry.utils.StringUtils.polishedHtmlTagsMessage;
+
 import io.flowinquiry.modules.ai.service.ChatModelService;
 import io.flowinquiry.modules.teams.domain.TeamRequest;
 import io.flowinquiry.modules.teams.domain.TeamRequestConversationHealth;
 import io.flowinquiry.modules.teams.repository.TeamRequestConversationHealthRepository;
-import org.apache.commons.text.StringEscapeUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.ai.chat.prompt.Prompt;
@@ -176,10 +177,5 @@ public class TeamRequestHealthEvalService {
         health.setConversationHealth(0.0f);
         health.setSummary(generateSummary(firstMessage));
         return teamRequestConversationHealthRepository.save(health);
-    }
-
-    private String polishedHtmlTagsMessage(String message) {
-        String preProcessedHtml = message.replaceAll(">(\\s*)<", "> <");
-        return StringEscapeUtils.unescapeHtml4(preProcessedHtml).replaceAll("<[^>]+>", "");
     }
 }

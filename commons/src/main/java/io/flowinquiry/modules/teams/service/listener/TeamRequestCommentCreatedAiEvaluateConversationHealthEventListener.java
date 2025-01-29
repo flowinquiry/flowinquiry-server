@@ -4,7 +4,7 @@ import io.flowinquiry.modules.collab.service.dto.CommentDTO;
 import io.flowinquiry.modules.teams.service.TeamRequestHealthEvalService;
 import io.flowinquiry.modules.teams.service.TeamRequestService;
 import io.flowinquiry.modules.teams.service.dto.TeamRequestDTO;
-import io.flowinquiry.modules.teams.service.event.TeamRequestNewCommentEvent;
+import io.flowinquiry.modules.teams.service.event.TeamRequestCommentCreatedEvent;
 import java.util.Objects;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.context.event.EventListener;
@@ -13,13 +13,13 @@ import org.springframework.stereotype.Component;
 
 @Component
 @ConditionalOnBean(TeamRequestHealthEvalService.class)
-public class TeamRequestNewCommentAiEvaluateConversationHealthEventListener {
+public class TeamRequestCommentCreatedAiEvaluateConversationHealthEventListener {
 
     private final TeamRequestService teamRequestService;
 
     private final TeamRequestHealthEvalService teamRequestHealthEvalService;
 
-    public TeamRequestNewCommentAiEvaluateConversationHealthEventListener(
+    public TeamRequestCommentCreatedAiEvaluateConversationHealthEventListener(
             TeamRequestService teamRequestService,
             TeamRequestHealthEvalService teamRequestHealthEvalService) {
         this.teamRequestHealthEvalService = teamRequestHealthEvalService;
@@ -29,7 +29,7 @@ public class TeamRequestNewCommentAiEvaluateConversationHealthEventListener {
     @Async("asyncTaskExecutor")
     @EventListener
     public void onTeamRequestNewCommentAiEvaluateConversationHealthEvent(
-            TeamRequestNewCommentEvent event) {
+            TeamRequestCommentCreatedEvent event) {
         CommentDTO comment = event.getCommentDTO();
         TeamRequestDTO teamRequestDTO =
                 teamRequestService.getTeamRequestById(comment.getEntityId());

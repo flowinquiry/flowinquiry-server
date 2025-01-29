@@ -7,7 +7,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 @Component
-public class RemoveUserOutOfTeamEmailEventListener {
+public class RemoveUserOutOfTeamMailEventListener {
 
     @Async("asyncTaskExecutor")
     @EventListener

@@ -29,6 +29,7 @@ public class EmailContext {
 
     public EmailContext setToUser(UserDTO toUser) {
         this.toUser = toUser;
+        thymeleafContext.setVariable("user", toUser);
         return this;
     }
 

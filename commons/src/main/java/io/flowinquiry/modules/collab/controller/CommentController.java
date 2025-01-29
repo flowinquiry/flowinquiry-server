@@ -1,6 +1,5 @@
 package io.flowinquiry.modules.collab.controller;
 
-import io.flowinquiry.modules.collab.domain.Comment;
 import io.flowinquiry.modules.collab.domain.EntityType;
 import io.flowinquiry.modules.collab.service.CommentService;
 import io.flowinquiry.modules.collab.service.dto.CommentDTO;
@@ -32,9 +31,8 @@ public class CommentController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Comment> getCommentById(@PathVariable("id") Long id) {
-        Comment comment = commentService.getCommentById(id);
-        return ResponseEntity.ok(comment);
+    public CommentDTO getCommentById(@PathVariable("id") Long id) {
+        return commentService.getCommentById(id);
     }
 
     @GetMapping

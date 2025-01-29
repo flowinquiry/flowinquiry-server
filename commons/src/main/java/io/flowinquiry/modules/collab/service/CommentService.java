@@ -1,6 +1,5 @@
 package io.flowinquiry.modules.collab.service;
 
-import io.flowinquiry.modules.collab.domain.Comment;
 import io.flowinquiry.modules.collab.domain.EntityType;
 import io.flowinquiry.modules.collab.repository.CommentRepository;
 import io.flowinquiry.modules.collab.service.dto.CommentDTO;
@@ -39,9 +38,10 @@ public class CommentService {
         return savedComment;
     }
 
-    public Comment getCommentById(Long id) {
+    public CommentDTO getCommentById(Long id) {
         return commentRepository
                 .findById(id)
+                .map(commentMapper::toDTO)
                 .orElseThrow(
                         () -> new IllegalArgumentException("Comment not found with id: " + id));
     }

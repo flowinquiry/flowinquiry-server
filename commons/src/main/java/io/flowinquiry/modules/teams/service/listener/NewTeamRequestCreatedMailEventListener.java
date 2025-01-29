@@ -50,7 +50,7 @@ public class NewTeamRequestCreatedMailEventListener {
                                 new EmailContext(Locale.forLanguageTag("en"))
                                         .setToUser(watcherMapper.toUserDto(watcher))
                                         .setSubject(
-                                                "mail.newticket.title",
+                                                "email.new.ticket.subject",
                                                 teamRequestDTO.getRequestTitle())
                                         .addVariable("ticket", teamRequestDTO)
                                         .setTemplate("mail/newTicketEmail");

@@ -4,7 +4,7 @@
 <body>
 <div class="email-container" style="max-width: 600px; margin: auto; background-color: #ffffff; border: 1px solid #dcdcdc; border-radius: 8px;">
   <!-- Include Header -->
-  <div th:insert="mail/header :: header('Account activation')"></div>
+  <div th:insert="~{mail/header :: header('Account activation')}"></div>
 
   <!-- Body -->
   <div style="padding: 20px; text-align: left;">
@@ -33,14 +33,14 @@
       </a>
     </p>
     <p>
-      <span>Regards,</span>
+      <span th:text="#{email.regards}">Regards,</span>
       <br />
       <span th:text="#{email.signature}">FlowInquiry Team.</span>
     </p>
   </div>
 
   <!-- Include Footer -->
-  <div th:insert="mail/footer :: footer"></div>
+  <div th:insert="~{mail/footer :: footer}"></div>
 </div>
 </body>
 </html>

@@ -3,10 +3,11 @@
 <head></head>
 <body>
 <div class="email-container" style="max-width: 600px; margin: auto; background-color: #ffffff; border: 1px solid #dcdcdc; border-radius: 8px;">
-    <!-- Include Header -->
-    <div th:insert="mail/header :: header('New request has been created')"></div>
+    <div th:insert="~{mail/header :: header('New request has been created')}"></div>
     <div style="padding: 20px; text-align: left;">
-        <p>Hi <span th:text="${user.email}">[Watcher Name]</span>,</p>
+        <p th:text="#{email.greeting(${user.firstName})}">
+            Dear user@example.com,
+        </p>
 
         <p>A new ticket has been created.</p>
 
@@ -31,12 +32,12 @@
         </table>
 
         <p>
-            <span>Regards,</span>
+            <span th:text="#{email.regards}">Regards,</span>
             <br />
             <span th:text="#{email.signature}">FlowInquiry Team.</span>
         </p>
     </div>
-    <div th:insert="mail/footer :: footer"></div>
+    <div th:insert="~{mail/footer :: footer}"></div>
 </div>
 </body>
 </html>

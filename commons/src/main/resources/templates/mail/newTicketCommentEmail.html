@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head></head>
+<body>
+<div class="email-container" style="max-width: 600px; margin: auto; background-color: #ffffff; border: 1px solid #dcdcdc; border-radius: 8px;">
+    <!-- Include Header -->
+    <div th:insert="~{mail/header :: header(#{email.ticket.comment.title(${ticket.requestTitle})})}"></div>
+
+    <!-- Body -->
+    <div style="padding: 20px; text-align: left;">
+        <p th:text="#{email.greeting(${user.firstName})}">
+            Dear user@example.com,
+        </p>
+        <p>
+            <strong th:text="${comment.createdByName}">John Doe</strong>
+            <span th:text="#{email.ticket.comment.text1}">has added a new comment to the ticket:</span>
+            <strong th:text="${ticket.requestTitle}">Ticket Title</strong>.
+        </p>
+        <div style="border-left: 4px solid #0056b3; padding: 10px; margin: 10px 0; background: #f9f9f9;">
+            <p style="margin: 0;" th:utext="${comment.content}">
+                This is a sample comment text from the user.
+            </p>
+        </div>
+        <p>
+            <span th:text="#{email.ticket.comment.text2}">You can view the full ticket and reply by clicking below:</span>
+        </p>
+        <!-- View Ticket Button -->
+        <a th:with="url=(@{|${baseUrl}/portal/teams/${obfuscatedTeamId}/requests/${obfuscatedTicketId}|})"
+           th:href="${url}"
+           style="display: inline-block; padding: 12px 20px; font-size: 16px; font-weight: bold; color: #ffffff; background-color: #0056b3; text-decoration: none; border-radius: 4px; margin-top: 10px;"
+           th:text="#{email.ticket.comment.action}">
+            View Ticket
+        </a>
+        <p th:text="#{email.ticket.comment.text3}" style="margin-top: 20px;">
+            If the button above doesn't work, copy and paste the following URL into your browser:
+        </p>
+        <!-- Full Ticket Link -->
+        <p>
+            <a th:with="url=(@{|${baseUrl}/portal/teams/${obfuscatedTeamId}/requests/${obfuscatedTicketId}|})"
+               th:href="${url}"
+               th:text="${url}">
+                Full Ticket Link
+            </a>
+        </p>
+        <p>
+            <span th:text="#{email.regards}">Regards,</span>
+            <br />
+            <span th:text="#{email.signature}">FlowInquiry Team.</span>
+        </p>
+    </div>
+
+    <!-- Include Footer -->
+    <div th:insert="~{mail/footer :: footer}"></div>
+</div>
+</body>
+</html>

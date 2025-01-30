@@ -1,4 +1,4 @@
-package io.flowinquiry.service;
+package io.flowinquiry.modules.collab.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.fail;
@@ -11,7 +11,6 @@ import static org.mockito.Mockito.when;
 
 import io.flowinquiry.IntegrationTest;
 import io.flowinquiry.config.FlowInquiryProperties;
-import io.flowinquiry.modules.collab.service.MailService;
 import io.flowinquiry.modules.shared.Constants;
 import io.flowinquiry.modules.usermanagement.service.dto.UserDTO;
 import jakarta.mail.Multipart;

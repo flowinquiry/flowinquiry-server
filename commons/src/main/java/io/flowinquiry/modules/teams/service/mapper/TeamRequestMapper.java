@@ -60,7 +60,9 @@ public interface TeamRequestMapper {
             target = "currentState",
             source = "currentStateId",
             qualifiedByName = "toWorkflowState")
-    @Mapping(target = "conversationHealth", source = "conversationHealth")
+    @Mapping(
+            target = "conversationHealth",
+            ignore = true) // ✅ Ignore to avoid detached entity issue
     void updateEntity(TeamRequestDTO dto, @MappingTarget TeamRequest entity);
 
     @Named("toTeam")

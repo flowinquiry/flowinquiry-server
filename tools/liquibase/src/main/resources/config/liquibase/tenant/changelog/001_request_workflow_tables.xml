@@ -508,4 +508,178 @@
 		<sql>SELECT setval('fw_team_workflow_selection_id_seq', (SELECT
 			MAX(id) FROM fw_team_workflow_selection));</sql>
 	</changeSet>
+	<changeSet author="flowinquiry"
+		id="001:05-insert-fw_team_request-data" context="test">
+		<loadData
+			file="config/liquibase/tenant/data/fw_team_request_test.csv"
+			separator=";" tableName="fw_team_request">
+			<column name="id" type="numeric" />
+			<column name="team_id" type="numeric" />
+			<column name="workflow_id" type="numeric" />
+			<column name="request_user_id" type="numeric" />
+			<column name="assign_user_id" type="numeric" />
+			<column name="request_title" type="string" />
+			<column name="request_description" type="string" />
+			<column name="channel" type="string" />
+			<column name="priority" type="numeric" />
+			<column name="is_deleted" type="boolean" />
+			<column name="is_recurring" type="boolean" />
+			<column name="estimated_completion_date" type="date" />
+			<column name="actual_completion_date" type="date" />
+			<column name="is_new" type="boolean" />
+			<column name="current_state_id" type="numeric" />
+			<column name="is_completed" type="boolean" />
+			<column name="created_by" type="numeric" />
+			<column name="created_at" type="timestamp" />
+			<column name="modified_by" type="numeric" />
+			<column name="modified_at" type="timestamp" />
+		</loadData>
+		<sql>SELECT setval('fw_team_request_id_seq', (SELECT MAX(id) FROM
+			fw_team_request));</sql>
+	</changeSet>
+	<changeSet author="flowinquiry"
+		id="001:06-insert-fw_team_request_conversation_health-data"
+		context="test">
+		<loadData
+			file="config/liquibase/tenant/data/fw_team_request_conversation_health_test.csv"
+			separator=";" tableName="fw_team_request_conversation_health">
+			<column name="id" type="numeric" />
+			<column name="team_request_id" type="numeric" />
+			<column name="summary" type="string" />
+			<column name="conversation_health" type="float" />
+			<column name="cumulative_sentiment" type="float" />
+			<column name="total_messages" type="integer" />
+			<column name="total_questions" type="integer" />
+			<column name="resolved_questions" type="integer" />
+		</loadData>
+		<sql>SELECT setval('fw_team_request_conversation_health_id_seq',
+			(SELECT MAX(id) FROM fw_team_request_conversation_health));</sql>
+	</changeSet>
+	<changeSet author="flowinquiry"
+		id="001:07-insert-fw_team_request_watchers-test" context="test">
+		<loadData
+			file="config/liquibase/tenant/data/fw_team_request_watchers_test.csv"
+			separator=";" tableName="fw_team_request_watchers">
+			<column name="id" type="numeric" />
+			<column name="team_request_id" type="numeric" />
+			<column name="user_id" type="numeric" />
+			<column name="created_at" type="timestamp" />
+			<column name="created_by" type="numeric" />
+		</loadData>
+		<sql>SELECT setval('fw_team_request_watchers_id_seq', (SELECT MAX(id)
+			FROM fw_team_request_watchers));</sql>
+	</changeSet>
+	<changeSet author="flowinquiry"
+		id="001:08-insert-fw_workflow_actions-test" context="test">
+		<loadData
+			file="config/liquibase/tenant/data/fw_workflow_actions_test.csv"
+			separator=";" tableName="fw_workflow_actions">
+			<column name="id" type="numeric" />
+			<column name="transition_id" type="numeric" />
+			<column name="action_type" type="string" />
+			<column name="action_data" type="json" />
+		</loadData>
+		<sql>SELECT setval('fw_workflow_actions_id_seq', (SELECT MAX(id) FROM
+			fw_workflow_actions));</sql>
+	</changeSet>
+	<changeSet author="flowinquiry"
+		id="001:09-insert-fw_workflow_transition_history-test" context="test">
+		<loadData
+			file="config/liquibase/tenant/data/fw_workflow_transition_history_test.csv"
+			separator=";" tableName="fw_workflow_transition_history">
+			<column name="id" type="numeric" />
+			<column name="team_request_id" type="numeric" />
+			<column name="from_state_id" type="numeric" />
+			<column name="to_state_id" type="numeric" />
+			<column name="event_name" type="string" />
+			<column name="transition_date" type="timestamp" />
+			<column name="sla_due_date" type="timestamp" />
+			<column name="status" type="string" />
+		</loadData>
+		<sql>SELECT setval('fw_workflow_transition_history_id_seq', (SELECT
+			MAX(id) FROM fw_workflow_transition_history));</sql>
+	</changeSet>
+	<changeSet author="flowinquiry"
+		id="001:10-insert-fw_escalation_tracking-test" context="test">
+		<loadData
+			file="config/liquibase/tenant/data/fw_escalation_tracking_test.csv"
+			separator=";" tableName="fw_escalation_tracking">
+			<column name="id" type="numeric" />
+			<column name="team_request_id" type="numeric" />
+			<column name="escalation_level" type="integer" />
+			<column name="escalated_to_user_id" type="numeric" />
+			<column name="escalation_time" type="timestamp" />
+		</loadData>
+		<sql>SELECT setval('fw_escalation_tracking_id_seq', (SELECT MAX(id)
+			FROM fw_escalation_tracking));</sql>
+	</changeSet>
+	<changeSet author="flowinquiry"
+		id="001:11-insert-fw_entity_attachment-test" context="test">
+		<loadData
+			file="config/liquibase/tenant/data/fw_entity_attachment_test.csv"
+			separator=";" tableName="fw_entity_attachment">
+			<column name="id" type="numeric" />
+			<column name="entity_type" type="string" />
+			<column name="entity_id" type="numeric" />
+			<column name="file_name" type="string" />
+			<column name="file_type" type="string" />
+			<column name="file_size" type="numeric" />
+			<column name="file_url" type="string" />
+			<column name="uploaded_at" type="timestamp" />
+		</loadData>
+		<sql>SELECT setval('fw_entity_attachment_id_seq', (SELECT MAX(id) FROM
+			fw_entity_attachment));</sql>
+	</changeSet>
+	<changeSet author="flowinquiry"
+		id="001:12-insert-fw_comment-test" context="test">
+		<loadData
+			file="config/liquibase/tenant/data/fw_comment_test.csv" separator=";"
+			tableName="fw_comment">
+			<column name="id" type="numeric" />
+			<column name="content" type="string" />
+			<column name="entity_type" type="string" />
+			<column name="entity_id" type="numeric" />
+			<column name="created_by" type="numeric" />
+			<column name="created_at" type="timestamp" />
+			<column name="modified_by" type="numeric" />
+			<column name="modified_at" type="timestamp" />
+		</loadData>
+		<sql>SELECT setval('fw_comment_id_seq', (SELECT MAX(id) FROM
+			fw_comment));</sql>
+	</changeSet>
+	<changeSet author="flowinquiry"
+		id="001:13-insert-fw_notification-test" context="test">
+		<loadData
+			file="config/liquibase/tenant/data/fw_notification_test.csv"
+			separator=";" tableName="fw_notification">
+			<column name="id" type="numeric" />
+			<column name="content" type="string" />
+			<column name="user_id" type="numeric" />
+			<column name="is_read" type="boolean" />
+			<column name="created_by" type="numeric" />
+			<column name="created_at" type="timestamp" />
+			<column name="modified_by" type="numeric" />
+			<column name="modified_at" type="timestamp" />
+		</loadData>
+		<sql>SELECT setval('fw_notification_id_seq', (SELECT MAX(id) FROM
+			fw_notification));</sql>
+	</changeSet>
+	<changeSet author="flowinquiry"
+		id="001:14-insert-fw_activity_log-test" context="test">
+		<loadData
+			file="config/liquibase/tenant/data/fw_activity_log_test.csv"
+			separator=";" tableName="fw_activity_log">
+			<column name="id" type="numeric" />
+			<column name="entity_type" type="string" />
+			<column name="entity_id" type="numeric" />
+			<column name="content" type="string" />
+			<column name="created_at" type="timestamp" />
+			<column name="updated_at" type="timestamp" />
+			<column name="created_by" type="numeric" />
+		</loadData>
+		<sql>SELECT setval('fw_activity_log_id_seq', (SELECT MAX(id) FROM
+			fw_activity_log));</sql>
+	</changeSet>
+
+
 </databaseChangeLog>

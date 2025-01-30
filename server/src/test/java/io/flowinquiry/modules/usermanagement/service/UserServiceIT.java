@@ -1,4 +1,4 @@
-package io.flowinquiry.service;
+package io.flowinquiry.modules.usermanagement.service;
 
 import static io.flowinquiry.modules.usermanagement.domain.UserAuth.UP_AUTH_PROVIDER;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -10,7 +10,6 @@ import io.flowinquiry.modules.usermanagement.domain.UserAuth;
 import io.flowinquiry.modules.usermanagement.domain.UserStatus;
 import io.flowinquiry.modules.usermanagement.repository.UserAuthRepository;
 import io.flowinquiry.modules.usermanagement.repository.UserRepository;
-import io.flowinquiry.modules.usermanagement.service.UserService;
 import io.flowinquiry.modules.usermanagement.service.dto.ResourcePermissionDTO;
 import io.flowinquiry.modules.usermanagement.service.dto.UserDTO;
 import io.flowinquiry.utils.Random;

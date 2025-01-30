@@ -6,11 +6,11 @@ import org.springframework.context.ApplicationEvent;
 @Getter
 public class TeamRequestWorkStateTransitionEvent extends ApplicationEvent {
 
-    private Long teamRequestId;
+    private final Long teamRequestId;
 
-    private Long sourceStateId;
+    private final Long sourceStateId;
 
-    private Long targetStateId;
+    private final Long targetStateId;
 
     public TeamRequestWorkStateTransitionEvent(
             Object source, Long teamRequestId, Long sourceStateId, Long targetStateId) {

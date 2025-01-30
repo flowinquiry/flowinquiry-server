@@ -8,6 +8,7 @@ import static org.mockito.Mockito.verify;
 
 import io.flowinquiry.IntegrationTest;
 import io.flowinquiry.modules.audit.AuditLogUpdateEvent;
+import io.flowinquiry.modules.teams.domain.TicketChannel;
 import io.flowinquiry.modules.teams.repository.TeamRequestRepository;
 import io.flowinquiry.modules.teams.repository.TeamRequestWatcherRepository;
 import io.flowinquiry.modules.teams.service.dto.TeamRequestDTO;
@@ -15,6 +16,7 @@ import io.flowinquiry.modules.teams.service.dto.WatcherDTO;
 import io.flowinquiry.modules.teams.service.event.NewTeamRequestCreatedEvent;
 import io.flowinquiry.modules.teams.service.event.TeamRequestWorkStateTransitionEvent;
 import io.flowinquiry.modules.teams.service.mapper.TeamRequestMapper;
+import java.time.LocalDate;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -23,8 +25,10 @@ import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.test.util.ReflectionTestUtils;
+import org.springframework.transaction.annotation.Transactional;
 
 @IntegrationTest
+@Transactional
 public class TeamRequestServiceIT {
 
     @Autowired private TeamRequestService teamRequestService;
@@ -91,5 +95,73 @@ public class TeamRequestServiceIT {
 
         assertThat(capturedEvent.getSourceStateId()).isEqualTo(1L);
         assertThat(capturedEvent.getTargetStateId()).isEqualTo(2L);
+    }
+
+    @Test
+    void shouldFindNextTeamRequestSuccessfully() {
+        TeamRequestDTO nextEntity = teamRequestService.getNextEntity(11L).orElseThrow();
+
+        // Then: Validate key properties in a single assertion block
+        assertThat(nextEntity)
+                .isNotNull()
+                .extracting(
+                        TeamRequestDTO::getId,
+                        TeamRequestDTO::getTeamId,
+                        TeamRequestDTO::getWorkflowId,
+                        TeamRequestDTO::getRequestTitle,
+                        TeamRequestDTO::getRequestDescription,
+                        TeamRequestDTO::getChannel,
+                        TeamRequestDTO::getIsNew,
+                        TeamRequestDTO::getIsCompleted,
+                        TeamRequestDTO::getEstimatedCompletionDate)
+                .containsExactly(
+                        12L,
+                        1L,
+                        1L, // ID, team, workflow
+                        "Refund Status Inquiry",
+                        "Customer wants an update on refund.",
+                        TicketChannel.CHAT,
+                        true,
+                        false,
+                        LocalDate.of(2025, 2, 17));
+
+        assertThat(nextEntity.getCreatedAt()).isNotNull();
+        assertThat(nextEntity.getModifiedAt()).isNotNull();
+        assertThat(nextEntity.getWatchers()).isNotNull();
+        assertThat(nextEntity.getNumberAttachments()).isGreaterThanOrEqualTo(0);
+    }
+
+    @Test
+    void shouldFindPreviousTeamRequestSuccessfully() {
+        TeamRequestDTO previousEntity = teamRequestService.getPreviousEntity(11L).orElseThrow();
+
+        // Then: Validate key properties in a single assertion block
+        assertThat(previousEntity)
+                .isNotNull()
+                .extracting(
+                        TeamRequestDTO::getId,
+                        TeamRequestDTO::getTeamId,
+                        TeamRequestDTO::getWorkflowId,
+                        TeamRequestDTO::getRequestTitle,
+                        TeamRequestDTO::getRequestDescription,
+                        TeamRequestDTO::getChannel,
+                        TeamRequestDTO::getIsNew,
+                        TeamRequestDTO::getIsCompleted,
+                        TeamRequestDTO::getEstimatedCompletionDate)
+                .containsExactly(
+                        1L,
+                        1L,
+                        1L, // ID, team, workflow
+                        "Customer Refund Issue",
+                        "Customer reported an issue with a refund request.",
+                        TicketChannel.WEB_PORTAL,
+                        true,
+                        false,
+                        LocalDate.of(2025, 2, 15));
+
+        assertThat(previousEntity.getCreatedAt()).isNotNull();
+        assertThat(previousEntity.getModifiedAt()).isNotNull();
+        assertThat(previousEntity.getWatchers()).isNotNull();
+        assertThat(previousEntity.getNumberAttachments()).isGreaterThanOrEqualTo(0);
     }
 }

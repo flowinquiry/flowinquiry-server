@@ -27,13 +27,13 @@ public class TeamRequestConversationHealthDTO {
      */
     @JsonProperty("healthLevel")
     public TicketHealthLevel getHealthLevel() {
-        if (conversationHealth > 0.9) {
+        if (conversationHealth >= 0.8) {
             return TicketHealthLevel.EXCELLENT;
-        } else if (conversationHealth > 0.8) {
-            return TicketHealthLevel.GOOD;
         } else if (conversationHealth > 0.6) {
-            return TicketHealthLevel.FAIR;
+            return TicketHealthLevel.GOOD;
         } else if (conversationHealth > 0.4) {
+            return TicketHealthLevel.FAIR;
+        } else if (conversationHealth > 0.2) {
             return TicketHealthLevel.POOR;
         } else {
             return TicketHealthLevel.CRITICAL;

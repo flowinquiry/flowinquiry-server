@@ -21,6 +21,8 @@ import io.flowinquiry.modules.usermanagement.repository.UserAuthRepository;
 import io.flowinquiry.modules.usermanagement.repository.UserRepository;
 import java.util.Set;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.http.MediaType;
@@ -54,17 +56,13 @@ class AuthenticateControllerIT {
     }
 
     @Transactional
-    @Test
-    void testAuthorize() throws Exception {
-        User user = new User();
-        user.setEmail("user-jwt-controller@example.com");
-        user.setStatus(UserStatus.ACTIVE);
-
-        savedUser(user, "test");
-
+    @ParameterizedTest
+    @CsvSource({"admin@flowinquiry.io, admin", "bob.brown@flowinquiry.io, user1234"})
+    void shouldAuthorizeUserSuccessfully(String email, String password) throws Exception {
         LoginVM login = new LoginVM();
-        login.setEmail("user-jwt-controller@example.com");
-        login.setPassword("test");
+        login.setEmail(email);
+        login.setPassword(password);
+
         mockMvc.perform(
                         post("/api/authenticate")
                                 .contentType(MediaType.APPLICATION_JSON)

@@ -53,52 +53,60 @@ public class TeamRequestHealthEvalService {
                         .orElseGet(
                                 () -> createNewConversationHealth(teamRequestId, polishedMessage));
 
-        // Evaluate the sentiment of the new message
+        // Step 1: Evaluate sentiment of the new message
         float sentimentScore = evaluateSentiment(polishedMessage);
         LOG.debug("Message '{}' has sentiment score: {}", polishedMessage, sentimentScore);
 
-        // Check if the message resolves the issue (only for customer responses)
-        boolean isMessageResolved = determineIfResolved(polishedMessage);
-        boolean resolvesIssue = isCustomerResponse && isMessageResolved;
-        LOG.debug("Message resolved: {}, Customer response: {}", resolvesIssue, isCustomerResponse);
+        // Step 2: Check if the message resolves an issue (only for customer responses)
+        boolean resolvesIssue = isCustomerResponse && determineIfResolved(polishedMessage);
+        LOG.debug(
+                "Message '{}' resolved: {}, Customer response: {}",
+                polishedMessage,
+                resolvesIssue,
+                isCustomerResponse);
 
-        // Increment total messages
+        // Step 3: Increment total messages
         health.setTotalMessages(health.getTotalMessages() + 1);
 
-        // Check if the customer response contains a question using AI
-        if (isCustomerResponse && isQuestion(polishedMessage)) {
+        // Step 4: Check if message is a question
+        boolean isQuestion = isCustomerResponse && isQuestion(polishedMessage);
+        if (isQuestion) {
             health.setTotalQuestions(health.getTotalQuestions() + 1);
         }
 
-        // Increment resolved questions only if it resolves a previously asked question
+        // Step 5: Increment resolved question count only if the issue is resolved
         if (resolvesIssue) {
             health.setResolvedQuestions(health.getResolvedQuestions() + 1);
         }
 
-        // Update cumulative sentiment with weight for customer responses
+        // Step 6: Update cumulative sentiment (weighted for customer responses)
         float sentimentWeight = isCustomerResponse ? 1.5f : 1.0f;
-        float currentCumulativeSentiment = health.getCumulativeSentiment();
         health.setCumulativeSentiment(
-                (currentCumulativeSentiment * (health.getTotalMessages() - 1)
+                (health.getCumulativeSentiment() * (health.getTotalMessages() - 1)
                                 + sentimentScore * sentimentWeight)
                         / health.getTotalMessages());
 
-        // Calculate clarity score, handling cases where no questions have been asked
-        float clarityScore =
-                health.getTotalQuestions() > 0
+        // Step 7: Compute clarity score, but prevent sudden drops
+        float clarityRatio =
+                (health.getTotalQuestions() > 0)
                         ? (float) health.getResolvedQuestions() / health.getTotalQuestions()
-                        : 1.0f;
+                        : 0.5f; // **Set a default clarity score to avoid instant drop**
 
-        // Adjust conversation health calculation
+        // Scale the clarity contribution based on conversation progress
+        float clarityScalingFactor = Math.min(1.0f, (float) health.getTotalQuestions() / 5);
+        float weightedClarityScore =
+                clarityRatio * clarityScalingFactor + (1 - clarityScalingFactor) * 0.5f;
+
+        // Step 8: Compute conversation health
         health.setConversationHealth(
-                (0.4f * health.getCumulativeSentiment())
+                (0.6f * health.getCumulativeSentiment())
                         + // Sentiment contribution
-                        (0.4f * clarityScore)
-                        + // Clarity contribution
+                        (0.2f * weightedClarityScore)
+                        + // **Adjusted Clarity Contribution**
                         (0.2f * (resolvesIssue ? 1.0f : 0.0f)) // Resolution contribution
                 );
 
-        // Save the updated health record
+        // Step 9: Save the updated conversation health record
         teamRequestConversationHealthRepository.save(health);
     }
 

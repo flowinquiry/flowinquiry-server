@@ -244,7 +244,8 @@
 			baseTableName="fw_team_request_conversation_health"
 			baseColumnNames="team_request_id"
 			referencedTableName="fw_team_request" referencedColumnNames="id"
-			constraintName="fk_team_request_conversation_health_team_request" />
+			constraintName="fk_team_request_conversation_health_team_request"
+			onDelete="CASCADE" />
 
 		<createTable tableName="fw_team_request_watchers">
 			<column name="id" type="BIGSERIAL" autoIncrement="true">
@@ -268,7 +269,8 @@
 			baseTableName="fw_team_request_watchers"
 			baseColumnNames="team_request_id"
 			constraintName="fk_team_request_watchers_request_id"
-			referencedTableName="fw_team_request" referencedColumnNames="id" />
+			referencedTableName="fw_team_request" referencedColumnNames="id"
+			onDelete="CASCADE" />
 		<addForeignKeyConstraint
 			baseTableName="fw_team_request_watchers" baseColumnNames="user_id"
 			constraintName="fk_team_request_watchers_user_id"

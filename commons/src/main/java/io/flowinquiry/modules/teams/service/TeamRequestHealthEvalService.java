@@ -18,7 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 @ConditionalOnBean(ChatModelService.class)
 public class TeamRequestHealthEvalService {
 
-    private static Logger LOG = LoggerFactory.getLogger(TeamRequestHealthEvalService.class);
+    private static final Logger LOG = LoggerFactory.getLogger(TeamRequestHealthEvalService.class);
 
     private final TeamRequestConversationHealthRepository teamRequestConversationHealthRepository;
     private final ChatModelService chatModelService;
@@ -115,17 +115,16 @@ public class TeamRequestHealthEvalService {
         String aiPrompt =
                 "Determine if the following message is a question. Respond with 'true' or 'false':\n\nMessage: "
                         + message;
-        String aiResponse = chatModelService.call(aiPrompt); // Example AI service integration
+        String aiResponse = chatModelService.call(aiPrompt);
         return Boolean.parseBoolean(aiResponse.trim());
     }
 
     /** Determines if the message resolves the issue. */
     private boolean determineIfResolved(String message) {
-        // AI-assisted resolution determination (or custom logic can be implemented here)
         String aiPrompt =
                 "Does the following message indicate that the issue has been resolved? Respond with 'true' or 'false':\n\nMessage: "
                         + message;
-        String aiResponse = chatModelService.call(aiPrompt); // Example AI service integration
+        String aiResponse = chatModelService.call(aiPrompt);
         return Boolean.parseBoolean(aiResponse.trim());
     }
 

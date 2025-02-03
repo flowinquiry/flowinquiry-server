@@ -8,7 +8,6 @@ import io.flowinquiry.modules.usermanagement.service.dto.FwUserDetails;
 import org.hibernate.validator.internal.constraintvalidators.hv.EmailValidator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -29,7 +28,6 @@ public class DomainUserDetailsService implements UserDetailsService {
 
     @Override
     @Transactional(readOnly = true)
-    @Cacheable(value = "authenticatedUsers")
     public UserDetails loadUserByUsername(final String email) {
         LOG.debug("Authenticating {}", email);
 

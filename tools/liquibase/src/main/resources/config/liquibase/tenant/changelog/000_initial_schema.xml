@@ -259,6 +259,9 @@
 			<column name="id" type="BIGSERIAL" autoIncrement="true">
 				<constraints primaryKey="true" nullable="false" />
 			</column>
+			<column name="notification_type" type="VARCHAR(50)">
+				<constraints nullable="false" />
+			</column>
 			<column name="content" type="TEXT">
 				<constraints nullable="false" />
 			</column>

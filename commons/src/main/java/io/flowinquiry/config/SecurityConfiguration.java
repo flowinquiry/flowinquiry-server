@@ -35,6 +35,7 @@ public class SecurityConfiguration {
                         authz ->
                                 // prettier-ignore
                                 authz.requestMatchers(
+                                                mvc.pattern("/fiws/**"),
                                                 mvc.pattern(HttpMethod.POST, "/api/login"),
                                                 mvc.pattern(HttpMethod.POST, "/api/authenticate"),
                                                 mvc.pattern(HttpMethod.GET, "/api/authenticate"),
@@ -48,6 +49,8 @@ public class SecurityConfiguration {
                                         .hasAuthority(AuthoritiesConstants.ADMIN)
                                         .requestMatchers(mvc.pattern("/api/**"))
                                         .authenticated()
+                                        .requestMatchers("/fiws/**")
+                                        .authenticated() // ✅ Require authentication for WebSockets
                                         .requestMatchers(mvc.pattern("/management/**"))
                                         .hasAuthority(
                                                 AuthoritiesConstants.ADMIN)) // Enforces ROLE_ADMIN

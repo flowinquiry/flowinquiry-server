@@ -10,6 +10,8 @@ logging:
     ROOT: WARN
     sql: DEBUG # built-in group sql include org.springframework.jdbc.core, org.hibernate.SQL
     io.flowinquiry: DEBUG
+    org.springframework.web.socket: DEBUG
+    org.springframework.messaging: DEBUG
 #    org.springframework.web: DEBUG
 
 spring:

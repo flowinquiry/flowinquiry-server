@@ -9,24 +9,36 @@ import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.Collection;
 import java.util.stream.Collectors;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.oauth2.jwt.JwsHeader;
+import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.security.oauth2.jwt.JwtClaimsSet;
+import org.springframework.security.oauth2.jwt.JwtDecoder;
 import org.springframework.security.oauth2.jwt.JwtEncoder;
 import org.springframework.security.oauth2.jwt.JwtEncoderParameters;
+import org.springframework.security.oauth2.jwt.JwtException;
+import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationConverter;
 import org.springframework.stereotype.Service;
 
 @Service
 public class JwtService {
+
+    private static final Logger LOG = LoggerFactory.getLogger(JwtService.class);
+
     private final JwtEncoder jwtEncoder;
+
+    private final JwtDecoder jwtDecoder;
 
     @Value("${flowinquiry.security.authentication.jwt.token-validity-in-seconds:0}")
     private long tokenValidityInSeconds;
 
-    public JwtService(JwtEncoder jwtEncoder) {
+    public JwtService(JwtEncoder jwtEncoder, JwtDecoder jwtDecoder) {
         this.jwtEncoder = jwtEncoder;
+        this.jwtDecoder = jwtDecoder;
     }
 
     public String generateToken(Authentication authentication) {
@@ -56,5 +68,15 @@ public class JwtService {
 
         JwsHeader jwsHeader = JwsHeader.with(JWT_ALGORITHM).build();
         return this.jwtEncoder.encode(JwtEncoderParameters.from(jwsHeader, claims)).getTokenValue();
+    }
+
+    public Authentication authenticateToken(String token) {
+        try {
+            Jwt jwt = jwtDecoder.decode(token);
+            return new JwtAuthenticationConverter().convert(jwt);
+        } catch (JwtException e) {
+            LOG.error("❌ Invalid JWT Token: " + e.getMessage(), e);
+            return null;
+        }
     }
 }

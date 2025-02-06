@@ -52,7 +52,6 @@ public class WebConfigurer
     /** Customize the Servlet engine: Mime types, the document root, the cache. */
     @Override
     public void customize(WebServerFactory server) {
-        // When running in an IDE or with ./gradlew bootRun, set location of the static web assets.
         setLocationForStaticAssets(server);
     }
 

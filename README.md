@@ -6,95 +6,48 @@
 
 FlowInquiry is a service designed to streamline the management of cases, tickets, and requests for teams handling both internal and external inquiries. It bridges communication gaps across teams and ensures timely resolution of customer or interdepartmental requests. By enabling organizations to define custom workflows with tailored Service Level Agreements (SLAs) for each state, FlowInquiry ensures teams can meet deadlines and respond promptly to requests. This structured approach enhances accountability, efficiency, and satisfaction for all parties involved, fostering smoother collaboration and better outcomes.
 
+![FlowInquiry](assets/flowinquiry_slide.gif)
+
 ### Problems FlowInquiry Solves with Specific Use Cases
 
 FlowInquiry addresses several challenges faced by organizations in managing cases, tickets, and team communication. Here are some specific use cases:
 
-* **On-Call System Management**
-In an on-call system, teams often face challenges in managing incoming requests or incidents, particularly when multiple shifts or team members are involved. FlowInquiry ensures that each request follows a well-defined workflow, with SLAs for escalation and resolution. This helps reduce response times, avoids missed escalations, and provides clear accountability for handling incidents.
+* **On-Call System Management** In an on-call system, teams often face challenges in managing incoming requests or incidents, particularly when multiple shifts or team members are involved. FlowInquiry ensures that each request follows a well-defined workflow, with SLAs for escalation and resolution. This helps reduce response times, avoids missed escalations, and provides clear accountability for handling incidents.
 
-* **Case Management in CRM Applications**
-CRM applications often struggle to manage customer cases effectively, especially when handling inquiries, complaints, or service requests. FlowInquiry enables teams to define custom workflows tailored to specific case types, such as refunds, escalations, or product inquiries. SLAs for each workflow stage ensure customers receive timely updates and resolutions, enhancing customer satisfaction and loyalty.
+* **Case Management in CRM Applications**  CRM applications often struggle to manage customer cases effectively, especially when handling inquiries, complaints, or service requests. FlowInquiry enables teams to define custom workflows tailored to specific case types, such as refunds, escalations, or product inquiries. SLAs for each workflow stage ensure customers receive timely updates and resolutions, enhancing customer satisfaction and loyalty.
 
-* **Team Communication and Collaboration**
-Effective communication within and across teams can be difficult in large organizations, especially when requests involve multiple departments or external stakeholders. FlowInquiry acts as a centralized platform where requests are logged, tracked, and routed through clearly defined workflows. This reduces miscommunication, prevents delays, and ensures all parties are aligned on priorities.
+* **Team Communication and Collaboration** Effective communication within and across teams can be difficult in large organizations, especially when requests involve multiple departments or external stakeholders. FlowInquiry acts as a centralized platform where requests are logged, tracked, and routed through clearly defined workflows. This reduces miscommunication, prevents delays, and ensures all parties are aligned on priorities.
 
-* **Service Request Tracking for IT Teams**
-IT teams managing internal service requests often encounter bottlenecks due to unclear processes or manual tracking. FlowInquiry allows IT departments to automate workflows for common requests such as software installation, access management, or issue resolution. The system ensures each request is assigned, processed, and resolved within agreed SLAs.
+* **Service Request Tracking for IT Teams** IT teams managing internal service requests often encounter bottlenecks due to unclear processes or manual tracking. FlowInquiry allows IT departments to automate workflows for common requests such as software installation, access management, or issue resolution. The system ensures each request is assigned, processed, and resolved within agreed SLAs.
 
-* **Project management**
-  Teams can use FlowInquiry as a project management tool to create, assign, and prioritize tasks, track progress with workflows, and ensure timely completion with SLAs and automation. Its collaboration features, real-time updates, and integration capabilities streamline workflows and boost productivity.
+* **Project management** Teams can use FlowInquiry as a project management tool to create, assign, and prioritize tasks, track progress with workflows, and ensure timely completion with SLAs and automation. Its collaboration features, real-time updates, and integration capabilities streamline workflows and boost productivity.
 
 By tailoring workflows to these and other scenarios, FlowInquiry empowers teams to streamline operations, meet deadlines, and deliver exceptional service to both internal and external stakeholders.
 
-### Screenshots
-
-<table>
-  <tr>
-    <td style="padding: 10px; text-align: center;">
-      <a href="assets/team_dashboard.png">
-        <img src="assets/team_dashboard_thumbnail.png" alt="Team Dashboard">
-      </a>
-    </td>
-    <td style="padding: 10px; text-align: center;">
-      <a href="assets/team_members.png">
-        <img src="assets/team_members_thumbnail.png" alt="Team Members">
-      </a>
-    </td>
-    <td style="padding: 10px; text-align: center;">
-      <a href="assets/ticket_view.png">
-        <img src="assets/ticket_view_thumbnail.png" alt="Ticket View">
-      </a>
-    </td>
-  </tr>
-  <tr>
-    <td style="padding: 10px; text-align: center;">
-      <a href="assets/user_view.png">
-        <img src="assets/user_view_thumbnail.png" alt="User View">
-      </a>
-    </td>
-    <td style="padding: 10px; text-align: center;">
-      <a href="assets/workflow_customization.png">
-        <img src="assets/workflow_customization_thumbnail.png" alt="Workflow Customization">
-      </a>
-    </td>
-    <td style="padding: 10px; text-align: center;">
-      <a href="assets/workspace_dashboard.png">
-        <img src="assets/workspace_dashboard_thumbnail.png" alt="Workspace Dashboard">
-      </a>
-    </td>
-  </tr>
-</table>
 
 ## FlowInquiry Server
 
 FlowInquiry Server serves as the back-end component of the FlowInquiry service, a Java-based platform designed to manage workflows and enhance team collaboration. Developed with Spring Boot, the server provides a reliable and scalable REST API to support the FlowInquiry front-end application. It also facilitates workflow management, runs scheduler programs for task automation, handles data caching for efficient performance, and ensures seamless data persistence to the database
 
-### Technologies
+### Built With
 
-* **Spring Boot:** Acts as the backbone of the back-end, orchestrating various components. It handles the creation and management of REST APIs, service layers, and controllers to facilitate business logic. Spring Boot also integrates seamlessly with the database through JPA and Hibernate and provides hooks for adding essential services like logging, tracing, and monitoring to ensure a well-rounded and maintainable application architecture.
+<div style="display: flex; justify-content: left; gap: 20px; align-items: center;">
+    <img src="assets/spring-boot.svg" alt="Spring Boot" width="80" height="80" title="Acts as the backbone of the back-end, orchestrating various components. It handles the creation and management of REST APIs, service layers, and controllers to facilitate business logic. Spring Boot also integrates seamlessly with the database through JPA and Hibernate and provides hooks for adding essential services like logging, tracing, and monitoring to ensure a well-rounded and maintainable application architecture">
+    <img src="assets/hibernate.svg" alt="Hibernate" width="80" height="80" title="Serves as the ORM (Object-Relational Mapping) framework, facilitating seamless interaction between Java objects and the database">
+    <img src="assets/postgresql.svg" alt="PostgreSQL" width="80" height="80" title="Acts as the primary relational database, offering reliability, scalability, and robust support for complex queries">
+    <img src="assets/liquibase.svg" alt="Liquibase" width="80" height="80" title="Manages database schema changes through version-controlled migration scripts, ensuring consistency across environments">
+    <img src="assets/docker.svg" alt="Docker" width="80" height="80" title="Provides containerization for consistent application deployment across environments, enabling scalability and portability">
+</div>
 
-* **Hibernate:** Serves as the ORM (Object-Relational Mapping) framework, facilitating seamless interaction between Java objects and the database.
+### Getting Started
 
-* **PostgreSQL:** Acts as the primary relational database, offering reliability, scalability, and robust support for complex queries.
-
-* **Liquibase:** Manages database schema changes through version-controlled migration scripts, ensuring consistency across environments.
-
-* **MapStruct:** Simplifies object mapping by generating type-safe and efficient mappers between Java objects (e.g., DTOs and entities).
-
-* **Docker:** Provides containerization for consistent application deployment across environments, enabling scalability and portability.
-
-
-## Getting Started
-
-### Prerequisites
+#### Prerequisites
 * Java 21 or higher
-* Gradle 8 or higher
 * PostgreSQL (or compatible database)
 
-### Setup Instructions
+#### Setup Instructions
 
-#### 1. Clone the repository:
+##### 1. Clone the repository:
 ```
    git clone git@github.com:flowinquiry/flowinquiry-server.git
    cd flowinquiry-server
@@ -108,7 +61,7 @@ To run the FlowInquiry backend, users need to provide their input in the local c
 
 ##### 2.1 Creating config file using script
 
-   Set up the application secrets by running the following script:
+Set up the application secrets by running the following script:
 ```bash
 scripts/create_secrets.sh
 ```

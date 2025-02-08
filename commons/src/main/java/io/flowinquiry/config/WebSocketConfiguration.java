@@ -40,7 +40,7 @@ public class WebSocketConfiguration implements WebSocketMessageBrokerConfigurer 
 
     @Override
     public void configureMessageBroker(MessageBrokerRegistry registry) {
-        registry.enableSimpleBroker("/queue");
+        registry.enableSimpleBroker("/queue", "/user");
         registry.setApplicationDestinationPrefixes("/app");
         registry.setUserDestinationPrefix("/user");
     }
@@ -61,7 +61,7 @@ public class WebSocketConfiguration implements WebSocketMessageBrokerConfigurer 
                 .simpDestMatchers("/app/**")
                 .authenticated() // ✅ Secure app destinations
                 .anyMessage()
-                .authenticated()
+                .denyAll()
                 .build();
     }
 
@@ -70,7 +70,7 @@ public class WebSocketConfiguration implements WebSocketMessageBrokerConfigurer 
         registration.interceptors(jwtChannelInterceptor); // ✅ Register STOMP message interceptor
         registration.interceptors(
                 webSocketOutboundInterceptor); // ✅ Log all outgoing messages, should use on dev
-        // mode only
+        // only
     }
 
     @Bean("csrfChannelInterceptor")

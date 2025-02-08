@@ -40,18 +40,11 @@
 		resource="org/springframework/boot/logging/logback/console-appender.xml" />
 
 
-	<springProperty name="log.level"
-		source="logging.level.root" defaultValue="INFO" />
 
 	<root>
 		<level value="${log.level:INFO}" />
 		<appender-ref ref="CONSOLE" />
 		<!-- <appender-ref ref="MASKED_FILE" /> -->
 	</root>
-
-	<contextListener
-		class="ch.qos.logback.classic.jul.LevelChangePropagator">
-		<resetJUL>true</resetJUL>
-	</contextListener>
 
 </configuration>

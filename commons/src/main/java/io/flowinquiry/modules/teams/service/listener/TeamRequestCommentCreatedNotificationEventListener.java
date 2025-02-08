@@ -121,7 +121,7 @@ public class TeamRequestCommentCreatedNotificationEventListener {
             notifications.add(notification);
             //            }
         }
-        notificationRepository.saveAll(notifications);
+        //        notificationRepository.saveAll(notifications);
 
         ActivityLog activityLog =
                 ActivityLog.builder()

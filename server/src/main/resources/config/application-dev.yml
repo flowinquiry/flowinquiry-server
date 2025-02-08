@@ -12,6 +12,7 @@ logging:
     io.flowinquiry: DEBUG
     org.springframework.web.socket: DEBUG
     org.springframework.messaging: DEBUG
+    org.springframework.security: DEBUG
 #    org.springframework.web: DEBUG
 
 spring:

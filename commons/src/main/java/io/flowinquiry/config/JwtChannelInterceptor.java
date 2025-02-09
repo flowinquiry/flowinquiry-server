@@ -15,6 +15,19 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 
+/**
+ * Intercepts STOMP messages to extract and authenticate JWT tokens from the WebSocket connection.
+ *
+ * <p>This interceptor is applied to the WebSocket message broker's inbound channel. It
+ * authenticates users when they send a {@code CONNECT} STOMP command by extracting the JWT token
+ * from the {@code Authorization} header.
+ *
+ * <p>If a valid JWT token is found, the corresponding {@link Authentication} is set in the {@link
+ * SecurityContextHolder}, allowing Spring Security to handle authorization for subsequent WebSocket
+ * messages.
+ *
+ * @author Hai Nguyen
+ */
 @Component
 public class JwtChannelInterceptor implements ChannelInterceptor {
     private static final Logger LOG = LoggerFactory.getLogger(JwtChannelInterceptor.class);
@@ -25,6 +38,18 @@ public class JwtChannelInterceptor implements ChannelInterceptor {
         this.jwtService = jwtService;
     }
 
+    /**
+     * Intercepts the STOMP message before it is sent to the broker to authenticate users.
+     *
+     * <p>This method checks if the message is a {@code CONNECT} STOMP command. If so, it extracts
+     * the {@code Authorization} header, verifies the JWT token, and sets the authenticated user in
+     * the {@link SecurityContextHolder}.
+     *
+     * @param message the STOMP message being sent
+     * @param channel the message channel through which the message is sent
+     * @return the original message if authentication is successful, otherwise the message is still
+     *     passed through
+     */
     @Override
     public Message<?> preSend(Message<?> message, MessageChannel channel) {
         StompHeaderAccessor accessor =

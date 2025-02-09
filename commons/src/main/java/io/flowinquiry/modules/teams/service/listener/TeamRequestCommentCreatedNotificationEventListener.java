@@ -106,22 +106,22 @@ public class TeamRequestCommentCreatedNotificationEventListener {
         List<Notification> notifications = new ArrayList<>();
 
         for (UserWithTeamRoleDTO user : usersInTeam) {
-            //            if (!user.getId().equals(commentDTO.getCreatedById())) {
-            Notification notification =
-                    Notification.builder()
-                            .content(html)
-                            .type(NotificationType.INFO)
-                            .user(User.builder().id(user.getId()).build())
-                            .isRead(false)
-                            .build();
+            if (!user.getId().equals(commentDTO.getCreatedById())) {
+                Notification notification =
+                        Notification.builder()
+                                .content(html)
+                                .type(NotificationType.INFO)
+                                .user(User.builder().id(user.getId()).build())
+                                .isRead(false)
+                                .build();
 
-            messageTemplate.convertAndSendToUser(
-                    String.valueOf(user.getId()), "/queue/notifications", notification);
+                messageTemplate.convertAndSendToUser(
+                        String.valueOf(user.getId()), "/queue/notifications", notification);
 
-            notifications.add(notification);
-            //            }
+                notifications.add(notification);
+            }
         }
-        //        notificationRepository.saveAll(notifications);
+        notificationRepository.saveAll(notifications);
 
         ActivityLog activityLog =
                 ActivityLog.builder()

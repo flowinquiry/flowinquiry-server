@@ -24,13 +24,9 @@ import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerCo
 public class WebSocketConfiguration implements WebSocketMessageBrokerConfigurer {
 
     private final JwtChannelInterceptor jwtChannelInterceptor;
-    private final WebSocketOutboundInterceptor webSocketOutboundInterceptor;
 
-    public WebSocketConfiguration(
-            JwtChannelInterceptor jwtChannelInterceptor,
-            WebSocketOutboundInterceptor webSocketOutboundInterceptor) {
+    public WebSocketConfiguration(JwtChannelInterceptor jwtChannelInterceptor) {
         this.jwtChannelInterceptor = jwtChannelInterceptor;
-        this.webSocketOutboundInterceptor = webSocketOutboundInterceptor;
     }
 
     @Override
@@ -54,11 +50,11 @@ public class WebSocketConfiguration implements WebSocketMessageBrokerConfigurer 
                 .permitAll() // ✅ Allow WebSocket SUBSCRIBE
                 .matchers(new SimpMessageTypeMatcher(SimpMessageType.DISCONNECT))
                 .permitAll() // ✅ Allow WebSocket DISCONNECT
-                .simpDestMatchers("/user/**")
+                .simpMessageDestMatchers("/user/**")
                 .authenticated() // ✅ Allow authenticated users
-                .simpDestMatchers("/queue/**")
+                .simpMessageDestMatchers("/queue/**")
                 .authenticated() // ✅ Secure message queues
-                .simpDestMatchers("/app/**")
+                .simpMessageDestMatchers("/app/**")
                 .authenticated() // ✅ Secure app destinations
                 .anyMessage()
                 .denyAll()
@@ -68,9 +64,6 @@ public class WebSocketConfiguration implements WebSocketMessageBrokerConfigurer 
     @Override
     public void configureClientInboundChannel(ChannelRegistration registration) {
         registration.interceptors(jwtChannelInterceptor); // ✅ Register STOMP message interceptor
-        registration.interceptors(
-                webSocketOutboundInterceptor); // ✅ Log all outgoing messages, should use on dev
-        // only
     }
 
     @Bean("csrfChannelInterceptor")

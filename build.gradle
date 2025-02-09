@@ -26,6 +26,9 @@ allprojects {
                     sourceCompatibility = 21
                     targetCompatibility = 21
                 }
+                tasks.withType(JavaCompile) {
+                    options.compilerArgs << "-parameters"
+                }
             }
 
             if (project.plugins.hasPlugin('java-library')) {

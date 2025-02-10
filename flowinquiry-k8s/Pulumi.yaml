@@ -1,7 +1,7 @@
 name: flowinquiry-k8s
-description: FlowInquiry deployment for k8s
+description: Deployment script to deploy FlowInquiry to k8s
 runtime: java
 config:
   pulumi:tags:
     value:
-      pulumi:template: kubernetes-java
+      pulumi:template: java-gradle

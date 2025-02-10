@@ -1,6 +1,9 @@
 #!/bin/bash
 
-source scripts/shared.sh
+# Get the directory of the current script
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+
+source "$SCRIPT_DIR/shared.sh"
 
 
 run_script_stop_when_fail "frontend_config.sh"

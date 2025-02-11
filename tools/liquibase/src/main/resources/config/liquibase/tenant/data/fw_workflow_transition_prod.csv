@@ -1,0 +1,2 @@
+id;workflow_id;source_state_id;target_state_id;event_name;sla_duration;escalate_on_violation
+1;1;1;2;Close Request;172800;true

@@ -195,4 +195,9 @@ public class TeamService {
         String role = teamRepository.findUserRoleInTeam(userId, teamId);
         return (StringUtils.isNotEmpty(role)) ? role : "Guest";
     }
+
+    @Transactional(readOnly = true)
+    public boolean hasManager(Long teamId) {
+        return teamRepository.existsManagerInTeam(teamId);
+    }
 }

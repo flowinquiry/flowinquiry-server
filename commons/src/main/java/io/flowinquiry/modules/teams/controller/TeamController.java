@@ -10,6 +10,7 @@ import io.flowinquiry.query.QueryDTO;
 import jakarta.json.Json;
 import jakarta.validation.Valid;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 import lombok.Getter;
@@ -161,6 +162,12 @@ public class TeamController {
             @PathVariable("teamId") Long teamId, @PathVariable("userId") Long userId) {
         String role = teamService.getUserRoleInTeam(userId, teamId);
         return ResponseEntity.ok(Json.createObjectBuilder().add("role", role).build().toString());
+    }
+
+    @GetMapping("/{teamId}/has-manager")
+    public ResponseEntity<Map<String, Boolean>> checkIfTeamHasManager(@PathVariable Long teamId) {
+        boolean hasManager = teamService.hasManager(teamId);
+        return ResponseEntity.ok(Map.of("result", hasManager));
     }
 
     @Getter

@@ -1,7 +1,10 @@
 #!/bin/bash
 
+# Get the directory of the current script (scripts/)
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+
 # Define the output script that will store the sensitive data
-output_file=".backend.env"
+output_file="$SCRIPT_DIR/../.backend.env"
 
 # Check if the file exists; if not, create it
 if [ ! -f "$output_file" ]; then

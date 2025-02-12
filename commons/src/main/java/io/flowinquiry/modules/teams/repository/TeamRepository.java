@@ -66,4 +66,17 @@ public interface TeamRepository extends JpaRepository<Team, Long>, JpaSpecificat
     @Query(
             "SELECT COUNT(ut) > 0 FROM UserTeam ut WHERE ut.team.id = :teamId AND ut.role.name = 'Manager'")
     boolean existsManagerInTeam(@Param("teamId") Long teamId);
+
+    /**
+     * Finds all users who have the 'Manager' role in a given team.
+     *
+     * @param teamId the ID of the team.
+     * @return a list of users who are managers of the given team.
+     */
+    @Query(
+            """
+        SELECT ut.user FROM UserTeam ut
+        WHERE ut.team.id = :teamId AND ut.role.name = 'Manager'
+    """)
+    List<User> findManagersByTeamId(@Param("teamId") Long teamId);
 }

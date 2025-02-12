@@ -301,6 +301,17 @@
 			baseTableName="fw_activity_log" baseColumnNames="created_by"
 			constraintName="fk_activity_log_user" referencedTableName="fw_user"
 			referencedColumnNames="id" />
+
+		<!--The table to keep the cache data to check deduplicate -->
+		<createTable tableName="fw_deduplication_cache">
+			<column name="cache_key" type="VARCHAR(255)">
+				<constraints primaryKey="true" nullable="false" />
+			</column>
+			<column name="expired_time" type="TIMESTAMPTZ">
+				<constraints nullable="false" />
+			</column>
+		</createTable>
+
 	</changeSet>
 
 	<changeSet author="flowinquiry"

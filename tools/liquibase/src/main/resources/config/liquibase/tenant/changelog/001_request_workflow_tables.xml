@@ -365,6 +365,14 @@
 			<column name="status" type="VARCHAR(50)" />
 		</createTable>
 
+		<!-- Add composite index on (status, sla_due_date) for optimal query performance -->
+		<createIndex
+			indexName="idx_workflow_transition_history_status_sla_due_date"
+			tableName="fw_workflow_transition_history">
+			<column name="status" />
+			<column name="sla_due_date" />
+		</createIndex>
+
 		<addForeignKeyConstraint
 			baseTableName="fw_workflow_transition_history"
 			baseColumnNames="team_request_id"

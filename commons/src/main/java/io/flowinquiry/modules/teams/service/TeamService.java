@@ -200,4 +200,15 @@ public class TeamService {
     public boolean hasManager(Long teamId) {
         return teamRepository.existsManagerInTeam(teamId);
     }
+
+    /**
+     * Retrieves all users who have the 'Manager' role in the specified team.
+     *
+     * @param teamId the ID of the team.
+     * @return a list of users who are managers of the given team.
+     */
+    @Transactional(readOnly = true)
+    public List<User> getTeamManagers(Long teamId) {
+        return teamRepository.findManagersByTeamId(teamId);
+    }
 }

@@ -15,6 +15,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Map;
 import java.util.Optional;
+import net.javacrumbs.shedlock.spring.annotation.EnableSchedulerLock;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,8 +25,8 @@ import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.boot.autoconfigure.liquibase.LiquibaseProperties;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.EnableAspectJAutoProxy;
-import org.springframework.core.annotation.Order;
 import org.springframework.core.env.Environment;
+import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.transaction.annotation.Transactional;
 
 @SpringBootApplication
@@ -36,7 +37,8 @@ import org.springframework.transaction.annotation.Transactional;
 })
 @EntityScan("io.flowinquiry")
 @EnableAspectJAutoProxy
-@Order(1)
+@EnableScheduling
+@EnableSchedulerLock(defaultLockAtMostFor = "PT30S")
 public class FlowInquiryApp {
 
     private static final Logger LOG = LoggerFactory.getLogger(FlowInquiryApp.class);

@@ -93,15 +93,18 @@ public class NewTeamRequestCreatedNotificationEventListener {
                                 .isRead(false)
                                 .build();
 
-                messageTemplate.convertAndSendToUser(
-                        String.valueOf(user.getId()), "/queue/notifications", notification);
-
                 notifications.add(notification);
             }
         }
 
-        // Save all notifications in batch after WebSocket messages are sent
-        notificationRepository.saveAll(notifications);
+        List<Notification> savedNotifications = notificationRepository.saveAll(notifications);
+
+        for (Notification notification : savedNotifications) {
+            messageTemplate.convertAndSendToUser(
+                    String.valueOf(notification.getUser().getId()),
+                    "/queue/notifications",
+                    notification);
+        }
 
         ActivityLog activityLog =
                 ActivityLog.builder()

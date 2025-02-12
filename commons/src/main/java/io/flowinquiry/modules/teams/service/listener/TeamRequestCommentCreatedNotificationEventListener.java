@@ -103,6 +103,7 @@ public class TeamRequestCommentCreatedNotificationEventListener {
 
         List<UserWithTeamRoleDTO> usersInTeam =
                 teamRepository.findUsersByTeamId(teamRequest.getTeam().getId());
+
         List<Notification> notifications = new ArrayList<>();
 
         for (UserWithTeamRoleDTO user : usersInTeam) {
@@ -115,13 +116,18 @@ public class TeamRequestCommentCreatedNotificationEventListener {
                                 .isRead(false)
                                 .build();
 
-                messageTemplate.convertAndSendToUser(
-                        String.valueOf(user.getId()), "/queue/notifications", notification);
-
                 notifications.add(notification);
             }
         }
-        notificationRepository.saveAll(notifications);
+
+        List<Notification> savedNotifications = notificationRepository.saveAll(notifications);
+
+        for (Notification notification : savedNotifications) {
+            messageTemplate.convertAndSendToUser(
+                    String.valueOf(notification.getUser().getId()),
+                    "/queue/notifications",
+                    notification);
+        }
 
         ActivityLog activityLog =
                 ActivityLog.builder()

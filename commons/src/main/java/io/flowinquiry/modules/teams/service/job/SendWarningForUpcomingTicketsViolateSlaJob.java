@@ -22,11 +22,13 @@ import java.util.ArrayList;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import net.javacrumbs.shedlock.spring.annotation.SchedulerLock;
+import org.springframework.context.annotation.Profile;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 @Slf4j
+@Profile("!test")
 @Component
 public class SendWarningForUpcomingTicketsViolateSlaJob {
 
@@ -84,7 +86,8 @@ public class SendWarningForUpcomingTicketsViolateSlaJob {
                                 teamRequest.getId(),
                                 violatingTicket.getTeamRequest().getWorkflow().getId(),
                                 violatingTicket.getEventName(),
-                                violatingTicket.getToState().getId());
+                                violatingTicket.getToState().getId(),
+                                "SendWarningForUpcomingTicketsViolateSlaJob");
 
                 if (deduplicationCacheService.containsKey(cacheKey)) {
                     continue; // Skip if already sent

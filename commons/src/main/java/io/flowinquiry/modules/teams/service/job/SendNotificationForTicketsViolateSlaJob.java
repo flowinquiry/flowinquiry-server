@@ -31,6 +31,7 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 @Slf4j
 @Profile("!test")
@@ -68,6 +69,7 @@ public class SendNotificationForTicketsViolateSlaJob {
 
     @Scheduled(cron = "0 0/1 * * * ?")
     @SchedulerLock(name = "SendNotificationForTicketsViolateSlaJob")
+    @Transactional
     public void run() {
         List<WorkflowTransitionHistory> violatingTickets =
                 workflowTransitionHistoryService.getViolatedTransitions();
@@ -76,6 +78,9 @@ public class SendNotificationForTicketsViolateSlaJob {
             TeamRequest teamRequest = violatingTicket.getTeamRequest();
             ZonedDateTime slaDueDate = violatingTicket.getSlaDueDate();
             String formattedSlaDueDate = slaDueDate.format(formatter);
+
+            // ✅ Escalate status
+            workflowTransitionHistoryService.escalateTransition(violatingTicket.getId());
 
             // ✅ Fetch assign user (if exists)
             User assignUser = teamRequest.getAssignUser();
@@ -155,7 +160,7 @@ public class SendNotificationForTicketsViolateSlaJob {
                                 .addVariable("slaDueDate", formattedSlaDueDate)
                                 .setTemplate("mail/violatedSlaTicketEmail");
 
-                mailService.sendEmail(emailContext);
+                //                mailService.sendEmail(emailContext);
 
                 // ✅ Store Key in Deduplication Cache
                 deduplicationCacheService.put(cacheKey, Duration.ofHours(24));

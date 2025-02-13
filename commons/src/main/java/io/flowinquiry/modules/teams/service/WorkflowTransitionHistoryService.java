@@ -1,6 +1,7 @@
 package io.flowinquiry.modules.teams.service;
 
 import static io.flowinquiry.modules.teams.domain.WorkflowTransitionHistoryStatus.Completed;
+import static io.flowinquiry.modules.teams.domain.WorkflowTransitionHistoryStatus.Escalated;
 import static io.flowinquiry.modules.teams.domain.WorkflowTransitionHistoryStatus.In_Progress;
 
 import io.flowinquiry.exceptions.ResourceNotFoundException;
@@ -12,6 +13,7 @@ import io.flowinquiry.modules.teams.repository.WorkflowTransitionHistoryReposito
 import io.flowinquiry.modules.teams.repository.WorkflowTransitionRepository;
 import io.flowinquiry.modules.teams.service.dto.TransitionItemCollectionDTO;
 import io.flowinquiry.modules.teams.service.mapper.WorkflowTransitionHistoryMapper;
+import jakarta.persistence.EntityNotFoundException;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.Collections;
@@ -69,8 +71,7 @@ public class WorkflowTransitionHistoryService {
         // Calculate SLA due date
         ZonedDateTime slaDueDate = null;
         if (transition.getSlaDuration() != null && transition.getSlaDuration() > 0) {
-            slaDueDate =
-                    ZonedDateTime.now(ZoneId.of("UTC")).plusSeconds(transition.getSlaDuration());
+            slaDueDate = ZonedDateTime.now(ZoneId.of("UTC")).plusHours(transition.getSlaDuration());
         }
 
         // Create and save the WorkflowTransitionHistory entry
@@ -114,5 +115,24 @@ public class WorkflowTransitionHistoryService {
      */
     public List<WorkflowTransitionHistory> getViolatedTransitions() {
         return workflowTransitionHistoryRepository.findViolatingTransitions(ZonedDateTime.now());
+    }
+
+    /**
+     * Updates the given workflow transition to 'Escalated' and persists it.
+     *
+     * @param transitionId The workflow transition history entry to escalate.
+     */
+    @Transactional
+    public void escalateTransition(Long transitionId) {
+        WorkflowTransitionHistory violatedTicket =
+                workflowTransitionHistoryRepository
+                        .findById(transitionId)
+                        .orElseThrow(
+                                () ->
+                                        new EntityNotFoundException(
+                                                "Transition not found: " + transitionId));
+
+        violatedTicket.setStatus(Escalated);
+        workflowTransitionHistoryRepository.save(violatedTicket);
     }
 }

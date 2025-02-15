@@ -130,6 +130,11 @@ public class QueryUtils {
                     throw new IllegalArgumentException("Invalid operator: " + filter.getOperator());
             }
         } else {
+            Class<?> fieldType = root.get(field).getJavaType();
+            if (fieldType.equals(Boolean.class) && value instanceof String) {
+                value = Boolean.parseBoolean((String) value); // Convert to Boolean
+            }
+
             // No join needed, access the field directly from the root
             switch (filter.getOperator()) {
                 case "gt":

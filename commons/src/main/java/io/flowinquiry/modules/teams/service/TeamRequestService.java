@@ -83,9 +83,6 @@ public class TeamRequestService {
     }
 
     public Page<TeamRequestDTO> findTeamRequests(QueryDTO queryDTO, Pageable pageable) {
-        if (!hasTeamIdFilter(queryDTO)) {
-            throw new ResourceNotFoundException("No team id found");
-        }
         Specification<TeamRequest> spec = createSpecification(Optional.of(queryDTO));
         return teamRequestRepository.findAll(spec, pageable).map(teamRequestMapper::toDto);
     }

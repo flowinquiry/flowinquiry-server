@@ -91,6 +91,10 @@ public class TeamRequest extends AbstractAuditingEntity<Long> {
             "(SELECT COUNT(a.id) FROM fw_entity_attachment a WHERE a.entity_type = 'Team_Request' AND a.entity_id = id)")
     private int numberAttachments;
 
+    @Formula(
+            "(SELECT COUNT(a.id) FROM fw_entity_watchers a WHERE a.entity_type = 'Team_Request' AND a.entity_id = id)")
+    private int numWatchers;
+
     @OneToOne(
             mappedBy = "teamRequest",
             cascade = CascadeType.ALL,

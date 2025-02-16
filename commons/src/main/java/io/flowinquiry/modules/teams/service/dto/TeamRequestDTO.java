@@ -38,5 +38,6 @@ public class TeamRequestDTO {
     private Instant createdAt;
     private Instant modifiedAt;
     private int numberAttachments;
+    private int numberWatchers;
     private TeamRequestConversationHealthDTO conversationHealth;
 }

@@ -5,16 +5,11 @@ import io.flowinquiry.modules.teams.domain.TeamRequest;
 import io.flowinquiry.modules.teams.domain.Workflow;
 import io.flowinquiry.modules.teams.domain.WorkflowState;
 import io.flowinquiry.modules.teams.service.dto.TeamRequestDTO;
-import io.flowinquiry.modules.teams.service.dto.WatcherDTO;
 import io.flowinquiry.modules.usermanagement.domain.User;
-import java.util.Collections;
-import java.util.Set;
-import java.util.stream.Collectors;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
 import org.mapstruct.Named;
-import org.mapstruct.factory.Mappers;
 
 @Mapper(
         componentModel = "spring",
@@ -94,13 +89,5 @@ public interface TeamRequestMapper {
         String firstName = user.getFirstName() != null ? user.getFirstName() : "";
         String lastName = user.getLastName() != null ? user.getLastName() : "";
         return (firstName + " " + lastName).trim();
-    }
-
-    default Set<WatcherDTO> mapWatchers(Set<User> watchers) {
-        if (watchers == null || watchers.isEmpty()) {
-            return Collections.emptySet();
-        }
-        WatcherMapper watcherMapper = Mappers.getMapper(WatcherMapper.class);
-        return watchers.stream().map(watcherMapper::toDto).collect(Collectors.toSet());
     }
 }

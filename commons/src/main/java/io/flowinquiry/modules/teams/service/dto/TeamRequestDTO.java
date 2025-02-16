@@ -3,7 +3,6 @@ package io.flowinquiry.modules.teams.service.dto;
 import io.flowinquiry.modules.teams.domain.TicketChannel;
 import java.time.Instant;
 import java.time.LocalDate;
-import java.util.Set;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -38,7 +37,6 @@ public class TeamRequestDTO {
     private Boolean isCompleted;
     private Instant createdAt;
     private Instant modifiedAt;
-    private Set<WatcherDTO> watchers;
     private int numberAttachments;
     private TeamRequestConversationHealthDTO conversationHealth;
 }

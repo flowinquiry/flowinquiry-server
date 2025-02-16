@@ -2,6 +2,7 @@ package io.flowinquiry.modules.usermanagement.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.flowinquiry.modules.audit.AbstractAuditingEntity;
+import io.flowinquiry.modules.collab.domain.EntityWatcher;
 import io.flowinquiry.modules.teams.domain.Team;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -24,9 +25,6 @@ import jakarta.validation.constraints.Size;
 import java.io.Serial;
 import java.io.Serializable;
 import java.time.Instant;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.time.ZoneOffset;
 import java.util.HashSet;
 import java.util.Set;
 import lombok.AllArgsConstructor;
@@ -127,7 +125,7 @@ public class User extends AbstractAuditingEntity<Long> implements Serializable {
     private String country;
 
     @Column(name = "last_login_time")
-    private LocalDateTime lastLoginTime;
+    private Instant lastLoginTime;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<UserAuth> userAuths = new HashSet<>();
@@ -140,6 +138,9 @@ public class User extends AbstractAuditingEntity<Long> implements Serializable {
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "team_id"))
     private Set<Team> teams;
+
+    @OneToMany(mappedBy = "createdBy", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<EntityWatcher> createdWatchers;
 
     @JsonIgnore
     @ManyToMany
@@ -156,11 +157,8 @@ public class User extends AbstractAuditingEntity<Long> implements Serializable {
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<UserTeam> userTeams = new HashSet<>();
 
-    public LocalDateTime getLastLoginTime() {
-        if (lastLoginTime == null) return null;
-        ZoneId userZone =
-                (timezone != null) ? ZoneId.of(timezone) : ZoneId.of("America/Los_Angeles");
-        return lastLoginTime.atZone(ZoneOffset.UTC).withZoneSameInstant(userZone).toLocalDateTime();
+    public Instant getLastLoginTime() {
+        return lastLoginTime;
     }
 
     @PrePersist

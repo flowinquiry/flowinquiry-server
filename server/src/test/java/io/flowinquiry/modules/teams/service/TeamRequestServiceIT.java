@@ -8,11 +8,12 @@ import static org.mockito.Mockito.verify;
 
 import io.flowinquiry.IntegrationTest;
 import io.flowinquiry.modules.audit.AuditLogUpdateEvent;
+import io.flowinquiry.modules.collab.domain.EntityType;
+import io.flowinquiry.modules.collab.domain.EntityWatcher;
+import io.flowinquiry.modules.collab.repository.EntityWatcherRepository;
 import io.flowinquiry.modules.teams.domain.TicketChannel;
 import io.flowinquiry.modules.teams.repository.TeamRequestRepository;
-import io.flowinquiry.modules.teams.repository.TeamRequestWatcherRepository;
 import io.flowinquiry.modules.teams.service.dto.TeamRequestDTO;
-import io.flowinquiry.modules.teams.service.dto.WatcherDTO;
 import io.flowinquiry.modules.teams.service.event.NewTeamRequestCreatedEvent;
 import io.flowinquiry.modules.teams.service.event.TeamRequestWorkStateTransitionEvent;
 import io.flowinquiry.modules.teams.service.mapper.TeamRequestMapper;
@@ -34,7 +35,7 @@ public class TeamRequestServiceIT {
     @Autowired private TeamRequestService teamRequestService;
     @Autowired private TeamRequestRepository teamRequestRepository;
     @Autowired private TeamRequestMapper teamRequestMapper;
-    @Autowired private TeamRequestWatcherRepository teamRequestWatcherRepository;
+    @Autowired private EntityWatcherRepository entityWatcherRepository;
     @Autowired private ApplicationEventPublisher realEventPublisher;
     private ApplicationEventPublisher spyEventPublisher;
 
@@ -71,9 +72,11 @@ public class TeamRequestServiceIT {
         assertThat(updatedRequest.getRequestTitle()).isEqualTo("Updated Request Title");
         assertThat(updatedRequest.getCurrentStateId()).isEqualTo(2L);
 
-        List<WatcherDTO> watchers = teamRequestWatcherRepository.findWatchersByRequestId(1L);
+        List<EntityWatcher> watchers =
+                entityWatcherRepository.findByEntityTypeAndEntityId(EntityType.Team_Request, 1L);
         assertThat(watchers).hasSize(3);
-        List<String> emails = watchers.stream().map(WatcherDTO::getEmail).toList();
+        List<String> emails =
+                watchers.stream().map(watcher -> watcher.getWatchUser().getEmail()).toList();
         assertThat(emails)
                 .containsExactlyInAnyOrder(
                         "alice.johnson@flowinquiry.io",
@@ -127,7 +130,6 @@ public class TeamRequestServiceIT {
 
         assertThat(nextEntity.getCreatedAt()).isNotNull();
         assertThat(nextEntity.getModifiedAt()).isNotNull();
-        assertThat(nextEntity.getWatchers()).isNotNull();
         assertThat(nextEntity.getNumberAttachments()).isGreaterThanOrEqualTo(0);
     }
 
@@ -161,7 +163,6 @@ public class TeamRequestServiceIT {
 
         assertThat(previousEntity.getCreatedAt()).isNotNull();
         assertThat(previousEntity.getModifiedAt()).isNotNull();
-        assertThat(previousEntity.getWatchers()).isNotNull();
         assertThat(previousEntity.getNumberAttachments()).isGreaterThanOrEqualTo(0);
     }
 }

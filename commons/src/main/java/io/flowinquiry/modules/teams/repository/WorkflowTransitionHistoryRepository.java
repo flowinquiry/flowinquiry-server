@@ -1,7 +1,7 @@
 package io.flowinquiry.modules.teams.repository;
 
 import io.flowinquiry.modules.teams.domain.WorkflowTransitionHistory;
-import java.time.ZonedDateTime;
+import java.time.Instant;
 import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -30,6 +30,5 @@ public interface WorkflowTransitionHistoryRepository
     WHERE wth.status = 'In_Progress'
     AND wth.slaDueDate <= :checkTime
     """)
-    List<WorkflowTransitionHistory> findViolatingTransitions(
-            @Param("checkTime") ZonedDateTime checkTime);
+    List<WorkflowTransitionHistory> findViolatingTransitions(@Param("checkTime") Instant checkTime);
 }

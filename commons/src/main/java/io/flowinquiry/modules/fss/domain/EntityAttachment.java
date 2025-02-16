@@ -8,7 +8,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
-import java.time.LocalDateTime;
+import java.time.Instant;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
@@ -55,12 +55,12 @@ public class EntityAttachment {
     private String fileUrl;
 
     @Column(name = "uploaded_at", nullable = false, updatable = false)
-    private LocalDateTime uploadedAt;
+    private Instant uploadedAt;
 
     @PrePersist
     public void prePersist() {
         if (this.uploadedAt == null) {
-            this.uploadedAt = LocalDateTime.now();
+            this.uploadedAt = Instant.now();
         }
     }
 }

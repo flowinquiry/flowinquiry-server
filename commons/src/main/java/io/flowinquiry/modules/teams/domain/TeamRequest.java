@@ -11,13 +11,10 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.JoinTable;
-import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import java.time.LocalDate;
-import java.util.Set;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
@@ -89,13 +86,6 @@ public class TeamRequest extends AbstractAuditingEntity<Long> {
 
     @Column(name = "is_completed", nullable = false)
     private Boolean isCompleted = false;
-
-    @ManyToMany
-    @JoinTable(
-            name = "fw_team_request_watchers",
-            joinColumns = @JoinColumn(name = "team_request_id"),
-            inverseJoinColumns = @JoinColumn(name = "user_id"))
-    private Set<User> watchers;
 
     @Formula(
             "(SELECT COUNT(a.id) FROM fw_entity_attachment a WHERE a.entity_type = 'Team_Request' AND a.entity_id = id)")

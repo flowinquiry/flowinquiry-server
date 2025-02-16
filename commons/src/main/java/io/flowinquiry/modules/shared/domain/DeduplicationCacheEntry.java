@@ -4,7 +4,7 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
-import java.time.ZonedDateTime;
+import java.time.Instant;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -22,5 +22,5 @@ public class DeduplicationCacheEntry {
     private String key;
 
     @Column(name = "expired_time", nullable = false)
-    private ZonedDateTime expiredTime;
+    private Instant expiredTime;
 }

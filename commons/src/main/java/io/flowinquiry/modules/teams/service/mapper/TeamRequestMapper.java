@@ -37,7 +37,6 @@ public interface TeamRequestMapper {
     @Mapping(target = "workflowRequestName", source = "workflow.requestName")
     @Mapping(target = "currentStateId", source = "currentState.id")
     @Mapping(target = "currentStateName", source = "currentState.stateName")
-    @Mapping(target = "watchers", source = "watchers")
     @Mapping(target = "conversationHealth", source = "conversationHealth")
     TeamRequestDTO toDto(TeamRequest teamRequest);
 

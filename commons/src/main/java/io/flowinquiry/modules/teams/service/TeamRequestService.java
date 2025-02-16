@@ -5,14 +5,15 @@ import static io.flowinquiry.query.QueryUtils.createSpecification;
 
 import io.flowinquiry.exceptions.ResourceNotFoundException;
 import io.flowinquiry.modules.audit.AuditLogUpdateEvent;
+import io.flowinquiry.modules.collab.domain.EntityType;
+import io.flowinquiry.modules.collab.domain.EntityWatcher;
+import io.flowinquiry.modules.collab.repository.EntityWatcherRepository;
 import io.flowinquiry.modules.teams.domain.TeamRequest;
-import io.flowinquiry.modules.teams.domain.TeamRequestWatcher;
 import io.flowinquiry.modules.teams.domain.WorkflowState;
 import io.flowinquiry.modules.teams.domain.WorkflowTransition;
 import io.flowinquiry.modules.teams.domain.WorkflowTransitionHistory;
 import io.flowinquiry.modules.teams.domain.WorkflowTransitionHistoryStatus;
 import io.flowinquiry.modules.teams.repository.TeamRequestRepository;
-import io.flowinquiry.modules.teams.repository.TeamRequestWatcherRepository;
 import io.flowinquiry.modules.teams.repository.WorkflowStateRepository;
 import io.flowinquiry.modules.teams.repository.WorkflowTransitionHistoryRepository;
 import io.flowinquiry.modules.teams.repository.WorkflowTransitionRepository;
@@ -30,9 +31,10 @@ import io.flowinquiry.query.GroupFilter;
 import io.flowinquiry.query.QueryDTO;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
+import java.time.Instant;
 import java.time.LocalDate;
 import java.time.ZoneOffset;
-import java.time.ZonedDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -42,7 +44,6 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
-import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.Page;
@@ -57,7 +58,7 @@ public class TeamRequestService {
     @PersistenceContext private EntityManager entityManager;
 
     private final TeamRequestRepository teamRequestRepository;
-    private final TeamRequestWatcherRepository teamRequestWatcherRepository;
+    private final EntityWatcherRepository entityWatcherRepository;
     private final TeamRequestMapper teamRequestMapper;
     private final WorkflowStateRepository workflowStateRepository;
     private final WorkflowTransitionRepository workflowTransitionRepository;
@@ -67,14 +68,14 @@ public class TeamRequestService {
     @Autowired
     public TeamRequestService(
             TeamRequestRepository teamRequestRepository,
-            TeamRequestWatcherRepository teamRequestWatcherRepository,
+            EntityWatcherRepository entityWatcherRepository,
             TeamRequestMapper teamRequestMapper,
             WorkflowTransitionRepository workflowTransitionRepository,
             WorkflowStateRepository workflowStateRepository,
             WorkflowTransitionHistoryRepository workflowTransitionHistoryRepository,
             ApplicationEventPublisher eventPublisher) {
         this.teamRequestRepository = teamRequestRepository;
-        this.teamRequestWatcherRepository = teamRequestWatcherRepository;
+        this.entityWatcherRepository = entityWatcherRepository;
         this.teamRequestMapper = teamRequestMapper;
         this.workflowTransitionRepository = workflowTransitionRepository;
         this.workflowStateRepository = workflowStateRepository;
@@ -124,37 +125,21 @@ public class TeamRequestService {
         // Construct a unique set of watchers including the ticket creator
         Set<Long> uniqueWatcherIds = new HashSet<>();
 
-        if (teamRequestDTO.getWatchers() != null) {
-            teamRequestDTO
-                    .getWatchers()
-                    .forEach(watcherDTO -> uniqueWatcherIds.add(watcherDTO.getId()));
-        }
-
         // Add ticket creator if not already in the watchers
         uniqueWatcherIds.add(teamRequestDTO.getRequestUserId());
         if (teamRequestDTO.getAssignUserId() != null) {
             uniqueWatcherIds.add(teamRequestDTO.getAssignUserId());
         }
 
-        List<TeamRequestWatcher> watchers =
-                uniqueWatcherIds.stream()
-                        .map(
-                                watcherId -> {
-                                    TeamRequestWatcher watcher = new TeamRequestWatcher();
-                                    watcher.setTeamRequestId(teamRequestId);
-                                    watcher.setUserId(watcherId);
-                                    watcher.setCreatedAt(ZonedDateTime.now());
-                                    watcher.setCreatedBy(teamRequestDTO.getRequestUserId());
-                                    return watcher;
-                                })
-                        .collect(Collectors.toList());
-
-        teamRequestWatcherRepository.saveAll(watchers);
+        EntityWatcher entityWatcher = new EntityWatcher();
+        entityWatcher.setEntityId(teamRequestId);
+        entityWatcher.setEntityType(EntityType.Team_Request);
+        entityWatcher.setWatchUser(User.builder().id(teamRequestDTO.getRequestUserId()).build());
 
         // Clear the persistence context to force a reload
         entityManager.clear();
 
-        ZonedDateTime slaDueDate =
+        Instant slaDueDate =
                 calculateEarliestSlaDueDate(
                         teamRequest.getWorkflow().getId(), initialStateByWorkflowId.getId());
 
@@ -163,7 +148,7 @@ public class TeamRequestService {
         history.setFromState(null);
         history.setToState(initialStateByWorkflowId);
         history.setEventName("Created");
-        history.setTransitionDate(ZonedDateTime.now());
+        history.setTransitionDate(Instant.now());
         history.setSlaDueDate(slaDueDate);
         history.setStatus(WorkflowTransitionHistoryStatus.In_Progress);
         workflowTransitionHistoryRepository.save(history);
@@ -205,20 +190,20 @@ public class TeamRequestService {
 
         if (teamRequestDTO.getAssignUserId() != null) {
             Long assignedUserId = teamRequestDTO.getAssignUserId();
-            Set<User> existingWatchers = existingTeamRequest.getWatchers();
 
             // Check if assigned user is already a watcher
             boolean isWatcherPresent =
-                    existingWatchers != null
-                            && existingWatchers.stream()
-                                    .anyMatch(watcher -> watcher.getId().equals(assignedUserId));
+                    entityWatcherRepository.existsByEntityTypeAndEntityIdAndWatchUserId(
+                            EntityType.Team_Request, teamRequestDTO.getId(), assignedUserId);
             if (!isWatcherPresent) {
-                TeamRequestWatcher watcher = new TeamRequestWatcher();
-                watcher.setTeamRequestId(teamRequestDTO.getId());
-                watcher.setUserId(assignedUserId);
-                watcher.setCreatedAt(ZonedDateTime.now());
-                watcher.setCreatedBy(-1L);
-                teamRequestWatcherRepository.save(watcher);
+                EntityWatcher watcher = new EntityWatcher();
+                watcher.setEntityType(EntityType.Team_Request);
+                watcher.setEntityId(teamRequestDTO.getId());
+                watcher.setWatchUser(User.builder().id(assignedUserId).build());
+                entityWatcherRepository.save(watcher);
+                // Flush & Clear the persistence context to ensure fresh retrieval
+                entityManager.flush();
+                entityManager.clear();
             }
         }
 
@@ -321,7 +306,7 @@ public class TeamRequestService {
         return teamRequestRepository.getTicketStatisticsByTeamId(teamId);
     }
 
-    private ZonedDateTime calculateEarliestSlaDueDate(Long workflowId, Long sourceStateId) {
+    private Instant calculateEarliestSlaDueDate(Long workflowId, Long sourceStateId) {
         // Fetch all transitions from the current state
         List<WorkflowTransition> transitions =
                 workflowTransitionRepository.findTransitionsBySourceState(
@@ -349,7 +334,7 @@ public class TeamRequestService {
         }
 
         // Calculate the SLA due date for the earliest transition
-        return ZonedDateTime.now().plusMinutes(earliestTransition.getSlaDuration());
+        return Instant.now().plus(earliestTransition.getSlaDuration(), ChronoUnit.MINUTES);
     }
 
     public Page<TeamRequestDTO> getOverdueTicketsByTeam(Long teamId, Pageable pageable) {

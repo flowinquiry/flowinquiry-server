@@ -1,7 +1,7 @@
 package io.flowinquiry.modules.shared.reppository;
 
 import io.flowinquiry.modules.shared.domain.DeduplicationCacheEntry;
-import java.time.ZonedDateTime;
+import java.time.Instant;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -17,5 +17,5 @@ public interface DeduplicationCacheRepository
     @Modifying
     @Transactional
     @Query("DELETE FROM DeduplicationCacheEntry e WHERE e.expiredTime < :now")
-    int deleteExpiredEntries(@Param("now") ZonedDateTime now);
+    int deleteExpiredEntries(@Param("now") Instant now);
 }

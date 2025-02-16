@@ -1,7 +1,7 @@
 package io.flowinquiry.modules.shared.service.job;
 
 import io.flowinquiry.modules.shared.reppository.DeduplicationCacheRepository;
-import java.time.ZonedDateTime;
+import java.time.Instant;
 import lombok.extern.slf4j.Slf4j;
 import net.javacrumbs.shedlock.spring.annotation.SchedulerLock;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -24,7 +24,7 @@ public class DeduplicationCacheCleanupJob {
     @Scheduled(cron = "0 0 0 * * ?") // Runs daily at midnight
     @SchedulerLock(name = "DeduplicationCacheCleanupJob")
     public void cleanupExpiredCacheEntries() {
-        int deletedRows = deduplicationCacheRepository.deleteExpiredEntries(ZonedDateTime.now());
+        int deletedRows = deduplicationCacheRepository.deleteExpiredEntries(Instant.now());
         log.info("Deleted {} expired cache entries", deletedRows);
     }
 }

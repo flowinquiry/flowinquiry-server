@@ -5,7 +5,6 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import java.io.Serializable;
 import java.time.Instant;
-import java.time.LocalDateTime;
 import java.util.Set;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -33,7 +32,7 @@ public class UserDTO implements Serializable {
 
     private String langKey;
 
-    private LocalDateTime lastLoginTime;
+    private Instant lastLoginTime;
 
     private Set<String> authorities;
 

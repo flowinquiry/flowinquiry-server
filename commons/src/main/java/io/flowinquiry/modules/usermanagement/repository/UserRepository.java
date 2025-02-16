@@ -2,7 +2,7 @@ package io.flowinquiry.modules.usermanagement.repository;
 
 import io.flowinquiry.modules.usermanagement.domain.User;
 import io.flowinquiry.modules.usermanagement.service.dto.UserHierarchyDTO;
-import java.time.LocalDateTime;
+import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.data.jpa.repository.EntityGraph;
@@ -49,8 +49,7 @@ public interface UserRepository extends JpaRepository<User, Long>, JpaSpecificat
     @Transactional
     @Query("UPDATE User u SET u.lastLoginTime = :lastLoginTime WHERE u.email = :userEmail")
     void updateLastLoginTime(
-            @Param("userEmail") String userEmail,
-            @Param("lastLoginTime") LocalDateTime lastLoginTime);
+            @Param("userEmail") String userEmail, @Param("lastLoginTime") Instant lastLoginTime);
 
     @Query(
             value =

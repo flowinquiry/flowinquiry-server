@@ -16,7 +16,8 @@ import io.flowinquiry.modules.teams.service.WorkflowTransitionHistoryService;
 import io.flowinquiry.modules.usermanagement.domain.User;
 import io.flowinquiry.utils.Obfuscator;
 import java.time.Duration;
-import java.time.ZonedDateTime;
+import java.time.Instant;
+import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
@@ -32,9 +33,9 @@ import org.springframework.stereotype.Component;
 @Component
 public class SendWarningForUpcomingTicketsViolateSlaJob {
 
-    private static final int PRIOR_SLA_WARNING_THRESHOLD_IN_SECONDS =
-            1800; // send the warning to people before 30 minutes the SLAs are violated, this value
-    // should get from team settings
+    // send the warning to people before 30 minutes the SLAs are violated, this value should get
+    // from team settings
+    private static final int PRIOR_SLA_WARNING_THRESHOLD_IN_SECONDS = 1800;
 
     private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm z");
 
@@ -66,8 +67,8 @@ public class SendWarningForUpcomingTicketsViolateSlaJob {
 
         for (WorkflowTransitionHistory violatingTicket : violatingTickets) {
             TeamRequest teamRequest = violatingTicket.getTeamRequest();
-            ZonedDateTime slaDueDate = violatingTicket.getSlaDueDate();
-            String formattedSlaDueDate = slaDueDate.format(formatter);
+            Instant slaDueDate = violatingTicket.getSlaDueDate();
+            String formattedSlaDueDate = slaDueDate.atZone(ZoneId.of("UTC")).format(formatter);
 
             User assignUser = teamRequest.getAssignUser();
             List<User> recipients = new ArrayList<>();

@@ -247,34 +247,40 @@
 			constraintName="fk_team_request_conversation_health_team_request"
 			onDelete="CASCADE" />
 
-		<createTable tableName="fw_team_request_watchers">
+
+		<createTable tableName="fw_entity_watchers">
 			<column name="id" type="BIGSERIAL" autoIncrement="true">
 				<constraints primaryKey="true" nullable="false" />
 			</column>
-			<column name="team_request_id" type="BIGINT">
+			<column name="entity_type" type="VARCHAR(50)">
 				<constraints nullable="false" />
 			</column>
-			<column name="user_id" type="BIGINT">
+			<column name="entity_id" type="BIGINT">
+				<constraints nullable="false" />
+			</column>
+			<column name="watch_user_id" type="BIGINT">
 				<constraints nullable="false" />
 			</column>
 			<column name="created_at" type="timestamptz">
 				<constraints nullable="false" />
 			</column>
 			<column name="created_by" type="BIGINT">
-				<constraints nullable="false" />
+				<constraints nullable="true" />
 			</column>
 		</createTable>
 
 		<addForeignKeyConstraint
-			baseTableName="fw_team_request_watchers"
-			baseColumnNames="team_request_id"
-			constraintName="fk_team_request_watchers_request_id"
-			referencedTableName="fw_team_request" referencedColumnNames="id"
+			baseTableName="fw_entity_watchers" baseColumnNames="watch_user_id"
+			constraintName="fk_entity_watchers_user_id"
+			referencedTableName="fw_user" referencedColumnNames="id"
 			onDelete="CASCADE" />
-		<addForeignKeyConstraint
-			baseTableName="fw_team_request_watchers" baseColumnNames="user_id"
-			constraintName="fk_team_request_watchers_user_id"
-			referencedTableName="fw_user" referencedColumnNames="id" />
+
+		<createIndex indexName="idx_entity_watchers_entity"
+			tableName="fw_entity_watchers">
+			<column name="entity_type" />
+			<column name="entity_id" />
+		</createIndex>
+
 
 		<!--Defines the transitions between states within each workflow. It includes 
 			the event name that triggers each transition, along with the SLA duration 
@@ -600,18 +606,20 @@
 			(SELECT MAX(id) FROM fw_team_request_conversation_health));</sql>
 	</changeSet>
 	<changeSet author="flowinquiry"
-		id="001:05-insert-fw_team_request_watchers-test" context="test">
+		id="001:05-insert-fw_entity_watchers-test" context="test">
 		<loadData
-			file="config/liquibase/tenant/data/fw_team_request_watchers_test.csv"
-			separator=";" tableName="fw_team_request_watchers">
+			file="config/liquibase/tenant/data/fw_entity_watchers_test.csv"
+			separator=";" tableName="fw_entity_watchers">
 			<column name="id" type="numeric" />
-			<column name="team_request_id" type="numeric" />
-			<column name="user_id" type="numeric" />
+			<column name="entity_type" type="string" />
+			<column name="entity_id" type="numeric" />
+			<column name="watch_user_id" type="numeric" />
 			<column name="created_at" type="timestamp" />
 			<column name="created_by" type="numeric" />
 		</loadData>
-		<sql>SELECT setval('fw_team_request_watchers_id_seq', (SELECT MAX(id)
-			FROM fw_team_request_watchers));</sql>
+		<sql>SELECT setval('fw_entity_watchers_id_seq', (SELECT MAX(id)
+			FROM
+			fw_entity_watchers));</sql>
 	</changeSet>
 	<changeSet author="flowinquiry"
 		id="001:06-insert-fw_workflow_actions-test" context="test">

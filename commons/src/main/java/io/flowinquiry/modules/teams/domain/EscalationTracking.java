@@ -10,7 +10,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
-import java.time.LocalDateTime;
+import java.time.Instant;
 
 @Entity
 @Table(name = "fw_escalation_tracking")
@@ -35,5 +35,5 @@ public class EscalationTracking {
             name = "escalation_time",
             nullable = false,
             columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
-    private LocalDateTime escalationTime;
+    private Instant escalationTime;
 }

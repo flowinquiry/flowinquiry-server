@@ -14,8 +14,8 @@ import io.flowinquiry.modules.teams.repository.WorkflowTransitionRepository;
 import io.flowinquiry.modules.teams.service.dto.TransitionItemCollectionDTO;
 import io.flowinquiry.modules.teams.service.mapper.WorkflowTransitionHistoryMapper;
 import jakarta.persistence.EntityNotFoundException;
-import java.time.ZoneId;
-import java.time.ZonedDateTime;
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.Collections;
 import java.util.List;
 import org.springframework.stereotype.Service;
@@ -69,9 +69,9 @@ public class WorkflowTransitionHistoryService {
                                                 "Transition not found for the given states"));
 
         // Calculate SLA due date
-        ZonedDateTime slaDueDate = null;
+        Instant slaDueDate = null;
         if (transition.getSlaDuration() != null && transition.getSlaDuration() > 0) {
-            slaDueDate = ZonedDateTime.now(ZoneId.of("UTC")).plusHours(transition.getSlaDuration());
+            slaDueDate = Instant.now().plus(transition.getSlaDuration(), ChronoUnit.HOURS);
         }
 
         // Create and save the WorkflowTransitionHistory entry
@@ -80,7 +80,7 @@ public class WorkflowTransitionHistoryService {
         history.setFromState(transition.getSourceState());
         history.setToState(transition.getTargetState());
         history.setEventName(transition.getEventName());
-        history.setTransitionDate(ZonedDateTime.now(ZoneId.of("UTC")));
+        history.setTransitionDate(Instant.now());
         history.setSlaDueDate(slaDueDate);
         if (transition.getTargetState().getIsFinal()) {
             history.setStatus(Completed);
@@ -104,7 +104,7 @@ public class WorkflowTransitionHistoryService {
 
     @Transactional(readOnly = true)
     public List<WorkflowTransitionHistory> getViolatingTransitions(long checkTimeInSeconds) {
-        ZonedDateTime checkTime = ZonedDateTime.now().plusSeconds(checkTimeInSeconds);
+        Instant checkTime = Instant.now().plusSeconds(checkTimeInSeconds);
         return workflowTransitionHistoryRepository.findViolatingTransitions(checkTime);
     }
 
@@ -114,7 +114,7 @@ public class WorkflowTransitionHistoryService {
      * @return A list of violated workflow transitions.
      */
     public List<WorkflowTransitionHistory> getViolatedTransitions() {
-        return workflowTransitionHistoryRepository.findViolatingTransitions(ZonedDateTime.now());
+        return workflowTransitionHistoryRepository.findViolatingTransitions(Instant.now());
     }
 
     /**

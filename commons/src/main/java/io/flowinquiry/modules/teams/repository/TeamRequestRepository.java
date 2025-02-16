@@ -35,7 +35,6 @@ public interface TeamRequestRepository
                 "modifiedByUser",
                 "workflow",
                 "currentState",
-                "watchers",
                 "conversationHealth"
             })
     Optional<TeamRequest> findById(@Param("id") Long id);

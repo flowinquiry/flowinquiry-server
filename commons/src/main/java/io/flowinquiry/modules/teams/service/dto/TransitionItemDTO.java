@@ -1,6 +1,6 @@
 package io.flowinquiry.modules.teams.service.dto;
 
-import java.time.ZonedDateTime;
+import java.time.Instant;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -14,7 +14,7 @@ public class TransitionItemDTO {
     private String fromState;
     private String toState;
     private String eventName;
-    private ZonedDateTime transitionDate;
-    private ZonedDateTime slaDueDate;
+    private Instant transitionDate;
+    private Instant slaDueDate;
     private String status;
 }

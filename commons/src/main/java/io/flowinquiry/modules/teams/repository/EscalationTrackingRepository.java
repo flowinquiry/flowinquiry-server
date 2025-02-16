@@ -1,7 +1,7 @@
 package io.flowinquiry.modules.teams.repository;
 
 import io.flowinquiry.modules.teams.domain.EscalationTracking;
-import java.time.LocalDateTime;
+import java.time.Instant;
 import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -43,5 +43,5 @@ public interface EscalationTrackingRepository extends JpaRepository<EscalationTr
     boolean existsEscalationBeforeThreshold(
             @Param("teamRequestId") Long teamRequestId,
             @Param("escalationLevel") int escalationLevel,
-            @Param("threshold") LocalDateTime threshold);
+            @Param("threshold") Instant threshold);
 }

@@ -14,7 +14,6 @@ import io.flowinquiry.modules.usermanagement.service.dto.ResourcePermissionDTO;
 import io.flowinquiry.modules.usermanagement.service.dto.UserDTO;
 import io.flowinquiry.utils.Random;
 import java.time.Instant;
-import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.HashSet;
 import java.util.List;
@@ -75,7 +74,7 @@ class UserServiceIT {
         user.setImageUrl(DEFAULT_IMAGEURL);
         user.setLangKey(DEFAULT_LANGKEY);
 
-        when(dateTimeProvider.getNow()).thenReturn(Optional.of(LocalDateTime.now()));
+        when(dateTimeProvider.getNow()).thenReturn(Optional.of(Instant.now()));
         auditingHandler.setDateTimeProvider(dateTimeProvider);
     }
 

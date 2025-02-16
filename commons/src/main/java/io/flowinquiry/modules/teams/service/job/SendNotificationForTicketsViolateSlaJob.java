@@ -19,7 +19,8 @@ import io.flowinquiry.modules.usermanagement.domain.User;
 import io.flowinquiry.modules.usermanagement.service.mapper.UserMapper;
 import io.flowinquiry.utils.Obfuscator;
 import java.time.Duration;
-import java.time.ZonedDateTime;
+import java.time.Instant;
+import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.HashSet;
 import java.util.List;
@@ -76,8 +77,8 @@ public class SendNotificationForTicketsViolateSlaJob {
 
         for (WorkflowTransitionHistory violatingTicket : violatingTickets) {
             TeamRequest teamRequest = violatingTicket.getTeamRequest();
-            ZonedDateTime slaDueDate = violatingTicket.getSlaDueDate();
-            String formattedSlaDueDate = slaDueDate.format(formatter);
+            Instant slaDueDate = violatingTicket.getSlaDueDate();
+            String formattedSlaDueDate = slaDueDate.atZone(ZoneId.of("UTC")).format(formatter);
 
             // ✅ Escalate status
             workflowTransitionHistoryService.escalateTransition(violatingTicket.getId());
@@ -160,7 +161,7 @@ public class SendNotificationForTicketsViolateSlaJob {
                                 .addVariable("slaDueDate", formattedSlaDueDate)
                                 .setTemplate("mail/violatedSlaTicketEmail");
 
-                //                mailService.sendEmail(emailContext);
+                mailService.sendEmail(emailContext);
 
                 // ✅ Store Key in Deduplication Cache
                 deduplicationCacheService.put(cacheKey, Duration.ofHours(24));

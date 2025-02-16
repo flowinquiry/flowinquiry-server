@@ -10,7 +10,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
-import java.time.ZonedDateTime;
+import java.time.Instant;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
@@ -49,10 +49,10 @@ public class WorkflowTransitionHistory {
     private String eventName;
 
     @Column(name = "transition_date", nullable = false)
-    private ZonedDateTime transitionDate;
+    private Instant transitionDate;
 
     @Column(name = "sla_due_date")
-    private ZonedDateTime slaDueDate;
+    private Instant slaDueDate;
 
     @Column(name = "status")
     @Enumerated(EnumType.STRING)

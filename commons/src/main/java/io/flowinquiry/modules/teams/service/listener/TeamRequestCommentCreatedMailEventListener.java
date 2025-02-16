@@ -1,15 +1,16 @@
 package io.flowinquiry.modules.teams.service.listener;
 
 import io.flowinquiry.modules.collab.EmailContext;
+import io.flowinquiry.modules.collab.domain.EntityType;
+import io.flowinquiry.modules.collab.domain.EntityWatcher;
+import io.flowinquiry.modules.collab.repository.EntityWatcherRepository;
 import io.flowinquiry.modules.collab.service.CommentService;
 import io.flowinquiry.modules.collab.service.MailService;
 import io.flowinquiry.modules.collab.service.dto.CommentDTO;
-import io.flowinquiry.modules.teams.repository.TeamRequestWatcherRepository;
 import io.flowinquiry.modules.teams.service.TeamRequestService;
 import io.flowinquiry.modules.teams.service.dto.TeamRequestDTO;
-import io.flowinquiry.modules.teams.service.dto.WatcherDTO;
 import io.flowinquiry.modules.teams.service.event.TeamRequestCommentCreatedEvent;
-import io.flowinquiry.modules.teams.service.mapper.WatcherMapper;
+import io.flowinquiry.modules.usermanagement.service.mapper.UserMapper;
 import io.flowinquiry.utils.Obfuscator;
 import java.util.List;
 import java.util.Locale;
@@ -21,20 +22,20 @@ import org.springframework.transaction.annotation.Transactional;
 @Component
 public class TeamRequestCommentCreatedMailEventListener {
     private final CommentService commentService;
-    private final WatcherMapper watcherMapper;
-    private final TeamRequestWatcherRepository teamRequestWatcherRepository;
+    private final UserMapper userMapper;
+    private final EntityWatcherRepository entityWatcherRepository;
     private final TeamRequestService teamRequestService;
     private final MailService mailService;
 
     public TeamRequestCommentCreatedMailEventListener(
             CommentService commentService,
-            WatcherMapper watcherMapper,
-            TeamRequestWatcherRepository teamRequestWatcherRepository,
+            UserMapper userMapper,
+            EntityWatcherRepository entityWatcherRepository,
             TeamRequestService teamRequestService,
             MailService mailService) {
         this.commentService = commentService;
-        this.watcherMapper = watcherMapper;
-        this.teamRequestWatcherRepository = teamRequestWatcherRepository;
+        this.userMapper = userMapper;
+        this.entityWatcherRepository = entityWatcherRepository;
         this.teamRequestService = teamRequestService;
         this.mailService = mailService;
     }
@@ -44,14 +45,15 @@ public class TeamRequestCommentCreatedMailEventListener {
     @EventListener
     public void onTeamRequestCommentCreated(TeamRequestCommentCreatedEvent event) {
         CommentDTO commentDTO = commentService.getCommentById(event.getCommentDTO().getId());
-        List<WatcherDTO> watchers =
-                teamRequestWatcherRepository.findWatchersByRequestId(commentDTO.getEntityId());
+        List<EntityWatcher> watchers =
+                entityWatcherRepository.findByEntityTypeAndEntityId(
+                        EntityType.Team_Request, commentDTO.getEntityId());
 
         TeamRequestDTO teamRequestDTO =
                 teamRequestService.getTeamRequestById(commentDTO.getEntityId());
 
         if (!watchers.isEmpty()) {
-            for (WatcherDTO watcher : watchers) {
+            for (EntityWatcher watcher : watchers) {
                 // Skip sending email if the watcher is the comment creator
                 if (watcher.getId().equals(commentDTO.getCreatedById())) {
                     continue;
@@ -59,7 +61,7 @@ public class TeamRequestCommentCreatedMailEventListener {
 
                 EmailContext emailContext =
                         new EmailContext(Locale.forLanguageTag("en"))
-                                .setToUser(watcherMapper.toUserDto(watcher))
+                                .setToUser(userMapper.toDto(watcher.getWatchUser()))
                                 .setSubject(
                                         "email.new.ticket.comment.subject",
                                         teamRequestDTO.getRequestTitle())

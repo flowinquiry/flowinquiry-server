@@ -6,8 +6,7 @@ import io.flowinquiry.modules.usermanagement.service.UserService;
 import io.flowinquiry.modules.usermanagement.service.dto.UserDTO;
 import io.flowinquiry.security.service.JwtService;
 import jakarta.validation.Valid;
-import java.time.LocalDateTime;
-import java.time.ZoneOffset;
+import java.time.Instant;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -60,7 +59,7 @@ public class LoginController {
         httpHeaders.setBearerAuth(jwt);
 
         // Update last login time for user
-        userRepository.updateLastLoginTime(loginVM.getEmail(), LocalDateTime.now(ZoneOffset.UTC));
+        userRepository.updateLastLoginTime(loginVM.getEmail(), Instant.now());
         return new ResponseEntity<>(adminUserDTO, httpHeaders, HttpStatus.OK);
     }
 }

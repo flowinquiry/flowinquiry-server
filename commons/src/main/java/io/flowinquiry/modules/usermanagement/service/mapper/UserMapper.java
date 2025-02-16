@@ -104,6 +104,11 @@ public abstract class UserMapper {
         return manager;
     }
 
+    @Named("userFullName")
+    public String getFullName(User user) {
+        return user != null ? user.getFirstName() + " " + user.getLastName() : "";
+    }
+
     public static class Context {
         private final boolean isIncludeManager;
 

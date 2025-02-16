@@ -5,7 +5,8 @@ import com.github.benmanes.caffeine.cache.Caffeine;
 import io.flowinquiry.modules.shared.domain.DeduplicationCacheEntry;
 import io.flowinquiry.modules.shared.reppository.DeduplicationCacheRepository;
 import java.time.Duration;
-import java.time.ZonedDateTime;
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.concurrent.TimeUnit;
 import org.springframework.stereotype.Service;
 
@@ -14,7 +15,7 @@ public class CaffeineDeduplicationCache implements DeduplicationCacheService {
 
     private final DeduplicationCacheRepository deduplicationCacheRepository;
 
-    private final Cache<String, ZonedDateTime> cache;
+    private final Cache<String, Instant> cache;
 
     public CaffeineDeduplicationCache(DeduplicationCacheRepository deduplicationCacheRepository) {
         this.deduplicationCacheRepository = deduplicationCacheRepository;
@@ -27,7 +28,7 @@ public class CaffeineDeduplicationCache implements DeduplicationCacheService {
                                     // ✅ If entry is evicted, store in the database
                                     if (key != null && value != null) {
                                         String evictedKey = (String) key;
-                                        ZonedDateTime expiredTime = (ZonedDateTime) value;
+                                        Instant expiredTime = (Instant) value;
                                         deduplicationCacheRepository.save(
                                                 new DeduplicationCacheEntry(
                                                         evictedKey, expiredTime));
@@ -38,7 +39,6 @@ public class CaffeineDeduplicationCache implements DeduplicationCacheService {
 
     @Override
     public boolean containsKey(String key) {
-        // ✅ Check Caffeine First
         if (cache.getIfPresent(key) != null) {
             return true;
         }
@@ -46,14 +46,14 @@ public class CaffeineDeduplicationCache implements DeduplicationCacheService {
         // ✅ If Not in Cache, Check Database
         boolean exists = deduplicationCacheRepository.existsByKey(key);
         if (exists) {
-            cache.put(key, ZonedDateTime.now().plusHours(24)); // Restore to memory
+            cache.put(key, Instant.now().plus(24, ChronoUnit.HOURS)); // Restore to memory
         }
         return exists;
     }
 
     @Override
     public void put(String key, Duration expirationDuration) {
-        ZonedDateTime expiredTime = ZonedDateTime.now().plus(expirationDuration);
+        Instant expiredTime = Instant.now().plus(expirationDuration);
 
         // ✅ Store in Caffeine
         cache.put(key, expiredTime);

@@ -4,7 +4,7 @@ import io.flowinquiry.modules.fss.domain.EntityAttachment;
 import io.flowinquiry.modules.fss.repository.EntityAttachmentRepository;
 import io.flowinquiry.modules.fss.service.dto.EntityAttachmentDTO;
 import io.flowinquiry.modules.fss.service.mapper.EntityAttachmentMapper;
-import java.time.LocalDateTime;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 import org.slf4j.Logger;
@@ -61,7 +61,7 @@ public class EntityAttachmentService {
         attachment.setFileType(file.getContentType());
         attachment.setFileSize(file.getSize());
         attachment.setFileUrl(fileUrl);
-        attachment.setUploadedAt(LocalDateTime.now());
+        attachment.setUploadedAt(Instant.now());
 
         return attachment;
     }

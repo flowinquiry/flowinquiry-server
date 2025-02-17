@@ -93,7 +93,7 @@ public class TeamRequest extends AbstractAuditingEntity<Long> {
 
     @Formula(
             "(SELECT COUNT(a.id) FROM fw_entity_watchers a WHERE a.entity_type = 'Team_Request' AND a.entity_id = id)")
-    private int numWatchers;
+    private int numberWatchers;
 
     @OneToOne(
             mappedBy = "teamRequest",

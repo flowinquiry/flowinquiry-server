@@ -10,6 +10,7 @@ public class EntityWatcherDTO {
     private Long entityId;
     private Long watchUserId;
     private String watchUserName;
+    private String watcherImageUrl;
     private Instant createdAt;
     private Long createdBy;
 }

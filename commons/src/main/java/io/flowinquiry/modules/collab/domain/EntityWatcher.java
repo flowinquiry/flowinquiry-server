@@ -3,11 +3,17 @@ package io.flowinquiry.modules.collab.domain;
 import io.flowinquiry.modules.usermanagement.domain.User;
 import jakarta.persistence.*;
 import java.time.Instant;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Getter
 @Setter
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @Entity
 @Table(
         name = "fw_entity_watchers",

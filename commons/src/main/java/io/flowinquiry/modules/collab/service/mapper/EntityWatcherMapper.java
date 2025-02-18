@@ -1,4 +1,4 @@
-package io.flowinquiry.modules.fss.service.mapper;
+package io.flowinquiry.modules.collab.service.mapper;
 
 import io.flowinquiry.modules.collab.domain.EntityWatcher;
 import io.flowinquiry.modules.fss.service.dto.EntityWatcherDTO;

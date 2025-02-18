@@ -1,11 +1,10 @@
-package io.flowinquiry.modules.fss.service;
+package io.flowinquiry.modules.collab.service;
 
-import io.flowinquiry.exceptions.ResourceNotFoundException;
 import io.flowinquiry.modules.collab.domain.EntityType;
 import io.flowinquiry.modules.collab.domain.EntityWatcher;
 import io.flowinquiry.modules.collab.repository.EntityWatcherRepository;
+import io.flowinquiry.modules.collab.service.mapper.EntityWatcherMapper;
 import io.flowinquiry.modules.fss.service.dto.EntityWatcherDTO;
-import io.flowinquiry.modules.fss.service.mapper.EntityWatcherMapper;
 import io.flowinquiry.modules.usermanagement.domain.User;
 import io.flowinquiry.modules.usermanagement.repository.UserRepository;
 import java.util.List;
@@ -31,23 +30,33 @@ public class EntityWatcherService {
         this.userRepository = userRepository;
     }
 
-    public EntityWatcherDTO addWatcher(EntityType entityType, Long entityId, Long userId) {
-        if (entityWatcherRepository.existsByEntityTypeAndEntityIdAndWatchUserId(
-                entityType, entityId, userId)) {
-            throw new IllegalStateException("User is already watching this entity.");
+    @Transactional
+    public void addWatchers(EntityType entityType, Long entityId, List<Long> watcherIds) {
+        // Fetch existing watchers for the given entity
+        List<Long> existingWatcherIds =
+                entityWatcherRepository.findWatcherIdsByEntity(entityType, entityId);
+
+        // Filter out users who are already watchers
+        List<Long> newWatcherIds =
+                watcherIds.stream().filter(id -> !existingWatcherIds.contains(id)).toList();
+
+        // Ensure we only fetch new users
+        if (!newWatcherIds.isEmpty()) {
+            List<User> newWatchers = userRepository.findAllById(newWatcherIds);
+
+            List<EntityWatcher> entityWatchers =
+                    newWatchers.stream()
+                            .map(
+                                    user ->
+                                            EntityWatcher.builder()
+                                                    .entityType(entityType)
+                                                    .entityId(entityId)
+                                                    .watchUser(user)
+                                                    .build())
+                            .toList();
+
+            entityWatcherRepository.saveAll(entityWatchers);
         }
-
-        User user =
-                userRepository
-                        .findById(userId)
-                        .orElseThrow(() -> new ResourceNotFoundException("User not found"));
-
-        EntityWatcher watcher = new EntityWatcher();
-        watcher.setEntityType(entityType);
-        watcher.setEntityId(entityId);
-        watcher.setWatchUser(user);
-
-        return entityWatcherMapper.toDTO(entityWatcherRepository.save(watcher));
     }
 
     public void removeWatcher(EntityType entityType, Long entityId, Long userId) {

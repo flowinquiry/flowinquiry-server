@@ -76,4 +76,10 @@ public class EntityWatcherService {
                 .findByWatchUserId(userId, pageable)
                 .map(entityWatcherMapper::toDTO);
     }
+
+    @Transactional
+    public void removeWatchers(EntityType entityType, Long entityId, List<Long> watcherIds) {
+        entityWatcherRepository.deleteByEntityTypeAndEntityIdAndWatchUser_IdIn(
+                entityType, entityId, watcherIds);
+    }
 }

@@ -51,7 +51,14 @@ public class EntityWatcherController {
             @RequestParam String entityType,
             @RequestParam Long entityId,
             @RequestBody List<Long> watcherIds) {
-
         entityWatcherService.addWatchers(EntityType.valueOf(entityType), entityId, watcherIds);
+    }
+
+    @DeleteMapping("/remove")
+    public void removeWatchersFromEntity(
+            @RequestParam String entityType,
+            @RequestParam Long entityId,
+            @RequestBody List<Long> watcherIds) {
+        entityWatcherService.removeWatchers(EntityType.valueOf(entityType), entityId, watcherIds);
     }
 }

@@ -128,8 +128,14 @@ public interface TeamRequestRepository
                     + "SUM(CASE WHEN tr.isCompleted = false THEN 1 ELSE 0 END), "
                     + "SUM(CASE WHEN tr.isCompleted = true THEN 1 ELSE 0 END)) "
                     + "FROM TeamRequest tr "
-                    + "WHERE tr.isDeleted = false AND tr.team.id = :teamId")
-    TicketStatisticsDTO getTicketStatisticsByTeamId(@Param("teamId") Long teamId);
+                    + "WHERE tr.isDeleted = false "
+                    + "AND tr.team.id = :teamId "
+                    + "AND (:fromDate IS NULL OR tr.createdAt >= :fromDate) "
+                    + "AND (:toDate IS NULL OR tr.createdAt <= :toDate)")
+    TicketStatisticsDTO getTicketStatisticsByTeamId(
+            @Param("teamId") Long teamId,
+            @Param("fromDate") Instant fromDate,
+            @Param("toDate") Instant toDate);
 
     @Query(
             "SELECT r "
@@ -163,18 +169,24 @@ public interface TeamRequestRepository
             Pageable pageable);
 
     @Query(
-            "SELECT COUNT(r.id) "
-                    + "FROM TeamRequest r "
-                    + "JOIN WorkflowTransitionHistory h ON h.teamRequest.id = r.id "
-                    + "WHERE r.isDeleted = false "
-                    + "AND r.isCompleted = false "
-                    + "AND h.slaDueDate IS NOT NULL "
-                    + "AND h.slaDueDate < CURRENT_TIMESTAMP "
-                    + "AND h.status <> :status "
-                    + "AND r.team.id = :teamId")
+            """
+        SELECT COUNT(r.id)
+        FROM TeamRequest r
+        JOIN WorkflowTransitionHistory h ON h.teamRequest.id = r.id
+        WHERE r.isDeleted = false
+        AND r.isCompleted = false
+        AND h.slaDueDate IS NOT NULL
+        AND h.slaDueDate < CURRENT_TIMESTAMP
+        AND h.status <> :status
+        AND r.team.id = :teamId
+        AND h.slaDueDate >= COALESCE(:fromDate, h.slaDueDate)
+        AND h.slaDueDate <= COALESCE(:toDate, h.slaDueDate)
+    """)
     Long countOverdueTicketsByTeamId(
             @Param("teamId") Long teamId,
-            @Param("status") WorkflowTransitionHistoryStatus completedStatus);
+            @Param("status") WorkflowTransitionHistoryStatus completedStatus,
+            @Param("fromDate") Instant fromDate,
+            @Param("toDate") Instant toDate);
 
     @Query(
             "SELECT new io.flowinquiry.modules.teams.service.dto.TicketActionCountByDateDTO("

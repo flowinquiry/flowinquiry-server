@@ -1,5 +1,6 @@
 package io.flowinquiry.modules.teams.controller;
 
+import io.flowinquiry.modules.teams.domain.WorkflowTransitionHistoryStatus;
 import io.flowinquiry.modules.teams.service.TeamRequestService;
 import io.flowinquiry.modules.teams.service.WorkflowTransitionHistoryService;
 import io.flowinquiry.modules.teams.service.dto.PriorityDistributionDTO;
@@ -10,10 +11,13 @@ import io.flowinquiry.modules.teams.service.dto.TicketDistributionDTO;
 import io.flowinquiry.modules.teams.service.dto.TransitionItemCollectionDTO;
 import io.flowinquiry.modules.usermanagement.service.dto.TicketStatisticsDTO;
 import io.flowinquiry.query.QueryDTO;
+import io.flowinquiry.utils.DateUtils;
 import jakarta.validation.Valid;
+import java.time.Instant;
 import java.util.List;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -125,8 +129,25 @@ public class TeamRequestController {
     }
 
     @GetMapping("/teams/{teamId}/statistics")
-    public TicketStatisticsDTO getTicketStatisticsByTeamId(@PathVariable("teamId") Long teamId) {
-        return teamRequestService.getTicketStatisticsByTeamId(teamId);
+    public TicketStatisticsDTO getTicketStatisticsByTeamId(
+            @PathVariable("teamId") Long teamId,
+            @RequestParam(value = "fromDate", required = false)
+                    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
+                    Instant fromDate,
+            @RequestParam(value = "toDate", required = false)
+                    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
+                    Instant toDate,
+            @RequestParam(value = "range", required = false) String range) {
+        if (range != null && fromDate == null && toDate == null) {
+            fromDate = DateUtils.parseDateRange(range);
+            toDate = Instant.now();
+        }
+
+        Instant adjustedFromDate = DateUtils.truncateToMidnight(fromDate);
+        Instant adjustedToDate = DateUtils.truncateToMidnight(toDate);
+
+        return teamRequestService.getTicketStatisticsByTeamId(
+                teamId, adjustedFromDate, adjustedToDate);
     }
 
     @GetMapping("/teams/{teamId}/overdue-tickets")
@@ -136,8 +157,28 @@ public class TeamRequestController {
     }
 
     @GetMapping("/teams/{teamId}/overdue-tickets/count")
-    public Long countOverdueTickets(@PathVariable("teamId") Long teamId) {
-        return teamRequestService.countOverdueTickets(teamId);
+    public Long countOverdueTickets(
+            @PathVariable("teamId") Long teamId,
+            @RequestParam(value = "fromDate", required = false)
+                    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
+                    Instant fromDate,
+            @RequestParam(value = "toDate", required = false)
+                    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
+                    Instant toDate,
+            @RequestParam(value = "range", required = false) String range) {
+
+        if (range != null && fromDate == null && toDate == null) {
+            fromDate = DateUtils.parseDateRange(range);
+            toDate = Instant.now();
+        }
+
+        Instant adjustedFromDate = DateUtils.truncateToMidnight(fromDate);
+        Instant adjustedToDate = DateUtils.truncateToMidnight(toDate);
+
+        WorkflowTransitionHistoryStatus completedStatus = WorkflowTransitionHistoryStatus.Completed;
+
+        return teamRequestService.countOverdueTickets(
+                teamId, completedStatus, adjustedFromDate, adjustedToDate);
     }
 
     @GetMapping("/teams/{teamId}/ticket-creations-day-series")

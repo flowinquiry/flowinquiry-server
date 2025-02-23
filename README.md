@@ -2,6 +2,28 @@
 [![Build Status](https://github.com/flowinquiry/flowinquiry-server/actions/workflows/gradle.yml/badge.svg)](https://github.com/flowinquiry/flowinquiry-server/actions/workflows/gradle.yml)
 ![License](https://img.shields.io/badge/License-AGPLv3-blue)
 
+<div style="display: flex; justify-content: center; align-items: center;">
+  <a href="https://flowinquiry.io" target="_blank">
+    <picture>
+      <source media="(prefers-color-scheme: dark)" srcset="assets/logo-dark.svg" type="image/svg+xml">
+      <img alt="FlowInquiry Logo" src="assets/logo-light.svg"/>
+    </picture>
+  </a>
+</div>
+
+<div style="display: flex; justify-content: center; gap: 10px;">
+  <br />
+  <a href="https://flowinquiry.io" rel="dofollow"><strong>Main page</strong></a> 
+  | 
+  <a href="https://docs.flowinquiry.io" rel="dofollow"><strong>Explore the docs »</strong></a>
+  |
+  <a href="https://github.com/orgs/flowinquiry/projects/4/views/3" rel="dofollow"><strong>Backlogs</strong></a>
+  |
+  <a href="https://hub.docker.com/r/flowinquiry/flowinquiry-server" rel="dofollow"><strong>Docker</strong></a>
+  <br />
+</div>
+
+
 ## What is FlowInquiry
 
 FlowInquiry is a free, open-source solution that embraces transparency as an alternative to Jira, ServiceNow, and Zendesk. Designed for managing cases, tickets, and requests, it streamlines communication, ensures timely resolutions, and supports customizable workflows with SLAs. By eliminating vendor lock-in and costly subscriptions, FlowInquiry enhances efficiency, accountability, and collaboration for teams handling internal and external inquiries.

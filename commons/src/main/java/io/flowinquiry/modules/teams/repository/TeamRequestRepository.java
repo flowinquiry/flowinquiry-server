@@ -101,9 +101,16 @@ public interface TeamRequestRepository
                     + "u.id, CONCAT(u.firstName, ' ', u.lastName), COUNT(r.id)) "
                     + "FROM TeamRequest r "
                     + "LEFT JOIN User u ON r.assignUser.id = u.id "
-                    + "WHERE r.team.id = :teamId AND r.isCompleted = false AND r.isDeleted = false "
+                    + "WHERE r.team.id = :teamId "
+                    + "AND r.isCompleted = false "
+                    + "AND r.isDeleted = false "
+                    + "AND r.createdAt >= COALESCE(:fromDate, r.createdAt) "
+                    + "AND r.createdAt <= COALESCE(:toDate, r.createdAt) "
                     + "GROUP BY u.id, u.firstName, u.lastName")
-    List<TicketDistributionDTO> findTicketDistributionByTeamId(@Param("teamId") Long teamId);
+    List<TicketDistributionDTO> findTicketDistributionByTeamId(
+            @Param("teamId") Long teamId,
+            @Param("fromDate") Instant fromDate,
+            @Param("toDate") Instant toDate);
 
     @Query(
             "SELECT r FROM TeamRequest r "
@@ -117,10 +124,16 @@ public interface TeamRequestRepository
             "SELECT new io.flowinquiry.modules.teams.service.dto.PriorityDistributionDTO("
                     + "r.priority, COUNT(r.id)) "
                     + "FROM TeamRequest r "
-                    + "WHERE r.team.id = :teamId AND r.isCompleted = false AND r.isDeleted = false "
+                    + "WHERE r.team.id = :teamId "
+                    + "AND r.isCompleted = false "
+                    + "AND r.isDeleted = false "
+                    + "AND r.createdAt >= COALESCE(:fromDate, r.createdAt) "
+                    + "AND r.createdAt <= COALESCE(:toDate, r.createdAt) "
                     + "GROUP BY r.priority")
     List<PriorityDistributionDTO> findTicketPriorityDistributionByTeamId(
-            @Param("teamId") Long teamId);
+            @Param("teamId") Long teamId,
+            @Param("fromDate") Instant fromDate,
+            @Param("toDate") Instant toDate);
 
     @Query(
             "SELECT new io.flowinquiry.modules.usermanagement.service.dto.TicketStatisticsDTO("
@@ -130,8 +143,8 @@ public interface TeamRequestRepository
                     + "FROM TeamRequest tr "
                     + "WHERE tr.isDeleted = false "
                     + "AND tr.team.id = :teamId "
-                    + "AND (:fromDate IS NULL OR tr.createdAt >= :fromDate) "
-                    + "AND (:toDate IS NULL OR tr.createdAt <= :toDate)")
+                    + "AND tr.createdAt >= COALESCE(:fromDate, tr.createdAt) "
+                    + "AND tr.createdAt <= COALESCE(:toDate, tr.createdAt)")
     TicketStatisticsDTO getTicketStatisticsByTeamId(
             @Param("teamId") Long teamId,
             @Param("fromDate") Instant fromDate,
@@ -213,21 +226,25 @@ public interface TeamRequestRepository
 
     @Query(
             """
-        SELECT new io.flowinquiry.modules.teams.service.dto.TeamTicketPriorityDistributionDTO(
-            r.team.id,
-            r.team.name,
-            r.priority,
-            COUNT(r.id)
-        )
-        FROM TeamRequest r
-        JOIN UserTeam ut ON ut.team.id = r.team.id
-        WHERE ut.user.id = :userId
-        AND r.isDeleted = false
-        AND r.isCompleted = false
-        GROUP BY r.team.id, r.team.name, r.priority
-    """)
+            SELECT new io.flowinquiry.modules.teams.service.dto.TeamTicketPriorityDistributionDTO(
+                r.team.id,
+                r.team.name,
+                r.priority,
+                COUNT(r.id)
+            )
+            FROM TeamRequest r
+            JOIN UserTeam ut ON ut.team.id = r.team.id
+            WHERE ut.user.id = :userId
+            AND r.isDeleted = false
+            AND r.isCompleted = false
+            AND r.createdAt >= COALESCE(:fromDate, r.createdAt)
+            AND r.createdAt <= COALESCE(:toDate, r.createdAt)
+            GROUP BY r.team.id, r.team.name, r.priority
+            """)
     List<TeamTicketPriorityDistributionDTO> findPriorityDistributionByUserId(
-            @Param("userId") Long userId);
+            @Param("userId") Long userId,
+            @Param("fromDate") Instant fromDate,
+            @Param("toDate") Instant toDate);
 
     boolean existsByWorkflowIdAndIsDeletedFalse(Long workflowId);
 }

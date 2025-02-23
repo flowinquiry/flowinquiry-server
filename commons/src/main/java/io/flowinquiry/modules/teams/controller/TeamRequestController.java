@@ -95,8 +95,24 @@ public class TeamRequestController {
 
     // Endpoint to get ticket distribution for a specific team
     @GetMapping("/teams/{teamId}/ticket-distribution")
-    public List<TicketDistributionDTO> getTicketDistribution(@PathVariable("teamId") Long teamId) {
-        return teamRequestService.getTicketDistribution(teamId);
+    public List<TicketDistributionDTO> getTicketDistribution(
+            @PathVariable("teamId") Long teamId,
+            @RequestParam(value = "fromDate", required = false)
+                    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
+                    Instant fromDate,
+            @RequestParam(value = "toDate", required = false)
+                    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
+                    Instant toDate,
+            @RequestParam(value = "range", required = false) String range) {
+        if (range != null && fromDate == null && toDate == null) {
+            fromDate = DateUtils.parseDateRange(range);
+            toDate = Instant.now();
+        }
+
+        Instant adjustedFromDate = DateUtils.truncateToMidnight(fromDate);
+        Instant adjustedToDate = DateUtils.truncateToMidnight(toDate);
+
+        return teamRequestService.getTicketDistribution(teamId, adjustedFromDate, adjustedToDate);
     }
 
     // Endpoint to get unassigned tickets for a specific team
@@ -109,8 +125,23 @@ public class TeamRequestController {
     // Endpoint to get priority distribution for a specific team
     @GetMapping("/teams/{teamId}/priority-distribution")
     public List<PriorityDistributionDTO> getPriorityDistribution(
-            @PathVariable("teamId") Long teamId) {
-        return teamRequestService.getPriorityDistribution(teamId);
+            @PathVariable("teamId") Long teamId,
+            @RequestParam(value = "fromDate", required = false)
+                    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
+                    Instant fromDate,
+            @RequestParam(value = "toDate", required = false)
+                    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
+                    Instant toDate,
+            @RequestParam(value = "range", required = false) String range) {
+        if (range != null && fromDate == null && toDate == null) {
+            fromDate = DateUtils.parseDateRange(range);
+            toDate = Instant.now();
+        }
+
+        Instant adjustedFromDate = DateUtils.truncateToMidnight(fromDate);
+        Instant adjustedToDate = DateUtils.truncateToMidnight(toDate);
+
+        return teamRequestService.getPriorityDistribution(teamId, adjustedFromDate, adjustedToDate);
     }
 
     /**
@@ -196,7 +227,20 @@ public class TeamRequestController {
 
     @GetMapping("/users/{userId}/team-tickets-priority-distribution")
     public List<TeamTicketPriorityDistributionDTO> getTeamTicketPriorityDistributionForUser(
-            @PathVariable("userId") Long userId) {
-        return teamRequestService.getPriorityDistributionForUser(userId);
+            @PathVariable("userId") Long userId,
+            @RequestParam(value = "from", required = false) Instant fromDate,
+            @RequestParam(value = "to", required = false) Instant toDate,
+            @RequestParam(value = "range", required = false) String range) {
+
+        if (range != null && fromDate == null && toDate == null) {
+            fromDate = DateUtils.parseDateRange(range);
+            toDate = Instant.now();
+        }
+
+        Instant adjustedFromDate = DateUtils.truncateToMidnight(fromDate);
+        Instant adjustedToDate = DateUtils.truncateToMidnight(toDate);
+
+        return teamRequestService.getPriorityDistributionForUser(
+                userId, adjustedFromDate, adjustedToDate);
     }
 }

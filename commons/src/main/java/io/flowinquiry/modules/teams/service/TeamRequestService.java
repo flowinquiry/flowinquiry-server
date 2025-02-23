@@ -286,8 +286,9 @@ public class TeamRequestService {
     }
 
     // Fetch ticket distribution by team member
-    public List<TicketDistributionDTO> getTicketDistribution(Long teamId) {
-        return teamRequestRepository.findTicketDistributionByTeamId(teamId);
+    public List<TicketDistributionDTO> getTicketDistribution(
+            Long teamId, Instant fromDate, Instant toDate) {
+        return teamRequestRepository.findTicketDistributionByTeamId(teamId, fromDate, toDate);
     }
 
     // Fetch unassigned tickets
@@ -298,8 +299,10 @@ public class TeamRequestService {
     }
 
     // Fetch ticket priority distribution
-    public List<PriorityDistributionDTO> getPriorityDistribution(Long teamId) {
-        return teamRequestRepository.findTicketPriorityDistributionByTeamId(teamId);
+    public List<PriorityDistributionDTO> getPriorityDistribution(
+            Long teamId, Instant fromDate, Instant toDate) {
+        return teamRequestRepository.findTicketPriorityDistributionByTeamId(
+                teamId, fromDate, toDate);
     }
 
     public TicketStatisticsDTO getTicketStatisticsByTeamId(
@@ -382,7 +385,8 @@ public class TeamRequestService {
         return ticketByDaySeries;
     }
 
-    public List<TeamTicketPriorityDistributionDTO> getPriorityDistributionForUser(Long userId) {
-        return teamRequestRepository.findPriorityDistributionByUserId(userId);
+    public List<TeamTicketPriorityDistributionDTO> getPriorityDistributionForUser(
+            Long userId, Instant fromDate, Instant toDate) {
+        return teamRequestRepository.findPriorityDistributionByUserId(userId, fromDate, toDate);
     }
 }

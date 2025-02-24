@@ -6,15 +6,30 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 # Define the output script that will store the sensitive data
 output_file="$SCRIPT_DIR/../.frontend.env"
 
-# Check if the file exists; if not, create it
-if [ ! -f "$output_file" ]; then
+# Check if the file exists
+if [ -f "$output_file" ]; then
+  # Prompt the user
+  read -p "The file $output_file already exists. Do you want to overwrite it? (y/n): " choice
+  case "$choice" in
+    y|Y )
+      echo "Overwriting the existing file..."
+      : > "$output_file"  # Clear the file
+      ;;
+    n|N )
+      echo "Keeping the existing file. Exiting."
+      exit 0
+      ;;
+    * )
+      echo "Invalid choice. Exiting."
+      exit 1
+      ;;
+  esac
+else
+  # Create the file if it does not exist
   touch "$output_file"
 fi
 
-# Clear the file to ensure it's empty
-: > "$output_file"
-
-# Check if file was created successfully
+# Ensure the file is writable
 if [ ! -w "$output_file" ]; then
   echo "Error: Cannot write to $output_file. Check permissions."
   exit 1

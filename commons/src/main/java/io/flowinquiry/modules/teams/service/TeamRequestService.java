@@ -44,6 +44,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.Page;
@@ -122,19 +123,25 @@ public class TeamRequestService {
 
         Long teamRequestId = teamRequest.getId();
 
-        // Construct a unique set of watchers including the ticket creator
         Set<Long> uniqueWatcherIds = new HashSet<>();
-
-        // Add ticket creator if not already in the watchers
         uniqueWatcherIds.add(teamRequestDTO.getRequestUserId());
+
         if (teamRequestDTO.getAssignUserId() != null) {
             uniqueWatcherIds.add(teamRequestDTO.getAssignUserId());
         }
 
-        EntityWatcher entityWatcher = new EntityWatcher();
-        entityWatcher.setEntityId(teamRequestId);
-        entityWatcher.setEntityType(EntityType.Team_Request);
-        entityWatcher.setWatchUser(User.builder().id(teamRequestDTO.getRequestUserId()).build());
+        List<EntityWatcher> entityWatchers =
+                uniqueWatcherIds.stream()
+                        .map(
+                                userId -> {
+                                    EntityWatcher entityWatcher = new EntityWatcher();
+                                    entityWatcher.setEntityId(teamRequestId);
+                                    entityWatcher.setEntityType(EntityType.Team_Request);
+                                    entityWatcher.setWatchUser(User.builder().id(userId).build());
+                                    return entityWatcher;
+                                })
+                        .collect(Collectors.toList());
+        entityWatcherRepository.saveAll(entityWatchers);
 
         // Clear the persistence context to force a reload
         entityManager.clear();

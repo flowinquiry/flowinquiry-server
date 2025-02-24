@@ -25,9 +25,7 @@ dependencies {
     api(libs.bundles.spring.ai)
     api(libs.dot.env)
     api(libs.j2html)
-    api(libs.jclouds) {
-        exclude group: "com.sun.xml.bind"
-    }
+
     api(libs.jhipster.framework)
     api project(":tools:liquibase")
 

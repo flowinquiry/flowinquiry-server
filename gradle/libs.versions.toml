@@ -3,7 +3,6 @@ mapstructVersion = "1.6.3"
 lombokVersion = "1.18.36"
 liquibaseVersion = "4.30.0"
 assertJVersion = "3.26.3"
-jcloudsVersion = "2.6.0"
 dotEnvVersion = "3.0.2"
 logbackVersion = "1.5.9"
 junitVersion = "5.11.3"
@@ -29,7 +28,6 @@ liquibase = { module = "org.liquibase:liquibase-core", version.ref = "liquibaseV
 assertJ = { module = "org.assertj:assertj-core", version.ref = "assertJVersion" }
 mapstruct = { module = "org.mapstruct:mapstruct", version.ref = "mapstructVersion" }
 mapstruct-processor = { module = "org.mapstruct:mapstruct-processor", version.ref = "mapstructVersion" }
-jclouds = { module = "org.apache.jclouds:jclouds-all", version.ref = "jcloudsVersion" }
 dot-env = { module = "io.github.cdimascio:dotenv-java", version.ref = "dotEnvVersion" }
 j2html = {module = "com.j2html:j2html", version.ref="j2HtmlVersion"}
 jib-plugin = { module = "com.google.cloud.tools:jib-gradle-plugin", version.ref = "jibVersion" }

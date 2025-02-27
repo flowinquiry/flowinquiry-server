@@ -96,9 +96,8 @@ public class TeamController {
 
     // Delete a team by ID
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteTeam(@PathVariable("id") Long id) {
+    public void deleteTeam(@PathVariable("id") Long id) {
         teamService.deleteTeam(id);
-        return ResponseEntity.noContent().build();
     }
 
     @DeleteMapping
@@ -116,9 +115,9 @@ public class TeamController {
     }
 
     @PostMapping("/search")
-    public ResponseEntity<Page<TeamDTO>> findTeams(
+    public Page<TeamDTO> findTeams(
             @Valid @RequestBody Optional<QueryDTO> queryDTO, Pageable pageable) {
-        return new ResponseEntity<>(teamService.findTeams(queryDTO, pageable), HttpStatus.OK);
+        return teamService.findTeams(queryDTO, pageable);
     }
 
     @GetMapping("/{teamId}/members")
@@ -134,27 +133,24 @@ public class TeamController {
     }
 
     @PostMapping("/{teamId}/add-users")
-    public ResponseEntity<Void> addUsersToTeam(
+    public void addUsersToTeam(
             @PathVariable("teamId") Long teamId,
             @RequestBody ListUserIdsAndRoleDTO userIdsAndRoleDTO) {
         teamService.addUsersToTeam(
                 userIdsAndRoleDTO.getUserIds(), userIdsAndRoleDTO.getRole(), teamId);
-        return ResponseEntity.ok().build();
     }
 
     @GetMapping("/searchUsersNotInTeam")
-    public ResponseEntity<List<UserDTO>> findUsersNotInTeam(
+    public List<UserDTO> findUsersNotInTeam(
             @RequestParam("userTerm") String searchTerm, @RequestParam("teamId") Long teamId) {
         PageRequest pageRequest = PageRequest.of(0, 20);
-        List<UserDTO> users = teamService.findUsersNotInTeam(searchTerm, teamId, pageRequest);
-        return ResponseEntity.ok(users);
+        return teamService.findUsersNotInTeam(searchTerm, teamId, pageRequest);
     }
 
     @DeleteMapping("/{teamId}/users/{userId}")
-    public ResponseEntity<Void> removeUserFromTeam(
+    public void removeUserFromTeam(
             @PathVariable("userId") Long userId, @PathVariable("teamId") Long teamId) {
         teamService.removeUserFromTeam(userId, teamId);
-        return ResponseEntity.noContent().build();
     }
 
     @GetMapping("/{teamId}/users/{userId}/role")

@@ -80,7 +80,6 @@ public class WorkflowController {
     @DeleteMapping("/{workflowId}/teams/{teamId}")
     public void deleteTeamWorkflow(
             @PathVariable("teamId") Long teamId, @PathVariable("workflowId") Long workflowId) {
-
         workflowService.deleteWorkflowByTeam(teamId, workflowId);
     }
 
@@ -91,10 +90,11 @@ public class WorkflowController {
      * @return a list of workflows available for the team.
      */
     @GetMapping("/teams/{teamId}")
-    public ResponseEntity<List<WorkflowDTO>> getWorkflowsByTeam(
-            @PathVariable("teamId") Long teamId) {
-        List<WorkflowDTO> workflows = workflowService.getWorkflowsForTeam(teamId);
-        return ResponseEntity.ok(workflows);
+    public List<WorkflowDTO> getWorkflowsByTeam(
+            @PathVariable("teamId") Long teamId,
+            @RequestParam(name = "used_for_project", required = false)
+                    Optional<Boolean> usedForProject) {
+        return workflowService.getWorkflowsForTeam(teamId, usedForProject.orElse(null));
     }
 
     /**

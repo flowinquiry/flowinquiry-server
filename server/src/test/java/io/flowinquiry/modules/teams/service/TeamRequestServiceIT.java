@@ -49,7 +49,7 @@ public class TeamRequestServiceIT {
     @Test
     void shouldCreateTeamRequestSuccessfully() {
         TeamRequestDTO teamRequestDTO =
-                teamRequestMapper.toDto(teamRequestRepository.findById(1L).orElseThrow());
+                teamRequestMapper.toDto(teamRequestRepository.findById(2L).orElseThrow());
         teamRequestDTO.setId(null);
         teamRequestDTO.setConversationHealth(null);
         TeamRequestDTO savedTeamRequest = teamRequestService.createTeamRequest(teamRequestDTO);

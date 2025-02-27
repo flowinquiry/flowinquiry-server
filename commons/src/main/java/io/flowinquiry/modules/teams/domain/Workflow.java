@@ -80,6 +80,9 @@ public class Workflow extends AbstractAuditingEntity<Long> {
     @Column(name = "cloned_from_global", nullable = false)
     private boolean clonedFromGlobal;
 
+    @Column(name = "use_for_project", nullable = false)
+    private boolean useForProject;
+
     @Column(columnDefinition = "TEXT")
     private String tags;
 }

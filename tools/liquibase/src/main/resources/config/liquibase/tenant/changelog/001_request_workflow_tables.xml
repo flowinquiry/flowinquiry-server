@@ -54,6 +54,8 @@
 				defaultValue="false">
 				<constraints nullable="false" />
 			</column>
+			<column name="use_for_project" type="BOOLEAN"
+				defaultValue="false" />
 			<!--To support tagging workflows for better categorization and searchability -->
 			<column name="tags" type="TEXT" />
 			<column name="created_by" type="bigint" />
@@ -122,6 +124,60 @@
 			referencedTableName="fw_workflow" referencedColumnNames="id"
 			onDelete="CASCADE" />
 
+		<!-- Create Project Table -->
+		<createTable tableName="fw_project">
+			<column name="id" type="BIGSERIAL" autoIncrement="true">
+				<constraints primaryKey="true" nullable="false" />
+			</column>
+			<column name="name" type="VARCHAR(255)">
+				<constraints nullable="false" />
+			</column>
+			<column name="description" type="TEXT">
+				<constraints nullable="true" />
+			</column>
+			<column name="team_id" type="BIGINT">
+				<constraints nullable="false" />
+			</column>
+			<column name="status" type="VARCHAR(50)" defaultValue="ACTIVE">
+				<constraints nullable="false" />
+			</column>
+			<column name="start_date" type="timestamptz">
+				<constraints nullable="true" />
+			</column>
+			<column name="end_date" type="timestamptz">
+				<constraints nullable="true" />
+			</column>
+			<column name="created_by" type="BIGINT">
+				<constraints nullable="true" />
+			</column>
+			<column name="created_at" type="timestamptz"
+				defaultValueComputed="CURRENT_TIMESTAMP">
+				<constraints nullable="false" />
+			</column>
+			<column name="modified_by" type="BIGINT">
+				<constraints nullable="true" />
+			</column>
+			<column name="modified_at" type="timestamptz"
+				defaultValueComputed="CURRENT_TIMESTAMP">
+				<constraints nullable="false" />
+			</column>
+		</createTable>
+		<!-- Foreign key constraints for project -->
+		<addForeignKeyConstraint
+			baseTableName="fw_project" baseColumnNames="team_id"
+			referencedTableName="fw_team" referencedColumnNames="id"
+			onDelete="CASCADE" constraintName="fk_project_team" />
+
+		<addForeignKeyConstraint
+			baseTableName="fw_project" baseColumnNames="created_by"
+			referencedTableName="fw_user" referencedColumnNames="id"
+			constraintName="fk_project_created_by" />
+
+		<addForeignKeyConstraint
+			baseTableName="fw_project" baseColumnNames="modified_by"
+			referencedTableName="fw_user" referencedColumnNames="id"
+			constraintName="fk_project_modified_by" />
+
 		<!--This table stores each customer request associated with a team, linking 
 			the request to a specific workflow and tracking the current state. -->
 		<createTable tableName="fw_team_request">
@@ -174,6 +230,9 @@
 				defaultValue="false">
 				<constraints nullable="false" />
 			</column>
+			<column name="project_id" type="BIGINT">
+				<constraints nullable="true" />
+			</column>
 			<column name="created_by" type="bigint" />
 			<column name="created_at" type="timestamptz" />
 			<column name="modified_by" type="bigint" />
@@ -200,6 +259,10 @@
 			baseTableName="fw_team_request" baseColumnNames="current_state_id"
 			constraintName="team_request_workflow_state"
 			referencedTableName="fw_workflow_state" referencedColumnNames="id" />
+		<addForeignKeyConstraint
+			baseTableName="fw_team_request" baseColumnNames="project_id"
+			referencedTableName="fw_project" referencedColumnNames="id"
+			onDelete="CASCADE" constraintName="fk_team_request_project" />
 
 		<createTable
 			tableName="fw_team_request_conversation_health">

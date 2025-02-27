@@ -33,12 +33,14 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Collectors;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+@Slf4j
 @Service
 public class WorkflowService {
 
@@ -86,6 +88,19 @@ public class WorkflowService {
         return workflowRepository.findById(id).map(workflowMapper::toDto);
     }
 
+    public WorkflowDTO getGlobalWorkflowUsedForProject() {
+        List<Workflow> workflows = workflowRepository.findPublicWorkflowsUsedForProjects();
+        if (workflows.isEmpty()) {
+            throw new ResourceNotFoundException(
+                    "Can not find any global workflow could be used for project");
+        }
+        if (workflows.size() > 1) {
+            log.warn(
+                    "Found more than one global workflow could be used for project. Get the first one.");
+        }
+        return workflowMapper.toDto(workflows.getFirst());
+    }
+
     @Transactional
     public WorkflowDTO updateWorkflow(Long id, WorkflowDTO updatedWorkflow) {
         return workflowRepository
@@ -105,8 +120,8 @@ public class WorkflowService {
      * @param teamId the ID of the team.
      * @return a list of workflows available for the team.
      */
-    public List<WorkflowDTO> getWorkflowsForTeam(Long teamId) {
-        return workflowRepository.findAllWorkflowsByTeam(teamId).stream()
+    public List<WorkflowDTO> getWorkflowsForTeam(Long teamId, Boolean usedForProject) {
+        return workflowRepository.findAllWorkflowsByTeam(teamId, usedForProject).stream()
                 .map(workflowMapper::toDto)
                 .toList();
     }
@@ -468,6 +483,7 @@ public class WorkflowService {
         newWorkflow.setVisibility(
                 WorkflowVisibility.PRIVATE); // Cloned workflows default to PRIVATE visibility
         newWorkflow.setClonedFromGlobal(true); // Mark as cloned
+        newWorkflow.setUseForProject(workflowToClone.isUseForProject());
         newWorkflow.setLevel1EscalationTimeout(workflowToClone.getLevel1EscalationTimeout());
         newWorkflow.setLevel2EscalationTimeout(workflowToClone.getLevel2EscalationTimeout());
         newWorkflow.setLevel3EscalationTimeout(workflowToClone.getLevel3EscalationTimeout());
@@ -543,6 +559,9 @@ public class WorkflowService {
                                 () ->
                                         new ResourceNotFoundException(
                                                 "Workflow not found with id: " + workflowId));
+        if (workflow.isUseForProject()) {
+            throw new IllegalArgumentException("Cannot delete workflow is used for project");
+        }
 
         // Check if there are any active team requests associated with this workflow
         boolean hasActiveRequests =
@@ -581,6 +600,10 @@ public class WorkflowService {
                 workflowRepository
                         .findById(workflowId)
                         .orElseThrow(() -> new EntityNotFoundException("Workflow not found."));
+
+        if (workflow.isUseForProject()) {
+            throw new IllegalArgumentException("Cannot delete workflow is used for project");
+        }
 
         // Check if the ownerId matches the teamId
         if (workflow.getOwner() != null && workflow.getOwner().getId().equals(teamId)) {

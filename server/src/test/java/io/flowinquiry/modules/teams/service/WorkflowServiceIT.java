@@ -48,13 +48,13 @@ public class WorkflowServiceIT {
 
     @Test
     public void shouldGetWorkflowForTeamSuccessfully() {
-        List<WorkflowDTO> workflows = workflowService.getWorkflowsForTeam(1L);
+        List<WorkflowDTO> workflows = workflowService.getWorkflowsForTeam(1L, false);
         assertThat(workflows.size()).isEqualTo(2);
 
         List<Tuple> expectedWorkflows =
                 List.of(
-                        Tuple.tuple(1L, "Refund Process Workflow"),
-                        Tuple.tuple(3L, "New Hardware Request"));
+                        Tuple.tuple(2L, "Refund Process Workflow"),
+                        Tuple.tuple(4L, "New Hardware Request"));
 
         assertThat(workflows)
                 .extracting(WorkflowDTO::getId, WorkflowDTO::getName)
@@ -63,16 +63,16 @@ public class WorkflowServiceIT {
 
     @Test
     public void shouldGetEmptyWorkflowNotNonExistentTeam() {
-        List<WorkflowDTO> workflows = workflowService.getWorkflowsForTeam(1000L);
+        List<WorkflowDTO> workflows = workflowService.getWorkflowsForTeam(1000L, false);
         assertThat(workflows.size()).isEqualTo(0);
     }
 
     @Test
     public void shouldGetWorkflowDetailSuccessfully() {
-        WorkflowDetailedDTO workflowDetail = workflowService.getWorkflowDetail(1L).get();
+        WorkflowDetailedDTO workflowDetail = workflowService.getWorkflowDetail(2L).get();
         assertThat(workflowDetail)
                 .extracting(WorkflowDetailedDTO::getId, WorkflowDetailedDTO::getName)
-                .containsExactly(1L, "Refund Process Workflow");
+                .containsExactly(2L, "Refund Process Workflow");
 
         // Expected workflow states
         assertThat(workflowDetail.getStates()).hasSize(6);
@@ -83,12 +83,12 @@ public class WorkflowServiceIT {
                         WorkflowStateDTO::getIsInitial,
                         WorkflowStateDTO::getIsFinal)
                 .containsExactlyInAnyOrder(
-                        tuple(1L, "New", true, false),
-                        tuple(2L, "Request Evidence", false, false),
-                        tuple(3L, "Evidence Provided", false, false),
-                        tuple(4L, "Refund Approved", false, false),
-                        tuple(5L, "Refund Denied", false, true),
-                        tuple(6L, "Refund Completed", false, true));
+                        tuple(6L, "New", true, false),
+                        tuple(7L, "Request Evidence", false, false),
+                        tuple(8L, "Evidence Provided", false, false),
+                        tuple(9L, "Refund Approved", false, false),
+                        tuple(10L, "Refund Denied", false, true),
+                        tuple(11L, "Refund Completed", false, true));
 
         assertThat(workflowDetail.getTransitions()).hasSize(5);
 
@@ -101,11 +101,11 @@ public class WorkflowServiceIT {
                         WorkflowTransitionDTO::getSourceStateId,
                         WorkflowTransitionDTO::getTargetStateId)
                 .containsExactlyInAnyOrder(
-                        tuple(5L, 1L, "Complete Refund", 4L, 6L),
-                        tuple(1L, 1L, "Request Evidence", 1L, 2L),
-                        tuple(2L, 1L, "Provide Evidence", 2L, 3L),
-                        tuple(3L, 1L, "Approve Refund", 3L, 4L),
-                        tuple(4L, 1L, "Deny Refund", 3L, 5L));
+                        tuple(11L, 2L, "Request Evidence", 6L, 7L),
+                        tuple(12L, 2L, "Provide Evidence", 7L, 8L),
+                        tuple(13L, 2L, "Approve Refund", 8L, 9L),
+                        tuple(14L, 2L, "Deny Refund", 8L, 10L),
+                        tuple(15L, 2L, "Complete Refund", 9L, 11L));
     }
 
     @Test
@@ -119,11 +119,12 @@ public class WorkflowServiceIT {
     @Test
     public void shouldGetWorkflowNotLinkWithTeamsSuccessfully() {
         List<WorkflowDTO> workflows = workflowService.listGlobalWorkflowsNotLinkedToTeam(1L);
-        assertThat(workflows.size()).isEqualTo(2);
+        assertThat(workflows.size()).isEqualTo(3);
         List<Tuple> expectedWorkflows =
                 List.of(
-                        Tuple.tuple(2L, "Bug Fix Workflow"),
-                        Tuple.tuple(4L, "Software Approval Workflow"));
+                        Tuple.tuple(1L, "Project Workflow"),
+                        Tuple.tuple(3L, "Bug Fix Workflow"),
+                        Tuple.tuple(5L, "Software Approval Workflow"));
 
         assertThat(workflows)
                 .extracting(WorkflowDTO::getId, WorkflowDTO::getName)
@@ -182,8 +183,8 @@ public class WorkflowServiceIT {
 
     @Test
     public void shouldDeleteWorkflowFromTeamSuccessfully() {
-        assertThat(workflowService.getWorkflowsForTeam(1L).size()).isEqualTo(2);
-        workflowService.deleteWorkflowByTeam(1L, 1L);
-        assertThat(workflowService.getWorkflowsForTeam(1L).size()).isEqualTo(1);
+        assertThat(workflowService.getWorkflowsForTeam(1L, false).size()).isEqualTo(2);
+        workflowService.deleteWorkflowByTeam(1L, 2L);
+        assertThat(workflowService.getWorkflowsForTeam(1L, false).size()).isEqualTo(1);
     }
 }

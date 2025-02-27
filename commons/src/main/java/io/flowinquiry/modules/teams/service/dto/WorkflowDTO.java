@@ -23,4 +23,5 @@ public class WorkflowDTO extends AuditEntityDTO {
     private Integer level2EscalationTimeout;
     private Integer level3EscalationTimeout;
     private String tags;
+    private boolean useForProject;
 }

@@ -15,6 +15,7 @@ import io.flowinquiry.utils.DateUtils;
 import jakarta.validation.Valid;
 import java.time.Instant;
 import java.util.List;
+import java.util.Map;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -22,6 +23,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -93,7 +95,6 @@ public class TeamRequestController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
-    // Endpoint to get ticket distribution for a specific team
     @GetMapping("/teams/{teamId}/ticket-distribution")
     public List<TicketDistributionDTO> getTicketDistribution(
             @PathVariable("teamId") Long teamId,
@@ -242,5 +243,17 @@ public class TeamRequestController {
 
         return teamRequestService.getPriorityDistributionForUser(
                 userId, adjustedFromDate, adjustedToDate);
+    }
+
+    @PatchMapping("/{requestId}/state")
+    public TeamRequestDTO updateTeamRequestState(
+            @PathVariable Long requestId, @RequestBody Map<String, Long> requestBody) {
+
+        Long newStateId = requestBody.get("newStateId");
+        if (newStateId == null) {
+            throw new IllegalArgumentException("newStateId is required");
+        }
+
+        return teamRequestService.updateTeamRequestState(requestId, newStateId);
     }
 }

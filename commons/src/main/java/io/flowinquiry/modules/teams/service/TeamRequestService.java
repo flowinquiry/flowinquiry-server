@@ -393,4 +393,30 @@ public class TeamRequestService {
             Long userId, Instant fromDate, Instant toDate) {
         return teamRequestRepository.findPriorityDistributionByUserId(userId, fromDate, toDate);
     }
+
+    @Transactional
+    public TeamRequestDTO updateTeamRequestState(Long requestId, Long newStateId) {
+        TeamRequest teamRequest =
+                teamRequestRepository
+                        .findById(requestId)
+                        .orElseThrow(
+                                () ->
+                                        new ResourceNotFoundException(
+                                                "Not find the request id " + requestId));
+
+        WorkflowState workflowState =
+                workflowStateRepository
+                        .findById(newStateId)
+                        .orElseThrow(
+                                () ->
+                                        new ResourceNotFoundException(
+                                                "Not find the new state id " + newStateId));
+
+        if (!Objects.equals(
+                teamRequest.getWorkflow().getId(), workflowState.getWorkflow().getId())) {
+            throw new IllegalArgumentException("Workflow id mismatch");
+        }
+        teamRequest.setCurrentState(workflowState);
+        return teamRequestMapper.toDto(teamRequestRepository.save(teamRequest));
+    }
 }

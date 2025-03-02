@@ -1,5 +1,6 @@
 package io.flowinquiry.modules.teams.service.mapper;
 
+import io.flowinquiry.modules.teams.domain.Project;
 import io.flowinquiry.modules.teams.domain.Team;
 import io.flowinquiry.modules.teams.domain.TeamRequest;
 import io.flowinquiry.modules.teams.domain.Workflow;
@@ -30,6 +31,7 @@ public interface TeamRequestMapper {
     @Mapping(target = "workflowId", source = "workflow.id")
     @Mapping(target = "workflowName", source = "workflow.name")
     @Mapping(target = "workflowRequestName", source = "workflow.requestName")
+    @Mapping(target = "projectId", source = "project.id")
     @Mapping(target = "currentStateId", source = "currentState.id")
     @Mapping(target = "currentStateName", source = "currentState.stateName")
     @Mapping(target = "conversationHealth", source = "conversationHealth")
@@ -37,6 +39,7 @@ public interface TeamRequestMapper {
 
     @Mapping(target = "team", source = "teamId", qualifiedByName = "toTeam")
     @Mapping(target = "workflow", source = "workflowId", qualifiedByName = "toWorkflow")
+    @Mapping(target = "project", source = "projectId", qualifiedByName = "toProject")
     @Mapping(target = "requestUser", source = "requestUserId", qualifiedByName = "toUser")
     @Mapping(target = "assignUser", source = "assignUserId", qualifiedByName = "toUser")
     @Mapping(
@@ -67,6 +70,11 @@ public interface TeamRequestMapper {
     @Named("toWorkflow")
     default Workflow toWorkflow(Long workflowId) {
         return (workflowId == null) ? null : Workflow.builder().id(workflowId).build();
+    }
+
+    @Named("toProject")
+    default Project toProject(Long projectId) {
+        return (projectId == null) ? null : Project.builder().id(projectId).build();
     }
 
     @Named("toWorkflowState")

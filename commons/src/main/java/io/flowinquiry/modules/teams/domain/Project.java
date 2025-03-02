@@ -3,13 +3,19 @@ package io.flowinquiry.modules.teams.domain;
 import io.flowinquiry.modules.audit.AbstractAuditingEntity;
 import jakarta.persistence.*;
 import java.time.Instant;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
 @Table(name = "fw_project")
 @Getter
 @Setter
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class Project extends AbstractAuditingEntity<Long> {
 
     @Id

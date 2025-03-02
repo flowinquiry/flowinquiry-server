@@ -119,10 +119,9 @@ public class WorkflowServiceIT {
     @Test
     public void shouldGetWorkflowNotLinkWithTeamsSuccessfully() {
         List<WorkflowDTO> workflows = workflowService.listGlobalWorkflowsNotLinkedToTeam(1L);
-        assertThat(workflows.size()).isEqualTo(3);
+        assertThat(workflows.size()).isEqualTo(2);
         List<Tuple> expectedWorkflows =
                 List.of(
-                        Tuple.tuple(1L, "Project Workflow"),
                         Tuple.tuple(3L, "Bug Fix Workflow"),
                         Tuple.tuple(5L, "Software Approval Workflow"));
 

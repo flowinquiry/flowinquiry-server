@@ -12,7 +12,5 @@ public interface ProjectMapper {
     ProjectDTO toDto(Project project);
 
     @Mapping(source = "teamId", target = "team.id")
-    @Mapping(source = "createdBy", target = "createdBy", ignore = true)
-    @Mapping(source = "modifiedBy", target = "modifiedBy", ignore = true)
     Project toEntity(ProjectDTO projectDTO);
 }

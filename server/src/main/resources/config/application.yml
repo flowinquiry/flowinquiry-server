@@ -63,6 +63,11 @@ spring:
   mvc:
     problemdetails:
       enabled: true
+    contentnegotiation:
+      favor-parameter: false
+      favor-path-extension: false
+      media-types:
+        json: application/json
   security:
     oauth2:
       resourceserver:

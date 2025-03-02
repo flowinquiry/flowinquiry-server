@@ -18,10 +18,12 @@ j2HtmlVersion = "1.6.0"
 shedlockVersion="6.0.1"
 jibVersion="3.4.4"
 caffeineVersion="3.2.0"
+redisHibernateVersion="3.45.0"
 
 [libraries]
 caffeine = {module="com.github.ben-manes.caffeine:caffeine", version.ref="caffeineVersion"}
 caffeine-jcache = {module="com.github.ben-manes.caffeine:jcache", version.ref="caffeineVersion"}
+redis-hibernate = {module="org.redisson:redisson-hibernate-6", version.ref="redisHibernateVersion"}
 jhipster-framework = { module = "tech.jhipster:jhipster-framework", version.ref = "jhisterVersion" }
 lombok = { module = "org.projectlombok:lombok", version.ref = "lombokVersion" }
 liquibase = { module = "org.liquibase:liquibase-core", version.ref = "liquibaseVersion" }

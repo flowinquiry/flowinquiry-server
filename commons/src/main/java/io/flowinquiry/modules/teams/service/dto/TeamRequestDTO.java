@@ -1,6 +1,7 @@
 package io.flowinquiry.modules.teams.service.dto;
 
 import io.flowinquiry.modules.teams.domain.TicketChannel;
+import jakarta.validation.constraints.NotNull;
 import java.time.Instant;
 import java.time.LocalDate;
 import lombok.AllArgsConstructor;
@@ -14,12 +15,18 @@ import lombok.experimental.SuperBuilder;
 @SuperBuilder
 public class TeamRequestDTO {
     private Long id;
-    private Long teamId;
+
+    @NotNull(message = "Team ID cannot be null") private Long teamId;
+
     private String teamName;
-    private Long workflowId;
+
+    @NotNull(message = "Workflow ID cannot be null") private Long workflowId;
+
     private String workflowName;
     private String workflowRequestName;
-    private Long requestUserId;
+
+    @NotNull(message = "Request User ID cannot be null") private Long requestUserId;
+
     private String requestUserName;
     private String requestUserImageUrl;
     private Long assignUserId;
@@ -30,7 +37,9 @@ public class TeamRequestDTO {
     private String priority;
     private LocalDate estimatedCompletionDate;
     private LocalDate actualCompletionDate;
-    private Long currentStateId;
+
+    @NotNull(message = "Current State ID cannot be null") private Long currentStateId;
+
     private String currentStateName;
     private TicketChannel channel;
     private Boolean isNew;

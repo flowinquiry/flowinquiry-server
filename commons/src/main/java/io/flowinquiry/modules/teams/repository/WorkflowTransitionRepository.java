@@ -13,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Repository
 public interface WorkflowTransitionRepository extends JpaRepository<WorkflowTransition, Long> {
+
     /**
      * Finds all valid target workflow states for a given workflow and current state.
      *

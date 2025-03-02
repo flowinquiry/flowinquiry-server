@@ -1,7 +1,6 @@
 package io.flowinquiry.modules.teams.controller;
 
 import io.flowinquiry.modules.teams.service.WorkflowService;
-import io.flowinquiry.modules.teams.service.WorkflowTransitionService;
 import io.flowinquiry.modules.teams.service.dto.WorkflowDTO;
 import io.flowinquiry.modules.teams.service.dto.WorkflowDetailedDTO;
 import io.flowinquiry.modules.teams.service.dto.WorkflowStateDTO;
@@ -30,19 +29,14 @@ public class WorkflowController {
 
     private final WorkflowService workflowService;
 
-    private final WorkflowTransitionService workflowTransitionService;
-
-    public WorkflowController(
-            WorkflowService workflowService, WorkflowTransitionService workflowTransitionService) {
+    public WorkflowController(WorkflowService workflowService) {
         this.workflowService = workflowService;
-        this.workflowTransitionService = workflowTransitionService;
     }
 
     @PostMapping("/search")
-    public ResponseEntity<Page<WorkflowDTO>> findWorkflows(
+    public Page<WorkflowDTO> findWorkflows(
             @Valid @RequestBody Optional<QueryDTO> queryDTO, Pageable pageable) {
-        return new ResponseEntity<>(
-                workflowService.findWorkflows(queryDTO, pageable), HttpStatus.OK);
+        return workflowService.findWorkflows(queryDTO, pageable);
     }
 
     @GetMapping("/{id}")
@@ -54,14 +48,9 @@ public class WorkflowController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<WorkflowDTO> updateWorkflow(
+    public WorkflowDTO updateWorkflow(
             @PathVariable("id") Long id, @RequestBody WorkflowDTO workflow) {
-        try {
-            WorkflowDTO updatedWorkflow = workflowService.updateWorkflow(id, workflow);
-            return ResponseEntity.ok(updatedWorkflow);
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.notFound().build();
-        }
+        return workflowService.updateWorkflow(id, workflow);
     }
 
     @DeleteMapping("/{id}")
@@ -120,14 +109,18 @@ public class WorkflowController {
      * @return a list of valid target WorkflowState objects
      */
     @GetMapping("/{workflowId}/transitions")
-    public ResponseEntity<List<WorkflowStateDTO>> getValidTargetStates(
+    public List<WorkflowStateDTO> getValidTargetStates(
             @PathVariable("workflowId") Long workflowId,
             @RequestParam("workflowStateId") Long workflowStateId,
             @RequestParam(value = "includeSelf", defaultValue = "false") boolean includeSelf) {
-        List<WorkflowStateDTO> validTargetStates =
-                workflowTransitionService.getValidTargetWorkflowStates(
-                        workflowId, workflowStateId, includeSelf);
-        return ResponseEntity.ok(validTargetStates);
+        return workflowService.getValidTargetWorkflowStates(
+                workflowId, workflowStateId, includeSelf);
+    }
+
+    @GetMapping("/{workflowId}/initial-states")
+    public List<WorkflowStateDTO> getInitialStatesOfWorkflow(
+            @PathVariable("workflowId") Long workflowId) {
+        return workflowService.getInitialStatesOfWorkflow(workflowId);
     }
 
     /**
@@ -153,13 +146,10 @@ public class WorkflowController {
     }
 
     @PutMapping("/details/{workflowId}")
-    public ResponseEntity<WorkflowDetailedDTO> updateWorkflow(
+    public WorkflowDetailedDTO updateWorkflow(
             @PathVariable("workflowId") Long workflowId,
             @Valid @RequestBody WorkflowDetailedDTO workflowDetailedDTO) {
-        WorkflowDetailedDTO updatedWorkflow =
-                workflowService.updateWorkflow(workflowId, workflowDetailedDTO);
-
-        return ResponseEntity.ok(updatedWorkflow);
+        return workflowService.updateWorkflow(workflowId, workflowDetailedDTO);
     }
 
     @PostMapping("/{referencedWorkflowId}/teams/{teamId}/create-workflow-reference")

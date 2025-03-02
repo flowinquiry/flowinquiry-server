@@ -26,6 +26,7 @@ import io.flowinquiry.modules.teams.service.mapper.WorkflowTransitionMapper;
 import io.flowinquiry.query.QueryDTO;
 import jakarta.persistence.EntityNotFoundException;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -621,5 +622,49 @@ public class WorkflowService {
 
         // Delete the workflow from fw_team_workflow_selection
         teamWorkflowSelectionRepository.deleteByTeamIdAndWorkflowId(teamId, workflowId);
+    }
+
+    /**
+     * Retrieves all valid target workflow states for a given workflow and current state, optionally
+     * including the current state itself.
+     *
+     * @param workflowId the ID of the workflow
+     * @param workflowStateId the ID of the current workflow state
+     * @param includeSelf whether to include the current state in the results
+     * @return a sorted list of WorkflowState objects
+     */
+    public List<WorkflowStateDTO> getValidTargetWorkflowStates(
+            Long workflowId, Long workflowStateId, boolean includeSelf) {
+        // Find the current state
+        WorkflowState currentState =
+                workflowStateRepository
+                        .findById(workflowStateId)
+                        .orElseThrow(
+                                () ->
+                                        new IllegalArgumentException(
+                                                "WorkflowState not found for ID: "
+                                                        + workflowStateId));
+
+        // Find valid target states
+        List<WorkflowState> targetStates =
+                workflowTransitionRepository.findValidTargetStates(workflowId, workflowStateId);
+
+        // Add current state if includeSelf is true
+        if (includeSelf) {
+            targetStates.add(currentState);
+        }
+
+        // Sort by isFinal, id, and stateName
+        targetStates.sort(
+                Comparator.comparing(WorkflowState::getIsFinal)
+                        .thenComparing(WorkflowState::getId)
+                        .thenComparing(WorkflowState::getStateName));
+        return targetStates.stream().map(workflowStateMapper::toDto).toList();
+    }
+
+    public List<WorkflowStateDTO> getInitialStatesOfWorkflow(Long workflowId) {
+        return workflowStateRepository.findInitialStatesByWorkflowId(workflowId).stream()
+                .map(workflowStateMapper::toDto)
+                .toList();
     }
 }

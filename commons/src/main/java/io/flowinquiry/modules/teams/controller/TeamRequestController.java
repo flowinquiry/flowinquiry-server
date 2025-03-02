@@ -58,7 +58,7 @@ public class TeamRequestController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public TeamRequestDTO createTeamRequest(@RequestBody TeamRequestDTO teamRequestDTO) {
+    public TeamRequestDTO createTeamRequest(@Valid @RequestBody TeamRequestDTO teamRequestDTO) {
         return teamRequestService.createTeamRequest(teamRequestDTO);
     }
 

@@ -123,6 +123,16 @@ public class WorkflowController {
         return workflowService.getInitialStatesOfWorkflow(workflowId);
     }
 
+    @GetMapping("/teams/{teamId}/project-workflow")
+    public WorkflowDetailedDTO getProjectWorkflowByTeam(@PathVariable("teamId") Long teamId) {
+        return workflowService
+                .findProjectWorkflowByTeam(teamId)
+                .orElseThrow(
+                        () ->
+                                new EntityNotFoundException(
+                                        "No project workflow found for team " + teamId));
+    }
+
     /**
      * Get workflow details including states and transitions.
      *

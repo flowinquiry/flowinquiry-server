@@ -667,4 +667,10 @@ public class WorkflowService {
                 .map(workflowStateMapper::toDto)
                 .toList();
     }
+
+    public Optional<WorkflowDetailedDTO> findProjectWorkflowByTeam(Long teamId) {
+        return workflowRepository
+                .findProjectWorkflowByTeam(teamId)
+                .map(workflowMapper::toDetailedDto);
+    }
 }

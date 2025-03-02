@@ -29,6 +29,18 @@ public interface WorkflowRepository
     List<Workflow> findPublicWorkflowsUsedForProjects();
 
     @EntityGraph(attributePaths = {"states", "transitions", "owner"})
+    @Query(
+            """
+    SELECT w
+    FROM Workflow w
+    LEFT JOIN TeamWorkflowSelection tws
+      ON w.id = tws.workflow.id AND tws.team.id = :teamId
+    WHERE w.useForProject = true
+      AND (w.owner.id = :teamId OR tws.id IS NOT NULL)
+""")
+    Optional<Workflow> findProjectWorkflowByTeam(@Param("teamId") Long teamId);
+
+    @EntityGraph(attributePaths = {"states", "transitions", "owner"})
     @Query("SELECT w FROM Workflow w WHERE w.id = :workflowId")
     Optional<Workflow> findWithDetailsById(@Param("workflowId") Long workflowId);
 

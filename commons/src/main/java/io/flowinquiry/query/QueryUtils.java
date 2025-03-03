@@ -121,7 +121,17 @@ public class QueryUtils {
                 case "lt":
                     return cb.lessThan(join.get(targetField), (Comparable) value);
                 case "eq":
-                    return cb.equal(join.get(targetField), value);
+                    if (value == null) {
+                        return cb.isNull(join.get(targetField));
+                    } else {
+                        return cb.equal(join.get(targetField), value);
+                    }
+                case "ne":
+                    if (value == null) {
+                        return cb.isNotNull(join.get(targetField));
+                    } else {
+                        return cb.notEqual(join.get(targetField), value);
+                    }
                 case "lk":
                     return cb.like(join.get(targetField), "%" + value + "%");
                 case "in":
@@ -143,6 +153,8 @@ public class QueryUtils {
                     return cb.lessThan(root.get(field), (Comparable) value);
                 case "eq":
                     return cb.equal(root.get(field), value);
+                case "ne":
+                    return cb.notEqual(root.get(field), value);
                 case "lk":
                     return cb.like(
                             cb.lower(root.get(field)), "%" + value.toString().toLowerCase() + "%");

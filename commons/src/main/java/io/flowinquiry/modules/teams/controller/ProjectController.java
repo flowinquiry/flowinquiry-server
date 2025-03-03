@@ -1,7 +1,6 @@
 package io.flowinquiry.modules.teams.controller;
 
 import io.flowinquiry.exceptions.ResourceNotFoundException;
-import io.flowinquiry.modules.teams.domain.Project;
 import io.flowinquiry.modules.teams.service.ProjectService;
 import io.flowinquiry.modules.teams.service.dto.ProjectDTO;
 import io.flowinquiry.query.QueryDTO;
@@ -49,13 +48,14 @@ public class ProjectController {
         return projectService.findProjects(queryDTO, pageable);
     }
 
-    @PutMapping("/{id}")
-    public ProjectDTO updateProject(@PathVariable Long id, @RequestBody Project project) {
-        return projectService.updateProject(id, project);
+    @PutMapping("/{projectId}")
+    public ProjectDTO updateProject(
+            @PathVariable("projectId") Long projectId, @RequestBody ProjectDTO project) {
+        return projectService.updateProject(projectId, project);
     }
 
-    @DeleteMapping("/{id}")
-    public void deleteProject(@PathVariable Long id) {
-        projectService.deleteProject(id);
+    @DeleteMapping("/{projectId}")
+    public void deleteProject(@PathVariable("projectId") Long projectId) {
+        projectService.deleteProject(projectId);
     }
 }

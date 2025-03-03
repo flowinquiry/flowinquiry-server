@@ -1,5 +1,7 @@
 # FlowInquiry Server
 [![Build Status](https://github.com/flowinquiry/flowinquiry-server/actions/workflows/gradle.yml/badge.svg)](https://github.com/flowinquiry/flowinquiry-server/actions/workflows/gradle.yml)
+[![Contributors](https://img.shields.io/github/contributors/flowinquiry/flowinquiry-server.svg)](https://github.com/flowinquiry/flowinquiry-server/graphs/contributors)
+[![Docker Pulls](https://img.shields.io/docker/pulls/flowinquiry/flowinquiry-server)](https://hub.docker.com/repository/docker/flowinquiry/flowinquiry-server/general)
 ![License](https://img.shields.io/badge/License-AGPLv3-blue)
 
 <div style="display: flex; justify-content: center; align-items: center;">

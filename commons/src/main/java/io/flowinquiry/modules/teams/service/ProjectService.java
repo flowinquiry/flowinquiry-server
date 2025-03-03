@@ -61,7 +61,7 @@ public class ProjectService {
         return projectRepository.findAll(spec, pageable).map(projectMapper::toDto);
     }
 
-    public ProjectDTO updateProject(Long id, Project updatedProject) {
+    public ProjectDTO updateProject(Long id, ProjectDTO updatedProject) {
         return projectRepository
                 .findById(id)
                 .map(

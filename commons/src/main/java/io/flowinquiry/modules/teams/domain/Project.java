@@ -36,7 +36,8 @@ public class Project extends AbstractAuditingEntity<Long> {
     private Team team;
 
     @Column(nullable = false, length = 50)
-    private String status = "ACTIVE";
+    @Enumerated(EnumType.STRING)
+    private ProjectStatus status = ProjectStatus.Active;
 
     @Column(name = "start_date")
     private Instant startDate;

@@ -2,6 +2,7 @@ package io.flowinquiry.modules.teams.service;
 
 import static io.flowinquiry.query.QueryUtils.createSpecification;
 
+import io.flowinquiry.exceptions.ResourceNotFoundException;
 import io.flowinquiry.modules.teams.domain.Project;
 import io.flowinquiry.modules.teams.domain.Team;
 import io.flowinquiry.modules.teams.repository.ProjectRepository;
@@ -44,7 +45,7 @@ public class ProjectService {
                         .findById(projectDTO.getTeamId())
                         .orElseThrow(
                                 () ->
-                                        new IllegalArgumentException(
+                                        new ResourceNotFoundException(
                                                 "Team not found with ID: "
                                                         + projectDTO.getTeamId()));
         project.setTeam(team);

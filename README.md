@@ -73,3 +73,9 @@ To ensure a smooth deployment process, we provide detailed guidelines for deploy
 
 ## License
 This project is licensed under the [AGPLv3](LICENSE) License.
+
+## Contributors
+
+Thanks to all the contributors! 🙌  
+
+[![Contributors](https://contrib.rocks/image?repo=flowinquiry/flowinquiry-server)](https://github.com/flowinquiry/flowinquiry-server/graphs/contributors)

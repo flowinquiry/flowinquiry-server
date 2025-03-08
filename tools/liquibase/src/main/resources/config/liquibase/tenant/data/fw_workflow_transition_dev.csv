@@ -1,14 +1,14 @@
 id;workflow_id;source_state_id;target_state_id;event_name;sla_duration;escalate_on_violation
-1;1;1;2;Move to Ready;12;false
-2;1;1;3;Move to In Progress;12;false
-3;1;1;4;Move to Review;12;false
-4;1;1;5;Complete Task;12;false
-5;1;2;3;Move to In Progress;12;false
-6;1;2;4;Move to Review;12;false
-7;1;2;5;Complete Task;12;false
-8;1;3;4;Move to Review;12;false
-9;1;3;5;Complete Task;12;false
-10;1;4;5;Complete Task;12;false
+1;1;1;2;Move to Ready;120000;false
+2;1;1;3;Move to In Progress;120000;false
+3;1;1;4;Move to Review;120000;false
+4;1;1;5;Complete Task;120000;false
+5;1;2;3;Move to In Progress;120000;false
+6;1;2;4;Move to Review;120000;false
+7;1;2;5;Complete Task;120000;false
+8;1;3;4;Move to Review;120000;false
+9;1;3;5;Complete Task;120000;false
+10;1;4;5;Complete Task;120000;false
 11;2;6;7;Request Evidence;24;true
 12;2;7;8;Provide Evidence;48;true
 13;2;8;9;Approve Refund;24;true

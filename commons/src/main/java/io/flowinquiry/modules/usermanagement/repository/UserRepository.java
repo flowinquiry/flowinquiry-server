@@ -5,6 +5,8 @@ import io.flowinquiry.modules.usermanagement.service.dto.UserHierarchyDTO;
 import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
@@ -34,6 +36,21 @@ public interface UserRepository extends JpaRepository<User, Long>, JpaSpecificat
 
     @EntityGraph(attributePaths = {"manager"})
     Optional<User> findOneWithManagerById(Long id);
+
+    /**
+     * Find users where the search term matches any part of firstName, lastName, or email
+     *
+     * @param userTerm The search term to match against user fields
+     * @param pageable The pagination information
+     * @return Page of users matching the search criteria
+     */
+    @Query(
+            "SELECT u FROM User u WHERE "
+                    + "(LOWER(u.firstName) LIKE LOWER(CONCAT('%', :userTerm, '%')) OR "
+                    + "LOWER(u.lastName) LIKE LOWER(CONCAT('%', :userTerm, '%')) OR "
+                    + "LOWER(u.email) LIKE LOWER(CONCAT('%', :userTerm, '%'))) "
+                    + "AND u.status = 'ACTIVE'")
+    Page<User> findByUserTerm(@Param("userTerm") String userTerm, Pageable pageable);
 
     /**
      * Finds all direct reports of a specific user by their manager ID.

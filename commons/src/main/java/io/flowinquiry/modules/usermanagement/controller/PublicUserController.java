@@ -11,6 +11,7 @@ import io.flowinquiry.modules.usermanagement.service.UserService;
 import io.flowinquiry.modules.usermanagement.service.dto.ResourcePermissionDTO;
 import io.flowinquiry.modules.usermanagement.service.dto.UserDTO;
 import io.flowinquiry.modules.usermanagement.service.dto.UserHierarchyDTO;
+import io.flowinquiry.modules.usermanagement.service.mapper.UserMapper;
 import io.flowinquiry.query.Filter;
 import io.flowinquiry.query.QueryDTO;
 import jakarta.validation.Valid;
@@ -24,6 +25,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpHeaders;
@@ -59,16 +61,19 @@ public class PublicUserController {
     private final UserService userService;
     private final ApplicationEventPublisher eventPublisher;
     private final StorageService storageService;
+    private final UserMapper userMapper;
 
     public PublicUserController(
             UserService userService,
             UserRepository userRepository,
             ApplicationEventPublisher eventPublisher,
-            StorageService storageService) {
+            StorageService storageService,
+            UserMapper userMapper) {
         this.userService = userService;
         this.userRepository = userRepository;
         this.eventPublisher = eventPublisher;
         this.storageService = storageService;
+        this.userMapper = userMapper;
     }
 
     /**
@@ -228,5 +233,20 @@ public class PublicUserController {
     @GetMapping("/orgChart")
     public ResponseEntity<UserHierarchyDTO> getOrgChart() {
         return ResponseEntity.ok(userService.getOrgChart());
+    }
+
+    /**
+     * Search for users by a term that can match firstName, lastName, or email Returns a maximum of
+     * 10 results
+     *
+     * @param userTerm The search term
+     * @return List of up to 10 users matching the search criteria
+     */
+    @GetMapping("/search-by-term")
+    public List<UserDTO> searchUsers(@RequestParam("term") String userTerm) {
+        PageRequest pageRequest = PageRequest.of(0, 10, Sort.by("lastName").ascending());
+        return userService.searchUsers(userTerm, pageRequest).getContent().stream()
+                .map(userMapper::toDto)
+                .toList();
     }
 }

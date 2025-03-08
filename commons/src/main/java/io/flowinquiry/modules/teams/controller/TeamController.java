@@ -101,9 +101,8 @@ public class TeamController {
     }
 
     @DeleteMapping
-    public ResponseEntity<Void> deleteTeams(@RequestBody List<Long> ids) {
+    public void deleteTeams(@RequestBody List<Long> ids) {
         teamService.deleteTeams(ids);
-        return ResponseEntity.noContent().build();
     }
 
     @GetMapping("/{id}")

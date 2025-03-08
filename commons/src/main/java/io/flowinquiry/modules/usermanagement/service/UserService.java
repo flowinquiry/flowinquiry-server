@@ -443,4 +443,15 @@ public class UserService {
         userHierarchy.setSubordinates(subordinates);
         return userHierarchy;
     }
+
+    /**
+     * Search for users by a term that can match firstName, lastName, or email
+     *
+     * @param userTerm The search term
+     * @param pageable The pagination information
+     * @return Page of users matching the search criteria
+     */
+    public Page<User> searchUsers(String userTerm, Pageable pageable) {
+        return userRepository.findByUserTerm(userTerm, pageable);
+    }
 }

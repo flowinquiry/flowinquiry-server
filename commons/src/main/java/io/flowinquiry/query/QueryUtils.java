@@ -9,7 +9,6 @@ import jakarta.persistence.criteria.Root;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 import org.springframework.data.jpa.domain.Specification;
 
 public class QueryUtils {
@@ -28,7 +27,7 @@ public class QueryUtils {
                                                                                 createGroupPredicate(
                                                                                         group, root,
                                                                                         cb))
-                                                                .collect(Collectors.toList());
+                                                                .toList();
                                                 return cb.and(
                                                         groupPredicates.toArray(new Predicate[0]));
                                             } else if (dto.getFilters() != null) {
@@ -40,7 +39,7 @@ public class QueryUtils {
                                                                                 createPredicate(
                                                                                         filter,
                                                                                         root, cb))
-                                                                .collect(Collectors.toList());
+                                                                .toList();
                                                 return cb.and(predicates.toArray(new Predicate[0]));
                                             }
                                             return cb.conjunction(); // Return a no-op predicate
@@ -58,7 +57,7 @@ public class QueryUtils {
             predicates.addAll(
                     groupFilter.getFilters().stream()
                             .map(filter -> createPredicate(filter, root, cb))
-                            .collect(Collectors.toList()));
+                            .toList());
         }
 
         // Process nested groups
@@ -66,7 +65,7 @@ public class QueryUtils {
             predicates.addAll(
                     groupFilter.getGroups().stream()
                             .map(nestedGroup -> createGroupPredicate(nestedGroup, root, cb))
-                            .collect(Collectors.toList()));
+                            .toList());
         }
 
         // Combine predicates based on the logical operator
@@ -112,7 +111,7 @@ public class QueryUtils {
             String targetField = pathParts[1];
 
             // Perform the join dynamically
-            Join<Object, Object> join = root.join(joinEntity, JoinType.INNER);
+            Join<Object, Object> join = root.join(joinEntity, JoinType.LEFT);
 
             // Create the predicate based on the operator
             switch (filter.getOperator()) {
@@ -140,11 +139,6 @@ public class QueryUtils {
                     throw new IllegalArgumentException("Invalid operator: " + filter.getOperator());
             }
         } else {
-            Class<?> fieldType = root.get(field).getJavaType();
-            if (fieldType.equals(Boolean.class) && value instanceof String) {
-                value = Boolean.parseBoolean((String) value); // Convert to Boolean
-            }
-
             // No join needed, access the field directly from the root
             switch (filter.getOperator()) {
                 case "gt":
@@ -152,9 +146,27 @@ public class QueryUtils {
                 case "lt":
                     return cb.lessThan(root.get(field), (Comparable) value);
                 case "eq":
-                    return cb.equal(root.get(field), value);
+                    // Handle null values correctly for non-join fields
+                    if (value == null) {
+                        return cb.isNull(root.get(field));
+                    } else {
+                        Class<?> fieldType = root.get(field).getJavaType();
+                        if (fieldType.equals(Boolean.class) && value instanceof String) {
+                            value = Boolean.parseBoolean((String) value); // Convert to Boolean
+                        }
+                        return cb.equal(root.get(field), value);
+                    }
                 case "ne":
-                    return cb.notEqual(root.get(field), value);
+                    // Handle null values correctly for non-join fields
+                    if (value == null) {
+                        return cb.isNotNull(root.get(field));
+                    } else {
+                        Class<?> fieldType = root.get(field).getJavaType();
+                        if (fieldType.equals(Boolean.class) && value instanceof String) {
+                            value = Boolean.parseBoolean((String) value); // Convert to Boolean
+                        }
+                        return cb.notEqual(root.get(field), value);
+                    }
                 case "lk":
                     return cb.like(
                             cb.lower(root.get(field)), "%" + value.toString().toLowerCase() + "%");

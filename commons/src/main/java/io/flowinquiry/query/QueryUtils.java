@@ -4,6 +4,7 @@ import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.Expression;
 import jakarta.persistence.criteria.Join;
 import jakarta.persistence.criteria.JoinType;
+import jakarta.persistence.criteria.Path;
 import jakarta.persistence.criteria.Predicate;
 import jakarta.persistence.criteria.Root;
 import java.util.ArrayList;
@@ -110,7 +111,7 @@ public class QueryUtils {
             String joinEntity = pathParts[0];
             String targetField = pathParts[1];
 
-            // Perform the join dynamically
+            // Perform the join dynamically - use LEFT JOIN to include nulls
             Join<Object, Object> join = root.join(joinEntity, JoinType.LEFT);
 
             // Create the predicate based on the operator
@@ -123,12 +124,40 @@ public class QueryUtils {
                     if (value == null) {
                         return cb.isNull(join.get(targetField));
                     } else {
+                        // Handle enum types for join fields
+                        Class<?> fieldType = join.get(targetField).getJavaType();
+                        if (fieldType.isEnum() && value instanceof String) {
+                            try {
+                                @SuppressWarnings({"unchecked", "rawtypes"})
+                                Object enumValue =
+                                        Enum.valueOf((Class<Enum>) fieldType, (String) value);
+                                return cb.equal(join.get(targetField), enumValue);
+                            } catch (IllegalArgumentException e) {
+                                // Invalid enum value provided
+                                return cb.disjunction(); // Always false
+                            }
+                        }
+
                         return cb.equal(join.get(targetField), value);
                     }
                 case "ne":
                     if (value == null) {
                         return cb.isNotNull(join.get(targetField));
                     } else {
+                        // Handle enum types for join fields
+                        Class<?> fieldType = join.get(targetField).getJavaType();
+                        if (fieldType.isEnum() && value instanceof String) {
+                            try {
+                                @SuppressWarnings({"unchecked", "rawtypes"})
+                                Object enumValue =
+                                        Enum.valueOf((Class<Enum>) fieldType, (String) value);
+                                return cb.notEqual(join.get(targetField), enumValue);
+                            } catch (IllegalArgumentException e) {
+                                // Invalid enum value provided
+                                return cb.conjunction(); // Always true
+                            }
+                        }
+
                         return cb.notEqual(join.get(targetField), value);
                     }
                 case "lk":
@@ -140,38 +169,82 @@ public class QueryUtils {
             }
         } else {
             // No join needed, access the field directly from the root
+            Path<?> path = root.get(field);
+            Class<?> fieldType = path.getJavaType();
+
             switch (filter.getOperator()) {
                 case "gt":
                     return cb.greaterThan(root.get(field), (Comparable) value);
                 case "lt":
                     return cb.lessThan(root.get(field), (Comparable) value);
                 case "eq":
-                    // Handle null values correctly for non-join fields
+                    // Handle null values and type conversions for direct fields
                     if (value == null) {
-                        return cb.isNull(root.get(field));
+                        return cb.isNull(path);
                     } else {
-                        Class<?> fieldType = root.get(field).getJavaType();
+                        // Handle special type conversions
                         if (fieldType.equals(Boolean.class) && value instanceof String) {
-                            value = Boolean.parseBoolean((String) value); // Convert to Boolean
+                            value = Boolean.parseBoolean((String) value);
+                        } else if (fieldType.isEnum() && value instanceof String) {
+                            try {
+                                @SuppressWarnings({"unchecked", "rawtypes"})
+                                Object enumValue =
+                                        Enum.valueOf((Class<Enum>) fieldType, (String) value);
+                                value = enumValue;
+                            } catch (IllegalArgumentException e) {
+                                // Invalid enum value provided
+                                return cb.disjunction(); // Always false
+                            }
                         }
-                        return cb.equal(root.get(field), value);
+                        return cb.equal(path, value);
                     }
                 case "ne":
-                    // Handle null values correctly for non-join fields
+                    // Handle null values and type conversions for direct fields
                     if (value == null) {
-                        return cb.isNotNull(root.get(field));
+                        return cb.isNotNull(path);
                     } else {
-                        Class<?> fieldType = root.get(field).getJavaType();
+                        // Handle special type conversions
                         if (fieldType.equals(Boolean.class) && value instanceof String) {
-                            value = Boolean.parseBoolean((String) value); // Convert to Boolean
+                            value = Boolean.parseBoolean((String) value);
+                        } else if (fieldType.isEnum() && value instanceof String) {
+                            try {
+                                @SuppressWarnings({"unchecked", "rawtypes"})
+                                Object enumValue =
+                                        Enum.valueOf((Class<Enum>) fieldType, (String) value);
+                                value = enumValue;
+                            } catch (IllegalArgumentException e) {
+                                // Invalid enum value provided
+                                return cb.conjunction(); // Always true
+                            }
                         }
-                        return cb.notEqual(root.get(field), value);
+                        return cb.notEqual(path, value);
                     }
                 case "lk":
                     return cb.like(
                             cb.lower(root.get(field)), "%" + value.toString().toLowerCase() + "%");
                 case "in":
-                    return root.get(field).in((List<?>) value);
+                    // Handle enum type for IN operator
+                    if (fieldType.isEnum() && value instanceof List<?>) {
+                        List<?> valueList = (List<?>) value;
+                        List<Object> enumValues = new ArrayList<>();
+                        for (Object item : valueList) {
+                            if (item instanceof String) {
+                                try {
+                                    @SuppressWarnings({"unchecked", "rawtypes"})
+                                    Object enumValue =
+                                            Enum.valueOf((Class<Enum>) fieldType, (String) item);
+                                    enumValues.add(enumValue);
+                                } catch (IllegalArgumentException e) {
+                                    // Skip invalid enum values
+                                }
+                            }
+                        }
+                        if (enumValues.isEmpty()) {
+                            return cb.disjunction(); // Always false if no valid enum values
+                        }
+                        return path.in(enumValues);
+                    }
+                    return path.in((List<?>) value);
                 default:
                     throw new IllegalArgumentException("Invalid operator: " + filter.getOperator());
             }

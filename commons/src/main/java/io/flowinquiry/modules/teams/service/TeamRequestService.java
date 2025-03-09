@@ -27,7 +27,6 @@ import io.flowinquiry.modules.teams.service.event.TeamRequestWorkStateTransition
 import io.flowinquiry.modules.teams.service.mapper.TeamRequestMapper;
 import io.flowinquiry.modules.usermanagement.domain.User;
 import io.flowinquiry.modules.usermanagement.service.dto.TicketStatisticsDTO;
-import io.flowinquiry.query.GroupFilter;
 import io.flowinquiry.query.QueryDTO;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
@@ -235,52 +234,6 @@ public class TeamRequestService {
         teamRequestRepository.deleteById(id);
     }
 
-    private static boolean hasTeamIdFilter(QueryDTO queryDTO) {
-        if (queryDTO == null || queryDTO.getGroups() == null) {
-            return false;
-        }
-
-        // Check for "team.id" in filters at the top level
-        if (queryDTO.getFilters() != null) {
-            boolean hasTeamIdInFilters =
-                    queryDTO.getFilters().stream()
-                            .filter(Objects::nonNull)
-                            .anyMatch(filter -> "team.id".equals(filter.getField()));
-            if (hasTeamIdInFilters) {
-                return true;
-            }
-        }
-
-        // Check for "team.id" recursively in groups
-        return queryDTO.getGroups().stream()
-                .anyMatch(TeamRequestService::containsTeamIdFilterInGroup);
-    }
-
-    private static boolean containsTeamIdFilterInGroup(GroupFilter groupFilter) {
-        if (groupFilter == null) {
-            return false;
-        }
-
-        // Check for "team.id" in filters in the current group
-        if (groupFilter.getFilters() != null) {
-            boolean hasTeamIdInFilters =
-                    groupFilter.getFilters().stream()
-                            .filter(Objects::nonNull)
-                            .anyMatch(filter -> "team.id".equals(filter.getField()));
-            if (hasTeamIdInFilters) {
-                return true;
-            }
-        }
-
-        // Recursively check nested groups for "team.id"
-        if (groupFilter.getGroups() != null) {
-            return groupFilter.getGroups().stream()
-                    .anyMatch(TeamRequestService::containsTeamIdFilterInGroup);
-        }
-
-        return false;
-    }
-
     public Optional<TeamRequestDTO> getNextEntity(Long requestId) {
         return teamRequestRepository.findNextEntity(requestId).map(teamRequestMapper::toDto);
     }
@@ -403,20 +356,8 @@ public class TeamRequestService {
                                 () ->
                                         new ResourceNotFoundException(
                                                 "Not find the request id " + requestId));
-
-        WorkflowState workflowState =
-                workflowStateRepository
-                        .findById(newStateId)
-                        .orElseThrow(
-                                () ->
-                                        new ResourceNotFoundException(
-                                                "Not find the new state id " + newStateId));
-
-        if (!Objects.equals(
-                teamRequest.getWorkflow().getId(), workflowState.getWorkflow().getId())) {
-            throw new IllegalArgumentException("Workflow id mismatch");
-        }
-        teamRequest.setCurrentState(workflowState);
-        return teamRequestMapper.toDto(teamRequestRepository.save(teamRequest));
+        TeamRequestDTO newTeamRequest = teamRequestMapper.toDto(teamRequest);
+        newTeamRequest.setCurrentStateId(newStateId);
+        return updateTeamRequest(newTeamRequest);
     }
 }

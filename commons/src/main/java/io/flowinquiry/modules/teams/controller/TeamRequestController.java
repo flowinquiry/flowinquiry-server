@@ -79,18 +79,21 @@ public class TeamRequestController {
     }
 
     @GetMapping("/{currentId}/next")
-    public ResponseEntity<TeamRequestDTO> getNextEntity(@PathVariable("currentId") Long currentId) {
+    public ResponseEntity<TeamRequestDTO> getNextEntity(
+            @PathVariable("currentId") Long currentId,
+            @RequestParam(value = "projectId", required = false) Long projectId) {
         return teamRequestService
-                .getNextEntity(currentId)
+                .getNextTeamRequest(currentId, projectId)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
 
     @GetMapping("/{currentId}/previous")
     public ResponseEntity<TeamRequestDTO> getPreviousEntity(
-            @PathVariable("currentId") Long currentId) {
+            @PathVariable("currentId") Long currentId,
+            @RequestParam(value = "projectId", required = false) Long projectId) {
         return teamRequestService
-                .getPreviousEntity(currentId)
+                .getPreviousTeamRequest(currentId, projectId)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }

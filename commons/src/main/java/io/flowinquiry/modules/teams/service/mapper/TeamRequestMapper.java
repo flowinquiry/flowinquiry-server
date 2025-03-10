@@ -32,6 +32,7 @@ public interface TeamRequestMapper {
     @Mapping(target = "workflowName", source = "workflow.name")
     @Mapping(target = "workflowRequestName", source = "workflow.requestName")
     @Mapping(target = "projectId", source = "project.id")
+    @Mapping(target = "projectName", source = "project.name")
     @Mapping(target = "currentStateId", source = "currentState.id")
     @Mapping(target = "currentStateName", source = "currentState.stateName")
     @Mapping(target = "conversationHealth", source = "conversationHealth")

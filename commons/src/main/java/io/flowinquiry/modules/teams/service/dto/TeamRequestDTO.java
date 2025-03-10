@@ -26,6 +26,7 @@ public class TeamRequestDTO {
     private String workflowRequestName;
 
     private Long projectId;
+    private String projectName;
 
     @NotNull(message = "Request User ID cannot be null") private Long requestUserId;
 

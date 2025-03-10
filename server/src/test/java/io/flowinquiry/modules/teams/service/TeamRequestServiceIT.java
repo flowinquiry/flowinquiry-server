@@ -102,7 +102,7 @@ public class TeamRequestServiceIT {
 
     @Test
     void shouldFindNextTeamRequestSuccessfully() {
-        TeamRequestDTO nextEntity = teamRequestService.getNextEntity(11L).orElseThrow();
+        TeamRequestDTO nextEntity = teamRequestService.getNextTeamRequest(11L, null).orElseThrow();
 
         // Then: Validate key properties in a single assertion block
         assertThat(nextEntity)
@@ -135,7 +135,8 @@ public class TeamRequestServiceIT {
 
     @Test
     void shouldFindPreviousTeamRequestSuccessfully() {
-        TeamRequestDTO previousEntity = teamRequestService.getPreviousEntity(11L).orElseThrow();
+        TeamRequestDTO previousEntity =
+                teamRequestService.getPreviousTeamRequest(11L, null).orElseThrow();
 
         // Then: Validate key properties in a single assertion block
         assertThat(previousEntity)

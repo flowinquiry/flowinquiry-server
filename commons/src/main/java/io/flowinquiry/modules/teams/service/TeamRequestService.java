@@ -234,12 +234,16 @@ public class TeamRequestService {
         teamRequestRepository.deleteById(id);
     }
 
-    public Optional<TeamRequestDTO> getNextEntity(Long requestId) {
-        return teamRequestRepository.findNextEntity(requestId).map(teamRequestMapper::toDto);
+    public Optional<TeamRequestDTO> getNextTeamRequest(Long requestId, Long projectId) {
+        return teamRequestRepository
+                .findNextTeamRequest(requestId, projectId)
+                .map(teamRequestMapper::toDto);
     }
 
-    public Optional<TeamRequestDTO> getPreviousEntity(Long requestId) {
-        return teamRequestRepository.findPreviousEntity(requestId).map(teamRequestMapper::toDto);
+    public Optional<TeamRequestDTO> getPreviousTeamRequest(Long requestId, Long projectId) {
+        return teamRequestRepository
+                .findPreviousTeamRequest(requestId, projectId)
+                .map(teamRequestMapper::toDto);
     }
 
     // Fetch ticket distribution by team member

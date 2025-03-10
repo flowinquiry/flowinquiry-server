@@ -30,6 +30,7 @@ public interface TeamRequestRepository
     @EntityGraph(
             attributePaths = {
                 "team",
+                "project",
                 "requestUser",
                 "assignUser",
                 "modifiedByUser",
@@ -58,11 +59,12 @@ public interface TeamRequestRepository
             WHERE r.id = :requestId
         )
         AND tr.id < :requestId
-        AND tr.project is null
+        AND (:projectId IS NOT NULL AND tr.project.id = :projectId OR :projectId IS NULL AND tr.project IS NULL)
         ORDER BY tr.id DESC
             LIMIT 1
     """)
-    Optional<TeamRequest> findPreviousEntity(@Param("requestId") Long requestId);
+    Optional<TeamRequest> findPreviousTeamRequest(
+            @Param("requestId") Long requestId, @Param("projectId") Long projectId);
 
     @EntityGraph(
             attributePaths = {
@@ -83,11 +85,12 @@ public interface TeamRequestRepository
             WHERE r.id = :requestId
         )
         AND tr.id > :requestId
-        AND tr.project is null
+        AND (:projectId IS NOT NULL AND tr.project.id = :projectId OR :projectId IS NULL AND tr.project IS NULL)
         ORDER BY tr.id ASC
-            LIMIT 1
+        LIMIT 1
     """)
-    Optional<TeamRequest> findNextEntity(@Param("requestId") Long requestId);
+    Optional<TeamRequest> findNextTeamRequest(
+            @Param("requestId") Long requestId, @Param("projectId") Long projectId);
 
     /**
      * Finds all distinct workflow IDs associated with team requests.

@@ -188,18 +188,25 @@ public interface TeamRequestRepository
 
     @Query(
             """
-        SELECT COUNT(r.id)
-        FROM TeamRequest r
-        JOIN WorkflowTransitionHistory h ON h.teamRequest.id = r.id
-        WHERE r.isDeleted = false
-        AND r.isCompleted = false
-        AND h.slaDueDate IS NOT NULL
-        AND h.slaDueDate < CURRENT_TIMESTAMP
-        AND h.status <> :status
-        AND r.team.id = :teamId
-        AND h.slaDueDate >= COALESCE(:fromDate, h.slaDueDate)
-        AND h.slaDueDate <= COALESCE(:toDate, h.slaDueDate)
-    """)
+            SELECT COUNT(r.id)
+            FROM TeamRequest r
+            JOIN WorkflowTransitionHistory h ON h.teamRequest.id = r.id
+            WHERE r.isDeleted = false
+            AND r.isCompleted = false
+            AND h.id = (
+                SELECT h2.id
+                FROM WorkflowTransitionHistory h2
+                WHERE h2.teamRequest.id = r.id
+                ORDER BY h2.transitionDate DESC
+                LIMIT 1
+            )
+            AND h.slaDueDate IS NOT NULL
+            AND h.slaDueDate < CURRENT_TIMESTAMP
+            AND h.status <> :status
+            AND r.team.id = :teamId
+            AND (h.slaDueDate >= COALESCE(:fromDate, h.slaDueDate))
+            AND (h.slaDueDate <= COALESCE(:toDate, h.slaDueDate))
+            """)
     Long countOverdueTicketsByTeamId(
             @Param("teamId") Long teamId,
             @Param("status") WorkflowTransitionHistoryStatus completedStatus,

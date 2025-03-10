@@ -58,6 +58,7 @@ public interface TeamRequestRepository
             WHERE r.id = :requestId
         )
         AND tr.id < :requestId
+        AND tr.project is null
         ORDER BY tr.id DESC
             LIMIT 1
     """)
@@ -82,6 +83,7 @@ public interface TeamRequestRepository
             WHERE r.id = :requestId
         )
         AND tr.id > :requestId
+        AND tr.project is null
         ORDER BY tr.id ASC
             LIMIT 1
     """)

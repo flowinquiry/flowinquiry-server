@@ -3,6 +3,7 @@ package io.flowinquiry.modules.teams.repository;
 import io.flowinquiry.modules.teams.domain.Team;
 import io.flowinquiry.modules.usermanagement.domain.User;
 import io.flowinquiry.modules.usermanagement.service.dto.UserWithTeamRoleDTO;
+import jakarta.persistence.QueryHint;
 import java.util.List;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -11,6 +12,7 @@ import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.jpa.repository.QueryHints;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
@@ -18,8 +20,16 @@ import org.springframework.stereotype.Repository;
 public interface TeamRepository extends JpaRepository<Team, Long>, JpaSpecificationExecutor<Team> {
 
     @EntityGraph(attributePaths = {"organization"})
+    @QueryHints({
+        @QueryHint(name = "org.hibernate.cacheable", value = "true"),
+        @QueryHint(name = "org.hibernate.cacheRegion", value = "queryWorkflows")
+    })
     Page<Team> findAll(Specification<Team> spec, Pageable pageable);
 
+    @QueryHints({
+        @QueryHint(name = "org.hibernate.cacheable", value = "true"),
+        @QueryHint(name = "org.hibernate.cacheRegion", value = "queryWorkflows")
+    })
     @Query("SELECT t FROM Team t JOIN t.users u WHERE u.id = :userId")
     List<Team> findTeamsByUserId(@Param("userId") Long userId);
 
@@ -54,6 +64,10 @@ public interface TeamRepository extends JpaRepository<Team, Long>, JpaSpecificat
      * @param teamId
      * @return
      */
+    @QueryHints({
+        @QueryHint(name = "org.hibernate.cacheable", value = "true"),
+        @QueryHint(name = "org.hibernate.cacheRegion", value = "queryWorkflows")
+    })
     @Query(
             """
            SELECT COALESCE(ut.role.name, 'Guest')
@@ -63,6 +77,10 @@ public interface TeamRepository extends JpaRepository<Team, Long>, JpaSpecificat
            """)
     String findUserRoleInTeam(@Param("userId") Long userId, @Param("teamId") Long teamId);
 
+    @QueryHints({
+        @QueryHint(name = "org.hibernate.cacheable", value = "true"),
+        @QueryHint(name = "org.hibernate.cacheRegion", value = "queryWorkflows")
+    })
     @Query(
             "SELECT COUNT(ut) > 0 FROM UserTeam ut WHERE ut.team.id = :teamId AND ut.role.name = 'Manager'")
     boolean existsManagerInTeam(@Param("teamId") Long teamId);
@@ -73,6 +91,10 @@ public interface TeamRepository extends JpaRepository<Team, Long>, JpaSpecificat
      * @param teamId the ID of the team.
      * @return a list of users who are managers of the given team.
      */
+    @QueryHints({
+        @QueryHint(name = "org.hibernate.cacheable", value = "true"),
+        @QueryHint(name = "org.hibernate.cacheRegion", value = "queryWorkflows")
+    })
     @Query(
             """
         SELECT ut.user FROM UserTeam ut

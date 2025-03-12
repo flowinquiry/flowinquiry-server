@@ -1,10 +1,12 @@
 package io.flowinquiry.modules.teams.repository;
 
 import io.flowinquiry.modules.teams.domain.WorkflowState;
+import jakarta.persistence.QueryHint;
 import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.jpa.repository.QueryHints;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
@@ -12,10 +14,18 @@ import org.springframework.transaction.annotation.Transactional;
 @Repository
 public interface WorkflowStateRepository extends JpaRepository<WorkflowState, Long> {
 
+    @QueryHints({
+        @QueryHint(name = "org.hibernate.cacheable", value = "true"),
+        @QueryHint(name = "org.hibernate.cacheRegion", value = "queryWorkflowStates")
+    })
     @Query(
             "SELECT ws FROM WorkflowState ws WHERE ws.workflow.id = :workflowId AND ws.isInitial = true")
     List<WorkflowState> findInitialStatesByWorkflowId(@Param("workflowId") Long workflowId);
 
+    @QueryHints({
+        @QueryHint(name = "org.hibernate.cacheable", value = "true"),
+        @QueryHint(name = "org.hibernate.cacheRegion", value = "queryWorkflowStates")
+    })
     @Query(
             "SELECT CASE WHEN COUNT(ws) > 0 THEN TRUE ELSE FALSE END "
                     + "FROM WorkflowState ws "

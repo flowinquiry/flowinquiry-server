@@ -7,6 +7,7 @@ import io.flowinquiry.modules.teams.service.dto.TeamTicketPriorityDistributionDT
 import io.flowinquiry.modules.teams.service.dto.TicketActionCountByDateDTO;
 import io.flowinquiry.modules.teams.service.dto.TicketDistributionDTO;
 import io.flowinquiry.modules.usermanagement.service.dto.TicketStatisticsDTO;
+import jakarta.persistence.QueryHint;
 import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
@@ -17,6 +18,7 @@ import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.jpa.repository.QueryHints;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
@@ -48,6 +50,10 @@ public interface TeamRequestRepository
                 "workflow",
                 "conversationHealth"
             })
+    @QueryHints({
+        @QueryHint(name = "org.hibernate.cacheable", value = "true"),
+        @QueryHint(name = "org.hibernate.cacheRegion", value = "queryTeamRequests")
+    })
     @Query(
             value =
                     """
@@ -74,6 +80,10 @@ public interface TeamRequestRepository
                 "workflow",
                 "conversationHealth"
             })
+    @QueryHints({
+        @QueryHint(name = "org.hibernate.cacheable", value = "true"),
+        @QueryHint(name = "org.hibernate.cacheRegion", value = "queryTeamRequests")
+    })
     @Query(
             value =
                     """
@@ -117,6 +127,10 @@ public interface TeamRequestRepository
             @Param("fromDate") Instant fromDate,
             @Param("toDate") Instant toDate);
 
+    @QueryHints({
+        @QueryHint(name = "org.hibernate.cacheable", value = "true"),
+        @QueryHint(name = "org.hibernate.cacheRegion", value = "queryTeamRequests")
+    })
     @Query(
             "SELECT r FROM TeamRequest r "
                     + "WHERE r.team.id = :teamId AND r.isCompleted = false AND r.isDeleted = false "

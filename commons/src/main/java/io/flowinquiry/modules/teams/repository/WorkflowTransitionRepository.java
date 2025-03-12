@@ -2,11 +2,13 @@ package io.flowinquiry.modules.teams.repository;
 
 import io.flowinquiry.modules.teams.domain.WorkflowState;
 import io.flowinquiry.modules.teams.domain.WorkflowTransition;
+import jakarta.persistence.QueryHint;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.jpa.repository.QueryHints;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,6 +23,10 @@ public interface WorkflowTransitionRepository extends JpaRepository<WorkflowTran
      * @param sourceStateId the name of the current state
      * @return a list of WorkflowState objects representing valid target states
      */
+    @QueryHints({
+        @QueryHint(name = "org.hibernate.cacheable", value = "true"),
+        @QueryHint(name = "org.hibernate.cacheRegion", value = "queryWorkflowStates")
+    })
     @Query(
             "SELECT ws FROM WorkflowState ws "
                     + "JOIN WorkflowTransition wt ON ws.id = wt.targetState.id "
@@ -33,6 +39,10 @@ public interface WorkflowTransitionRepository extends JpaRepository<WorkflowTran
      * @param sourceStateId
      * @return
      */
+    @QueryHints({
+        @QueryHint(name = "org.hibernate.cacheable", value = "true"),
+        @QueryHint(name = "org.hibernate.cacheRegion", value = "queryWorkflowStates")
+    })
     @Query(
             "SELECT wt "
                     + "FROM WorkflowTransition wt "
@@ -47,6 +57,10 @@ public interface WorkflowTransitionRepository extends JpaRepository<WorkflowTran
      * @param targetStateId
      * @return
      */
+    @QueryHints({
+        @QueryHint(name = "org.hibernate.cacheable", value = "true"),
+        @QueryHint(name = "org.hibernate.cacheRegion", value = "queryWorkflowStates")
+    })
     Optional<WorkflowTransition> findByWorkflowIdAndSourceStateIdAndTargetStateId(
             Long workflowId, Long sourceStateId, Long targetStateId);
 

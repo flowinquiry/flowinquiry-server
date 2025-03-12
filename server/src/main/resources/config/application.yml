@@ -38,7 +38,7 @@ spring:
       hibernate.connection.provider_disables_autocommit: true
       hibernate.cache:
         use_second_level_cache: true
-        use_query_cache: false
+        use_query_cache: true
       hibernate.generate_statistics: false
       # modify batch size as necessary
       hibernate.jdbc.batch_size: 25

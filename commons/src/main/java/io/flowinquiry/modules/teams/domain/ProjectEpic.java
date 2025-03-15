@@ -2,7 +2,7 @@ package io.flowinquiry.modules.teams.domain;
 
 import io.flowinquiry.modules.audit.AbstractAuditingEntity;
 import jakarta.persistence.*;
-import java.time.LocalDateTime;
+import java.time.Instant;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -36,7 +36,7 @@ public class ProjectEpic extends AbstractAuditingEntity<Long> {
 
     @Column private Integer priority; // Optional priority field
 
-    @Column private LocalDateTime startDate;
+    @Column private Instant startDate;
 
-    @Column private LocalDateTime endDate;
+    @Column private Instant endDate;
 }

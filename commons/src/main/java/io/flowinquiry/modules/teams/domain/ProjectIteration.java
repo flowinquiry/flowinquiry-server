@@ -2,7 +2,7 @@ package io.flowinquiry.modules.teams.domain;
 
 import io.flowinquiry.modules.audit.AbstractAuditingEntity;
 import jakarta.persistence.*;
-import java.time.LocalDateTime;
+import java.time.Instant;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -35,8 +35,8 @@ public class ProjectIteration extends AbstractAuditingEntity<Long> {
     private String status = "ACTIVE"; // Possible values: ACTIVE, COMPLETED
 
     @Column(nullable = false)
-    private LocalDateTime startDate;
+    private Instant startDate;
 
     @Column(nullable = false)
-    private LocalDateTime endDate;
+    private Instant endDate;
 }

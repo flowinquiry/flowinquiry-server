@@ -111,4 +111,12 @@ public class TeamRequest extends AbstractAuditingEntity<Long> {
             fetch = FetchType.LAZY,
             orphanRemoval = true)
     private TeamRequestConversationHealth conversationHealth;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "iteration_id", foreignKey = @ForeignKey(name = "fk_team_request_iteration"))
+    private ProjectIteration iteration;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "epic_id", foreignKey = @ForeignKey(name = "fk_team_request_epic"))
+    private ProjectEpic epic;
 }

@@ -119,4 +119,10 @@ public class TeamRequest extends AbstractAuditingEntity<Long> {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "epic_id", foreignKey = @ForeignKey(name = "fk_team_request_epic"))
     private ProjectEpic epic;
+
+    @Column(nullable = false)
+    private int size;
+
+    @Column(nullable = false)
+    private int estimate;
 }

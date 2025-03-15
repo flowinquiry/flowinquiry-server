@@ -317,18 +317,16 @@
 			<column name="is_deleted" type="BOOLEAN" defaultValue="false">
 				<constraints nullable="false" />
 			</column>
-			<!-- Flag for recurring requests -->
+
 			<column name="is_recurring" type="BOOLEAN"
 				defaultValue="false">
 				<constraints nullable="false" />
 			</column>
 
-			<!-- Estimated completion date -->
 			<column name="estimated_completion_date" type="Date">
 				<constraints nullable="true" />
 			</column>
 
-			<!-- Actual completion date -->
 			<column name="actual_completion_date" type="Date">
 				<constraints nullable="true" />
 			</column>
@@ -350,6 +348,12 @@
 			</column>
 			<column name="epic_id" type="BIGINT">
 				<constraints nullable="true" />
+			</column>
+			<column name="size" type="INT">
+				<constraints nullable="false" />
+			</column>
+			<column name="estimate" type="INT">
+				<constraints nullable="false" />
 			</column>
 			<column name="created_by" type="bigint" />
 			<column name="created_at" type="timestamptz" />

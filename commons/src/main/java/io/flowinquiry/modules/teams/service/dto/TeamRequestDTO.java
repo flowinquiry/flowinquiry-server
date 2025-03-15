@@ -51,5 +51,7 @@ public class TeamRequestDTO {
     private Instant modifiedAt;
     private int numberAttachments;
     private int numberWatchers;
+    private int size;
+    private int estimate;
     private TeamRequestConversationHealthDTO conversationHealth;
 }

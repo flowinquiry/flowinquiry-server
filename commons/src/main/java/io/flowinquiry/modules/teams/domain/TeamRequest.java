@@ -121,8 +121,8 @@ public class TeamRequest extends AbstractAuditingEntity<Long> {
     private ProjectEpic epic;
 
     @Column(nullable = false)
-    private int size;
+    private Integer size;
 
     @Column(nullable = false)
-    private int estimate;
+    private Integer estimate;
 }

@@ -350,10 +350,10 @@
 				<constraints nullable="true" />
 			</column>
 			<column name="size" type="INT">
-				<constraints nullable="false" />
+				<constraints nullable="true" />
 			</column>
 			<column name="estimate" type="INT">
-				<constraints nullable="false" />
+				<constraints nullable="true" />
 			</column>
 			<column name="created_by" type="bigint" />
 			<column name="created_at" type="timestamptz" />

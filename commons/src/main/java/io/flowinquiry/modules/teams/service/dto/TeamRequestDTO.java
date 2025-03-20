@@ -1,5 +1,6 @@
 package io.flowinquiry.modules.teams.service.dto;
 
+import io.flowinquiry.modules.teams.domain.TShirtSize;
 import io.flowinquiry.modules.teams.domain.TicketChannel;
 import jakarta.validation.constraints.NotNull;
 import java.time.Instant;
@@ -51,7 +52,7 @@ public class TeamRequestDTO {
     private Instant modifiedAt;
     private int numberAttachments;
     private int numberWatchers;
-    private int size;
+    private TShirtSize size;
     private int estimate;
     private TeamRequestConversationHealthDTO conversationHealth;
 }

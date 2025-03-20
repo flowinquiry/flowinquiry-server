@@ -108,10 +108,9 @@ public class TeamRequest extends AbstractAuditingEntity<Long> {
     @JoinColumn(name = "epic_id", foreignKey = @ForeignKey(name = "fk_team_request_epic"))
     private ProjectEpic epic;
 
-    @Column(nullable = false)
+    @Column
     @Enumerated(EnumType.STRING)
     private TShirtSize size;
 
-    @Column(nullable = false)
-    private Integer estimate;
+    @Column private Integer estimate;
 }

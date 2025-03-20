@@ -2,6 +2,7 @@
 [![Build Status](https://github.com/flowinquiry/flowinquiry-server/actions/workflows/gradle.yml/badge.svg)](https://github.com/flowinquiry/flowinquiry-server/actions/workflows/gradle.yml)
 [![Contributors](https://img.shields.io/github/contributors/flowinquiry/flowinquiry-server.svg)](https://github.com/flowinquiry/flowinquiry-server/graphs/contributors)
 [![Docker Pulls](https://img.shields.io/docker/pulls/flowinquiry/flowinquiry-server)](https://hub.docker.com/repository/docker/flowinquiry/flowinquiry-server/general)
+[![GitHub stars](https://img.shields.io/github/stars/flowinquiry/flowinquiry-server.svg?style=social)](https://github.com/flowinquiry/flowinquiry-server/stargazers)
 ![License](https://img.shields.io/badge/License-AGPLv3-blue)
 
 <div style="display: flex; justify-content: center; align-items: center;">
@@ -63,6 +64,10 @@ FlowInquiry Server serves as the back-end component of the FlowInquiry service, 
     <img src="assets/docker.svg" alt="Docker" width="80" height="80" title="Provides containerization for consistent application deployment across environments, enabling scalability and portability">
 </div>
 
+## Stay Up-to-Date
+
+![Follow FlowInquiry](assets/github_project_star.gif)
+
 ## Getting Started
 
 To have the FlowInquiry back-end up and running, please follow the [Getting Started](https://docs.flowinquiry.io/developer_guides/backend/getting_started) guide
@@ -74,7 +79,8 @@ To ensure a smooth deployment process, we provide detailed guidelines for deploy
 ## License
 This project is licensed under the [AGPLv3](LICENSE) License.
 
-## Contributors
+
+## 💪 Contributors
 
 Thanks to all the contributors! 🙌  
 

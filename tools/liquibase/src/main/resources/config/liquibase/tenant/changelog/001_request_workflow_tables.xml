@@ -349,7 +349,7 @@
 			<column name="epic_id" type="BIGINT">
 				<constraints nullable="true" />
 			</column>
-			<column name="size" type="INT">
+			<column name="size" type="VARCHAR(15)">
 				<constraints nullable="true" />
 			</column>
 			<column name="estimate" type="INT">
@@ -925,14 +925,4 @@
 		<sql>SELECT setval('fw_activity_log_id_seq', (SELECT MAX(id) FROM
 			fw_activity_log));</sql>
 	</changeSet>
-	<changeSet id="001:13-update-fw_team_request" author="flowinquiry">
-		<update tableName="fw_team_request">
-			<column name="size" type="VARCHAR(15)">
-				<constraints nullable="true" />
-			</column>
-		</update>
-	</changeSet>
-
-
-
 </databaseChangeLog>

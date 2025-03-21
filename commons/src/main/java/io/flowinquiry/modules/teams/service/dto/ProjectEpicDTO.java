@@ -17,4 +17,5 @@ public class ProjectEpicDTO {
     private String description;
     private Instant startDate;
     private Instant endDate;
+    private Long totalTickets;
 }

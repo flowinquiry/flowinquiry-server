@@ -10,5 +10,5 @@ import org.springframework.stereotype.Repository;
 public interface ProjectIterationRepository
         extends JpaRepository<ProjectIteration, Long>, JpaSpecificationExecutor<ProjectIteration> {
 
-    List<ProjectIteration> findByProjectId(Long projectId);
+    List<ProjectIteration> findByProjectIdOrderByStartDateAsc(Long projectId);
 }

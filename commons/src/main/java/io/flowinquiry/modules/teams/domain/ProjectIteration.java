@@ -6,6 +6,7 @@ import java.time.Instant;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.Formula;
 
 @Entity
 @Table(name = "fw_project_iteration")
@@ -39,4 +40,7 @@ public class ProjectIteration extends AbstractAuditingEntity<Long> {
 
     @Column(nullable = false)
     private Instant endDate;
+
+    @Formula("(SELECT COUNT(r.id) FROM fw_team_request r WHERE r.iteration_id = id)")
+    private Long totalTickets;
 }

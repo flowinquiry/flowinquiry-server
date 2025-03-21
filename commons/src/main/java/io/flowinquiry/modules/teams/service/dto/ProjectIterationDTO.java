@@ -14,6 +14,8 @@ public class ProjectIterationDTO {
     private Long id;
     private Long projectId;
     private String name;
+    private String description;
     private Instant startDate;
     private Instant endDate;
+    private Long totalTickets;
 }

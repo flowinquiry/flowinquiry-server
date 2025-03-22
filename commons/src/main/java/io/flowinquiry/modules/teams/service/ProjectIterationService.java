@@ -24,7 +24,7 @@ public class ProjectIterationService {
 
     private final ProjectRepository projectRepository;
 
-    public List<ProjectIterationDTO> getAllIterations(Long projectId) {
+    public List<ProjectIterationDTO> findByProjectId(Long projectId) {
         return projectIterationRepository.findByProjectIdOrderByStartDateAsc(projectId).stream()
                 .map(projectIterationMapper::toDto)
                 .collect(toList());

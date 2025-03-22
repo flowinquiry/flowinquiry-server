@@ -24,7 +24,7 @@ public class ProjectEpicService {
 
     private final ProjectRepository projectRepository;
 
-    public List<ProjectEpicDTO> getAllEpics(Long projectId) {
+    public List<ProjectEpicDTO> findByProjectId(Long projectId) {
         return projectEpicRepository.findByProjectId(projectId).stream()
                 .map(projectEpicMapper::toDto)
                 .collect(toList());

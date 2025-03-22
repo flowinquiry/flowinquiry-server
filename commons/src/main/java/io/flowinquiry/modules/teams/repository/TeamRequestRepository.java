@@ -38,6 +38,8 @@ public interface TeamRequestRepository
                 "modifiedByUser",
                 "workflow",
                 "currentState",
+                "iteration",
+                "epic",
                 "conversationHealth"
             })
     Optional<TeamRequest> findById(@Param("id") Long id);
@@ -78,6 +80,8 @@ public interface TeamRequestRepository
                 "requestUser",
                 "assignUser",
                 "workflow",
+                "iteration",
+                "epic",
                 "conversationHealth"
             })
     @QueryHints({
@@ -101,14 +105,6 @@ public interface TeamRequestRepository
     """)
     Optional<TeamRequest> findNextTeamRequest(
             @Param("requestId") Long requestId, @Param("projectId") Long projectId);
-
-    /**
-     * Finds all distinct workflow IDs associated with team requests.
-     *
-     * @return A list of workflow IDs.
-     */
-    @Query("SELECT DISTINCT r.workflow.id FROM TeamRequest r")
-    List<Long> findAllWorkflowIds();
 
     // Query to count tickets assigned to each team member for a specific team
     @Query(

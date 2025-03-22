@@ -44,6 +44,12 @@ public class TeamRequestDTO {
 
     @NotNull(message = "Current State ID cannot be null") private Long currentStateId;
 
+    private Long iterationId;
+    private String iterationName;
+
+    private Long epicId;
+    private String epicName;
+
     private String currentStateName;
     private TicketChannel channel;
     private Boolean isNew;

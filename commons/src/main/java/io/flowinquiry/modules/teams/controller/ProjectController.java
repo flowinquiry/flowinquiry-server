@@ -1,11 +1,17 @@
 package io.flowinquiry.modules.teams.controller;
 
 import io.flowinquiry.exceptions.ResourceNotFoundException;
+import io.flowinquiry.modules.teams.service.ProjectEpicService;
+import io.flowinquiry.modules.teams.service.ProjectIterationService;
 import io.flowinquiry.modules.teams.service.ProjectService;
 import io.flowinquiry.modules.teams.service.dto.ProjectDTO;
+import io.flowinquiry.modules.teams.service.dto.ProjectEpicDTO;
+import io.flowinquiry.modules.teams.service.dto.ProjectIterationDTO;
 import io.flowinquiry.query.QueryDTO;
 import jakarta.validation.Valid;
+import java.util.List;
 import java.util.Optional;
+import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -19,13 +25,14 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/api/projects")
+@AllArgsConstructor
 public class ProjectController {
 
     private final ProjectService projectService;
 
-    public ProjectController(ProjectService projectService) {
-        this.projectService = projectService;
-    }
+    private final ProjectIterationService projectIterationService;
+
+    private final ProjectEpicService projectEpicService;
 
     @PostMapping
     public ProjectDTO createProject(@RequestBody ProjectDTO project) {
@@ -57,5 +64,15 @@ public class ProjectController {
     @DeleteMapping("/{projectId}")
     public void deleteProject(@PathVariable("projectId") Long projectId) {
         projectService.deleteProject(projectId);
+    }
+
+    @GetMapping("/{projectId}/iterations")
+    public List<ProjectIterationDTO> getProjectIterations(@PathVariable Long projectId) {
+        return projectIterationService.findByProjectId(projectId);
+    }
+
+    @GetMapping("/{projectId}/epics")
+    public List<ProjectEpicDTO> getProjectEpics(@PathVariable Long projectId) {
+        return projectEpicService.findByProjectId(projectId);
     }
 }

@@ -1,12 +1,10 @@
 package io.flowinquiry.modules.teams.service.mapper;
 
-import io.flowinquiry.modules.teams.domain.Project;
 import io.flowinquiry.modules.teams.domain.Team;
 import io.flowinquiry.modules.teams.domain.TeamRequest;
-import io.flowinquiry.modules.teams.domain.Workflow;
-import io.flowinquiry.modules.teams.domain.WorkflowState;
 import io.flowinquiry.modules.teams.service.dto.TeamRequestDTO;
 import io.flowinquiry.modules.usermanagement.domain.User;
+import io.flowinquiry.utils.BaseMapper;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
@@ -15,7 +13,7 @@ import org.mapstruct.Named;
 @Mapper(
         componentModel = "spring",
         uses = {TeamRequestConversationHealthMapper.class})
-public interface TeamRequestMapper {
+public interface TeamRequestMapper extends BaseMapper {
 
     @Mapping(target = "teamId", source = "team.id")
     @Mapping(target = "requestUserId", source = "requestUser.id")
@@ -35,29 +33,52 @@ public interface TeamRequestMapper {
     @Mapping(target = "projectName", source = "project.name")
     @Mapping(target = "currentStateId", source = "currentState.id")
     @Mapping(target = "currentStateName", source = "currentState.stateName")
+    @Mapping(target = "iterationId", source = "iteration.id")
+    @Mapping(target = "iterationName", source = "iteration.name")
+    @Mapping(target = "epicId", source = "epic.id")
+    @Mapping(target = "epicName", source = "epic.name")
     @Mapping(target = "conversationHealth", source = "conversationHealth")
     TeamRequestDTO toDto(TeamRequest teamRequest);
 
     @Mapping(target = "team", source = "teamId", qualifiedByName = "toTeam")
-    @Mapping(target = "workflow", source = "workflowId", qualifiedByName = "toWorkflow")
-    @Mapping(target = "project", source = "projectId", qualifiedByName = "toProject")
-    @Mapping(target = "requestUser", source = "requestUserId", qualifiedByName = "toUser")
-    @Mapping(target = "assignUser", source = "assignUserId", qualifiedByName = "toUser")
+    @Mapping(
+            target = "workflow",
+            expression = "java(toStub(teamRequestDTO.getWorkflowId(), Workflow.class))")
+    @Mapping(
+            target = "project",
+            expression = "java(toStub(teamRequestDTO.getProjectId(), Project.class))")
+    @Mapping(
+            target = "requestUser",
+            expression = "java(toStub(teamRequestDTO.getRequestUserId(), User.class))")
+    @Mapping(
+            target = "assignUser",
+            expression = "java(toStub(teamRequestDTO.getAssignUserId(), User.class))")
+    @Mapping(
+            target = "iteration",
+            expression = "java(toStub(teamRequestDTO.getIterationId(), ProjectIteration.class))")
+    @Mapping(
+            target = "epic",
+            expression = "java(toStub(teamRequestDTO.getEpicId(), ProjectEpic.class))")
     @Mapping(
             target = "currentState",
-            source = "currentStateId",
-            qualifiedByName = "toWorkflowState")
+            expression = "java(toStub(teamRequestDTO.getCurrentStateId(), WorkflowState.class))")
     @Mapping(target = "conversationHealth", source = "conversationHealth")
     TeamRequest toEntity(TeamRequestDTO teamRequestDTO);
 
     @Mapping(target = "team", source = "teamId", qualifiedByName = "toTeam")
-    @Mapping(target = "workflow", source = "workflowId", qualifiedByName = "toWorkflow")
-    @Mapping(target = "assignUser", source = "assignUserId", qualifiedByName = "toUser")
-    @Mapping(target = "requestUser", source = "requestUserId", qualifiedByName = "toUser")
+    @Mapping(target = "workflow", expression = "java(toStub(dto.getWorkflowId(), Workflow.class))")
+    @Mapping(
+            target = "requestUser",
+            expression = "java(toStub(dto.getRequestUserId(), User.class))")
+    @Mapping(target = "assignUser", expression = "java(toStub(dto.getAssignUserId(), User.class))")
+    @Mapping(
+            target = "iteration",
+            expression = "java(toStub(dto.getIterationId(), ProjectIteration.class))")
+    @Mapping(target = "epic", expression = "java(toStub(dto.getEpicId(), ProjectEpic.class))")
     @Mapping(
             target = "currentState",
-            source = "currentStateId",
-            qualifiedByName = "toWorkflowState")
+            expression = "java(toStub(dto.getCurrentStateId(), WorkflowState.class))")
+    @Mapping(target = "project", expression = "java(toStub(dto.getProjectId(), Project.class))")
     @Mapping(
             target = "conversationHealth",
             ignore = true) // ✅ Ignore to avoid detached entity issue
@@ -66,28 +87,6 @@ public interface TeamRequestMapper {
     @Named("toTeam")
     default Team toTeam(Long teamId) {
         return (teamId == null) ? null : Team.builder().id(teamId).build();
-    }
-
-    @Named("toWorkflow")
-    default Workflow toWorkflow(Long workflowId) {
-        return (workflowId == null) ? null : Workflow.builder().id(workflowId).build();
-    }
-
-    @Named("toProject")
-    default Project toProject(Long projectId) {
-        return (projectId == null) ? null : Project.builder().id(projectId).build();
-    }
-
-    @Named("toWorkflowState")
-    default WorkflowState toWorkflowState(Long workflowStateId) {
-        return (workflowStateId == null)
-                ? null
-                : WorkflowState.builder().id(workflowStateId).build();
-    }
-
-    @Named("toUser")
-    default User toUser(Long userId) {
-        return (userId == null) ? null : User.builder().id(userId).build();
     }
 
     @Named("mapUserFullName")

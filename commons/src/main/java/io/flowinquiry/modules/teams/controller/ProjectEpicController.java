@@ -1,7 +1,6 @@
 package io.flowinquiry.modules.teams.controller;
 
 import io.flowinquiry.exceptions.ResourceNotFoundException;
-import io.flowinquiry.modules.teams.domain.ProjectEpic;
 import io.flowinquiry.modules.teams.service.ProjectEpicService;
 import io.flowinquiry.modules.teams.service.dto.ProjectEpicDTO;
 import java.util.List;
@@ -16,7 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/api/epics")
+@RequestMapping("/api/project-epics")
 @RequiredArgsConstructor
 public class ProjectEpicController {
 
@@ -35,8 +34,8 @@ public class ProjectEpicController {
     }
 
     @PostMapping
-    public ProjectEpicDTO createEpic(@RequestBody ProjectEpic epic) {
-        return epicService.createEpic(epic);
+    public ProjectEpicDTO createEpic(@RequestBody ProjectEpicDTO epic) {
+        return epicService.save(epic);
     }
 
     @PutMapping("/{id}")

@@ -31,9 +31,9 @@ spring:
   jpa:
     open-in-view: false
     properties:
+      hibernate.javax.cache.missing_cache_strategy: create
       hibernate.jdbc.time_zone: UTC
       hibernate.timezone.default_storage: NORMALIZE
-      hibernate.type.preferred_instant_jdbc_type: TIMESTAMP
       hibernate.id.new_generator_mappings: true
       hibernate.connection.provider_disables_autocommit: true
       hibernate.cache:

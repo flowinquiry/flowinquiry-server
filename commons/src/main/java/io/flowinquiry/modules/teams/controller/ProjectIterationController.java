@@ -1,7 +1,6 @@
 package io.flowinquiry.modules.teams.controller;
 
 import io.flowinquiry.exceptions.ResourceNotFoundException;
-import io.flowinquiry.modules.teams.domain.ProjectIteration;
 import io.flowinquiry.modules.teams.service.ProjectIterationService;
 import io.flowinquiry.modules.teams.service.dto.ProjectIterationDTO;
 import java.util.List;
@@ -17,7 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/api/iterations")
+@RequestMapping("/api/project-iterations")
 @RequiredArgsConstructor
 public class ProjectIterationController {
 
@@ -37,8 +36,8 @@ public class ProjectIterationController {
     }
 
     @PostMapping
-    public ProjectIterationDTO createIteration(@RequestBody ProjectIteration iteration) {
-        return iterationService.createIteration(iteration);
+    public ProjectIterationDTO createIteration(@RequestBody ProjectIterationDTO iteration) {
+        return iterationService.save(iteration);
     }
 
     @PutMapping("/{id}")

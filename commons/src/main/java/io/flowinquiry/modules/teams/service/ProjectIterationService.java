@@ -2,8 +2,10 @@ package io.flowinquiry.modules.teams.service;
 
 import static java.util.stream.Collectors.toList;
 
+import io.flowinquiry.modules.teams.domain.Project;
 import io.flowinquiry.modules.teams.domain.ProjectIteration;
 import io.flowinquiry.modules.teams.repository.ProjectIterationRepository;
+import io.flowinquiry.modules.teams.repository.ProjectRepository;
 import io.flowinquiry.modules.teams.service.dto.ProjectIterationDTO;
 import io.flowinquiry.modules.teams.service.mapper.ProjectIterationMapper;
 import java.util.List;
@@ -18,33 +20,49 @@ public class ProjectIterationService {
 
     private final ProjectIterationMapper projectIterationMapper;
 
-    private final ProjectIterationRepository iterationRepository;
+    private final ProjectIterationRepository projectIterationRepository;
+
+    private final ProjectRepository projectRepository;
 
     public List<ProjectIterationDTO> getAllIterations(Long projectId) {
-        return iterationRepository.findByProjectIdOrderByStartDateAsc(projectId).stream()
+        return projectIterationRepository.findByProjectIdOrderByStartDateAsc(projectId).stream()
                 .map(projectIterationMapper::toDto)
                 .collect(toList());
     }
 
     public Optional<ProjectIterationDTO> getIterationById(Long id) {
-        return iterationRepository.findById(id).map(projectIterationMapper::toDto);
+        return projectIterationRepository.findById(id).map(projectIterationMapper::toDto);
     }
 
     @Transactional
-    public ProjectIterationDTO createIteration(ProjectIteration iteration) {
-        return projectIterationMapper.toDto(iterationRepository.save(iteration));
+    public ProjectIterationDTO save(ProjectIterationDTO projectIterationDTO) {
+        Project project =
+                projectRepository
+                        .findById(projectIterationDTO.getProjectId())
+                        .orElseThrow(
+                                () ->
+                                        new IllegalArgumentException(
+                                                "Project not found: "
+                                                        + projectIterationDTO.getProjectId()));
+
+        ProjectIteration iteration = projectIterationMapper.toEntity(projectIterationDTO);
+        iteration.setProject(project);
+
+        ProjectIteration saved = projectIterationRepository.save(iteration);
+
+        return projectIterationMapper.toDto(saved);
     }
 
     @Transactional
     public ProjectIterationDTO updateIteration(Long id, ProjectIterationDTO updatedIteration) {
-        return iterationRepository
+        return projectIterationRepository
                 .findById(id)
                 .map(
                         existingIteration -> {
                             existingIteration.setName(updatedIteration.getName());
                             existingIteration.setStartDate(updatedIteration.getStartDate());
                             existingIteration.setEndDate(updatedIteration.getEndDate());
-                            return iterationRepository.save(existingIteration);
+                            return projectIterationRepository.save(existingIteration);
                         })
                 .map(projectIterationMapper::toDto)
                 .orElseThrow(
@@ -53,6 +71,6 @@ public class ProjectIterationService {
 
     @Transactional
     public void deleteIteration(Long id) {
-        iterationRepository.deleteById(id);
+        projectIterationRepository.deleteById(id);
     }
 }

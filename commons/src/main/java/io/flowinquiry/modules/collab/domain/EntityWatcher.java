@@ -10,7 +10,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
-import org.springframework.cache.annotation.Cacheable;
 
 @Getter
 @Setter
@@ -18,7 +17,6 @@ import org.springframework.cache.annotation.Cacheable;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Cacheable
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @Table(
         name = "fw_entity_watchers",

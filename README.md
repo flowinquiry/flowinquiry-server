@@ -79,6 +79,19 @@ To ensure a smooth deployment process, we provide detailed guidelines for deploy
 ## License
 This project is licensed under the [AGPLv3](LICENSE) License.
 
+## How to Contribute
+
+We welcome contributions of all kinds — not just code!
+
+You can:
+- Star the project ⭐
+- Share it on social media 📢
+- Create a tutorial or video 🎥
+- Report bugs or suggest improvements 🐛
+- Submit a pull request 🛠️
+
+Read the full guide: [How to Contribute to FlowInquiry](https://docs.flowinquiry.io/how_to_contributes/your_action_is_meaningful_to_us)
+
 
 ## 💪 Contributors
 

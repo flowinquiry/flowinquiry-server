@@ -22,11 +22,9 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
-import org.springframework.cache.annotation.Cacheable;
 
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @Entity
-@Cacheable
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @Table(name = "fw_workflow")
 @Getter
@@ -52,7 +50,7 @@ public class Workflow extends AbstractAuditingEntity<Long> {
     @JoinColumn(name = "owner_id", nullable = true)
     private Team owner; // Owner team; null for global workflows
 
-    @Column(nullable = false, length = 50)
+    @Column(name = "visibility", nullable = false, length = 50)
     @Enumerated(EnumType.STRING)
     private WorkflowVisibility visibility;
 

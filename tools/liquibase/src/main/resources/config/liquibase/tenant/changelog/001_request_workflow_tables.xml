@@ -776,6 +776,8 @@
 			<column name="created_at" type="timestamp" />
 			<column name="modified_by" type="numeric" />
 			<column name="modified_at" type="timestamp" />
+			<column name="size" type="string" />
+			<column name="estimate" type="number" />
 		</loadData>
 		<sql>SELECT setval('fw_team_request_id_seq', (SELECT MAX(id) FROM
 			fw_team_request));</sql>

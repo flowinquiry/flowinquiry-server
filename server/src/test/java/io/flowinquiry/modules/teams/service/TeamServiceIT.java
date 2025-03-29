@@ -56,7 +56,6 @@ public class TeamServiceIT {
         assertThat(savedTeam.getSlogan()).isEqualTo("Driving Innovation");
         assertThat(savedTeam.getDescription())
                 .isEqualTo("A team dedicated to workflow excellence.");
-
         ArgumentCaptor<NewTeamCreatedEvent> eventCaptor =
                 ArgumentCaptor.forClass(NewTeamCreatedEvent.class);
         verify(spyEventPublisher, times(1)).publishEvent(eventCaptor.capture());

@@ -11,6 +11,7 @@ import io.flowinquiry.modules.audit.AuditLogUpdateEvent;
 import io.flowinquiry.modules.collab.domain.EntityType;
 import io.flowinquiry.modules.collab.domain.EntityWatcher;
 import io.flowinquiry.modules.collab.repository.EntityWatcherRepository;
+import io.flowinquiry.modules.teams.domain.TShirtSize;
 import io.flowinquiry.modules.teams.domain.TicketChannel;
 import io.flowinquiry.modules.teams.repository.TeamRequestRepository;
 import io.flowinquiry.modules.teams.service.dto.TeamRequestDTO;
@@ -66,12 +67,15 @@ public class TeamRequestServiceIT {
                 teamRequestMapper.toDto(teamRequestRepository.findById(1L).orElseThrow());
         teamRequestDTO.setRequestTitle("Updated Request Title");
         teamRequestDTO.setCurrentStateId(2L);
+        teamRequestDTO.setSize(TShirtSize.XL);
+        teamRequestDTO.setEstimate(15);
 
         TeamRequestDTO updatedRequest = teamRequestService.updateTeamRequest(teamRequestDTO);
 
         assertThat(updatedRequest.getRequestTitle()).isEqualTo("Updated Request Title");
         assertThat(updatedRequest.getCurrentStateId()).isEqualTo(2L);
-
+        assertThat(teamRequestDTO.getSize()).isEqualTo(TShirtSize.XL);
+        assertThat(teamRequestDTO.getEstimate()).isEqualTo(15);
         List<EntityWatcher> watchers =
                 entityWatcherRepository.findByEntityTypeAndEntityId(EntityType.Team_Request, 1L);
         assertThat(watchers).hasSize(3);
@@ -116,7 +120,9 @@ public class TeamRequestServiceIT {
                         TeamRequestDTO::getChannel,
                         TeamRequestDTO::getIsNew,
                         TeamRequestDTO::getIsCompleted,
-                        TeamRequestDTO::getEstimatedCompletionDate)
+                        TeamRequestDTO::getEstimatedCompletionDate,
+                        TeamRequestDTO::getSize,
+                        TeamRequestDTO::getEstimate)
                 .containsExactly(
                         12L,
                         1L,
@@ -126,7 +132,9 @@ public class TeamRequestServiceIT {
                         TicketChannel.CHAT,
                         true,
                         false,
-                        LocalDate.of(2025, 2, 17));
+                        LocalDate.of(2025, 2, 17),
+                        TShirtSize.S,
+                        9);
 
         assertThat(nextEntity.getCreatedAt()).isNotNull();
         assertThat(nextEntity.getModifiedAt()).isNotNull();

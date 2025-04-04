@@ -1,4 +1,4 @@
-name: Monorepo CI
+name: FlowInquiry CI
 
 on:
   push:

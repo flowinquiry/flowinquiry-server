@@ -1,7 +1,8 @@
 # FlowInquiry Server
-[![Build Status](https://github.com/flowinquiry/flowinquiry-server/actions/workflows/gradle.yml/badge.svg)](https://github.com/flowinquiry/flowinquiry-server/actions/workflows/gradle.yml)
-[![Contributors](https://img.shields.io/github/contributors/flowinquiry/flowinquiry-server.svg)](https://github.com/flowinquiry/flowinquiry-server/graphs/contributors)
-[![Docker Pulls](https://img.shields.io/docker/pulls/flowinquiry/flowinquiry-server)](https://hub.docker.com/repository/docker/flowinquiry/flowinquiry-server/general)
+[![Build Status](https://github.com/flowinquiry/flowinquiry/actions/workflows/ci.yml/badge.svg)](https://github.com/flowinquiry/flowinquiry/actions/workflows/ci.yml)
+[![Contributors](https://img.shields.io/github/contributors/flowinquiry/flowinquiry.svg)](https://github.com/flowinquiry/flowinquiry/graphs/contributors)
+[![Frontend Docker Pulls](https://img.shields.io/docker/pulls/flowinquiry/flowinquiry-frontend?label=frontend%20pulls&logo=docker)](https://hub.docker.com/r/flowinquiry/flowinquiry-frontend)
+[![Backend Docker Pulls](https://img.shields.io/docker/pulls/flowinquiry/flowinquiry-server?label=backend%20pulls&logo=docker)](https://hub.docker.com/r/flowinquiry/flowinquiry-server)
 [![GitHub stars](https://img.shields.io/github/stars/flowinquiry/flowinquiry-server.svg?style=social)](https://github.com/flowinquiry/flowinquiry-server/stargazers)
 ![License](https://img.shields.io/badge/License-AGPLv3-blue)
 

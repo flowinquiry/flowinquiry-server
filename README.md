@@ -74,7 +74,22 @@ FlowInquiry Server serves as the back-end component of the FlowInquiry service, 
 
 ## Getting Started
 
-To have the FlowInquiry back-end up and running, please follow the [Getting Started](https://docs.flowinquiry.io/developer_guides/backend/getting_started) guide
+FlowInquiry uses a [monorepo](https://monorepo.tools/) structure to manage all parts of the application — including the backend, frontend, and documentation — in a single repository. This approach ensures consistency, shared tooling, and easier cross-service collaboration.
+
+All core services are located in the apps/ directory:
+
+* apps:
+  * backend: The Spring Boot service that powers the API layer, business logic, database integrations, workflows, and backend features of FlowInquiry.
+  * frontend: The Next.js web application that provides the user interface for the platform. It integrates with the backend via REST APIs, handles authentication, and supports both freemium and premium features through dynamic configuration.
+  * docs: A documentation site built with a [Nextra](https://nextra.site/) static site generator, providing guides, and setup instructions for developers and users.
+
+To get started with setting up the frontend and backend locally, follow the official developer guides:
+
+* [Frontend Setup Guide](https://docs.flowinquiry.io/developer_guides/frontend/getting_started)
+
+* [Backend Setup Guide](https://docs.flowinquiry.io/developer_guides/backend/getting_started)
+
+These guides provide step-by-step instructions to help you configure your environment, install dependencies, and run the services in development mode.
 
 ## Deploy FlowInquiry
 To ensure a smooth deployment process, we provide detailed guidelines for deploying FlowInquiry in various environments. These instructions cover setup steps, configuration details, and best practices for deploying the service effectively. You can find the deployment documentation [here](https://docs.flowinquiry.io/developer_guides/deployment)

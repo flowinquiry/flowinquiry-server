@@ -1,3 +1,5 @@
+import { useTranslations } from "next-intl";
+
 import { ContentLayout } from "@/components/admin-panel/content-layout";
 import RecentUserTeamActivities from "@/components/dashboard/global-dashboard-recent-activities";
 import UserNotifications from "@/components/dashboard/notifications-user";
@@ -5,9 +7,11 @@ import TeamUnresolvedTicketsPriorityDistributionChart from "@/components/dashboa
 import UserTeamsOverdueTickets from "@/components/dashboard/user-requests-overdue";
 
 const Page = () => {
+  const navT = useTranslations("common.navigation");
+
   return (
     <ContentLayout title="Dashboard">
-      <h1 className="text-2xl mb-4">Dashboard</h1>
+      <h1 className="text-2xl mb-4">{navT("dashboard")}</h1>
 
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 pb-4">
         <div className="flex flex-col">

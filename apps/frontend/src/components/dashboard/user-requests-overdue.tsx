@@ -3,6 +3,7 @@
 import { ChevronDown, ChevronRight, ChevronUp } from "lucide-react";
 import Link from "next/link";
 import { useSession } from "next-auth/react";
+import { useTranslations } from "next-intl";
 import React, { useEffect, useState } from "react";
 
 import { UserAvatar } from "@/components/shared/avatar-display";
@@ -36,6 +37,8 @@ const UserTeamsOverdueTickets = () => {
   const [sortBy, setSortBy] = useState("priority");
   const [sortDirection, setSortDirection] = useState<"asc" | "desc">("asc");
   const { setError } = useError();
+  const pageT = useTranslations("dashboard.overdue_tickets");
+  const miscT = useTranslations("common.misc");
 
   useEffect(() => {
     const fetchOverdueTickets = async () => {
@@ -79,7 +82,7 @@ const UserTeamsOverdueTickets = () => {
                 <ChevronDown className="w-5 h-5" />
               )}
             </button>
-            <CardTitle>Overdue Tickets ({totalTickets})</CardTitle>
+            <CardTitle>{pageT("title", { totalTickets })}</CardTitle>
           </div>
 
           {/* Right: Sort Button */}
@@ -101,8 +104,8 @@ const UserTeamsOverdueTickets = () => {
               </TooltipTrigger>
               <TooltipContent>
                 {sortDirection === "asc"
-                  ? "Sort by priority: Ascending"
-                  : "Sort by priority: Descending"}
+                  ? pageT("priority_asc")
+                  : pageT("priority_desc")}
               </TooltipContent>
             </Tooltip>
           </div>
@@ -115,7 +118,7 @@ const UserTeamsOverdueTickets = () => {
           {loading ? (
             <div className="flex justify-center items-center">
               <Spinner className="h-8 w-8">
-                <span>Loading data ...</span>
+                <span>{miscT("loading_data")}</span>
               </Spinner>
             </div>
           ) : (
@@ -197,7 +200,7 @@ const UserTeamsOverdueTickets = () => {
                 ))
               ) : (
                 <p className="text-sm text-gray-500 dark:text-gray-400">
-                  No overdue tickets available
+                  {pageT("no_data")}
                 </p>
               )}
             </div>

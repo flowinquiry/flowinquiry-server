@@ -2,6 +2,7 @@
 
 import { CheckCircle, ClipboardList, FileText } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { useTranslations } from "next-intl";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -13,6 +14,7 @@ import {
 
 export function UserQuickAction() {
   const router = useRouter();
+  const compT = useTranslations("header.my_tickets");
 
   return (
     <DropdownMenu>
@@ -22,7 +24,7 @@ export function UserQuickAction() {
           className="flex items-center gap-2 cursor-pointer"
         >
           <ClipboardList className="w-5 h-5" />
-          <span>My Tickets</span>
+          <span>{compT("title")}</span>
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">
@@ -30,13 +32,13 @@ export function UserQuickAction() {
           className="cursor-pointer flex items-center gap-2"
           onSelect={() => router.push("/portal/my/tickets?ticketType=reported")}
         >
-          <FileText className="w-4 h-4" /> My Reported Tickets
+          <FileText className="w-4 h-4" /> {compT("reported_tickets")}
         </DropdownMenuItem>
         <DropdownMenuItem
           className="cursor-pointer flex items-center gap-2"
           onSelect={() => router.push("/portal/my/tickets?ticketType=assigned")}
         >
-          <CheckCircle className="w-4 h-4" /> My Assigned Tickets
+          <CheckCircle className="w-4 h-4" /> {compT("assigned_tickets")}
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>

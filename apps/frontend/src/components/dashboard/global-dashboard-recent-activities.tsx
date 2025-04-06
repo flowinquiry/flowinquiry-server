@@ -3,6 +3,7 @@
 import { ChevronDown, ChevronRight } from "lucide-react";
 import Link from "next/link";
 import { useSession } from "next-auth/react";
+import { useTranslations } from "next-intl";
 import React, { useEffect, useState } from "react";
 
 import PaginationExt from "@/components/shared/pagination-ext";
@@ -27,6 +28,9 @@ const RecentUserTeamActivities = () => {
   const [loading, setLoading] = useState(false);
   const [collapsed, setCollapsed] = useState(false); // State for collapsible content
   const { setError } = useError();
+
+  const pageT = useTranslations("dashboard.recent_activities");
+  const miscT = useTranslations("common.misc");
 
   const { data: session } = useSession();
   const userId = Number(session?.user?.id!);
@@ -59,7 +63,7 @@ const RecentUserTeamActivities = () => {
               <ChevronDown className="w-5 h-5" />
             )}
           </button>
-          <CardTitle>Recent Activities</CardTitle>
+          <CardTitle>{pageT("title")}</CardTitle>
         </div>
       </CardHeader>
 
@@ -69,7 +73,7 @@ const RecentUserTeamActivities = () => {
           {loading ? (
             <div className="flex justify-center items-center h-[150px]">
               <Spinner className="h-8 w-8">
-                <span>Loading data ...</span>
+                <span>{miscT("loading_data")}</span>
               </Spinner>
             </div>
           ) : activityLogs && activityLogs.length > 0 ? (
@@ -118,7 +122,7 @@ const RecentUserTeamActivities = () => {
             </div>
           ) : (
             <p className="text-sm text-gray-500 dark:text-gray-400">
-              No activity logs available
+              {pageT("no_data")}
             </p>
           )}
           <PaginationExt

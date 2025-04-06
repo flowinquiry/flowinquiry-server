@@ -2,6 +2,7 @@
 
 import { ChevronDown, ChevronRight } from "lucide-react";
 import { useSession } from "next-auth/react";
+import { useTranslations } from "next-intl";
 import React, { useEffect, useState } from "react";
 import {
   Bar,
@@ -38,6 +39,7 @@ const TeamUnresolvedTicketsPriorityDistributionChart = () => {
   const [loading, setLoading] = useState(true);
   const [collapsed, setCollapsed] = useState(false); // State for collapsible content
   const { setError } = useError();
+  const pageT = useTranslations("dashboard.un_resolved_tickets_by_teams");
 
   useEffect(() => {
     const fetchData = async () => {
@@ -91,7 +93,7 @@ const TeamUnresolvedTicketsPriorityDistributionChart = () => {
               <ChevronDown className="w-5 h-5" />
             )}
           </button>
-          <CardTitle>Unresolved Tickets by Team</CardTitle>
+          <CardTitle>{pageT("title")}</CardTitle>
         </div>
       </CardHeader>
 
@@ -105,7 +107,7 @@ const TeamUnresolvedTicketsPriorityDistributionChart = () => {
               </div>
             ) : chartData.length === 0 ? (
               <div className="flex justify-center items-center">
-                <p className="text-gray-500">No data available to display.</p>
+                <p className="text-gray-500">{pageT("no_data")}</p>
               </div>
             ) : (
               <BarChart

@@ -1,0 +1,52 @@
+{
+  "locale_switcher": {
+    "fr": "Français",
+    "en": "Anglais",
+    "label": "FR"
+  },
+  "common": {
+    "buttons": {
+      "submit": "Soumettre",
+      "cancel": "Annuler"
+    },
+    "misc": {
+      "loading_data": "Chargement des données..."
+    },
+    "navigation": {
+      "dashboard": "Tableau de bord",
+      "teams": "Équipes",
+      "settings": "Paramètres",
+      "users": "Utilisateurs",
+      "authorities": "Autorités",
+      "workflows": "Flux de travail"
+    }
+  },
+  "header": {
+    "my_tickets": {
+      "title": "Mes tickets",
+      "reported_tickets": "Tickets signalés par moi",
+      "assigned_tickets": "Tickets qui me sont assignés"
+    }
+  },
+  "dashboard": {
+    "recent_activities": {
+      "title": "Activités récentes",
+      "no_data": "Aucun journal d’activité disponible"
+    },
+    "notifications": {
+      "title": "Notifications",
+      "no_data": "Aucune notification disponible",
+      "mark_as_read": "Marquer comme lue"
+    },
+    "un_resolved_tickets_by_teams": {
+      "title": "Tickets non résolus par équipe",
+      "no_data": "Aucune donnée disponible à afficher."
+    },
+    "overdue_tickets": {
+      "title": "Tickets en retard ({totalTickets})",
+      "no_data": "Aucun ticket en retard disponible",
+      "priority_asc": "Trier par priorité : Croissante",
+      "priority_desc": "Trier par priorité : Décroissante"
+    }
+  }
+}

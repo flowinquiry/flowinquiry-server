@@ -1,0 +1,54 @@
+{
+  "locale_switcher": {
+    "fr": "French",
+    "en": "English",
+    "label": "EN"
+  },
+  "common": {
+    "buttons": {
+      "submit": "Submit",
+      "cancel": "Cancel",
+      "previous": "Previous",
+      "next": "Next"
+    },
+    "misc": {
+      "loading_data": "Loading data ..."
+    },
+    "navigation": {
+      "dashboard": "Dashboard",
+      "teams": "Teams",
+      "settings": "Settings",
+      "users": "Users",
+      "authorities": "Authorities",
+      "workflows": "Workflows"
+    }
+  },
+  "header": {
+    "my_tickets": {
+      "title": "My tickets",
+      "reported_tickets": "My reported tickets",
+      "assigned_tickets": "My assigned tickets"
+    }
+  },
+  "dashboard": {
+    "recent_activities": {
+      "title": "Recent Activities",
+      "no_data": "No activity logs available"
+    },
+    "notifications": {
+      "title": "Notifications",
+      "no_data": "No notifications available",
+      "mark_as_read": "Mark as Read"
+    },
+    "un_resolved_tickets_by_teams": {
+      "title": "Unresolved Tickets by Team",
+      "no_data": "No data available to display."
+    },
+    "overdue_tickets": {
+      "title": "Overdue Tickets ({totalTickets})",
+      "no_data": "No overdue tickets available",
+      "priority_asc": "Sort by priority: Ascending",
+      "priority_desc": "Sort by priority: Descending"
+    }
+  }
+}

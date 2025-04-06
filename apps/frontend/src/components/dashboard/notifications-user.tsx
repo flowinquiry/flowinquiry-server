@@ -2,6 +2,7 @@
 
 import { ChevronDown, ChevronRight } from "lucide-react";
 import { useSession } from "next-auth/react";
+import { useTranslations } from "next-intl";
 import React, { useEffect, useState } from "react";
 
 import PaginationExt from "@/components/shared/pagination-ext";
@@ -25,6 +26,8 @@ const UserNotifications = () => {
   const { setError } = useError();
   const { data: session } = useSession();
   const userId = Number(session?.user?.id!);
+  const componentT = useTranslations("dashboard.notifications");
+  const miscT = useTranslations("common.misc");
 
   useEffect(() => {
     async function fetchNotifications() {
@@ -62,7 +65,7 @@ const UserNotifications = () => {
               <ChevronDown className="w-5 h-5" />
             )}
           </button>
-          <CardTitle>Notifications</CardTitle>
+          <CardTitle>{componentT("title")}</CardTitle>
         </div>
       </CardHeader>
 
@@ -72,7 +75,7 @@ const UserNotifications = () => {
           {loading ? (
             <div className="flex justify-center items-center h-[150px]">
               <Spinner className="h-8 w-8">
-                <span>Loading data ...</span>
+                <span>{miscT("loading_data")}</span>
               </Spinner>
             </div>
           ) : notifications && notifications.length > 0 ? (
@@ -106,7 +109,7 @@ const UserNotifications = () => {
                       className="px-0 h-0"
                       onClick={() => handleMarkAsRead(notification.id!)}
                     >
-                      Mark as Read
+                      {componentT("mark_as_read")}
                     </Button>
                   )}
                 </div>
@@ -114,7 +117,7 @@ const UserNotifications = () => {
             </div>
           ) : (
             <p className="text-sm text-gray-500 dark:text-gray-400">
-              No notifications available
+              {componentT("no_data")}
             </p>
           )}
           <PaginationExt

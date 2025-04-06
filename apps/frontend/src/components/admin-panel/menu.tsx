@@ -3,6 +3,7 @@
 import { Ellipsis } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useTranslations } from "next-intl";
 
 import { CollapseMenuButton } from "@/components/admin-panel/collapse-menu-button";
 import { Button } from "@/components/ui/button";
@@ -25,7 +26,8 @@ export function Menu({ isOpen }: MenuProps) {
   const pathname = usePathname();
   const permissions = usePermissions()?.permissions;
 
-  const menuList = getMenuList(pathname, permissions);
+  const comT = useTranslations("common.navigation");
+  const menuList = getMenuList(pathname, permissions, comT);
 
   return (
     <ScrollArea>

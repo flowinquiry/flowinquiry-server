@@ -6,18 +6,21 @@ import {
   Shuffle,
   Users,
 } from "lucide-react";
+import { createTranslator, Messages } from "next-intl";
 
 import { Permission } from "@/providers/permissions-provider";
 
 type Submenu = {
   href: string;
   label: string;
+  resource: string;
   active?: boolean;
 };
 
 type Menu = {
   href: string;
   label: string;
+  resource: string;
   active?: boolean;
   icon: LucideIcon;
   submenus?: Submenu[];
@@ -28,17 +31,22 @@ type Group = {
   menus: Menu[];
 };
 
+type Translator = ReturnType<
+  typeof createTranslator<Messages, "common.navigation">
+>;
+
 export function getMenuList(
   pathname: string,
   permissions: Permission[],
+  comT: Translator,
 ): Group[] {
   // Helper function to check if a menu or submenu is enabled
-  const isMenuEnabled = (menuLabel: string): boolean => {
-    if (menuLabel === "Dashboard") {
+  const isMenuEnabled = (menuResource: string): boolean => {
+    if (menuResource === "Dashboard") {
       return true; // Always enable "Dashboard"
     }
     const permission = permissions.find(
-      (perm) => perm.resourceName === menuLabel,
+      (perm) => perm.resourceName === menuResource,
     );
     return permission ? permission.permission !== "NONE" : false;
   };
@@ -49,11 +57,11 @@ export function getMenuList(
       .map((menu) => {
         // Recursively filter submenus
         const filteredSubmenus = menu.submenus
-          ? menu.submenus.filter((submenu) => isMenuEnabled(submenu.label))
+          ? menu.submenus.filter((submenu) => isMenuEnabled(submenu.resource))
           : [];
 
         // Check if the menu itself or its submenus are enabled
-        if (isMenuEnabled(menu.label) || filteredSubmenus.length > 0) {
+        if (isMenuEnabled(menu.resource) || filteredSubmenus.length > 0) {
           return {
             ...menu,
             submenus: filteredSubmenus,
@@ -72,7 +80,8 @@ export function getMenuList(
       menus: [
         {
           href: "/portal",
-          label: "Dashboard",
+          label: comT("dashboard"),
+          resource: "Dashboard",
           icon: LayoutGrid,
           submenus: [],
         },
@@ -83,27 +92,31 @@ export function getMenuList(
       menus: [
         {
           href: "/portal/teams",
-          label: "Teams",
+          label: comT("teams"),
+          resource: "Teams",
           icon: Layers,
         },
       ],
     },
     {
-      groupLabel: "Settings",
+      groupLabel: comT("settings"),
       menus: [
         {
           href: "/portal/users",
-          label: "Users",
+          label: comT("users"),
+          resource: "Users",
           icon: Users,
         },
         {
           href: "/portal/settings/authorities",
-          label: "Authorities",
+          label: comT("authorities"),
+          resource: "Authorities",
           icon: ShieldCheck,
         },
         {
           href: "/portal/settings/workflows",
-          label: "Workflows",
+          label: comT("workflows"),
+          resource: "Workflows",
           icon: Shuffle,
         },
       ],

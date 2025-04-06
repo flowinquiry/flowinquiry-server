@@ -27,6 +27,7 @@ import {
 } from "@/components/ui/form";
 import { Spinner } from "@/components/ui/spinner";
 import WorkflowStateSelectField from "@/components/workflows/workflow-state-select-field";
+import { useAppClientTranslations } from "@/hooks/use-translations";
 import {
   findRequestById,
   updateTeamRequest,
@@ -53,6 +54,7 @@ export const TeamRequestForm = ({
   );
   const { setError } = useError();
   const [loading, setLoading] = useState(true);
+  const t = useAppClientTranslations();
 
   // Parse empty object to get schema defaults
   const defaultValues = TeamRequestDTOSchema.parse({});
@@ -118,8 +120,8 @@ export const TeamRequestForm = ({
   }
 
   const breadcrumbItems = [
-    { title: "Dashboard", link: "/portal" },
-    { title: "Teams", link: "/portal/teams" },
+    { title: t.common.navigation("dashboard"), link: "/portal" },
+    { title: t.common.navigation("teams"), link: "/portal/teams" },
     {
       title: teamRequest.teamName!,
       link: `/portal/teams/${obfuscate(teamRequest.teamId!)}`,
@@ -127,7 +129,7 @@ export const TeamRequestForm = ({
     ...(teamRequest.projectId
       ? [
           {
-            title: "Projects",
+            title: t.common.navigation("projects"),
             link: `/portal/teams/${obfuscate(teamRequest.teamId!)}/projects`,
           },
           {
@@ -138,18 +140,18 @@ export const TeamRequestForm = ({
             title: teamRequest.requestTitle!,
             link: `/portal/teams/${obfuscate(teamRequest.teamId!)}/projects/${obfuscate(teamRequest.projectId!)}/${obfuscate(teamRequest.id!)}`,
           },
-          { title: "Edit", link: "#" },
+          { title: t.common.buttons("edit"), link: "#" },
         ]
       : [
           {
-            title: "Requests",
+            title: t.common.navigation("tickets"),
             link: `/portal/teams/${obfuscate(teamRequest.teamId!)}/requests`,
           },
           {
             title: teamRequest.requestTitle!,
             link: `/portal/teams/${obfuscate(teamRequest.teamId!)}/requests/${obfuscate(teamRequest.id!)}`,
           },
-          { title: "Edit", link: "#" },
+          { title: t.common.buttons("edit"), link: "#" },
         ]),
   ];
 
@@ -255,7 +257,7 @@ export const TeamRequestForm = ({
               labelWhileLoading="Saving changes..."
             />
             <Button variant="secondary" onClick={() => router.back()}>
-              Discard
+              {t.common.buttons("discard")}
             </Button>
           </div>
         </form>

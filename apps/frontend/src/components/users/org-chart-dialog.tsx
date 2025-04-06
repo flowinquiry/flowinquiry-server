@@ -26,6 +26,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import PersonNode from "@/components/users/org-chart-node";
+import { useAppClientTranslations } from "@/hooks/use-translations";
 import { getOrgChart, getUserHierarchy } from "@/lib/actions/users.action";
 import { obfuscate } from "@/lib/endecode";
 import { useError } from "@/providers/error-provider";
@@ -98,6 +99,7 @@ const OrgChartContent = ({
   setRootUserId: (id: number | undefined) => void;
 }) => {
   const { zoomIn, zoomOut } = useReactFlow();
+  const t = useAppClientTranslations();
 
   return (
     <div className="flex h-full">
@@ -117,21 +119,23 @@ const OrgChartContent = ({
         </ReactFlow>
         <div className="absolute top-2 right-2 z-10 flex space-x-2">
           <Button variant="outline" onClick={() => zoomIn()}>
-            Zoom In
+            {t.common.misc("zoom_in")}
           </Button>
           <Button variant="outline" onClick={() => zoomOut()}>
-            Zoom Out
+            {t.common.misc("zoom_out")}
           </Button>
         </div>
       </div>
 
       {/* Instructions Sidebar */}
       <div className="w-64 p-4 border-l border-gray-200 bg-gray-50 dark:bg-gray-800 overflow-auto">
-        <h2 className="font-bold mb-4">How to Use the Org Chart</h2>
+        <h2 className="font-bold mb-4">
+          {t.users.org_chart_view("instruction_title")}
+        </h2>
         <ul className="list-disc ml-4 space-y-2">
-          <li>Drag the entire org chart to adjust your view.</li>
-          <li>Click a user icon to view the org chart from that user.</li>
-          <li>Click a user link to navigate to the user's profile page.</li>
+          <li>{t.users.org_chart_view("instruction_desc1")}</li>
+          <li>{t.users.org_chart_view("instruction_desc2")}</li>
+          <li>{t.users.org_chart_view("instruction_desc3")}</li>
         </ul>
       </div>
     </div>
@@ -157,6 +161,7 @@ const OrgChartDialog = ({
     Edge<Record<string, unknown>>
   >([]);
   const DUMMY_MANAGER_ID = -1;
+  const t = useAppClientTranslations();
 
   const generateChart = (data: UserHierarchyDTO) => {
     const nodes: Node<Record<string, unknown>>[] = [];
@@ -290,7 +295,7 @@ const OrgChartDialog = ({
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="max-w-[100rem] w-full">
         <DialogHeader>
-          <DialogTitle>Organization Chart</DialogTitle>
+          <DialogTitle>{t.users.common("org_chart")}</DialogTitle>
         </DialogHeader>
         <div className="h-[50rem]">
           {isOpen && (

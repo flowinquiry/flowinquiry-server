@@ -13,28 +13,30 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import NewWorkflowFromScratch from "@/components/workflows/workflow-create-from-scratch";
+import { useAppClientTranslations } from "@/hooks/use-translations";
 import { obfuscate } from "@/lib/endecode";
 import { BreadcrumbProvider } from "@/providers/breadcrumb-provider";
 import { useTeam } from "@/providers/team-provider";
 
 const TeamWorkflowNew = () => {
   const team = useTeam();
+  const t = useAppClientTranslations();
   const [selectedOption, setSelectedOption] = useState<
     "scratch" | "clone" | null
   >(null);
 
   const breadcrumbItems = [
-    { title: "Dashboard", link: "/portal" },
-    { title: "Teams", link: "/portal/teams" },
+    { title: t.common.navigation("dashboard"), link: "/portal" },
+    { title: t.common.navigation("teams"), link: "/portal/teams" },
     {
       title: team.name,
       link: `/portal/teams/${obfuscate(team.id)}`,
     },
     {
-      title: "Workflows",
+      title: t.common.navigation("workflows"),
       link: `/portal/teams/${obfuscate(team.id)}/workflows`,
     },
-    { title: "New", link: "#" },
+    { title: t.common.buttons("create"), link: "#" },
   ];
 
   const renderComponent = () => {
@@ -94,7 +96,7 @@ const TeamWorkflowNew = () => {
                     variant="link"
                     className="h-5"
                   >
-                    Create from Scratch
+                    Create from scratch
                   </Button>
                   <div className="text-sm text-gray-500">
                     Start building a new workflow from the ground up.

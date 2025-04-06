@@ -42,6 +42,7 @@ import OrgChartDialog from "@/components/users/org-chart-dialog";
 import { useDebouncedCallback } from "@/hooks/use-debounced-callback";
 import { usePagePermission } from "@/hooks/use-page-permission";
 import { useToast } from "@/hooks/use-toast";
+import { useAppClientTranslations } from "@/hooks/use-translations";
 import {
   deleteUser,
   findUsers,
@@ -68,6 +69,8 @@ export const UserList = () => {
   );
   const [sortDirection, setSortDirection] = useState<"asc" | "desc">("asc");
   const [isOrgChartOpen, setIsOrgChartOpen] = useState(false);
+
+  const t = useAppClientTranslations();
 
   const permissionLevel = usePagePermission();
 
@@ -158,7 +161,9 @@ export const UserList = () => {
   function onResendActivationEmail(user: UserDTO) {
     resendActivationEmail(user.email, setError).then(() => {
       toast({
-        description: `An activation email has been sent to ${user.email}`,
+        description: t.users.list("activation_email_sent", {
+          email: user.email,
+        }),
       });
     });
   }
@@ -167,14 +172,14 @@ export const UserList = () => {
     <div className="grid grid-cols-1 gap-4">
       <div className="flex flex-row justify-between">
         <Heading
-          title={`Users (${totalElements})`}
-          description="Manage users"
+          title={t.users.list("title", { totalElements })}
+          description={t.users.list("description")}
         />
 
         <div className="flex space-x-4">
           <Input
             className="w-[18rem]"
-            placeholder="Search user names ..."
+            placeholder={t.users.list("search_place_holder")}
             onChange={(e) => {
               handleSearchTeams(e.target.value);
             }}
@@ -188,8 +193,8 @@ export const UserList = () => {
             </TooltipTrigger>
             <TooltipContent>
               {sortDirection === "asc"
-                ? "Sort names A → Z"
-                : "Sort names Z → A"}
+                ? t.users.list("sort_a_z")
+                : t.users.list("sort_z_a")}
             </TooltipContent>
           </Tooltip>
           {PermissionUtils.canWrite(permissionLevel) && (
@@ -197,19 +202,19 @@ export const UserList = () => {
               href={"/portal/users/new/edit"}
               className={cn(buttonVariants({ variant: "default" }))}
             >
-              <Plus className="mr-2 h-4 w-4" /> Invite user
+              <Plus className="mr-2 h-4 w-4" /> {t.users.list("invite_user")}
             </Link>
           )}
           <Button onClick={() => setIsOrgChartOpen(true)}>
             <Network />
-            Org chart
+            {t.users.common("org_chart")}
           </Button>
         </div>
       </div>
       <Separator />
       {loading ? (
         <LoadingPlaceholder
-          message="Loading user data..."
+          message={t.common.misc("loading_data")}
           skeletonCount={3}
           skeletonWidth="28rem"
         />
@@ -233,7 +238,7 @@ export const UserList = () => {
                           onClick={() => onResendActivationEmail(user)}
                         >
                           <RotateCw />
-                          Resend Activation Email
+                          {t.users.list("resend_activation_email")}
                         </DropdownMenuItem>
                       )}
                       <DropdownMenuItem
@@ -241,7 +246,7 @@ export const UserList = () => {
                         onClick={() => onDeleteUser(user)}
                       >
                         <Trash />
-                        Delete User
+                        {t.common.buttons("delete")}
                       </DropdownMenuItem>
                     </DropdownMenuContent>
                   </DropdownMenu>
@@ -253,7 +258,7 @@ export const UserList = () => {
                 {user.status !== "ACTIVE" && (
                   <div className="absolute inset-0 bg-black bg-opacity-50 rounded-full flex items-center justify-center">
                     <span className="text-white text-xs font-bold">
-                      Not Activated
+                      {t.users.common("not_activated")}
                     </span>
                   </div>
                 )}
@@ -269,20 +274,24 @@ export const UserList = () => {
                   </Button>
                 </div>
                 <div>
-                  Email:{" "}
+                  {t.users.form("email")}:{" "}
                   <Button variant="link" className="px-0 py-0 h-0">
                     <Link href={`mailto:${user.email}`}>{user.email}</Link>
                   </Button>
                 </div>
-                <div>Title: {user.title}</div>
-                <div>Timezone: {user.timezone}</div>
                 <div>
-                  Last login time:{" "}
+                  {t.users.form("title")}: {user.title}
+                </div>
+                <div>
+                  {t.users.form("timezone")}: {user.timezone}
+                </div>
+                <div>
+                  {t.users.form("last_login_time")}:{" "}
                   {user.lastLoginTime
                     ? safeFormatDistanceToNow(user.lastLoginTime, {
                         addSuffix: true,
                       })
-                    : "No recent login"}
+                    : t.users.common("no_recent_login")}
                 </div>
               </div>
             </div>
@@ -304,21 +313,20 @@ export const UserList = () => {
       <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Confirm Deletion</DialogTitle>
+            <DialogTitle>{t.users.list("delete_dialog_title")}</DialogTitle>
           </DialogHeader>
           <p>
-            Are you sure you want to delete{" "}
-            <strong>
-              {selectedUser?.firstName} {selectedUser?.lastName}
-            </strong>
-            ? This action cannot be undone.
+            {t.users.list.rich("delete_confirmation", {
+              name: `${selectedUser?.firstName} ${selectedUser?.lastName}`,
+              strong: (chunks) => <strong>{chunks}</strong>,
+            })}
           </p>
           <DialogFooter>
             <Button variant="secondary" onClick={() => setIsDialogOpen(false)}>
-              Cancel
+              {t.common.buttons("cancel")}
             </Button>
             <Button variant="destructive" onClick={confirmDeleteUser}>
-              Delete
+              {t.common.buttons("delete")}
             </Button>
           </DialogFooter>
         </DialogContent>

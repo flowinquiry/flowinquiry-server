@@ -6,11 +6,23 @@
   },
   "common": {
     "buttons": {
+      "create": "Créer",
       "submit": "Soumettre",
-      "cancel": "Annuler"
+      "cancel": "Annuler",
+      "previous": "Précédent",
+      "next": "Suivant",
+      "edit": "Modifier",
+      "delete": "Supprimer",
+      "add": "Ajouter",
+      "discard": "Ignorer",
+      "close": "Fermer",
+      "update": "Mettre à jour",
+      "invite": "Inviter"
     },
     "misc": {
-      "loading_data": "Chargement des données..."
+      "loading_data": "Chargement des données...",
+      "zoom_in": "Agrandir",
+      "zoom_out": "Réduire"
     },
     "navigation": {
       "dashboard": "Tableau de bord",
@@ -18,7 +30,11 @@
       "settings": "Paramètres",
       "users": "Utilisateurs",
       "authorities": "Autorités",
-      "workflows": "Flux de travail"
+      "workflows": "Flux de travail",
+      "projects": "Projets",
+      "tickets": "Tickets",
+      "profile": "Profil",
+      "members": "Membres"
     }
   },
   "header": {
@@ -31,7 +47,7 @@
   "dashboard": {
     "recent_activities": {
       "title": "Activités récentes",
-      "no_data": "Aucun journal d’activité disponible"
+      "no_data": "Aucune activité disponible"
     },
     "notifications": {
       "title": "Notifications",
@@ -47,6 +63,66 @@
       "no_data": "Aucun ticket en retard disponible",
       "priority_asc": "Trier par priorité : Croissante",
       "priority_desc": "Trier par priorité : Décroissante"
+    }
+  },
+  "teams": {
+    "list": {
+      "title": "Équipes ({totalElements})",
+      "description": "Gérer les équipes",
+      "search_place_holder": "Rechercher des équipes...",
+      "sort_a_z": "Trier par nom : A → Z",
+      "sort_z_a": "Trier par nom : Z → A",
+      "my_teams_only": "Mes équipes uniquement",
+      "new_team": "Nouvelle équipe"
+    }
+  },
+  "users": {
+    "list": {
+      "title": "Utilisateurs ({totalElements})",
+      "description": "Gérer les utilisateurs",
+      "search_place_holder": "Rechercher des noms d'utilisateur...",
+      "sort_a_z": "Trier par nom : A → Z",
+      "sort_z_a": "Trier par nom : Z → A",
+      "invite_user": "Inviter un utilisateur",
+      "delete_dialog_title": "Confirmer la suppression",
+      "delete_confirmation": "Êtes-vous sûr de vouloir supprimer <strong>{name}</strong> ? Cette action est irréversible.",
+      "activation_email_sent": "Un email d'activation a été envoyé à {email}",
+      "resend_activation_email": "Renvoyer l’email d’activation"
+    },
+    "detail": {},
+    "common": {
+      "org_chart": "Organigramme",
+      "no_recent_login": "Aucune connexion récente",
+      "not_activated": "Non activé"
+    },
+    "form": {
+      "title": "Titre",
+      "email": "Email",
+      "last_login_time": "Dernière connexion",
+      "timezone": "Fuseau horaire",
+      "about": "À propos",
+      "address": "Adresse",
+      "city": "Ville",
+      "state": "État",
+      "country": "Pays",
+      "report_to": "Rapporte à",
+      "direct_reports": "Subordonnés directs",
+      "member_of_teams": "Membre des équipes",
+      "authorities": "Autorités",
+      "first_name": "Prénom",
+      "last_name": "Nom"
+    },
+    "org_chart_view": {
+      "instruction_title": "Comment utiliser l'organigramme",
+      "instruction_desc1": "Faites glisser l'organigramme pour ajuster votre vue.",
+      "instruction_desc2": "Cliquez sur une icône utilisateur pour voir l'organigramme depuis cet utilisateur.",
+      "instruction_desc3": "Cliquez sur un lien utilisateur pour naviguer vers la page de profil de l'utilisateur."
+    }
+  },
+  "authorities": {
+    "common": {
+      "select_place_holder": "Sélectionner des autorités",
+      "no_data": "Impossible de charger les autorités"
     }
   }
 }

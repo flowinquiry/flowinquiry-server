@@ -11,6 +11,7 @@ import { Spinner } from "@/components/ui/spinner";
 import { WorkflowDiagram } from "@/components/workflows/workflow-diagram-view";
 import WorkflowEditForm from "@/components/workflows/workflow-editor-form";
 import { usePagePermission } from "@/hooks/use-page-permission";
+import { useAppClientTranslations } from "@/hooks/use-translations";
 import {
   deleteWorkflow,
   getWorkflowDetail,
@@ -22,6 +23,7 @@ import { WorkflowDetailDTO } from "@/types/workflows";
 
 const GlobalWorkflowDetailView = ({ workflowId }: { workflowId: number }) => {
   const router = useRouter();
+  const t = useAppClientTranslations();
 
   const permissionLevel = usePagePermission();
   const [workflowDetail, setWorkflowDetail] =
@@ -66,9 +68,9 @@ const GlobalWorkflowDetailView = ({ workflowId }: { workflowId: number }) => {
   }
 
   const breadcrumbItems = [
-    { title: "Dashboard", link: "/portal" },
+    { title: t.common.navigation("dashboard"), link: "/portal" },
     {
-      title: "Workflows",
+      title: t.common.navigation("workflows"),
       link: `/portal/settings/workflows`,
     },
     { title: workflowDetail.name, link: "#" },
@@ -114,7 +116,7 @@ const GlobalWorkflowDetailView = ({ workflowId }: { workflowId: number }) => {
       {loading && (
         <div className="flex items-center justify-center py-4">
           <Spinner>
-            <span>Loading workflow detail...</span>
+            <span>{t.common.misc("loading_data")}</span>
           </Spinner>
         </div>
       )}

@@ -21,6 +21,7 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { usePagePermission } from "@/hooks/use-page-permission";
+import { useAppClientTranslations } from "@/hooks/use-translations";
 import {
   deleteTeamWorkflow,
   getWorkflowsByTeam,
@@ -36,11 +37,12 @@ import { WorkflowDTO } from "@/types/workflows";
 
 const TeamWorkflowsView = () => {
   const team = useTeam();
+  const t = useAppClientTranslations();
   const breadcrumbItems = [
-    { title: "Dashboard", link: "/portal" },
-    { title: "Teams", link: "/portal/teams" },
+    { title: t.common.navigation("dashboard"), link: "/portal" },
+    { title: t.common.navigation("teams"), link: "/portal/teams" },
     { title: team.name, link: `/portal/teams/${obfuscate(team.id)}` },
-    { title: "Workflows", link: "#" },
+    { title: t.common.navigation("workflow"), link: "#" },
   ];
 
   const permissionLevel = usePagePermission();
@@ -75,7 +77,7 @@ const TeamWorkflowsView = () => {
     await fetchWorkflows();
   };
 
-  if (loading) return <div>Loading...</div>;
+  if (loading) return <div>{t.common.misc("loading_data")}</div>;
 
   return (
     <BreadcrumbProvider items={breadcrumbItems}>

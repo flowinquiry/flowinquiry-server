@@ -13,20 +13,23 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
+import { getAppTranslations } from "@/lib/translation";
 
-const breadcrumbItems = [
-  { title: "Dashboard", link: "/portal" },
-  { title: "Settings", link: "/portal/settings" },
-];
+const Page = async () => {
+  const t = await getAppTranslations("en");
 
-const Page = () => {
+  const breadcrumbItems = [
+    { title: t.common.navigation("dashboard"), link: "/portal" },
+    { title: t.common.navigation("settings"), link: "/portal/settings" },
+  ];
+
   return (
-    <ContentLayout title="Settings">
+    <ContentLayout title={t.common.navigation("settings")}>
       <Breadcrumbs items={breadcrumbItems} />
       <div className="grid grid-cols-1 gap-4">
         <div className="flex flex-row justify-between">
           <Heading
-            title="Settings"
+            title={t.common.navigation("settings")}
             description="Configure and manage all system settings in one place to tailor the platform to your organization's needs."
           />
         </div>

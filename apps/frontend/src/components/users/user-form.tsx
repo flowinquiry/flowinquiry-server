@@ -19,6 +19,7 @@ import {
 import { Form } from "@/components/ui/form";
 import { Separator } from "@/components/ui/separator";
 import AuthoritiesSelect from "@/components/users/authorities-select";
+import { useAppClientTranslations } from "@/hooks/use-translations";
 import {
   createUser,
   findUserById,
@@ -32,6 +33,7 @@ type UserFormValues = z.infer<typeof UserDTOSchema>;
 
 export const UserForm = ({ userId }: { userId?: number }) => {
   const router = useRouter();
+  const t = useAppClientTranslations();
   const [user, setUser] = useState<UserDTO | undefined>();
   const [loading, setLoading] = useState(!!userId); // Only show loading if userId is defined
   const { setError } = useError();
@@ -86,7 +88,7 @@ export const UserForm = ({ userId }: { userId?: number }) => {
   if (loading) {
     return (
       <div className="flex justify-center items-center h-full">
-        <p>Loading user data...</p>
+        <p>{t.common.misc("loading_data")}</p>
       </div>
     );
   }
@@ -108,8 +110,8 @@ export const UserForm = ({ userId }: { userId?: number }) => {
               form={form}
               required={true}
               fieldName="email"
-              label="Email"
-              placeholder="Email"
+              label={t.users.form("email")}
+              placeholder={t.users.form("email")}
               className="w-[20rem]"
             />
           </div>
@@ -117,7 +119,7 @@ export const UserForm = ({ userId }: { userId?: number }) => {
           <UserSelectField form={form} fieldName="managerId" label="Manager" />
           <AuthoritiesSelect
             form={form}
-            label="Authority"
+            label={t.users.form("authorities")}
             fieldName="authorities"
             required={true}
           />
@@ -125,59 +127,65 @@ export const UserForm = ({ userId }: { userId?: number }) => {
             form={form}
             required={true}
             fieldName="firstName"
-            label="First Name"
-            placeholder="First Name"
+            label={t.users.form("first_name")}
+            placeholder={t.users.form("first_name")}
           />
           <ExtInputField
             form={form}
             required={true}
             fieldName="lastName"
-            label="Last Name"
-            placeholder="Last Name"
+            label={t.users.form("last_name")}
+            placeholder={t.users.form("last_name")}
           />
           <ExtTextAreaField
             form={form}
             fieldName="about"
-            label="About"
-            placeholder="About"
+            label={t.users.form("about")}
+            placeholder={t.users.form("about")}
           />
           <ExtInputField
             form={form}
             fieldName="title"
-            label="Title"
-            placeholder="Title"
+            label={t.users.form("title")}
+            placeholder={t.users.form("title")}
           />
           <TimezoneSelect
             form={form}
             fieldName="timezone"
-            label="Timezone"
-            placeholder="Timezone"
+            label={t.users.form("timezone")}
+            placeholder={t.users.form("timezone")}
             required={true}
           />
           <ExtInputField
             form={form}
             fieldName="address"
-            label="Address"
-            placeholder="Address"
+            label={t.users.form("address")}
+            placeholder={t.users.form("address")}
           />
           <ExtInputField
             form={form}
             fieldName="city"
-            label="City"
-            placeholder="City"
+            label={t.users.form("city")}
+            placeholder={t.users.form("city")}
           />
           <ExtInputField
             form={form}
             fieldName="state"
-            label="State"
-            placeholder="State"
+            label={t.users.form("state")}
+            placeholder={t.users.form("state")}
           />
-          <CountrySelectField form={form} fieldName="country" label="Country" />
+          <CountrySelectField
+            form={form}
+            fieldName="country"
+            label={t.users.form("country")}
+          />
 
           {/* Buttons section spans the entire row */}
           <div className="sm:col-span-2 flex flex-row gap-4">
             <SubmitButton
-              label={isEdit ? "Update" : "Invite"}
+              label={
+                isEdit ? t.common.buttons("update") : t.common.buttons("invite")
+              }
               labelWhileLoading={isEdit ? "Updating..." : "Inviting..."}
             />
             <Button variant="secondary" onClick={() => router.back()}>

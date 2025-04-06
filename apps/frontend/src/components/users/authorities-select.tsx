@@ -9,6 +9,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { MultiSelect } from "@/components/ui/multi-select";
+import { useAppClientTranslations } from "@/hooks/use-translations";
 import { getAuthorities } from "@/lib/actions/authorities.action";
 import { useError } from "@/providers/error-provider";
 import { AuthorityDTO } from "@/types/authorities";
@@ -30,6 +31,8 @@ const AuthoritiesSelect = ({
   const [authorities, setAuthorities] = useState<AuthorityDTO[]>();
   const { setError } = useError();
 
+  const t = useAppClientTranslations();
+
   useEffect(() => {
     const fetchAuthorities = async () => {
       const data = await getAuthorities(0, setError);
@@ -40,7 +43,7 @@ const AuthoritiesSelect = ({
   }, []);
 
   if (authorities === undefined) {
-    return <div>Cannot load authorities</div>;
+    return <div>{t.authorities.common("no_data")}</div>;
   }
 
   // Map authorities to options
@@ -76,7 +79,7 @@ const AuthoritiesSelect = ({
                   )
                 }
                 defaultValue={defaultValues}
-                placeholder="Select authorities"
+                placeholder={t.authorities.common("select_place_holder")}
                 animation={2}
                 maxCount={3}
               />

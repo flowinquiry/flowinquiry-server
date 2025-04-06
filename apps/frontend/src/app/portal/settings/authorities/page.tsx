@@ -2,16 +2,25 @@ import React from "react";
 
 import { SimpleContentView } from "@/components/admin-panel/simple-content-view";
 import { AuthoritiesView } from "@/components/authorities/authority-list";
+import { getAppTranslations } from "@/lib/translation";
 
-const breadcrumbItems = [
-  { title: "Dashboard", link: "/portal" },
-  { title: "Settings", link: "/portal/settings" },
-  { title: "Authorities", link: "/portal/settings/authorities" },
-];
+const Page = async () => {
+  const t = await getAppTranslations("en");
 
-const Page = () => {
+  const breadcrumbItems = [
+    { title: t.common.navigation("dashboard"), link: "/portal" },
+    { title: t.common.navigation("settings"), link: "/portal/settings" },
+    {
+      title: t.common.navigation("authorities"),
+      link: "/portal/settings/authorities",
+    },
+  ];
+
   return (
-    <SimpleContentView title="Authorities" breadcrumbItems={breadcrumbItems}>
+    <SimpleContentView
+      title={t.common.navigation("authorities")}
+      breadcrumbItems={breadcrumbItems}
+    >
       <AuthoritiesView />
     </SimpleContentView>
   );

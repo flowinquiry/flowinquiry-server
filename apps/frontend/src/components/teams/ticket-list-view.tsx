@@ -25,6 +25,7 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { usePagePermission } from "@/hooks/use-page-permission";
+import { useAppClientTranslations } from "@/hooks/use-translations";
 import { searchTeamRequests } from "@/lib/actions/teams-request.action";
 import { getWorkflowsByTeam } from "@/lib/actions/workflows.action";
 import { obfuscate } from "@/lib/endecode";
@@ -45,11 +46,12 @@ export type Pagination = {
 
 const TicketListView = () => {
   const team = useTeam();
+  const t = useAppClientTranslations();
   const breadcrumbItems = [
-    { title: "Dashboard", link: "/portal" },
-    { title: "Teams", link: "/portal/teams" },
+    { title: t.common.navigation("dashboard"), link: "/portal" },
+    { title: t.common.navigation("teams"), link: "/portal/teams" },
     { title: team.name, link: `/portal/teams/${obfuscate(team.id)}` },
-    { title: "Tickets", link: "#" },
+    { title: t.common.navigation("tickets"), link: "#" },
   ];
 
   const permissionLevel = usePagePermission();

@@ -30,6 +30,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { usePagePermission } from "@/hooks/use-page-permission";
+import { useAppClientTranslations } from "@/hooks/use-translations";
 import {
   findProjectById,
   findProjectWorkflowByTeam,
@@ -74,6 +75,8 @@ export const ProjectView = ({ projectId }: { projectId: number }) => {
   const [epics, setEpics] = useState<ProjectEpicDTO[]>([]);
   const [loadingIterations, setLoadingIterations] = useState(false);
   const [loadingEpics, setLoadingEpics] = useState(false);
+
+  const t = useAppClientTranslations();
 
   // State for filters
   const [selectedIteration, setSelectedIteration] = useState<number | null>(
@@ -480,10 +483,13 @@ export const ProjectView = ({ projectId }: { projectId: number }) => {
   };
 
   const breadcrumbItems = [
-    { title: "Dashboard", link: "/portal" },
-    { title: "Teams", link: "/portal/teams" },
+    { title: t.common.navigation("dashboard"), link: "/portal" },
+    { title: t.common.navigation("teams"), link: "/portal/teams" },
     { title: team.name, link: `/portal/teams/${obfuscate(team.id)}` },
-    { title: "Projects", link: `/portal/teams/${obfuscate(team.id)}/projects` },
+    {
+      title: t.common.navigation("projects"),
+      link: `/portal/teams/${obfuscate(team.id)}/projects`,
+    },
     { title: project?.name!, link: "#" },
   ];
 

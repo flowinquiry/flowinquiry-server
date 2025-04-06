@@ -5,15 +5,17 @@ import React from "react";
 import { Breadcrumbs } from "@/components/breadcrumbs";
 import { Heading } from "@/components/heading";
 import NewWorkflowFromScratch from "@/components/workflows/workflow-create-from-scratch";
+import { useAppClientTranslations } from "@/hooks/use-translations";
 
 const WorkflowNew = () => {
+  const t = useAppClientTranslations();
   const breadcrumbItems = [
-    { title: "Dashboard", link: "/portal" },
+    { title: t.common.navigation("dashboard"), link: "/portal" },
     {
-      title: "Workflows",
+      title: t.common.navigation("workflows"),
       link: `/portal/settings/workflows`,
     },
-    { title: "New", link: "#" },
+    { title: t.common.buttons("create"), link: "#" },
   ];
 
   return (

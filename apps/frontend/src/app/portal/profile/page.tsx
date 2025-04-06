@@ -1,14 +1,20 @@
 import { SimpleContentView } from "@/components/admin-panel/simple-content-view";
 import { ProfileForm } from "@/components/forms/profile-form";
+import { getAppTranslations } from "@/lib/translation";
 
-const breadcrumbItems = [
-  { title: "Dashboard", link: "/portal" },
-  { title: "Profile", link: "/portal/profile" },
-];
+const Page = async () => {
+  const t = await getAppTranslations("en");
 
-const Page = () => {
+  const breadcrumbItems = [
+    { title: t.common.navigation("dashboard"), link: "/portal" },
+    { title: t.common.navigation("profile"), link: "/portal/profile" },
+  ];
+
   return (
-    <SimpleContentView title="Profile" breadcrumbItems={breadcrumbItems}>
+    <SimpleContentView
+      title={t.common.navigation("profile")}
+      breadcrumbItems={breadcrumbItems}
+    >
       <ProfileForm />
     </SimpleContentView>
   );

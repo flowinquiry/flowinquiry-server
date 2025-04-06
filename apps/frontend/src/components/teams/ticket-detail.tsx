@@ -45,6 +45,7 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { usePagePermission } from "@/hooks/use-page-permission";
+import { useAppClientTranslations } from "@/hooks/use-translations";
 import {
   findNextTeamRequest,
   findPreviousTeamRequest,
@@ -82,6 +83,7 @@ const TeamRequestDetailView = ({
   const [workflowStates, setWorkflowStates] = useState<WorkflowStateDTO[]>([]);
   const [currentRequestState, setCurrentRequestState] = useState<String>("");
   const [isWorkflowDialogOpen, setWorkflowDialogOpen] = useState(false);
+  const t = useAppClientTranslations();
 
   const commentsViewRef = useRef<HTMLDivElement | null>(null);
 
@@ -180,7 +182,7 @@ const TeamRequestDetailView = ({
       <div className="flex h-64 items-center justify-center">
         <Loader2 className="h-8 w-8 animate-spin text-primary" />
         <span className="ml-2 text-lg font-medium">
-          Loading ticket details...
+          {t.common.misc("loading_data")}
         </span>
       </div>
     );
@@ -205,8 +207,8 @@ const TeamRequestDetailView = ({
   }
 
   const breadcrumbItems = [
-    { title: "Dashboard", link: "/portal" },
-    { title: "Teams", link: "/portal/teams" },
+    { title: t.common.navigation("dashboard"), link: "/portal" },
+    { title: t.common.navigation("teams"), link: "/portal/teams" },
     {
       title: teamRequest.teamName!,
       link: `/portal/teams/${obfuscate(teamRequest.teamId)}`,
@@ -214,7 +216,7 @@ const TeamRequestDetailView = ({
     ...(teamRequest.projectId
       ? [
           {
-            title: "Projects",
+            title: t.common.navigation("projects"),
             link: `/portal/teams/${obfuscate(teamRequest.teamId)}/projects`,
           },
           {
@@ -228,7 +230,7 @@ const TeamRequestDetailView = ({
         ]
       : [
           {
-            title: "Tickets",
+            title: t.common.navigation("tickets"),
             link: `/portal/teams/${obfuscate(teamRequest.teamId)}/requests`,
           },
           { title: teamRequest.requestTitle!, link: "#" },

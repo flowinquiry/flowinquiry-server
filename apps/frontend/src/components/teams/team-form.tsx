@@ -25,6 +25,7 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { useImageCropper } from "@/hooks/use-image-cropper";
+import { useAppClientTranslations } from "@/hooks/use-translations";
 import {
   createTeam,
   findTeamById,
@@ -50,6 +51,7 @@ export const TeamForm = ({ teamId }: { teamId: number | undefined }) => {
   const [team, setTeam] = useState<TeamDTO | undefined>(undefined);
   const [loading, setLoading] = useState(true);
   const { setError } = useError();
+  const t = useAppClientTranslations();
 
   const defaultValues = TeamDTOSchema.parse({});
 
@@ -124,17 +126,17 @@ export const TeamForm = ({ teamId }: { teamId: number | undefined }) => {
   const submitTextWhileLoading = isEdit ? "Saving changes ..." : "Creating ...";
 
   const breadcrumbItems = [
-    { title: "Dashboard", link: "/portal" },
-    { title: "Teams", link: "/portal/teams" },
+    { title: t.common.navigation("dashboard"), link: "/portal" },
+    { title: t.common.navigation("teams"), link: "/portal/teams" },
     ...(team
       ? [
           {
             title: `${team.name}`,
             link: `/portal/teams/${obfuscate(team.id)}`,
           },
-          { title: "Edit", link: "#" },
+          { title: t.common.buttons("edit"), link: "#" },
         ]
-      : [{ title: "Add", link: "#" }]),
+      : [{ title: t.common.buttons("add"), link: "#" }]),
   ];
 
   if (loading) {
@@ -210,7 +212,7 @@ export const TeamForm = ({ teamId }: { teamId: number | undefined }) => {
                 type="button"
                 onClick={() => router.back()}
               >
-                Discard
+                {t.common.buttons("discard")}
               </Button>
             </div>
           </form>

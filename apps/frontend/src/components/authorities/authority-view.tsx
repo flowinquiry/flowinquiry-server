@@ -26,6 +26,7 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { usePagePermission } from "@/hooks/use-page-permission";
+import { useAppClientTranslations } from "@/hooks/use-translations";
 import {
   deleteUserFromAuthority,
   findAuthorityByName,
@@ -56,6 +57,7 @@ export const AuthorityView = ({ authorityId }: { authorityId: string }) => {
   const [loadingAuthority, setLoadingAuthority] = useState(false);
   const [loadingUsers, setLoadingUsers] = useState(false);
   const { setError } = useError();
+  const t = useAppClientTranslations();
 
   const router = useRouter();
 
@@ -105,8 +107,11 @@ export const AuthorityView = ({ authorityId }: { authorityId: string }) => {
   }
 
   const breadcrumbItems = [
-    { title: "Dashboard", link: "/portal" },
-    { title: "Authorities", link: "/portal/settings/authorities" },
+    { title: t.common.navigation("dashboard"), link: "/portal" },
+    {
+      title: t.common.navigation("authorities"),
+      link: "/portal/settings/authorities",
+    },
     { title: `${authority?.descriptiveName ?? ""}`, link: "#" },
   ];
 

@@ -37,6 +37,7 @@ import {
 } from "@/components/ui/tooltip";
 import { useDebouncedCallback } from "@/hooks/use-debounced-callback";
 import { usePagePermission } from "@/hooks/use-page-permission";
+import { useAppClientTranslations } from "@/hooks/use-translations";
 import { deleteTeams, searchTeams } from "@/lib/actions/teams.action";
 import { obfuscate } from "@/lib/endecode";
 import { cn } from "@/lib/utils";
@@ -58,6 +59,8 @@ export const TeamList = () => {
   const [filterUserTeamsOnly, setFilterUserTeamsOnly] = useState(false);
   const [isDialogOpen, setDialogOpen] = useState(false);
   const [selectedTeam, setSelectedTeam] = useState<TeamDTO | null>(null);
+
+  const t = useAppClientTranslations();
 
   const searchParams = useSearchParams();
   const { replace } = useRouter();
@@ -138,19 +141,30 @@ export const TeamList = () => {
     <div className="grid grid-cols-1 gap-4">
       <div className="flex flex-row justify-between items-center">
         <Heading
-          title={`Teams (${totalElements})`}
-          description="Manage teams"
+          title={t.teams.list("title", { totalElements })}
+          description={t.teams.list("description")}
         />
         <div className="flex space-x-4">
           <Input
             className="w-[18rem]"
-            placeholder="Search teams ..."
+            placeholder={t.teams.list("search_place_holder")}
             onChange={(e) => handleSearchTeams(e.target.value)}
             defaultValue={searchParams.get("name")?.toString()}
           />
-          <Button variant="outline" onClick={toggleSortDirection}>
-            {sortDirection === "asc" ? <ArrowDownAZ /> : <ArrowUpAZ />}
-          </Button>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Button variant="outline" onClick={toggleSortDirection}>
+                {sortDirection === "asc" ? <ArrowDownAZ /> : <ArrowUpAZ />}
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent side="top">
+              <p>
+                {sortDirection === "asc"
+                  ? t.teams.list("sort_a_z")
+                  : t.teams.list("sort_z_a")}
+              </p>
+            </TooltipContent>
+          </Tooltip>
           <div className="flex items-center space-x-2">
             <Checkbox
               id="user-teams-only"
@@ -158,7 +172,7 @@ export const TeamList = () => {
               onCheckedChange={(checked) => setFilterUserTeamsOnly(!!checked)}
             />
             <label htmlFor="user-teams-only" className="text-sm">
-              My Teams Only
+              {t.teams.list("my_teams_only")}
             </label>
           </div>
           {PermissionUtils.canWrite(permissionLevel) && (
@@ -166,7 +180,7 @@ export const TeamList = () => {
               href="/portal/teams/new/edit"
               className={cn(buttonVariants({ variant: "default" }))}
             >
-              <Plus className="mr-2 h-4 w-4" /> New Team
+              <Plus className="mr-2 h-4 w-4" /> {t.teams.list("new_team")}
             </Link>
           )}
         </div>
@@ -174,7 +188,7 @@ export const TeamList = () => {
       <Separator />
       {isLoading ? (
         <div className="flex justify-center py-4">
-          <LoadingPlaceHolder message="Loading teams ..." />
+          <LoadingPlaceHolder message={t.common.misc("loading_data")} />
         </div>
       ) : (
         <>
@@ -219,12 +233,12 @@ export const TeamList = () => {
                           )
                         }
                       >
-                        <Pencil /> Edit
+                        <Pencil /> {t.common.buttons("edit")}
                       </DropdownMenuItem>
                       <DropdownMenuItem
                         onClick={() => showDeleteTeamConfirmationDialog(team)}
                       >
-                        <Trash /> Delete
+                        <Trash /> {t.common.buttons("delete")}
                       </DropdownMenuItem>
                     </DropdownMenuContent>
                   </DropdownMenu>

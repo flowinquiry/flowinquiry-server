@@ -16,6 +16,7 @@ import {
 import { WorkflowDiagram } from "@/components/workflows/workflow-diagram-view";
 import WorkflowEditForm from "@/components/workflows/workflow-editor-form";
 import { usePagePermission } from "@/hooks/use-page-permission";
+import { useAppClientTranslations } from "@/hooks/use-translations";
 import {
   getWorkflowDetail,
   updateWorkflowDetail,
@@ -37,6 +38,7 @@ const TeamWorkflowDetailView = ({ workflowId }: { workflowId: number }) => {
   const [loading, setLoading] = useState(true);
   const [isEditing, setIsEditing] = useState(false);
   const { setError } = useError();
+  const t = useAppClientTranslations();
 
   const permissionLevel = usePagePermission();
   const teamRole = useUserTeamRole().role;
@@ -70,14 +72,14 @@ const TeamWorkflowDetailView = ({ workflowId }: { workflowId: number }) => {
   }
 
   const breadcrumbItems = [
-    { title: "Dashboard", link: "/portal" },
-    { title: "Teams", link: "/portal/teams" },
+    { title: t.common.navigation("dashboard"), link: "/portal" },
+    { title: t.common.navigation("teams"), link: "/portal/teams" },
     {
       title: workflowDetail.ownerName!,
       link: `/portal/teams/${obfuscate(workflowDetail.ownerId)}`,
     },
     {
-      title: "Workflows",
+      title: t.common.navigation("workflows"),
       link: `/portal/teams/${obfuscate(workflowDetail.ownerId)}/workflows`,
     },
     { title: workflowDetail.name, link: "#" },

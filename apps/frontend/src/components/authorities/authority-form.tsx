@@ -27,6 +27,7 @@ import {
 } from "@/components/ui/select";
 import { Spinner } from "@/components/ui/spinner";
 import { Textarea } from "@/components/ui/textarea";
+import { useAppClientTranslations } from "@/hooks/use-translations";
 import {
   batchSavePermissions,
   createAuthority,
@@ -62,6 +63,7 @@ const AuthorityForm = ({
     useState<Array<AuthorityResourcePermissionDTO>>([]);
   const [authority, setAuthority] = useState<AuthorityDTO | undefined>();
   const { setError } = useError();
+  const t = useAppClientTranslations();
 
   const form = useForm<FormData>({
     resolver: zodResolver(formSchema),
@@ -131,23 +133,26 @@ const AuthorityForm = ({
   const isSystemRole = authority?.systemRole;
 
   const breadcrumbItems = [
-    { title: "Dashboard", link: "/portal" },
-    { title: "Authorities", link: "/portal/settings/authorities" },
+    { title: t.common.navigation("dashboard"), link: "/portal" },
+    {
+      title: t.common.navigation("authorities"),
+      link: "/portal/settings/authorities",
+    },
     ...(authority
       ? [
           {
             title: `${authority.descriptiveName}`,
             link: `/portal/settings/authorities/${obfuscate(authority.name)}`,
           },
-          { title: "Edit", link: "#" },
+          { title: t.common.buttons("edit"), link: "#" },
         ]
-      : [{ title: "Add", link: "#" }]),
+      : [{ title: t.common.buttons("add"), link: "#" }]),
   ];
 
   if (loading) {
     return (
       <div className="flex justify-center items-center h-full">
-        <Spinner>Loading data...</Spinner>
+        <Spinner>{t.common.misc("loading_data")}</Spinner>
       </div>
     );
   }

@@ -6,13 +6,23 @@
   },
   "common": {
     "buttons": {
+      "create": "Create",
       "submit": "Submit",
       "cancel": "Cancel",
       "previous": "Previous",
-      "next": "Next"
+      "next": "Next",
+      "edit": "Edit",
+      "delete": "Delete",
+      "add": "Add",
+      "discard": "Discard",
+      "close": "Close",
+      "update": "Update",
+      "invite": "Invite"
     },
     "misc": {
-      "loading_data": "Loading data ..."
+      "loading_data": "Loading data ...",
+      "zoom_in": "Zoom In",
+      "zoom_out": "Zoom Out"
     },
     "navigation": {
       "dashboard": "Dashboard",
@@ -20,7 +30,11 @@
       "settings": "Settings",
       "users": "Users",
       "authorities": "Authorities",
-      "workflows": "Workflows"
+      "workflows": "Workflows",
+      "projects": "Projects",
+      "tickets": "Tickets",
+      "profile": "Profile",
+      "members": "Members"
     }
   },
   "header": {
@@ -49,6 +63,66 @@
       "no_data": "No overdue tickets available",
       "priority_asc": "Sort by priority: Ascending",
       "priority_desc": "Sort by priority: Descending"
+    }
+  },
+  "teams": {
+    "list": {
+      "title": "Teams ({totalElements})",
+      "description": "Manage teams",
+      "search_place_holder": "Search teams ...",
+      "sort_a_z": "Sort by name: A → Z",
+      "sort_z_a": "Sort by name: Z → A",
+      "my_teams_only": "My Teams Only",
+      "new_team": "New Team"
+    }
+  },
+  "users": {
+    "list": {
+      "title": "Users ({totalElements})",
+      "description": "Manage users",
+      "search_place_holder": "Search user names ...",
+      "sort_a_z": "Sort by name: A → Z",
+      "sort_z_a": "Sort by name: Z → A",
+      "invite_user": "Invite user",
+      "delete_dialog_title": "Confirm Deletion",
+      "delete_confirmation": "Are you sure you want to delete <strong>{name}</strong>? This action cannot be undone.",
+      "activation_email_sent": "An activation email has been sent to {email}",
+      "resend_activation_email": "Resend Activation Email"
+    },
+    "detail": {},
+    "common": {
+      "org_chart": "Org chart",
+      "no_recent_login": "No recent login",
+      "not_activated": "Not Activated"
+    },
+    "form": {
+      "title": "Title",
+      "email": "Email",
+      "last_login_time": "Last login time",
+      "timezone": "Timezone",
+      "about": "About",
+      "address": "Address",
+      "city": "City",
+      "state": "State",
+      "country": "Country",
+      "report_to": "Report to",
+      "direct_reports": "Direct Reports",
+      "member_of_teams": "Member of Teams",
+      "authorities": "Authorities",
+      "first_name": "First Name",
+      "last_name": "Last Name"
+    },
+    "org_chart_view": {
+      "instruction_title": "How to Use the Org Chart",
+      "instruction_desc1": "Drag the entire org chart to adjust your view.",
+      "instruction_desc2": "Click a user icon to view the org chart from that user.",
+      "instruction_desc3": "Click a user link to navigate to the user's profile page."
+    }
+  },
+  "authorities": {
+    "common": {
+      "select_place_holder": "Select authorities",
+      "no_data": "Cannot load authorities"
     }
   }
 }

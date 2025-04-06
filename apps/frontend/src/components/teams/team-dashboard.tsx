@@ -25,6 +25,7 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { usePagePermission } from "@/hooks/use-page-permission";
+import { useAppClientTranslations } from "@/hooks/use-translations";
 import { checkTeamHasAnyManager } from "@/lib/actions/teams.action";
 import { obfuscate } from "@/lib/endecode";
 import { cn } from "@/lib/utils";
@@ -36,6 +37,7 @@ const TeamDashboard = () => {
   const team = useTeam();
   const permissionLevel = usePagePermission();
   const [isDialogOpen, setDialogOpen] = useState(false);
+  const t = useAppClientTranslations();
 
   const { data: hasManager, isValidating } = useSWR(
     team.id ? ["checkTeamManager", team.id] : null,
@@ -50,8 +52,8 @@ const TeamDashboard = () => {
   );
 
   const breadcrumbItems = [
-    { title: "Dashboard", link: "/portal" },
-    { title: "Teams", link: "/portal/teams" },
+    { title: t.common.navigation("dashboard"), link: "/portal" },
+    { title: t.common.navigation("teams"), link: "/portal/teams" },
     { title: team.name, link: "#" },
   ];
 

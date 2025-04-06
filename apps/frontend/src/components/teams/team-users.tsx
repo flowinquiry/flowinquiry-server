@@ -33,6 +33,7 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { usePagePermission } from "@/hooks/use-page-permission";
+import { useAppClientTranslations } from "@/hooks/use-translations";
 import {
   deleteUserFromTeam,
   findMembersByTeamId,
@@ -50,6 +51,7 @@ const TeamUsersView = () => {
   const permissionLevel = usePagePermission();
   const teamRole = useUserTeamRole().role;
   const { setError } = useError();
+  const t = useAppClientTranslations();
 
   const [open, setOpen] = useState(false);
   const [notDeleteOnlyManagerDialogOpen, setNotDeleteOnlyManagerDialogOpen] =
@@ -98,10 +100,10 @@ const TeamUsersView = () => {
   const roleOrder = ["Manager", "Member", "Guest", "Unassigned"];
 
   const breadcrumbItems = [
-    { title: "Dashboard", link: "/portal" },
-    { title: "Teams", link: "/portal/teams" },
+    { title: t.common.navigation("dashboard"), link: "/portal" },
+    { title: t.common.navigation("teams"), link: "/portal/teams" },
     { title: team.name, link: `/portal/teams/${obfuscate(team.id)}` },
-    { title: "Members", link: "#" },
+    { title: t.common.navigation("members"), link: "#" },
   ];
 
   return (
@@ -145,7 +147,7 @@ const TeamUsersView = () => {
           </div>
 
           {isLoading ? (
-            <LoadingPlaceHolder message="Load members ..." />
+            <LoadingPlaceHolder message={t.common.misc("loading_data")} />
           ) : (
             roleOrder.map(
               (role) =>
@@ -237,7 +239,7 @@ const TeamUsersView = () => {
                 <AlertDialogAction
                   onClick={() => setNotDeleteOnlyManagerDialogOpen(false)}
                 >
-                  Close
+                  {t.common.buttons("close")}
                 </AlertDialogAction>
               </AlertDialogFooter>
             </AlertDialogContent>

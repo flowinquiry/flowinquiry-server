@@ -21,8 +21,9 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import OrgChartDialog from "@/components/users/org-chart-dialog"; // Import OrgChartDialog
+import OrgChartDialog from "@/components/users/org-chart-dialog";
 import { usePagePermission } from "@/hooks/use-page-permission";
+import { useAppClientTranslations } from "@/hooks/use-translations";
 import { findTeamsByMemberId } from "@/lib/actions/teams.action";
 import { findUserById, getDirectReports } from "@/lib/actions/users.action";
 import { obfuscate } from "@/lib/endecode";
@@ -33,6 +34,7 @@ import { TeamDTO } from "@/types/teams";
 import { UserDTO } from "@/types/users";
 
 export const UserView = ({ userId }: { userId: number }) => {
+  const t = useAppClientTranslations();
   const [user, setUser] = useState<UserDTO | undefined | null>(undefined);
   const [teams, setTeams] = useState<TeamDTO[]>([]);
   const [directReports, setDirectReports] = useState<UserDTO[] | undefined>(
@@ -66,7 +68,7 @@ export const UserView = ({ userId }: { userId: number }) => {
   if (loading) {
     return (
       <div className="flex justify-center items-center h-full">
-        <Spinner>Loading user data ...</Spinner>
+        <Spinner>{t.common.misc("loading_data")}</Spinner>
       </div>
     );
   }
@@ -76,8 +78,8 @@ export const UserView = ({ userId }: { userId: number }) => {
   }
 
   const breadcrumbItems = [
-    { title: "Dashboard", link: "/portal" },
-    { title: "Users", link: "/portal/users" },
+    { title: t.common.navigation("dashboard"), link: "/portal" },
+    { title: t.common.navigation("users"), link: "/portal/users" },
     { title: `${user.firstName} ${user.lastName}`, link: "#" },
   ];
 
@@ -93,7 +95,7 @@ export const UserView = ({ userId }: { userId: number }) => {
               {(user.status !== "ACTIVE" || user.isDeleted) && (
                 <div className="absolute inset-0 bg-black bg-opacity-50 rounded-full flex items-center justify-center">
                   <span className="text-white text-xs font-bold">
-                    Not Activated
+                    ${t.users.common("not_activated")}
                   </span>
                 </div>
               )}
@@ -101,16 +103,16 @@ export const UserView = ({ userId }: { userId: number }) => {
           </CardHeader>
           <CardContent className="text-sm space-y-2">
             <div>
-              <strong>Email:</strong>{" "}
+              <strong>{t.users.form("email")}:</strong>{" "}
               <Button variant="link" className="px-0 py-0 h-0">
                 <Link href={`mailto: ${user.email}`}>{user.email}</Link>
               </Button>
             </div>
             <div>
-              <strong>Title:</strong> {user.title}
+              <strong>{t.users.form("title")}:</strong> {user.title}
             </div>
             <div>
-              <strong>Last login time:</strong>{" "}
+              <strong>{t.users.form("last_login_time")}:</strong>{" "}
               {user.lastLoginTime ? (
                 <Tooltip>
                   <TooltipTrigger asChild>
@@ -125,7 +127,7 @@ export const UserView = ({ userId }: { userId: number }) => {
                   </TooltipContent>
                 </Tooltip>
               ) : (
-                "No recent login"
+                t.users.common("no_recent_login")
               )}
             </div>
             <div>
@@ -153,12 +155,12 @@ export const UserView = ({ userId }: { userId: number }) => {
                     }
                   >
                     <Edit />
-                    Edit
+                    {t.common.buttons("edit")}
                   </Button>
                 )}
                 <Button onClick={() => setIsOrgChartOpen(true)}>
                   <Network />
-                  Org chart
+                  {t.users.common("org_chart")}
                 </Button>
               </div>
             </div>
@@ -166,24 +168,24 @@ export const UserView = ({ userId }: { userId: number }) => {
           <CardContent>
             <div className="grid grid-cols-1 px-4 py-4 gap-4 text-sm">
               <div>
-                <strong>About:</strong> {user.about}
+                <strong>{t.users.form("about")}:</strong> {user.about}
               </div>
               <div>
-                <strong>Address:</strong> {user.address}
+                <strong>{t.users.form("address")}:</strong> {user.address}
               </div>
               <div>
-                <strong>City:</strong> {user.city}
+                <strong>{t.users.form("city")}:</strong> {user.city}
               </div>
               <div>
-                <strong>State:</strong> {user.state}
+                <strong>{t.users.form("state")}:</strong> {user.state}
               </div>
               <div>
-                <strong>Country:</strong> {user.country}
+                <strong>{t.users.form("country")}:</strong> {user.country}
               </div>
             </div>
             {user.managerId && (
               <div>
-                <strong>Report to:</strong>{" "}
+                <strong>{t.users.form("report_to")}:</strong>{" "}
                 <Badge variant="outline" className="gap-2">
                   <UserAvatar imageUrl={user.managerImageUrl} size="w-5 h-5" />
                   <Link href={`/portal/users/${obfuscate(user.managerId)}`}>
@@ -195,7 +197,7 @@ export const UserView = ({ userId }: { userId: number }) => {
             {directReports && directReports.length > 0 && (
               <div className="py-4">
                 <div>
-                  <strong>Direct Reports:</strong>
+                  <strong>{t.users.form("direct_reports")}:</strong>
                 </div>
                 <div className="flex flex-row flex-wrap gap-4 pt-4">
                   {directReports.map((report) => (
@@ -213,7 +215,7 @@ export const UserView = ({ userId }: { userId: number }) => {
           <CardFooter>
             <div className="grid grid-cols-1 gap-4">
               <div>
-                <strong>Member of Teams:</strong>
+                <strong>{t.users.form("member_of_teams")}:</strong>
               </div>
               <div className="flex flex-row flex-wrap gap-4">
                 {(teams ?? []).map((team) => (

@@ -6,24 +6,25 @@ import { Callout, Tabs } from "nextra/components";
 
 # Programming languages and Development tools
 
-FlowInquiry is an application consisting of two components: a front-end and a back-end. Each component can be hosted on a separate service. To run the FlowInquiry application, both the front-end and back-end must be deployed properly.
+FlowInquiry is an application consisting of two components: a front-end and a back-end. Each component can be hosted on a separate service. To run the FlowInquiry application, both the frontend and backend must be deployed properly.
 
 The developer guidelines provide foundational knowledge for those contributing to the FlowInquiry codebase. If you encounter issues with the FlowInquiry codebase and the documentation doesn't resolve them, feel free to raise an issue in our GitHub repository.
 
+
+## Window users
 FlowInquiry's source code is primarily written in Java, TypeScript, and Python, making it platform-independent. However, some setup scripts are written in Bash and are supported only in Bash-enabled environments like macOS and Linux. If you're using Windows, you can enable Bash support through one of the following options:
 
 - Windows Subsystem for Linux (WSL)
 - Cygwin
 - Linux Virtual Machine
+- Git bash
 
 <Callout type="info" emoji="ℹ️">
-  Alternatively, Windows users can bypass the setup scripts by directly editing
-  the .env.local.example file provided in each repository of the front-end and
-  back-end. Additionally, we include detailed instruction guidelines for both
-  the front-end and back-end setup in their respective sections to assist with
-  manual configuration. However, please note that this approach skips the
-  environment pre-checks performed by the setup scripts.
+  We recommend using Git Bash to execute FlowInquiry scripts, as it is the default terminal installed with Git on Windows. Additionally, all our scripts are tested and verified using Git Bash on the Windows platform to ensure compatibility.
 </Callout>
+
+When installing Git from the official [Git for Windows](https://gitforwindows.org/) website, make sure to select **Git Bash** in the installation components.
+After installation, you can verify that Git Bash is available by opening the **Start Menu** and searching for **Git Bash**.
 
 ## Development tools
 

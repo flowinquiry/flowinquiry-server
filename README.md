@@ -50,11 +50,6 @@ FlowInquiry addresses several challenges faced by organizations in managing case
 
 By tailoring workflows to these and other scenarios, FlowInquiry empowers teams to streamline operations, meet deadlines, and deliver exceptional service to both internal and external stakeholders.
 
-
-## Intro
-
-FlowInquiry Server serves as the back-end component of the FlowInquiry service, a Java-based platform designed to manage workflows and enhance team collaboration. Developed with Spring Boot, the server provides a reliable and scalable REST API to support the FlowInquiry front-end application. It also facilitates workflow management, runs scheduler programs for task automation, handles data caching for efficient performance, and ensures seamless data persistence to the database
-
 ## Built With
 
 <div style="display: flex; justify-content: left; gap: 20px; align-items: center;">

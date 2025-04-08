@@ -19,6 +19,7 @@ export function useAppClientTranslations() {
     },
     authorities: {
       common: useTranslations("authorities.common"),
+      list: useTranslations("authorities.list"),
     },
   };
 }

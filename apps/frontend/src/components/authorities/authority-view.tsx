@@ -145,7 +145,7 @@ export const AuthorityView = ({ authorityId }: { authorityId: string }) => {
                 )
               }
             >
-              <Edit /> Edit
+              <Edit /> {t.common.buttons("edit")}
             </Button>
           </div>
         )}

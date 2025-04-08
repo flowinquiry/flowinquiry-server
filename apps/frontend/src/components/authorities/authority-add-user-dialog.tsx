@@ -22,6 +22,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import MultipleSelector from "@/components/ui/multi-select-dynamic";
+import { useAppClientTranslations } from "@/hooks/use-translations";
 import {
   addUsersToAuthority,
   findUsersNotInAuthority,
@@ -51,6 +52,7 @@ const AddUserToAuthorityDialog: React.FC<AddUserToAuthorityDialogProps> = ({
   authorityEntity,
   onSaveSuccess,
 }) => {
+  const t = useAppClientTranslations();
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
   });
@@ -110,7 +112,10 @@ const AddUserToAuthorityDialog: React.FC<AddUserToAuthorityDialogProps> = ({
                 </FormItem>
               )}
             />
-            <SubmitButton label="Save" labelWhileLoading="Saving ..." />
+            <SubmitButton
+              label={t.common.buttons("save")}
+              labelWhileLoading="Saving ..."
+            />
           </form>
         </Form>
       </DialogContent>

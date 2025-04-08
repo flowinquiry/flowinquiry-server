@@ -81,8 +81,11 @@ export const UserForm = ({ userId }: { userId?: number }) => {
 
   const isEdit = !!user;
   const title = isEdit
-    ? `Edit User ${user?.firstName} ${user?.lastName}`
-    : "Create User";
+    ? t.users.form("edit_user", {
+        firstName: user?.firstName ?? "",
+        lastName: user?.lastName ?? "",
+      })
+    : t.users.form("create_user");
   const description = isEdit ? `Edit user` : "Add a new user";
 
   if (loading) {
@@ -186,10 +189,12 @@ export const UserForm = ({ userId }: { userId?: number }) => {
               label={
                 isEdit ? t.common.buttons("update") : t.common.buttons("invite")
               }
-              labelWhileLoading={isEdit ? "Updating..." : "Inviting..."}
+              labelWhileLoading={
+                isEdit ? t.users.form("updating") : t.users.form("inviting")
+              }
             />
             <Button variant="secondary" onClick={() => router.back()}>
-              Discard
+              {t.common.buttons("discard")}
             </Button>
           </div>
         </form>

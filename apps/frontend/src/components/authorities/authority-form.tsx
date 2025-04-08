@@ -246,11 +246,11 @@ const AuthorityForm = ({
 
             <div className="flex items-center gap-4 pt-4">
               <SubmitButton
-                label="Save changes"
+                label={t.common.buttons("save")}
                 labelWhileLoading="Save changes ..."
               />
               <Button variant="secondary" onClick={() => router.back()}>
-                Discard
+                {t.common.buttons("discard")}
               </Button>
             </div>
           </form>

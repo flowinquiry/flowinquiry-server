@@ -30,6 +30,7 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { usePagePermission } from "@/hooks/use-page-permission";
+import { useAppClientTranslations } from "@/hooks/use-translations";
 import {
   deleteAuthority,
   getAuthorities,
@@ -41,6 +42,7 @@ import { PermissionUtils } from "@/types/resources";
 
 export function AuthoritiesView() {
   const router = useRouter();
+  const t = useAppClientTranslations();
   const permissionLevel = usePagePermission();
 
   const [authorities, setAuthorities] = useState<Array<AuthorityDTO>>([]);
@@ -83,15 +85,15 @@ export function AuthoritiesView() {
     <div className="grid grid-cols-1 gap-4">
       <div className="flex flex-row justify-between">
         <Heading
-          title={`Authorities (${totalElements})`}
-          description="Manage permissions for groups and users to control access to resources."
+          title={t.authorities.list("title", { totalElements })}
+          description={t.authorities.list("description")}
         />
         {PermissionUtils.canWrite(permissionLevel) && (
           <Button
             onClick={() => router.push("/portal/settings/authorities/new/edit")}
           >
             <Plus />
-            New Authority
+            {t.authorities.list("new_authority")}
           </Button>
         )}
       </div>
@@ -123,7 +125,7 @@ export function AuthoritiesView() {
                       className="text-blue-500 border-blue-500 dark:text-blue-300 dark:border-blue-600"
                     >
                       <Shield className="w-4 h-4 mr-1" />
-                      System Role
+                      {t.authorities.common("system_role")}
                     </Badge>
                   )}
                 </div>
@@ -144,13 +146,12 @@ export function AuthoritiesView() {
                               className="cursor-pointer"
                               onClick={() => handleDeleteClick(authority)}
                             >
-                              <Trash /> Remove authority
+                              <Trash /> {t.authorities.list("remove_authority")}
                             </DropdownMenuItem>
                           </TooltipTrigger>
                           <TooltipContent>
                             <p>
-                              This action will delete the role and unassign all
-                              users from this role.
+                              {t.authorities.list("remove_authority_tooltip")}
                             </p>
                           </TooltipContent>
                         </Tooltip>
@@ -170,22 +171,25 @@ export function AuthoritiesView() {
         <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
           <DialogContent>
             <DialogHeader>
-              <DialogTitle>Confirm Deletion</DialogTitle>
+              <DialogTitle>
+                {t.authorities.list("remove_dialog_title")}
+              </DialogTitle>
             </DialogHeader>
             <p>
-              Are you sure you want to delete{" "}
-              <strong>{selectedAuthority?.descriptiveName}</strong>? This action
-              cannot be undone.
+              {t.authorities.list.rich("remove_dialog_content", {
+                name: selectedAuthority?.descriptiveName ?? "",
+                strong: (chunks) => <strong>{chunks}</strong>,
+              })}
             </p>
             <DialogFooter>
               <Button
                 variant="secondary"
                 onClick={() => setIsDialogOpen(false)}
               >
-                Cancel
+                {t.common.buttons("cancel")}
               </Button>
               <Button variant="destructive" onClick={confirmDeleteAuthority}>
-                Delete
+                {t.common.buttons("delete")}
               </Button>
             </DialogFooter>
           </DialogContent>

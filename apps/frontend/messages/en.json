@@ -17,7 +17,8 @@
       "discard": "Discard",
       "close": "Close",
       "update": "Update",
-      "invite": "Invite"
+      "invite": "Invite",
+      "save": "Save"
     },
     "misc": {
       "loading_data": "Loading data ...",
@@ -110,7 +111,11 @@
       "member_of_teams": "Member of Teams",
       "authorities": "Authorities",
       "first_name": "First Name",
-      "last_name": "Last Name"
+      "last_name": "Last Name",
+      "updating": "Updating ...",
+      "inviting": "Inviting ...",
+      "create_user": "Create User",
+      "edit_user": "Edit User {firstName} {lastName}"
     },
     "org_chart_view": {
       "instruction_title": "How to Use the Org Chart",
@@ -122,7 +127,17 @@
   "authorities": {
     "common": {
       "select_place_holder": "Select authorities",
-      "no_data": "Cannot load authorities"
+      "no_data": "Cannot load authorities",
+      "system_role": "System Role"
+    },
+    "list": {
+      "title": "Authorities ({totalElements})",
+      "description": "Manage permissions for groups and users to control access to resources.",
+      "new_authority": "New Authority",
+      "remove_authority": "Remove Authority",
+      "remove_authority_tooltip": "This action will delete the role and unassign all users from this role.",
+      "remove_dialog_title": "Confirm Deletion",
+      "remove_dialog_content": "Are you sure you want to delete <strong>{name}</strong>? This action cannot be undone."
     }
   }
 }

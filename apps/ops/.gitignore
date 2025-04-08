@@ -1,0 +1,8 @@
+flowinquiry-docker/caddy
+flowinquiry-docker/volumes
+.frontend.env
+.backend.env
+.backend.env.bak
+flowinquiry-k8s/app/build
+flowinquiry-k8s/.gradle
+flowinquiry-k8s/build

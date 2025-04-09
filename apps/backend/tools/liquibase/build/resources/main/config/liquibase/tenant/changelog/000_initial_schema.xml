@@ -312,6 +312,33 @@
 			</column>
 		</createTable>
 
+		<createTable tableName="fw_app_settings">
+			<column name="setting_key" type="varchar(100)">
+				<constraints primaryKey="true" nullable="false"/>
+			</column>
+			<column name="setting_value" type="varchar(1000)">
+				<constraints nullable="false"/>
+			</column>
+			<!--setting_type = "string", "int", "boolean", "secret", etc.-->
+			<!--For encrypted values: use secret:<algorithm>, e.g.:
+			secret:aes256
+			secret:vault
+			secret:aws-kms
+			-->
+			<column name="setting_type" type="varchar(50)">
+				<constraints nullable="false"/>
+			</column>
+			<column name="setting_group" type="varchar(50)"/>
+			<column name="description" type="varchar(255)"/>
+			<column name="updated_at" type="timestamp">
+				<constraints nullable="false"/>
+			</column>
+		</createTable>
+
+		<createIndex tableName="fw_app_settings" indexName="idx_fw_app_settings_key">
+			<column name="setting_key"/>
+		</createIndex>
+
 	</changeSet>
 
 	<changeSet author="flowinquiry"

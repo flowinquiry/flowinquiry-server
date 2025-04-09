@@ -2,17 +2,21 @@ package io.flowinquiry.modules.collab.service;
 
 import io.flowinquiry.config.FlowInquiryProperties;
 import io.flowinquiry.modules.collab.EmailContext;
+import io.flowinquiry.modules.collab.service.event.MailSettingsUpdatedEvent;
 import io.flowinquiry.modules.usermanagement.service.dto.UserDTO;
+import jakarta.annotation.PostConstruct;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import java.nio.charset.StandardCharsets;
 import java.util.Locale;
-import java.util.Optional;
+import java.util.Properties;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.MessageSource;
+import org.springframework.context.event.EventListener;
 import org.springframework.mail.MailException;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
@@ -34,31 +38,78 @@ public class MailService {
     private static final String BASE_URL = "baseUrl";
 
     private final FlowInquiryProperties flowInquiryProperties;
-    private final Optional<JavaMailSender> javaMailSender;
+    private final AppSettingService appSettingService;
     private final MessageSource messageSource;
     private final SpringTemplateEngine templateEngine;
 
+    private JavaMailSenderImpl mailSender;
+    private boolean mailEnabled = false;
+
     public MailService(
+            AppSettingService appSettingService,
             FlowInquiryProperties flowInquiryProperties,
-            Optional<JavaMailSender> javaMailSender,
             MessageSource messageSource,
             SpringTemplateEngine templateEngine) {
+        this.appSettingService = appSettingService;
         this.flowInquiryProperties = flowInquiryProperties;
-        this.javaMailSender = javaMailSender;
         this.messageSource = messageSource;
         this.templateEngine = templateEngine;
+    }
+
+    @PostConstruct
+    public void init() {
+        reloadMailSender();
+    }
+
+    @EventListener
+    public void onMailSettingsUpdated(MailSettingsUpdatedEvent event) {
+        LOG.info("Mail settings changed — reloading mail sender.");
+        reloadMailSender();
+    }
+
+    private void reloadMailSender() {
+        String host = appSettingService.getValue("mail.host").orElse(null);
+        String portStr = appSettingService.getValue("mail.port").orElse(null);
+
+        if (host == null || portStr == null) {
+            mailEnabled = false;
+            LOG.warn("MailService not configured. 'mail.host' or 'mail.port' is missing.");
+            return;
+        }
+
+        try {
+            JavaMailSenderImpl sender = new JavaMailSenderImpl();
+            sender.setHost(host);
+            sender.setPort(Integer.parseInt(portStr));
+            sender.setUsername(appSettingService.getValue("mail.username").orElse(""));
+            sender.setPassword(appSettingService.getDecryptedValue("mail.password").orElse(""));
+
+            Properties props = sender.getJavaMailProperties();
+            props.put(
+                    "mail.transport.protocol",
+                    appSettingService.getValue("mail.protocol").orElse("smtp"));
+            props.put("mail.smtp.auth", "true");
+            props.put("mail.smtp.starttls.enable", "true");
+            props.put("mail.debug", "false");
+
+            this.mailSender = sender;
+            this.mailEnabled = true;
+            LOG.info("MailService configured and ready to send emails.");
+        } catch (Exception ex) {
+            this.mailEnabled = false;
+            LOG.error(
+                    "Failed to initialize MailService due to invalid config: {}",
+                    ex.getMessage(),
+                    ex);
+        }
     }
 
     @Async
     public void sendEmail(
             String to, String subject, String content, boolean isMultipart, boolean isHtml) {
-        javaMailSender.ifPresentOrElse(
-                sender -> sendEmailSync(sender, to, subject, content, isMultipart, isHtml),
-                () ->
-                        LOG.warn(
-                                "Mail sending is disabled. Skipping email to '{}' with content {}",
-                                to,
-                                content));
+        if (mailEnabled && mailSender != null) {
+            sendEmailSync(mailSender, to, subject, content, isMultipart, isHtml);
+        }
     }
 
     private void sendEmailSync(

@@ -1,0 +1,132 @@
+package io.flowinquiry.modules.collab.service;
+
+import io.flowinquiry.modules.collab.domain.AppSetting;
+import io.flowinquiry.modules.collab.repository.AppSettingRepository;
+import io.flowinquiry.modules.collab.service.dto.AppSettingDTO;
+import io.flowinquiry.modules.collab.service.event.MailSettingsUpdatedEvent;
+import java.util.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+@Service
+public class AppSettingService {
+
+    private static final Logger logger = LoggerFactory.getLogger(AppSettingService.class);
+
+    private final AppSettingRepository repository;
+    private final ApplicationEventPublisher eventPublisher;
+
+    public AppSettingService(
+            AppSettingRepository repository, ApplicationEventPublisher eventPublisher) {
+        this.repository = repository;
+        this.eventPublisher = eventPublisher;
+    }
+
+    @Cacheable(value = "appSettings", key = "#key")
+    public Optional<AppSetting> getRawSetting(String key) {
+        return repository.findById(key);
+    }
+
+    public Optional<String> getValue(String key) {
+        return getRawSetting(key).map(AppSetting::getValue);
+    }
+
+    public Optional<String> getDecryptedValue(String key) {
+        return getRawSetting(key)
+                .map(
+                        setting -> {
+                            if (setting.getType() != null
+                                    && setting.getType().startsWith("secret:")) {
+                                String algorithm = setting.getType().substring("secret:".length());
+                                return decrypt(setting.getValue(), algorithm);
+                            } else {
+                                return setting.getValue();
+                            }
+                        });
+    }
+
+    public List<AppSettingDTO> getAllSettingDTOs() {
+        List<AppSetting> settings = repository.findAll();
+        return settings.stream()
+                .map(
+                        s ->
+                                new AppSettingDTO(
+                                        s.getKey(),
+                                        s.getValue(),
+                                        s.getType(),
+                                        s.getGroup(),
+                                        s.getDescription()))
+                .toList();
+    }
+
+    public Map<String, String> getAllValues() {
+        List<AppSetting> all = repository.findAll();
+        Map<String, String> result = new LinkedHashMap<>();
+        for (AppSetting setting : all) {
+            result.put(setting.getKey(), setting.getValue());
+        }
+        return result;
+    }
+
+    @Transactional
+    @CacheEvict(value = "appSettings", key = "#key")
+    public void updateValue(String key, String value) {
+        AppSetting setting =
+                repository
+                        .findById(key)
+                        .orElseGet(
+                                () -> {
+                                    AppSetting s = new AppSetting();
+                                    s.setKey(key);
+                                    s.setType("string"); // default type
+                                    return s;
+                                });
+        setting.setValue(value);
+        repository.save(setting);
+
+        logger.info("Updated setting: {} = {}", key, value);
+
+        if (key.startsWith("mail.")) {
+            eventPublisher.publishEvent(new MailSettingsUpdatedEvent(this));
+        }
+    }
+
+    @Transactional
+    public void updateSettings(List<AppSettingDTO> settings) {
+        for (AppSettingDTO dto : settings) {
+            AppSetting setting = repository.findById(dto.getKey()).orElseGet(AppSetting::new);
+            setting.setKey(dto.getKey());
+            setting.setValue(dto.getValue());
+            setting.setType(dto.getType());
+            setting.setGroup(dto.getGroup());
+            setting.setDescription(dto.getDescription());
+            repository.save(setting);
+            cacheEvict(dto.getKey());
+
+            logger.info("Bulk updated setting: {} = {}", dto.getKey(), dto.getValue());
+
+            if (dto.getKey().startsWith("mail.")) {
+                eventPublisher.publishEvent(new MailSettingsUpdatedEvent(this));
+            }
+        }
+    }
+
+    @CacheEvict(value = "appSettings", key = "#key")
+    public void cacheEvict(String key) {
+        // This is required for Spring to process @CacheEvict internally
+    }
+
+    // 🔐 Placeholder for encryption — replace with real implementation
+    private String decrypt(String encryptedValue, String algorithm) {
+        return "[decrypted]" + encryptedValue;
+    }
+
+    private String encrypt(String plainValue, String algorithm) {
+        return "[encrypted]" + plainValue;
+    }
+}

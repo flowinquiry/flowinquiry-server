@@ -14,27 +14,47 @@
       "edit": "Modifier",
       "delete": "Supprimer",
       "add": "Ajouter",
-      "discard": "Ignorer",
+      "discard": "Abandonner",
       "close": "Fermer",
       "update": "Mettre à jour",
-      "invite": "Inviter"
+      "invite": "Inviter",
+      "save": "Enregistrer",
+      "saving": "Enregistrement ...",
+      "remove": "Supprimer",
+      "new": "Nouveau",
+      "go_back": "Retour",
+      "loading": "Chargement..."
     },
     "misc": {
-      "loading_data": "Chargement des données...",
+      "error": "Erreur",
+      "no_results_found": "Aucun résultat trouvé",
+      "no_data_available": "Aucune donnée disponible",
+      "loading_data": "Chargement des données ...",
       "zoom_in": "Agrandir",
-      "zoom_out": "Réduire"
+      "zoom_out": "Rétrécir",
+      "switch_to_light_mode": "Passer en mode clair",
+      "switch_to_dark_mode": "Passer en mode sombre",
+      "date_select_place_holder": "Sélectionnez une date"
     },
     "navigation": {
       "dashboard": "Tableau de bord",
       "teams": "Équipes",
       "settings": "Paramètres",
       "users": "Utilisateurs",
-      "authorities": "Autorités",
+      "authorities": "Autorisations",
       "workflows": "Flux de travail",
       "projects": "Projets",
       "tickets": "Tickets",
       "profile": "Profil",
-      "members": "Membres"
+      "members": "Membres",
+      "organizations": "Organisations",
+      "mail": "Messagerie"
+    },
+    "permission": {
+      "ACCESS": "Accès",
+      "WRITE": "Écriture",
+      "READ": "Lecture",
+      "NONE": "Aucun"
     }
   },
   "header": {
@@ -42,12 +62,19 @@
       "title": "Mes tickets",
       "reported_tickets": "Tickets signalés par moi",
       "assigned_tickets": "Tickets qui me sont assignés"
+    },
+    "nav": {
+      "profile": "Profil",
+      "about": "À propos",
+      "logout": "Se déconnecter",
+      "intro": "FlowInquiry est une solution puissante de gestion des demandes pour les équipes. Elle permet aux organisations de suivre, gérer et personnaliser les demandes des clients via des flux de travail flexibles, améliorant la collaboration et la productivité.",
+      "copyright": "Tous droits réservés"
     }
   },
   "dashboard": {
     "recent_activities": {
       "title": "Activités récentes",
-      "no_data": "Aucune activité disponible"
+      "no_data": "Aucun journal d'activité disponible"
     },
     "notifications": {
       "title": "Notifications",
@@ -61,33 +88,165 @@
     "overdue_tickets": {
       "title": "Tickets en retard ({totalTickets})",
       "no_data": "Aucun ticket en retard disponible",
-      "priority_asc": "Trier par priorité : Croissante",
-      "priority_desc": "Trier par priorité : Décroissante"
+      "priority_asc": "Trier par priorité : croissante",
+      "priority_desc": "Trier par priorité : décroissante"
     }
   },
   "teams": {
+    "common": {
+      "default_slogan": "Plus forts ensemble",
+      "role": "Rôle"
+    },
+    "roles": {
+      "manager": "Manager",
+      "member": "Membre",
+      "guest": "Invité",
+      "none": "Aucun"
+    },
+    "dashboard": {
+      "title": "Tableau de bord",
+      "description": "Aperçu des performances et des activités de votre équipe. Surveillez les demandes, la progression et les indicateurs clés d’un coup d’œil",
+      "edit_team": "Modifier l'équipe",
+      "last_7_days": "7 derniers jours",
+      "last_30_days": "30 derniers jours",
+      "last_90_days": "90 derniers jours",
+      "custom_range": "Plage personnalisée",
+      "add_user_dialog": {
+        "title1": "Cette équipe nécessite au moins un manager",
+        "description1": "Cette équipe n'a actuellement aucun manager. Vous devez en assigner un avant de continuer. Commencez à taper pour rechercher des utilisateurs.",
+        "title2": "Ajouter un utilisateur à l'équipe {teamName}",
+        "description2": "Ajoutez un utilisateur à cette équipe en le recherchant. Commencez à taper pour voir les suggestions correspondantes.",
+        "users": "Utilisateurs",
+        "user_select_place_holder": "Ajouter un utilisateur à l'équipe..."
+      },
+      "summary": {
+        "total": {
+          "title": "Tickets totaux",
+          "description": "Tous les tickets reçus",
+          "tooltip": "Voir tous les tickets de l’équipe."
+        },
+        "pending": {
+          "title": "Tickets en attente",
+          "description": "Tickets à traiter",
+          "tooltip": "Voir les tickets toujours en attente."
+        },
+        "completed": {
+          "title": "Tickets complétés",
+          "description": "Tickets résolus avec succès",
+          "tooltip": "Voir les tickets résolus."
+        },
+        "overdue": {
+          "title": "Tickets en retard",
+          "description": "Tickets dépassant la date limite",
+          "tooltip": "Voir les tickets en retard nécessitant une attention."
+        }
+      },
+      "tickets_times_series": {
+        "title": "Tendances journalières des tickets (créés & clôturés)",
+        "no_data": "Aucune donnée de ticket disponible.",
+        "created_tickets": "Tickets créés",
+        "closed_tickets": "Tickets clôturés"
+      },
+      "recent_activities": {
+        "title": "Activités récentes",
+        "no_data": "Aucune activité disponible"
+      }
+    },
     "list": {
       "title": "Équipes ({totalElements})",
       "description": "Gérer les équipes",
-      "search_place_holder": "Rechercher des équipes...",
+      "search_place_holder": "Rechercher des équipes ...",
       "sort_a_z": "Trier par nom : A → Z",
       "sort_z_a": "Trier par nom : Z → A",
       "my_teams_only": "Mes équipes uniquement",
       "new_team": "Nouvelle équipe"
+    },
+    "tickets": {
+      "list": {
+        "title": "Tickets ({count})",
+        "description": "Surveillez et gérez les tickets de votre équipe. Restez au courant des attributions et de la progression.",
+        "no_workflow_available": "Aucun flux de travail disponible pour l'équipe.",
+        "create_workflow_cta": "Vous pouvez créer un nouveau flux de travail <button><link>ici</link></button>.",
+        "contact_manager_to_create_workflow": "Contactez le manager de l'équipe pour créer un flux de travail.",
+        "no_ticket_title": "Ticket inexistant.",
+        "no_ticket_description": "Aucun ticket n'est actuellement disponible. Veuillez réessayer plus tard ou ajuster vos critères de recherche.",
+        "search_place_holder": "Rechercher le titre du ticket, la description...",
+        "filters": "Filtres",
+        "sort": "Trier",
+        "newest_first": "Les plus récents d'abord",
+        "oldest_first": "Les plus anciens d'abord"
+      },
+      "detail": {
+        "next_ticket": "Ticket suivant",
+        "previous_ticket": "Ticket précédent"
+      },
+      "timeline": {
+        "no_data": "Aucune transition trouvée pour ce ticket.",
+        "sla_due": "Délai SLA",
+        "sla_deadline": "Échéance SLA"
+      },
+      "new_dialog": {
+        "title": "Créer un nouveau ticket",
+        "description": "Soumettez un ticket à l'équipe pour obtenir de l'aide ou initier une tâche. Fournissez tous les détails nécessaires afin d'aider l'équipe à comprendre et traiter votre demande efficacement."
+      },
+      "form": {
+        "name": "Nom",
+        "description": "Description",
+        "priority": "Priorité",
+        "assignee": "Attribué à",
+        "user_select_place_holder": "Rechercher un utilisateur...",
+        "user_select_no_data": "Aucun utilisateur trouvé.",
+        "user_select_no_choose": "Aucun (désassigner l'utilisateur)",
+        "user_select_unassigned": "Non assigné",
+        "target_completion_date": "Date d'achèvement cible",
+        "actual_completion_date": "Date réelle d'achèvement",
+        "state": "État",
+        "channel": "Canal",
+        "channel_place_holder": "Sélectionner un canal",
+        "project": "Projet",
+        "channels": {
+          "email": "Email",
+          "phone": "Téléphone",
+          "web_portal": "Portail Web",
+          "chat": "Chat",
+          "social_media": "Réseaux sociaux",
+          "in_person": "En personne",
+          "mobile_app": "Application mobile",
+          "api": "API",
+          "system_generated": "Généré par le système",
+          "internal": "Interne"
+        },
+        "priorities": {
+          "Critical": "Critique",
+          "High": "Élevée",
+          "Medium": "Moyenne",
+          "Low": "Faible",
+          "Trivial": "Mineure"
+        }
+      }
+    },
+    "users": {
+      "title": "Membres ({count})",
+      "description": "Parcourez et gérez les membres de votre équipe. Consultez les rôles, les coordonnées et plus encore.",
+      "add_user": "Ajouter un utilisateur",
+      "remove_user": "Supprimer l'utilisateur",
+      "remove_user_from_team": "Cette action supprimera l'utilisateur <b>{firstName} {lastName}</b> de l'équipe <b>{teamName}</b>.",
+      "remove_only_manager_dialog_error_title": "Rôle de manager requis",
+      "remove_only_manager_dialog_error_description": "Vous ne pouvez pas supprimer le seul manager de l'équipe"
     }
   },
   "users": {
     "list": {
       "title": "Utilisateurs ({totalElements})",
       "description": "Gérer les utilisateurs",
-      "search_place_holder": "Rechercher des noms d'utilisateur...",
+      "search_place_holder": "Rechercher des noms d'utilisateur ...",
       "sort_a_z": "Trier par nom : A → Z",
       "sort_z_a": "Trier par nom : Z → A",
       "invite_user": "Inviter un utilisateur",
       "delete_dialog_title": "Confirmer la suppression",
       "delete_confirmation": "Êtes-vous sûr de vouloir supprimer <strong>{name}</strong> ? Cette action est irréversible.",
-      "activation_email_sent": "Un email d'activation a été envoyé à {email}",
-      "resend_activation_email": "Renvoyer l’email d’activation"
+      "activation_email_sent": "Un e-mail d'activation a été envoyé à {email}",
+      "resend_activation_email": "Renvoyer l'e-mail d'activation"
     },
     "detail": {},
     "common": {
@@ -105,24 +264,123 @@
       "city": "Ville",
       "state": "État",
       "country": "Pays",
-      "report_to": "Rapporte à",
+      "report_to": "Supérieur hiérarchique",
       "direct_reports": "Subordonnés directs",
       "member_of_teams": "Membre des équipes",
-      "authorities": "Autorités",
+      "authorities": "Autorisations",
       "first_name": "Prénom",
-      "last_name": "Nom"
+      "last_name": "Nom",
+      "updating": "Mise à jour ...",
+      "inviting": "Invitation ...",
+      "create_user": "Créer un utilisateur",
+      "edit_user": "Modifier l'utilisateur {firstName} {lastName}"
+    },
+    "profile": {
+      "title": "Profil",
+      "description": "Gérez les informations de votre compte ici. Mettez à jour votre email, votre photo de profil, votre mot de passe et d'autres informations personnelles pour garder votre profil à jour et sécurisé.",
+      "change_password": "Changer le mot de passe",
+      "current_password": "Mot de passe actuel",
+      "new_password": "Nouveau mot de passe"
     },
     "org_chart_view": {
       "instruction_title": "Comment utiliser l'organigramme",
       "instruction_desc1": "Faites glisser l'organigramme pour ajuster votre vue.",
-      "instruction_desc2": "Cliquez sur une icône utilisateur pour voir l'organigramme depuis cet utilisateur.",
-      "instruction_desc3": "Cliquez sur un lien utilisateur pour naviguer vers la page de profil de l'utilisateur."
+      "instruction_desc2": "Cliquez sur une icône utilisateur pour voir l'organigramme à partir de cet utilisateur.",
+      "instruction_desc3": "Cliquez sur un lien utilisateur pour accéder à la page de profil."
     }
   },
   "authorities": {
     "common": {
-      "select_place_holder": "Sélectionner des autorités",
-      "no_data": "Impossible de charger les autorités"
+      "select_place_holder": "Sélectionner des autorisations",
+      "no_data": "Impossible de charger les autorisations",
+      "system_role": "Rôle système"
+    },
+    "list": {
+      "title": "Autorisations ({totalElements})",
+      "description": "Gérez les permissions des groupes et des utilisateurs pour contrôler l'accès aux ressources.",
+      "new_authority": "Nouvelle autorisation",
+      "remove_authority": "Supprimer l'autorisation",
+      "remove_authority_tooltip": "Cette action supprimera le rôle et désassignera tous les utilisateurs de ce rôle.",
+      "remove_dialog_title": "Confirmer la suppression",
+      "remove_dialog_content": "Êtes-vous sûr de vouloir supprimer <strong>{name}</strong> ? Cette action est irréversible."
+    },
+    "detail": {
+      "add_user": "Ajouter un utilisateur",
+      "remove_user": "Supprimer un utilisateur",
+      "remove_user_tooltip": "Cette action révoquera l'accès et les permissions de l'utilisateur sélectionné associés à cette autorisation",
+      "permissions_title": "Permissions des ressources",
+      "resource": "Ressource",
+      "permission": "Permission",
+      "no_permission": "Aucune permission disponible",
+      "no_users": "Aucun utilisateur n'a encore été assigné à cette autorité. Veuillez ajouter des utilisateurs pour gérer les permissions."
+    },
+    "add": {
+      "dialog_title": "Ajouter un utilisateur à l'autorité {authorityName}",
+      "dialog_description": "Ajoutez un utilisateur à ce groupe d'autorité en le recherchant. Commencez à taper pour voir les suggestions correspondantes.",
+      "users": "Utilisateurs",
+      "users_select_place_holder": "Ajouter un utilisateur à l'autorité..."
+    },
+    "form": {
+      "title": "Détails de l'autorité",
+      "permissions_section": "Permissions des ressources",
+      "permission_select_place_holder": "Sélectionner une permission",
+      "name": "Nom",
+      "description": "Description"
+    }
+  },
+  "mail": {},
+  "login": {
+    "form": {
+      "invalid_email": "Email invalide",
+      "required_email": "L'adresse email est requise",
+      "required_password": "Le mot de passe est requis",
+      "login_failed_message": "Échec de la connexion. Veuillez réessayer.",
+      "google_login_failed_message": "La connexion Google a échoué. Veuillez réessayer.",
+      "title": "Votre partenaire pour satisfaire vos clients et suivre les demandes",
+      "password": "Mot de passe",
+      "forgot_password_cta": "Mot de passe oublié",
+      "signin": "Se connecter",
+      "signin_google": "Se connecter avec Google"
+    }
+  },
+  "workflows": {
+    "common": {
+      "state_select_place_holder": "Sélectionner un état",
+      "no_data": "Aucun flux de travail trouvé",
+      "select_workflow": "Sélectionner un flux de travail",
+      "search_workflow": "Rechercher un flux de travail..."
+    },
+    "detail": {
+      "cancel_edit": "Annuler la modification",
+      "customize_workflow": "Personnaliser le flux de travail",
+      "ticket_type_label": "Type de ticket : {requestName}"
+    },
+    "add": {
+      "title": "Créer un nouveau flux de travail",
+      "description": "Sélectionnez comment vous souhaitez créer le flux de travail",
+      "transitions": "Transitions",
+      "add_transition": "Ajouter une transition",
+      "escalate": "Escalader",
+      "sla_duration": "Durée SLA (heures)",
+      "event_name": "Nom de l'événement",
+      "source_state": "État source",
+      "source_state_place_holder": "Sélectionner l'état source",
+      "target_state": "État cible",
+      "target_state_place_holder": "Sélectionner l'état cible",
+      "add_state": "Ajouter un état",
+      "final": "Final",
+      "initial": "Initial",
+      "state_name": "Nom de l'état",
+      "states": "États",
+      "name": "Nom",
+      "ticket_type": "Type de ticket",
+      "field_description": "Description",
+      "edit_workflow": "Modifier le flux de travail"
+    },
+    "list": {
+      "title": "Flux de travail ({totalElements})",
+      "description": "Centralisez et gérez tous les flux de travail en toute simplicité avec une visibilité claire, les types de tickets et les descriptions en un coup d'œil.",
+      "new_workflow": "Nouveau flux de travail"
     }
   }
 }

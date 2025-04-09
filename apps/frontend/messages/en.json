@@ -18,12 +18,23 @@
       "close": "Close",
       "update": "Update",
       "invite": "Invite",
-      "save": "Save"
+      "save": "Save",
+      "saving": "Saving ...",
+      "remove": "Remove",
+      "new": "New",
+      "go_back": "Go back",
+      "loading": "Loading..."
     },
     "misc": {
+      "error": "Error",
+      "no_results_found": "No results found",
+      "no_data_available": "No data available",
       "loading_data": "Loading data ...",
       "zoom_in": "Zoom In",
-      "zoom_out": "Zoom Out"
+      "zoom_out": "Zoom Out",
+      "switch_to_light_mode": "Switch to light mode",
+      "switch_to_dark_mode": "Switch to dark mode",
+      "date_select_place_holder": "Select a date"
     },
     "navigation": {
       "dashboard": "Dashboard",
@@ -35,7 +46,15 @@
       "projects": "Projects",
       "tickets": "Tickets",
       "profile": "Profile",
-      "members": "Members"
+      "members": "Members",
+      "organizations": "Organizations",
+      "mail": "Mail"
+    },
+    "permission": {
+      "ACCESS": "Access",
+      "WRITE": "Write",
+      "READ": "Read",
+      "NONE": "None"
     }
   },
   "header": {
@@ -43,6 +62,13 @@
       "title": "My tickets",
       "reported_tickets": "My reported tickets",
       "assigned_tickets": "My assigned tickets"
+    },
+    "nav": {
+      "profile": "Profile",
+      "about": "About",
+      "logout": "Logout",
+      "intro": "FlowInquiry is a powerful request management solution for teams. It empowers organizations to track, manage, and customize customer inquiries through flexible workflows, enhancing collaboration and productivity.",
+      "copyright": "All rights reserved"
     }
   },
   "dashboard": {
@@ -67,6 +93,65 @@
     }
   },
   "teams": {
+    "common": {
+      "default_slogan": "Stronger Together",
+      "role": "Role"
+    },
+    "roles": {
+      "manager": "Manager",
+      "member": "Member",
+      "guest": "Guest",
+      "none": "None"
+    },
+    "dashboard": {
+      "title": "Dashboard",
+      "description": "Overview of your team's performance and activities. Monitor team requests, progress, and key metrics at a glance",
+      "edit_team": "Edit Team",
+      "last_7_days": "Last 7 Days",
+      "last_30_days": "Last 30 Days",
+      "last_90_days": "Last 90 Days",
+      "custom_range": "Custom Range",
+      "add_user_dialog": {
+        "title1": "This team requires at least one manager",
+        "description1": "This team currently has no managers. You must assign at least one manager before proceeding. Begin typing to search for users.",
+        "title2": "Add a user to team {teamName}",
+        "description2": "Add a user to this team by searching for them. Begin typing to see suggestions that match your input.",
+        "users": "Users",
+        "user_select_place_holder": "Add user to team..."
+      },
+      "summary": {
+        "total": {
+          "title": "Total Tickets",
+          "description": "All tickets received",
+          "tooltip": "View all team tickets."
+        },
+        "pending": {
+          "title": "Pending Tickets",
+          "description": "Tickets yet to be addressed",
+          "tooltip": "View tickets that are still pending."
+        },
+        "completed": {
+          "title": "Completed Tickets",
+          "description": "Successfully resolved tickets",
+          "tooltip": "View tickets that have been resolved."
+        },
+        "overdue": {
+          "title": "Overdue Tickets",
+          "description": "Tickets past their deadline",
+          "tooltip": "View overdue tickets that need attention."
+        }
+      },
+      "tickets_times_series": {
+        "title": "Daily Ticket Trends (Created & Closed)",
+        "no_data": "No ticket data available.",
+        "created_tickets": "Created Tickets",
+        "closed_tickets": "Closed Tickets"
+      },
+      "recent_activities": {
+        "title": "Recent Activities",
+        "no_data": "No activity logs available"
+      }
+    },
     "list": {
       "title": "Teams ({totalElements})",
       "description": "Manage teams",
@@ -75,6 +160,79 @@
       "sort_z_a": "Sort by name: Z → A",
       "my_teams_only": "My Teams Only",
       "new_team": "New Team"
+    },
+    "tickets": {
+      "list": {
+        "title": "Tickets ({count})",
+        "description": "Monitor and handle your team's tickets. Stay on top of assignments and progress.",
+        "no_workflow_available": "No workflow is available for team.",
+        "create_workflow_cta": "You can create a new workflow at <button><link>here</link></button>.",
+        "contact_manager_to_create_workflow": "Contact the team manager to create a new workflow.",
+        "no_ticket_title": "Ticket does not exist.",
+        "no_ticket_description": "There are currently no ticket available. Please check again later or adjust your search criteria.",
+        "search_place_holder": "Search ticket title, description...",
+        "filters": "Filters",
+        "sort": "Sort",
+        "newest_first": "Newest first",
+        "oldest_first": "Oldest first"
+      },
+      "detail": {
+        "next_ticket": "Next ticket",
+        "previous_ticket": "Previous ticket"
+      },
+      "timeline": {
+        "no_data": "No transitions found for this ticket.",
+        "sla_due": "SLA Due",
+        "sla_deadline": "SLA Deadline"
+      },
+      "new_dialog": {
+        "title": "Create a new ticket",
+        "description": "Submit a ticket to the team to get assistance or initiate a task. Provide all necessary details to help the team understand and address your request effectively."
+      },
+      "form": {
+        "name": "Name",
+        "description": "Description",
+        "priority": "Priority",
+        "assignee": "Assignee",
+        "user_select_place_holder": "Search user...",
+        "user_select_no_data": "No user found.",
+        "user_select_no_choose": "None (Unassign User)",
+        "user_select_unassigned": "Unassigned",
+        "target_completion_date": "Target Completion Date",
+        "actual_completion_date": "Actual Completion Date",
+        "state": "State",
+        "channel": "Channel",
+        "channel_place_holder": "Select a channel",
+        "project": "Project",
+        "channels": {
+          "email": "Email",
+          "phone": "Phone",
+          "web_portal": "Web Portal",
+          "chat": "Chat",
+          "social_media": "Social Media",
+          "in_person": "In Person",
+          "mobile_app": "Mobile App",
+          "api": "API",
+          "system_generated": "System Generated",
+          "internal": "Internal"
+        },
+        "priorities": {
+          "Critical": "Critical",
+          "High": "High",
+          "Medium": "Medium",
+          "Low": "Low",
+          "Trivial": "Trivial"
+        }
+      }
+    },
+    "users": {
+      "title": "Members ({count})",
+      "description": "Browse and manage the members of your team. View roles, contact information, and more",
+      "add_user": "Add User",
+      "remove_user": "Remove User",
+      "remove_user_from_team": "This action will remove user <b>{firstName} {lastName}</b> from team <b>{teamName}</b>.",
+      "remove_only_manager_dialog_error_title": "Manager Role Require",
+      "remove_only_manager_dialog_error_description": "You cannot remove the only Manager from the team"
     }
   },
   "users": {
@@ -94,7 +252,7 @@
     "common": {
       "org_chart": "Org chart",
       "no_recent_login": "No recent login",
-      "not_activated": "Not Activated"
+      "not_activated": "Not activated"
     },
     "form": {
       "title": "Title",
@@ -117,8 +275,15 @@
       "create_user": "Create User",
       "edit_user": "Edit User {firstName} {lastName}"
     },
+    "profile": {
+      "title": "Profile",
+      "description": "Manage your account details here. Update your email, profile picture, password, and other personal information to keep your profile accurate and secure.",
+      "change_password": "Change Password",
+      "current_password": "Current Password",
+      "new_password": "New Password"
+    },
     "org_chart_view": {
-      "instruction_title": "How to Use the Org Chart",
+      "instruction_title": "How to use the org chart",
       "instruction_desc1": "Drag the entire org chart to adjust your view.",
       "instruction_desc2": "Click a user icon to view the org chart from that user.",
       "instruction_desc3": "Click a user link to navigate to the user's profile page."
@@ -138,6 +303,84 @@
       "remove_authority_tooltip": "This action will delete the role and unassign all users from this role.",
       "remove_dialog_title": "Confirm Deletion",
       "remove_dialog_content": "Are you sure you want to delete <strong>{name}</strong>? This action cannot be undone."
+    },
+    "detail": {
+      "add_user": "Add User",
+      "remove_user": "Remove User",
+      "remove_user_tooltip": "This action will revoke the selected user’s access and permissions associated with this authority",
+      "permissions_title": "Resource Permissions",
+      "resource": "Resource",
+      "permission": "Permission",
+      "no_permission": "No permissions available",
+      "no_users": "No users have been assigned to this authority yet. Please add users to this authority to manage permissions."
+    },
+    "add": {
+      "dialog_title": "Add user to authority {authorityName}",
+      "dialog_description": "Add a user to this authority group by searching for them. Begin typing to see suggestions that match your input",
+      "users": "Users",
+      "users_select_place_holder": "Add user to authority..."
+    },
+    "form": {
+      "title": "Authority Details",
+      "permissions_section": "Resource Permissions",
+      "permission_select_place_holder": "Select permission",
+      "name": "Name",
+      "description": "Description"
+    }
+  },
+  "mail": {},
+  "login": {
+    "form": {
+      "invalid_email": "Invalid email",
+      "required_email": "Email is required",
+      "required_password": "Password is required",
+      "login_failed_message": "Login failed. Please try again.",
+      "google_login_failed_message": "Google login failed. Please try again.",
+      "title": "Your Partner in Keeping Customers Happy and Requests On Track",
+      "password": "Password",
+      "forgot_password_cta": "Forgot password",
+      "signin": "Sign in",
+      "signin_google": "Sign in with Google"
+    }
+  },
+  "workflows": {
+    "common": {
+      "state_select_place_holder": "Select a state",
+      "no_data": "No workflows found",
+      "select_workflow": "Select workflow",
+      "search_workflow": "Search workflow..."
+    },
+    "list": {
+      "title": "Workflows ({totalElements})",
+      "description": "Centralize and manage all workflows effortlessly with clear visibility, ticket types, and descriptions at a glance.",
+      "new_workflow": "New workflow"
+    },
+    "detail": {
+      "cancel_edit": "Cancel edit",
+      "customize_workflow": "Customize workflow",
+      "ticket_type_label": "Ticket type: {requestName}"
+    },
+    "add": {
+      "title": "Create new workflow",
+      "description": "Select how you want to create the workflow",
+      "transitions": "Transitions",
+      "add_transition": "Add transition",
+      "escalate": "Escalate",
+      "sla_duration": "SLA duration (hrs)",
+      "event_name": "Event name",
+      "source_state": "Source state",
+      "source_state_place_holder": "Select source state",
+      "target_state": "Target state",
+      "target_state_place_holder": "Select target state",
+      "add_state": "Add state",
+      "final": "Final",
+      "initial": "Initial",
+      "state_name": "State name",
+      "states": "States",
+      "name": "Name",
+      "ticket_type": "Ticket type",
+      "field_description": "Description",
+      "edit_workflow": "Edit workflow"
     }
   }
 }

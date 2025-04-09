@@ -18,10 +18,11 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
+import { useAppClientTranslations } from "@/hooks/use-translations";
 import { findMembersByTeamId } from "@/lib/actions/teams.action";
 import { cn } from "@/lib/utils";
 import { useError } from "@/providers/error-provider";
-import { UserWithTeamRoleDTO } from "@/types/users";
+import { UserWithTeamRoleDTO } from "@/types/teams";
 
 type TeamUserSelectProps = {
   teamId: number;
@@ -42,6 +43,7 @@ const TeamUserSelect: React.FC<TeamUserSelectProps> = ({
   onUserChange,
   disabled = false,
 }) => {
+  const t = useAppClientTranslations();
   const [users, setUsers] = useState<UserWithTeamRoleDTO[]>([]);
   const [open, setOpen] = useState(false);
   const { setError } = useError();
@@ -81,16 +83,21 @@ const TeamUserSelect: React.FC<TeamUserSelectProps> = ({
               <span>{`${selectedUser.firstName} ${selectedUser.lastName}`}</span>
             </div>
           ) : (
-            "Unassigned"
+            t.teams.tickets.form.base("user_select_unassigned")
           )}
           <ChevronsUpDown className="opacity-50 h-4 w-4" />
         </Button>
       </PopoverTrigger>
       <PopoverContent className="w-[18rem] p-0">
         <Command>
-          <CommandInput placeholder="Search team member..." className="h-9" />
+          <CommandInput
+            placeholder={t.teams.tickets.form.base("user_select_place_holder")}
+            className="h-9"
+          />
           <CommandList>
-            <CommandEmpty>No user found.</CommandEmpty>
+            <CommandEmpty>
+              {t.teams.tickets.form.base("user_select_no_data")}
+            </CommandEmpty>
             <CommandGroup>
               {/* Option to unassign a user */}
               <CommandItem
@@ -101,7 +108,7 @@ const TeamUserSelect: React.FC<TeamUserSelectProps> = ({
                 }}
                 className="gap-2 text-gray-500"
               >
-                None (Unassign User)
+                {t.teams.tickets.form.base("user_select_no_choose")}
                 <Check
                   className={cn(
                     "ml-auto",

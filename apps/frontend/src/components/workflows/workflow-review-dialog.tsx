@@ -11,6 +11,7 @@ import {
 } from "@/components/ui/dialog";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { WorkflowDiagram } from "@/components/workflows/workflow-diagram-view";
+import { useAppClientTranslations } from "@/hooks/use-translations";
 import { getWorkflowDetail } from "@/lib/actions/workflows.action";
 import { useError } from "@/providers/error-provider";
 import { WorkflowDetailDTO, WorkflowTransitionDTO } from "@/types/workflows";
@@ -30,6 +31,7 @@ export default function WorkflowReviewDialog({
   const [loading, setLoading] = useState(false);
   const [workflowDetail, setWorkflowDetail] =
     useState<WorkflowDetailDTO | null>(null);
+  const t = useAppClientTranslations();
 
   useEffect(() => {
     if (open) {
@@ -123,7 +125,7 @@ export default function WorkflowReviewDialog({
                   )
                 ) : (
                   <p className="text-sm text-muted-foreground py-4">
-                    No transitions available.
+                    No transitions available
                   </p>
                 )}
               </div>

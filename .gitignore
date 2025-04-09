@@ -164,3 +164,4 @@ apps/backend/buildSrc/build
 apps/frontend/.next
 apps/docs/.next
 .turbo
+apps/backend/tools/liquibase/build

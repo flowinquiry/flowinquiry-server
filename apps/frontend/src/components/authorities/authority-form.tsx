@@ -42,6 +42,7 @@ import {
   AuthorityResourcePermissionDTO,
   AuthorityResourcePermissionDTOSchema,
 } from "@/types/authorities";
+import { PermissionLevel } from "@/types/resources";
 
 const formSchema = z.object({
   authority: AuthorityDTOSchema,
@@ -50,7 +51,12 @@ const formSchema = z.object({
 
 type FormData = z.infer<typeof formSchema>;
 
-const permissionOptions = ["NONE", "READ", "WRITE", "ACCESS"];
+const permissionOptions: PermissionLevel[] = [
+  "NONE",
+  "READ",
+  "WRITE",
+  "ACCESS",
+];
 
 const AuthorityForm = ({
   authorityId,
@@ -168,19 +174,17 @@ const AuthorityForm = ({
           >
             {/* Authority Section */}
             <div className="space-y-4">
-              <h2 className="text-xl font-bold">Authority Details</h2>
+              <h2 className="text-xl font-bold">
+                {t.authorities.form("title")}
+              </h2>
               <FormField
                 control={form.control}
                 name="authority.descriptiveName"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Authority Name</FormLabel>
+                    <FormLabel>{t.authorities.form("name")}</FormLabel>
                     <FormControl>
-                      <Input
-                        placeholder="Enter authority name"
-                        {...field}
-                        disabled={isSystemRole}
-                      />
+                      <Input {...field} disabled={isSystemRole} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -191,13 +195,9 @@ const AuthorityForm = ({
                 name="authority.description"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Description</FormLabel>
+                    <FormLabel>{t.authorities.form("description")}</FormLabel>
                     <FormControl>
-                      <Textarea
-                        placeholder="Enter description"
-                        {...field}
-                        value={field.value ?? ""}
-                      />
+                      <Textarea {...field} value={field.value ?? ""} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -207,7 +207,9 @@ const AuthorityForm = ({
 
             {authorityResourcePermissions.length > 0 && (
               <div className="space-y-4 mt-6">
-                <h2 className="text-xl font-bold">Resource Permissions</h2>
+                <h2 className="text-xl font-bold">
+                  {t.authorities.form("permissions_section")}
+                </h2>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   {authorityResourcePermissions.map((perm, index) => (
                     <FormField
@@ -224,7 +226,11 @@ const AuthorityForm = ({
                               disabled={isSystemRole}
                             >
                               <SelectTrigger>
-                                <SelectValue placeholder="Select permission" />
+                                <SelectValue
+                                  placeholder={t.authorities.form(
+                                    "permission_select_place_holder",
+                                  )}
+                                />
                               </SelectTrigger>
                               <SelectContent>
                                 {permissionOptions.map((option) => (

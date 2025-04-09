@@ -13,16 +13,16 @@ import java.io.IOException;
 @JsonSerialize(using = TicketChannel.TicketChannelSerializer.class)
 @JsonDeserialize(using = TicketChannel.TicketChannelDeserializer.class)
 public enum TicketChannel {
-    EMAIL("Email"),
-    PHONE("Phone"),
-    WEB_PORTAL("Web Portal"),
-    CHAT("Chat"),
-    SOCIAL_MEDIA("Social Media"),
-    IN_PERSON("In-person"),
-    MOBILE_APP("Mobile App"),
-    API("API"),
-    SYSTEM_GENERATED("System-generated"),
-    INTERNAL("Internal");
+    EMAIL("email"),
+    PHONE("phone"),
+    WEB_PORTAL("web_portal"),
+    CHAT("chat"),
+    SOCIAL_MEDIA("social_media"),
+    IN_PERSON("in_person"),
+    MOBILE_APP("mobile_app"),
+    API("api"),
+    SYSTEM_GENERATED("system_generated"),
+    INTERNAL("internal");
 
     private final String displayName;
 

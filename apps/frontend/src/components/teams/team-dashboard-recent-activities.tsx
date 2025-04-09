@@ -12,6 +12,7 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import { useAppClientTranslations } from "@/hooks/use-translations";
 import { getActivityLogs } from "@/lib/actions/activity-logs.action";
 import { formatDateTimeDistanceToNow } from "@/lib/datetime";
 import { useError } from "@/providers/error-provider";
@@ -20,6 +21,7 @@ const RecentTeamActivities = ({ teamId }: { teamId: number }) => {
   const [currentPage, setCurrentPage] = useState(1);
   const [collapsed, setCollapsed] = useState(false); // Toggle collapse
   const { setError } = useError();
+  const t = useAppClientTranslations();
 
   // **SWF Fetcher Function**
   const fetchActivityLogs = async () => {
@@ -47,7 +49,7 @@ const RecentTeamActivities = ({ teamId }: { teamId: number }) => {
           ) : (
             <ChevronDown className="w-5 h-5" />
           )}
-          <CardTitle>Recent Activities</CardTitle>
+          <CardTitle>{t.teams.dashboard("recent_activities.title")}</CardTitle>
         </div>
       </CardHeader>
 
@@ -56,12 +58,12 @@ const RecentTeamActivities = ({ teamId }: { teamId: number }) => {
           {isLoading ? (
             <div className="flex justify-center items-center h-[150px]">
               <Spinner className="h-8 w-8">
-                <span>Loading data ...</span>
+                <span>{t.common.misc("loading_data")}</span>
               </Spinner>
             </div>
           ) : error ? (
             <p className="text-sm text-red-500">
-              Failed to load activity logs.
+              {t.teams.dashboard("recent_activities.no_data")}
             </p>
           ) : activityLogs.length > 0 ? (
             <div className="space-y-2">
@@ -100,7 +102,7 @@ const RecentTeamActivities = ({ teamId }: { teamId: number }) => {
             </div>
           ) : (
             <p className="text-sm text-gray-500 dark:text-gray-400">
-              No activity logs available
+              {t.teams.dashboard("recent_activities.no_data")}
             </p>
           )}
           <PaginationExt

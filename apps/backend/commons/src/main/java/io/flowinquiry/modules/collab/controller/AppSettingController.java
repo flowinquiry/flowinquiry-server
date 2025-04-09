@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -30,23 +31,24 @@ public class AppSettingController {
     }
 
     @GetMapping
-    public ResponseEntity<List<AppSettingDTO>> getAllSettings() {
-        return ResponseEntity.ok(appSettingService.getAllSettingDTOs());
+    public List<AppSettingDTO> getAllSettings(
+            @RequestParam(value = "group", required = false) String group) {
+        if (group != null) {
+            return appSettingService.getSettingsByGroup(group);
+        }
+        return appSettingService.getAllSettingDTOs();
     }
 
     @PutMapping
-    public ResponseEntity<Void> updateSettings(@RequestBody List<AppSettingDTO> settings) {
+    public void updateSettings(@RequestBody List<AppSettingDTO> settings) {
         appSettingService.updateSettings(settings);
-        return ResponseEntity.ok().build();
     }
 
     @PutMapping("/{key}")
-    public ResponseEntity<Void> updateSetting(
-            @PathVariable String key, @RequestBody AppSettingDTO dto) {
+    public void updateSetting(@PathVariable String key, @RequestBody AppSettingDTO dto) {
         if (!key.equals(dto.getKey())) {
-            return ResponseEntity.badRequest().build();
+            return;
         }
         appSettingService.updateValue(dto.getKey(), dto.getValue());
-        return ResponseEntity.ok().build();
     }
 }

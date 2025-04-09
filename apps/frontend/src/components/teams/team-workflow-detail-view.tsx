@@ -100,7 +100,7 @@ const TeamWorkflowDetailView = ({ workflowId }: { workflowId: number }) => {
                   <div className="text-left">
                     <p className="font-bold">{team.name}</p>
                     <p className="text-sm text-gray-500">
-                      {team.slogan ?? "Stronger Together"}
+                      {team.slogan ?? t.teams.common("default_slogan")}
                     </p>
                   </div>
                 </TooltipContent>
@@ -111,7 +111,7 @@ const TeamWorkflowDetailView = ({ workflowId }: { workflowId: number }) => {
               />
             </div>
             {(PermissionUtils.canWrite(permissionLevel) ||
-              teamRole === "Manager") && (
+              teamRole === "manager") && (
               <div>
                 <Button onClick={() => setIsEditing(!isEditing)}>
                   {isEditing ? "Cancel Edit" : <Edit />} Customize Workflow

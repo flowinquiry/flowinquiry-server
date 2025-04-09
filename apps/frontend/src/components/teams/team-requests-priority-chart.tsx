@@ -14,6 +14,7 @@ import useSWR from "swr";
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Spinner } from "@/components/ui/spinner";
+import { useAppClientTranslations } from "@/hooks/use-translations";
 import { getTicketsPriorityDistributionByTeam } from "@/lib/actions/teams-request.action";
 import { useError } from "@/providers/error-provider";
 import { useTimeRange } from "@/providers/time-range-provider";
@@ -23,6 +24,7 @@ const TicketPriorityPieChart = ({ teamId }: { teamId: number }) => {
   const [collapsed, setCollapsed] = useState(false);
   const { setError } = useError();
   const { timeRange, customDates } = useTimeRange();
+  const t = useAppClientTranslations();
 
   // Generate date parameters
   const dateParams =
@@ -72,7 +74,7 @@ const TicketPriorityPieChart = ({ teamId }: { teamId: number }) => {
               <span>Loading chart data...</span>
             </div>
           ) : priorityData.length === 0 ? (
-            <p className="text-center">No data available.</p>
+            <p className="text-center">{t.common.misc("no_data_available")}</p>
           ) : (
             <div className="w-full h-64 md:h-96">
               <ResponsiveContainer width="100%" height="100%">

@@ -42,6 +42,7 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { usePagePermission } from "@/hooks/use-page-permission";
+import { useAppClientTranslations } from "@/hooks/use-translations";
 import {
   deleteProject,
   searchProjects,
@@ -58,6 +59,7 @@ import { PermissionUtils } from "@/types/resources";
 
 const ProjectListView = () => {
   const team = useTeam();
+  const t = useAppClientTranslations();
   const breadcrumbItems = [
     { title: "Dashboard", link: "/portal" },
     { title: "Teams", link: "/portal/teams" },
@@ -172,7 +174,7 @@ const ProjectListView = () => {
                   <div className="text-left">
                     <p className="font-bold">{team.name}</p>
                     <p className="text-sm text-gray-500">
-                      {team.slogan ?? "Stronger Together"}
+                      {team.slogan ?? t.teams.common("default_slogan")}
                     </p>
                   </div>
                 </TooltipContent>
@@ -183,7 +185,7 @@ const ProjectListView = () => {
               />
             </div>
             {(PermissionUtils.canWrite(permissionLevel) ||
-              teamRole === "Manager") && (
+              teamRole === "manager") && (
               <div className="flex items-center">
                 <Button
                   onClick={() => {

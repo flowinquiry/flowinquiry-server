@@ -120,7 +120,7 @@ export const AuthorityView = ({ authorityId }: { authorityId: string }) => {
       <Breadcrumbs items={breadcrumbItems} />
       <div className="flex flex-row justify-between">
         {loadingAuthority ? (
-          <Spinner>Loading data...</Spinner>
+          <Spinner>{t.common.misc("loading_data")}</Spinner>
         ) : (
           <Heading
             title={`${authority?.descriptiveName ?? ""} (${totalElements})`}
@@ -130,7 +130,7 @@ export const AuthorityView = ({ authorityId }: { authorityId: string }) => {
         {PermissionUtils.canWrite(permissionLevel) && authority && (
           <div className="flex space-x-4">
             <Button onClick={() => setOpen(true)}>
-              <Plus /> Add User
+              <Plus /> {t.authorities.detail("add_user")}
             </Button>
             <AddUserToAuthorityDialog
               open={open}
@@ -166,7 +166,7 @@ export const AuthorityView = ({ authorityId }: { authorityId: string }) => {
                     {user.status !== "ACTIVE" && (
                       <div className="absolute inset-0 bg-black bg-opacity-50 rounded-full flex items-center justify-center">
                         <span className="text-white text-xs font-bold">
-                          Not Activated
+                          {t.users.common("not_activated")}
                         </span>
                       </div>
                     )}
@@ -180,10 +180,12 @@ export const AuthorityView = ({ authorityId }: { authorityId: string }) => {
                       </Button>
                     </div>
                     <div>
-                      Email:{" "}
+                      {t.users.form("email")}:{" "}
                       <Link href={`mailto:${user.email}`}>{user.email}</Link>
                     </div>
-                    <div>Title: {user.title}</div>
+                    <div>
+                      {t.users.form("title")}: {user.title}
+                    </div>
                   </div>
                   {PermissionUtils.canWrite(permissionLevel) && (
                     <DropdownMenu>
@@ -198,14 +200,12 @@ export const AuthorityView = ({ authorityId }: { authorityId: string }) => {
                                 className="cursor-pointer"
                                 onClick={() => removeUserOutAuthority(user)}
                               >
-                                <Trash /> Remove user
+                                <Trash /> {t.authorities.detail("remove_user")}
                               </DropdownMenuItem>
                             </TooltipTrigger>
                             <TooltipContent>
                               <p>
-                                This action will revoke the selected user’s
-                                access and permissions associated with this
-                                authority
+                                {t.authorities.detail("remove_user_tooltip")}
                               </p>
                             </TooltipContent>
                           </Tooltip>
@@ -218,10 +218,7 @@ export const AuthorityView = ({ authorityId }: { authorityId: string }) => {
             ) : (
               <div className="w-full text-left py-8 flex items-start gap-2">
                 <Info className="h-6 w-6" />
-                <p className="text-lg">
-                  No users have been assigned to this authority yet. Please add
-                  users to this authority to manage permissions.
-                </p>
+                <p className="text-lg">{t.authorities.detail("no_users")}</p>
               </div>
             )}
             {users && users.length > 0 && (
@@ -234,7 +231,7 @@ export const AuthorityView = ({ authorityId }: { authorityId: string }) => {
           </div>
         </div>
         <Card className="w-full md:w-[28rem] mt-4 md:mt-0">
-          <CardHeader>Resource Permissions</CardHeader>
+          <CardHeader>{t.authorities.detail("permissions_title")}</CardHeader>
           <CardContent>
             <div>
               {loadingAuthority ? (
@@ -243,15 +240,17 @@ export const AuthorityView = ({ authorityId }: { authorityId: string }) => {
                 resourcePermissions.map((perm, index) => (
                   <div key={index} className="p-4 rounded shadow">
                     <p>
-                      <strong>Resource:</strong> {perm.resourceName}
+                      <strong>{t.authorities.detail("resource")}:</strong>{" "}
+                      {t.common.navigation(perm.resourceName!)}
                     </p>
                     <p>
-                      <strong>Permission:</strong> {perm.permission}
+                      <strong>{t.authorities.detail("permission")}:</strong>{" "}
+                      {t.common.permission(perm.permission!)}
                     </p>
                   </div>
                 ))
               ) : (
-                <p>No permissions available</p>
+                <p>{t.authorities.detail("no_permission")}</p>
               )}
             </div>
           </CardContent>

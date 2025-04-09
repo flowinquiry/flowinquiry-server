@@ -186,23 +186,25 @@ const TicketListView = () => {
                   <div className="text-left">
                     <p className="font-bold">{team.name}</p>
                     <p className="text-sm text-gray-500">
-                      {team.slogan ?? "Stronger Together"}
+                      {team.slogan ?? t.teams.common("default_slogan")}
                     </p>
                   </div>
                 </TooltipContent>
               </Tooltip>
               <Heading
-                title={`Tickets (${totalElements})`}
-                description="Monitor and handle your team's tickets. Stay on top of assignments and progress."
+                title={t.teams.tickets.list("title", { count: totalElements })}
+                description={t.teams.tickets.list("description")}
               />
             </div>
             {(PermissionUtils.canWrite(permissionLevel) ||
-              teamRole === "Manager" ||
-              teamRole === "Member" ||
-              teamRole === "Guest") && (
+              teamRole === "manager" ||
+              teamRole === "member" ||
+              teamRole === "guest") && (
               <div>
                 <div className="flex items-center">
-                  <Button className={"rounded-r-none"}>New</Button>
+                  <Button className={"rounded-r-none"}>
+                    {t.common.buttons("new")}
+                  </Button>
                   <DropdownMenu>
                     <DropdownMenuTrigger asChild>
                       <Button
@@ -230,24 +232,30 @@ const TicketListView = () => {
                       </DropdownMenuContent>
                     ) : (
                       <DropdownMenuContent>
-                        No workflow is available for team.{" "}
+                        {t.teams.tickets.list("no_workflow_available")}{" "}
                         {PermissionUtils.canWrite(permissionLevel) ||
-                        teamRole === "Manager" ? (
+                        teamRole === "manager" ? (
                           <span>
-                            You can create a new workflow at{" "}
-                            <Button variant="link" className="px-0">
-                              {" "}
-                              <Link
-                                href={`/portal/teams/${obfuscate(team.id)}/workflows`}
-                              >
-                                here
-                              </Link>
-                            </Button>
-                            .
+                            {t.teams.tickets.list.rich("create_workflow_cta", {
+                              button: (chunks) => (
+                                <Button variant="link" className="px-0">
+                                  {chunks}
+                                </Button>
+                              ),
+                              link: (chunks) => (
+                                <Link
+                                  href={`/portal/teams/${obfuscate(team.id)}/workflows`}
+                                >
+                                  {chunks}
+                                </Link>
+                              ),
+                            })}
                           </span>
                         ) : (
                           <span>
-                            Contact the team manager to create a new workflow.
+                            {t.teams.tickets.list(
+                              "contact_manager_to_create_workflow",
+                            )}
                           </span>
                         )}
                       </DropdownMenuContent>
@@ -277,7 +285,7 @@ const TicketListView = () => {
 
           {loading ? (
             <div className="flex justify-center py-4">
-              <LoadingPlaceHolder message="Loading tickets ..." />
+              <LoadingPlaceHolder message={t.common.misc("loading_data")} />
             </div>
           ) : (
             <>

@@ -25,20 +25,6 @@ export const UserDTOSchema = z.object({
 
 export type UserDTO = z.infer<typeof UserDTOSchema>;
 
-export const UserWithTeamRoleDTOSchema = z.object({
-  id: z.number().nullable().optional(),
-  email: z.string().email().nullable().optional(),
-  firstName: z.string().nullable().optional(),
-  lastName: z.string().nullable().optional(),
-  timezone: z.string().nullable().optional(),
-  imageUrl: z.string().nullable().optional(),
-  title: z.string().nullable().optional(),
-  teamId: z.number().nullable().optional(),
-  teamRole: z.string().nullable().optional(),
-});
-
-export type UserWithTeamRoleDTO = z.infer<typeof UserWithTeamRoleDTOSchema>;
-
 export interface UserHierarchyDTO {
   id: number;
   name: string;

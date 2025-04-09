@@ -25,6 +25,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
+import { useAppClientTranslations } from "@/hooks/use-translations";
 import { getWorkflowsByTeam } from "@/lib/actions/workflows.action";
 import { cn } from "@/lib/utils";
 import { useError } from "@/providers/error-provider";
@@ -39,6 +40,7 @@ const WorkflowForTicketSelectField = ({
 }: ExtInputProps & UiAttributes & { teamId: number }) => {
   const [workflows, setWorkflows] = useState<Array<WorkflowDTO>>([]);
   const { setError } = useError();
+  const t = useAppClientTranslations();
   useEffect(() => {
     async function fetchWorkflows() {
       const workflowData = await getWorkflowsByTeam(teamId, false, setError);
@@ -73,7 +75,7 @@ const WorkflowForTicketSelectField = ({
                     );
                     return selectedWorkflow
                       ? `${selectedWorkflow.name}`
-                      : "Select workflow";
+                      : t.workflows.common("select_workflow");
                   })()}
                   <ChevronsUpDown className="opacity-50" />
                 </Button>
@@ -82,11 +84,11 @@ const WorkflowForTicketSelectField = ({
             <PopoverContent className="w-[18rem] p-0">
               <Command>
                 <CommandInput
-                  placeholder="Search workflow..."
+                  placeholder={t.workflows.common("search_workflow")}
                   className="h-9"
                 />
                 <CommandList>
-                  <CommandEmpty>No workflow found.</CommandEmpty>
+                  <CommandEmpty>{t.workflows.common("no_data")}</CommandEmpty>
                   <CommandGroup>
                     {workflows.map((workflow) => (
                       <CommandItem

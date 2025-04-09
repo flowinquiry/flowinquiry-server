@@ -536,7 +536,7 @@ export const ProjectView = ({ projectId }: { projectId: number }) => {
           <div className="flex items-center justify-between mb-2">
             <h1 className="text-3xl font-bold">{project.name}</h1>
             {(PermissionUtils.canWrite(permissionLevel) ||
-              teamRole === "Manager") && (
+              teamRole === "manager") && (
               <Button
                 onClick={() => setIsProjectEditDialogOpen(true)}
                 variant="default"

@@ -86,8 +86,8 @@ const StateColumn: React.FC<ColumnProps> = ({
         </motion.div>
       </SortableContext>
       {(PermissionUtils.canWrite(permissionLevel) ||
-        teamRole === "Manager" ||
-        teamRole === "Member") && (
+        teamRole === "manager" ||
+        teamRole === "member") && (
         <motion.button
           onClick={() => {
             setSelectedWorkflowState(workflowState);

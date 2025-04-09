@@ -19,6 +19,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import { useAppClientTranslations } from "@/hooks/use-translations";
 import { obfuscate } from "@/lib/endecode";
 import { cn, getSpecifiedColor } from "@/lib/utils";
 import { TeamRequestDTO } from "@/types/team-requests";
@@ -32,6 +33,7 @@ const TeamRequestsStatusView = ({
   requests,
   instantView = true,
 }: TeamRequestsStatusViewProps) => {
+  const t = useAppClientTranslations();
   const router = useRouter();
   const [selectedRequest, setSelectedRequest] = useState<TeamRequestDTO | null>(
     null,
@@ -90,10 +92,9 @@ const TeamRequestsStatusView = ({
     <div className="space-y-4">
       {requests.length === 0 ? (
         <Alert variant="default">
-          <AlertTitle>No Requests Found</AlertTitle>
+          <AlertTitle>{t.teams.tickets.list("no_ticket_title")}</AlertTitle>
           <AlertDescription>
-            There are currently no requests available. Please check again later
-            or adjust your search criteria.
+            {t.teams.tickets.list("no_ticket_description")}
           </AlertDescription>
         </Alert>
       ) : (
@@ -265,9 +266,11 @@ const TeamRequestsStatusView = ({
                         {request.channel && (
                           <div>
                             <div className="text-xs font-medium text-gray-500 mb-1">
-                              Channel
+                              {t.teams.tickets.form.base("channel")}
                             </div>
-                            <Badge variant="outline">{request.channel}</Badge>
+                            <Badge variant="outline">
+                              {t.teams.tickets.form.channels(request.channel)}
+                            </Badge>
                           </div>
                         )}
 
@@ -298,7 +301,7 @@ const TeamRequestsStatusView = ({
                         {request.projectId !== null && (
                           <div>
                             <div className="text-xs font-medium text-gray-500 mb-1">
-                              Project
+                              {t.teams.tickets.form.base("project")}
                             </div>
                             <Button variant="link" className="p-0">
                               <Link

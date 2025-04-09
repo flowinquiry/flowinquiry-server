@@ -36,6 +36,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
+import { useAppClientTranslations } from "@/hooks/use-translations";
 import {
   getPriorityClassNames,
   PRIORITIES_ORDERED,
@@ -77,6 +78,7 @@ const TicketAdvancedSearch: React.FC<TicketAdvancedSearchProps> = ({
   setIsAscending,
   onFilterChange = () => {},
 }) => {
+  const t = useAppClientTranslations();
   const [priority, setPriority] = useState<string>("");
   const [assignee, setAssignee] = useState<string>("");
   const [dateRange, setDateRange] = useState<DateRange>({
@@ -350,7 +352,7 @@ const TicketAdvancedSearch: React.FC<TicketAdvancedSearchProps> = ({
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-500 dark:text-gray-400" />
             <Input
               type="text"
-              placeholder="Search ticket title, description..."
+              placeholder={t.teams.tickets.list("search_place_holder")}
               value={internalSearchText}
               onChange={handleSearch}
               className="pl-10 w-full"
@@ -363,7 +365,7 @@ const TicketAdvancedSearch: React.FC<TicketAdvancedSearchProps> = ({
               <DropdownMenuTrigger asChild>
                 <Button variant="outline" className="flex items-center gap-2">
                   <FilterIcon className="h-4 w-4" />
-                  <span>Filters</span>
+                  <span>{t.teams.tickets.list("filters")}</span>
                   {activeFilterCount > 0 && (
                     <Badge
                       variant="secondary"
@@ -496,7 +498,7 @@ const TicketAdvancedSearch: React.FC<TicketAdvancedSearchProps> = ({
               <DropdownMenuTrigger asChild>
                 <Button variant="outline" className="flex items-center gap-2">
                   <ArrowUpDown className="h-4 w-4" />
-                  <span>Sort</span>
+                  <span>{t.teams.tickets.list("sort")}</span>
                   <ChevronDown className="h-4 w-4" />
                 </Button>
               </DropdownMenuTrigger>
@@ -506,10 +508,10 @@ const TicketAdvancedSearch: React.FC<TicketAdvancedSearchProps> = ({
                   onValueChange={(val) => setIsAscending(val === "asc")}
                 >
                   <DropdownMenuRadioItem value="desc">
-                    Newest first
+                    {t.teams.tickets.list("newest_first")}
                   </DropdownMenuRadioItem>
                   <DropdownMenuRadioItem value="asc">
-                    Oldest first
+                    {t.teams.tickets.list("oldest_first")}
                   </DropdownMenuRadioItem>
                 </DropdownMenuRadioGroup>
               </DropdownMenuContent>

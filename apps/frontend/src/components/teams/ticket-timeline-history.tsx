@@ -17,12 +17,14 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import { useAppClientTranslations } from "@/hooks/use-translations";
 import { getTeamRequestStateChangesHistory } from "@/lib/actions/teams.action";
 import { formatDateTime, formatDateTimeDistanceToNow } from "@/lib/datetime";
 import { useError } from "@/providers/error-provider";
 import { TransitionItemCollectionDTO } from "@/types/teams";
 
 const TicketTimelineHistory = ({ teamId }: { teamId: number }) => {
+  const t = useAppClientTranslations();
   const [transitionItemCollection, setTransitionItemCollection] =
     useState<TransitionItemCollectionDTO | null>(null);
   const [loading, setLoading] = useState(true);
@@ -39,7 +41,9 @@ const TicketTimelineHistory = ({ teamId }: { teamId: number }) => {
   }, [teamId]);
 
   if (loading) {
-    return <div className="text-center py-4">Loading timeline history...</div>;
+    return (
+      <div className="text-center py-4">{t.common.misc("loading_data")}</div>
+    );
   }
 
   if (
@@ -49,7 +53,7 @@ const TicketTimelineHistory = ({ teamId }: { teamId: number }) => {
   ) {
     return (
       <div className="py-4 text-left">
-        No transitions found for this request.
+        {t.teams.tickets.timeline("no_data")}
       </div>
     );
   }
@@ -92,7 +96,7 @@ const TicketTimelineHistory = ({ teamId }: { teamId: number }) => {
               {/* Show SLA if present */}
               {transition.slaDueDate && (
                 <div className="mt-1 text-sm text-gray-600 dark:text-gray-400">
-                  SLA Due:{" "}
+                  {t.teams.tickets.timeline("sla_due")}:{" "}
                   <Tooltip>
                     <TooltipTrigger asChild>
                       <span className="cursor-pointer text-red-500 dark:text-red-400">
@@ -100,7 +104,7 @@ const TicketTimelineHistory = ({ teamId }: { teamId: number }) => {
                       </span>
                     </TooltipTrigger>
                     <TooltipContent>
-                      SLA Deadline:{" "}
+                      {t.teams.tickets.timeline("sla_deadline")}:{" "}
                       {formatDateTime(new Date(transition.slaDueDate))}
                     </TooltipContent>
                   </Tooltip>

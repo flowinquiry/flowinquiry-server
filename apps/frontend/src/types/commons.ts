@@ -92,3 +92,13 @@ export type EntityWatcherDTO = {
   createdAt: string; // ISO 8601 format
   createdBy: number;
 };
+
+export const AppSettingSchema = z.object({
+  key: z.string(),
+  value: z.string(),
+  type: z.string(),
+  group: z.string().nullable(),
+  description: z.string().nullable(),
+});
+
+export type AppSettingDTO = z.infer<typeof AppSettingSchema>;

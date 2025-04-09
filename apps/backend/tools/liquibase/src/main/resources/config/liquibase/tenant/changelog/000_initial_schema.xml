@@ -328,7 +328,7 @@
 			<column name="setting_group" type="varchar(50)" />
 			<column name="description" type="varchar(255)" />
 			<column name="updated_at" type="timestamp">
-				<constraints nullable="false" />
+				<constraints nullable="true" />
 			</column>
 		</createTable>
 
@@ -509,5 +509,18 @@
 			file="config/liquibase/tenant/data/fw_authority_resource_permission.csv"
 			separator=";" tableName="fw_authority_resource_permission"
 			usePreparedStatements="true" />
+	</changeSet>
+	<changeSet author="flowinquiry"
+		id="000:11-insert-default-fw-app-setting">
+		<loadData
+			file="config/liquibase/tenant/data/fw_app_settings.csv" separator=";"
+			tableName="fw_app_settings" usePreparedStatements="true">
+			<column name="setting_key" type="STRING" />
+			<column name="setting_value" type="STRING" />
+			<column name="setting_type" type="STRING" />
+			<column name="setting_group" type="STRING" />
+			<column name="description" type="STRING" />
+			<column name="updated_at" type="TIMESTAMP" />
+		</loadData>
 	</changeSet>
 </databaseChangeLog>

@@ -4,7 +4,7 @@ import { ResourceProvider } from "@/providers/resource-provider";
 
 const Layout = ({ children }: { children: React.ReactNode }) => {
   return (
-    <ResourceProvider resourceId="authorities">
+    <ResourceProvider resourceId="mail">
       <div>{children}</div>
     </ResourceProvider>
   );

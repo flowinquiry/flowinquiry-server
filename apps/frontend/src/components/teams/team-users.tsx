@@ -44,7 +44,7 @@ import { useError } from "@/providers/error-provider";
 import { useTeam } from "@/providers/team-provider";
 import { useUserTeamRole } from "@/providers/user-team-role-provider";
 import { PermissionUtils } from "@/types/resources";
-import { UserWithTeamRoleDTO } from "@/types/users";
+import { UserWithTeamRoleDTO } from "@/types/teams";
 
 const TeamUsersView = () => {
   const team = useTeam();
@@ -73,8 +73,8 @@ const TeamUsersView = () => {
 
   const removeUserOutTeam = async (user: UserWithTeamRoleDTO) => {
     const isOnlyManager =
-      user.teamRole === "Manager" &&
-      items.filter((u) => u.teamRole === "Manager").length === 1;
+      user.teamRole === "manager" &&
+      items.filter((u) => u.teamRole === "manager").length === 1;
 
     if (isOnlyManager) {
       setNotDeleteOnlyManagerDialogOpen(true);
@@ -88,7 +88,7 @@ const TeamUsersView = () => {
   // Group users by role
   const groupedUsers = items.reduce<Record<string, UserWithTeamRoleDTO[]>>(
     (groups, user) => {
-      const role = user.teamRole || "Unassigned";
+      const role = user.teamRole || "unassigned";
       if (!groups[role]) groups[role] = [];
       groups[role].push(user);
       return groups;
@@ -97,7 +97,7 @@ const TeamUsersView = () => {
   );
 
   // Define role order
-  const roleOrder = ["Manager", "Member", "Guest", "Unassigned"];
+  const roleOrder = ["manager", "member", "guest", "unassigned"];
 
   const breadcrumbItems = [
     { title: t.common.navigation("dashboard"), link: "/portal" },
@@ -120,21 +120,21 @@ const TeamUsersView = () => {
                   <div className="text-left">
                     <p className="font-bold">{team.name}</p>
                     <p className="text-sm text-gray-500">
-                      {team.slogan ?? "Stronger Together"}
+                      {team.slogan ?? t.teams.common("default_slogan")}
                     </p>
                   </div>
                 </TooltipContent>
               </Tooltip>
               <Heading
-                title={`Members (${items.length})`}
-                description="Browse and manage the members of your team. View roles, contact information, and more"
+                title={t.teams.users("title", { count: items.length })}
+                description={t.teams.users("description")}
               />
             </div>
             {(PermissionUtils.canWrite(permissionLevel) ||
-              teamRole === "Manager") && (
+              teamRole === "manager") && (
               <div>
                 <Button onClick={() => setOpen(true)}>
-                  <Plus /> Add User
+                  <Plus /> {t.teams.users("add_user")}
                 </Button>
                 <AddUserToTeamDialog
                   open={open}
@@ -153,7 +153,9 @@ const TeamUsersView = () => {
               (role) =>
                 groupedUsers[role] && (
                   <div key={role} className="mb-6">
-                    <h2 className="text-lg font-bold mb-4">{role}</h2>
+                    <h2 className="text-lg font-bold mb-4">
+                      {t.teams.roles(role)}
+                    </h2>
                     <div className="flex flex-row flex-wrap gap-4 content-around">
                       {groupedUsers[role].map((user) => (
                         <div
@@ -178,18 +180,22 @@ const TeamUsersView = () => {
                               </Button>
                             </div>
                             <div>
-                              Email:{" "}
+                              {t.users.form("email")}:{" "}
                               <Button variant="link" className="px-0 py-0 h-0">
                                 <Link href={`mailto:${user.email}`}>
                                   {user.email}
                                 </Link>
                               </Button>
                             </div>
-                            <div>Timezone: {user.timezone}</div>
-                            <div>Title: {user.title}</div>
+                            <div>
+                              {t.users.form("timezone")}: {user.timezone}
+                            </div>
+                            <div>
+                              {t.users.form("title")}: {user.title}
+                            </div>
                           </div>
                           {(PermissionUtils.canWrite(permissionLevel) ||
-                            teamRole === "Manager") && (
+                            teamRole === "manager") && (
                             <DropdownMenu>
                               <DropdownMenuTrigger asChild>
                                 <Ellipsis className="cursor-pointer absolute top-2 right-2 text-gray-400" />
@@ -204,15 +210,25 @@ const TeamUsersView = () => {
                                       <TooltipTrigger className="w-full flex items-center gap-2">
                                         <Trash className="w-4 h-4 flex-shrink-0" />
                                         <span className="flex-1 text-left">
-                                          Remove user
+                                          {t.teams.users("remove_user")}
                                         </span>
                                       </TooltipTrigger>
                                     </DropdownMenuItem>
                                     <TooltipContent>
                                       <p>
-                                        This action will remove user{" "}
-                                        {user.firstName} {user.lastName} from
-                                        team {team.name}
+                                        <p>
+                                          {t.teams.users.rich(
+                                            "remove_user_from_team",
+                                            {
+                                              b: (chunks) => (
+                                                <strong>{chunks}</strong>
+                                              ),
+                                              firstName: user.firstName!,
+                                              lastName: user.lastName!,
+                                              teamName: team.name,
+                                            },
+                                          )}
+                                        </p>
                                       </p>
                                     </TooltipContent>
                                   </Tooltip>
@@ -230,9 +246,13 @@ const TeamUsersView = () => {
           <AlertDialog open={notDeleteOnlyManagerDialogOpen}>
             <AlertDialogContent>
               <AlertDialogHeader>
-                <AlertDialogTitle>Manager Role Required</AlertDialogTitle>
+                <AlertDialogTitle>
+                  {t.teams.users("remove_only_manager_dialog_error_title")}
+                </AlertDialogTitle>
                 <AlertDialogDescription>
-                  You cannot remove the only Manager from the team
+                  {t.teams.users(
+                    "remove_only_manager_dialog_error_description",
+                  )}
                 </AlertDialogDescription>
               </AlertDialogHeader>
               <AlertDialogFooter>

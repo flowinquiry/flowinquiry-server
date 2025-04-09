@@ -2,10 +2,6 @@
 
 set -e
 
-# 🧼 Sanitize line endings to prevent 'sed' issues from Windows CRLF
-# (safe to run even on Unix-based systems)
-sed -i 's/\r//' "$0"
-
 # Get absolute path to the repo root
 REPO_ROOT="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")/../.." &> /dev/null && pwd)"
 

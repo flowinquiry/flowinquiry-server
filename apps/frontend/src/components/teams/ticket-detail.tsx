@@ -89,9 +89,9 @@ const TeamRequestDetailView = ({
 
   const canEdit =
     PermissionUtils.canWrite(permissionLevel) ||
-    teamRole === "Manager" ||
-    teamRole === "Member";
-  const canComment = canEdit || teamRole === "Guest";
+    teamRole === "manager" ||
+    teamRole === "member";
+  const canComment = canEdit || teamRole === "guest";
 
   useEffect(() => {
     const fetchRequest = async () => {
@@ -199,7 +199,7 @@ const TeamRequestDetailView = ({
         <CardContent>
           <p className="mb-4">The requested ticket could not be found.</p>
           <Button variant="secondary" onClick={() => router.back()}>
-            <ArrowLeft className="mr-2 h-4 w-4" /> Go Back
+            <ArrowLeft className="mr-2 h-4 w-4" /> {t.common.buttons("go_back")}
           </Button>
         </CardContent>
       </Card>
@@ -258,7 +258,9 @@ const TeamRequestDetailView = ({
                       <ArrowLeft className="h-5 w-5" />
                     </Button>
                   </TooltipTrigger>
-                  <TooltipContent>Previous ticket</TooltipContent>
+                  <TooltipContent>
+                    {t.teams.tickets.detail("previous_ticket")}
+                  </TooltipContent>
                 </Tooltip>
               </TooltipProvider>
 
@@ -309,7 +311,9 @@ const TeamRequestDetailView = ({
                       <ArrowRight className="h-5 w-5" />
                     </Button>
                   </TooltipTrigger>
-                  <TooltipContent>Next ticket</TooltipContent>
+                  <TooltipContent>
+                    {t.teams.tickets.detail("next_ticket")}
+                  </TooltipContent>
                 </Tooltip>
               </TooltipProvider>
             </div>
@@ -325,13 +329,13 @@ const TeamRequestDetailView = ({
                   )
                 }
               >
-                <Edit className="mr-2 h-4 w-4" /> Edit Ticket
+                <Edit className="mr-2 h-4 w-4" /> Edit ticket
               </Button>
             )}
 
             {canComment && (
               <Button variant="outline" onClick={handleFocusComments}>
-                <MessageSquarePlus className="mr-2 h-4 w-4" /> Add Comment
+                <MessageSquarePlus className="mr-2 h-4 w-4" /> Add comment
               </Button>
             )}
 
@@ -371,7 +375,7 @@ const TeamRequestDetailView = ({
                       onClick={handleViewWorkflow}
                       className="cursor-pointer"
                     >
-                      <Eye className="mr-2 h-4 w-4" /> View Workflow
+                      <Eye className="mr-2 h-4 w-4" /> View workflow
                     </DropdownMenuItem>
                   </DropdownMenuGroup>
                 </DropdownMenuContent>
@@ -380,7 +384,7 @@ const TeamRequestDetailView = ({
 
             {!canEdit && canComment && (
               <Button variant="outline" onClick={handleViewWorkflow}>
-                <Eye className="mr-2 h-4 w-4" /> View Workflow
+                <Eye className="mr-2 h-4 w-4" /> View workflow
               </Button>
             )}
           </div>
@@ -497,7 +501,7 @@ const TeamRequestDetailView = ({
                             Channel
                           </p>
                           <Badge variant="outline" className="font-normal">
-                            {teamRequest.channel}
+                            {t.teams.tickets.form.channels(teamRequest.channel)}
                           </Badge>
                         </div>
                       )}

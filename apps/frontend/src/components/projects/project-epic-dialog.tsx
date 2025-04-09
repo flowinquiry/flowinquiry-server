@@ -31,6 +31,7 @@ import {
 } from "@/components/ui/popover";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/components/ui/use-toast";
+import { useAppClientTranslations } from "@/hooks/use-translations";
 import { createProjectEpic } from "@/lib/actions/project-epic.action";
 import { useError } from "@/providers/error-provider";
 import { ProjectEpicDTO, ProjectEpicDTOSchema } from "@/types/projects";
@@ -53,8 +54,9 @@ export function CreateEpicDialog({
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { setError } = useError();
   const { toast } = useToast();
-
   // Initialize form with the ProjectEpicDTOSchema
+
+  const t = useAppClientTranslations();
   const form = useForm<ProjectEpicDTO>({
     resolver: zodResolver(ProjectEpicDTOSchema),
     defaultValues: {
@@ -144,7 +146,7 @@ export function CreateEpicDialog({
                               format(field.value, "PPP")
                             ) : (
                               <span className="text-muted-foreground">
-                                Select a date
+                                {t.common.misc("date_select_place_holder")}
                               </span>
                             )}
                             <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
@@ -186,7 +188,7 @@ export function CreateEpicDialog({
                               format(field.value, "PPP")
                             ) : (
                               <span className="text-muted-foreground">
-                                Select a date
+                                {t.common.misc("date_select_place_holder")}
                               </span>
                             )}
                             <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />

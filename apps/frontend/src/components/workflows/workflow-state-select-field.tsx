@@ -16,6 +16,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { useAppClientTranslations } from "@/hooks/use-translations";
 import {
   getInitialStates,
   getValidTargetStates,
@@ -46,6 +47,7 @@ const WorkflowStateSelectField = ({
   const [workflowStates, setWorkflowStates] = useState<WorkflowStateDTO[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const { setError } = useError();
+  const t = useAppClientTranslations();
 
   useEffect(() => {
     const loadWorkflowStates = async () => {
@@ -123,7 +125,10 @@ const WorkflowStateSelectField = ({
               >
                 <SelectTrigger className={cn("w-[16rem]")}>
                   <SelectValue
-                    placeholder={selectedState?.stateName || "Select a state"}
+                    placeholder={
+                      selectedState?.stateName ||
+                      t.workflows.common("state_select_place_holder")
+                    }
                   />
                 </SelectTrigger>
                 <SelectContent>

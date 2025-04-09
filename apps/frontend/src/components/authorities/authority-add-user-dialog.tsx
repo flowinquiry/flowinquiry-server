@@ -81,11 +81,12 @@ const AddUserToAuthorityDialog: React.FC<AddUserToAuthorityDialogProps> = ({
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
           <DialogTitle>
-            Add user to authority {authorityEntity.descriptiveName}{" "}
+            {t.authorities.add("dialog_title", {
+              authorityName: authorityEntity.descriptiveName,
+            })}
           </DialogTitle>
           <DialogDescription>
-            Add a user to this authority group by searching for them. Begin
-            typing to see suggestions that match your input
+            {t.authorities.add("dialog_description")}
           </DialogDescription>
         </DialogHeader>
         <Form {...form}>
@@ -95,15 +96,17 @@ const AddUserToAuthorityDialog: React.FC<AddUserToAuthorityDialogProps> = ({
               name="users"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Users</FormLabel>
+                  <FormLabel>{t.authorities.add("users")}</FormLabel>
                   <FormControl>
                     <MultipleSelector
                       {...field}
                       onSearch={searchUsers}
-                      placeholder="Add user to authority..."
+                      placeholder={t.authorities.add(
+                        "users_select_place_holder",
+                      )}
                       emptyIndicator={
                         <p className="text-center text-lg leading-10 text-gray-600 dark:text-gray-400">
-                          no results found.
+                          {t.common.misc("no_results_found")}
                         </p>
                       }
                     />
@@ -114,7 +117,7 @@ const AddUserToAuthorityDialog: React.FC<AddUserToAuthorityDialogProps> = ({
             />
             <SubmitButton
               label={t.common.buttons("save")}
-              labelWhileLoading="Saving ..."
+              labelWhileLoading={t.common.buttons("saving")}
             />
           </form>
         </Form>

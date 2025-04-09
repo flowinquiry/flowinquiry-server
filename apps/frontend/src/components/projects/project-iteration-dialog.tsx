@@ -31,6 +31,7 @@ import {
 } from "@/components/ui/popover";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/components/ui/use-toast";
+import { useAppClientTranslations } from "@/hooks/use-translations";
 import { createProjectIteration } from "@/lib/actions/project-iteration.action";
 import { useError } from "@/providers/error-provider";
 import {
@@ -56,6 +57,7 @@ export function CreateIterationDialog({
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { setError } = useError();
   const { toast } = useToast();
+  const t = useAppClientTranslations();
 
   // Initialize form with the ProjectIterationDTOSchema
   const form = useForm<ProjectIterationDTO>({
@@ -149,7 +151,7 @@ export function CreateIterationDialog({
                               format(field.value, "PPP")
                             ) : (
                               <span className="text-muted-foreground">
-                                Select a date
+                                {t.common.misc("date_select_place_holder")}
                               </span>
                             )}
                             <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
@@ -187,7 +189,7 @@ export function CreateIterationDialog({
                               format(field.value, "PPP")
                             ) : (
                               <span className="text-muted-foreground">
-                                Select a date
+                                {t.common.misc("date_select_place_holder")}
                               </span>
                             )}
                             <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />

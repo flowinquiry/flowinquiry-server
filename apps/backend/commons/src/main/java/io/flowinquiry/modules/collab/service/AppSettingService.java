@@ -18,18 +18,18 @@ public class AppSettingService {
 
     private static final Logger logger = LoggerFactory.getLogger(AppSettingService.class);
 
-    private final AppSettingRepository repository;
+    private final AppSettingRepository appSettingRepository;
     private final ApplicationEventPublisher eventPublisher;
 
     public AppSettingService(
-            AppSettingRepository repository, ApplicationEventPublisher eventPublisher) {
-        this.repository = repository;
+            AppSettingRepository appSettingRepository, ApplicationEventPublisher eventPublisher) {
+        this.appSettingRepository = appSettingRepository;
         this.eventPublisher = eventPublisher;
     }
 
     @Cacheable(value = "appSettings", key = "#key")
     public Optional<AppSetting> getRawSetting(String key) {
-        return repository.findById(key);
+        return appSettingRepository.findById(key);
     }
 
     public Optional<String> getValue(String key) {
@@ -51,7 +51,7 @@ public class AppSettingService {
     }
 
     public List<AppSettingDTO> getAllSettingDTOs() {
-        List<AppSetting> settings = repository.findAll();
+        List<AppSetting> settings = appSettingRepository.findAll();
         return settings.stream()
                 .map(
                         s ->
@@ -64,8 +64,24 @@ public class AppSettingService {
                 .toList();
     }
 
+    public List<AppSettingDTO> getSettingsByGroup(String group) {
+        List<AppSetting> settings =
+                appSettingRepository.findAll(); // or create a custom query for better performance
+        return settings.stream()
+                .filter(s -> Objects.equals(s.getGroup(), group))
+                .map(
+                        s ->
+                                new AppSettingDTO(
+                                        s.getKey(),
+                                        s.getValue(),
+                                        s.getType(),
+                                        s.getGroup(),
+                                        s.getDescription()))
+                .toList();
+    }
+
     public Map<String, String> getAllValues() {
-        List<AppSetting> all = repository.findAll();
+        List<AppSetting> all = appSettingRepository.findAll();
         Map<String, String> result = new LinkedHashMap<>();
         for (AppSetting setting : all) {
             result.put(setting.getKey(), setting.getValue());
@@ -77,7 +93,7 @@ public class AppSettingService {
     @CacheEvict(value = "appSettings", key = "#key")
     public void updateValue(String key, String value) {
         AppSetting setting =
-                repository
+                appSettingRepository
                         .findById(key)
                         .orElseGet(
                                 () -> {
@@ -87,7 +103,7 @@ public class AppSettingService {
                                     return s;
                                 });
         setting.setValue(value);
-        repository.save(setting);
+        appSettingRepository.save(setting);
 
         logger.info("Updated setting: {} = {}", key, value);
 
@@ -99,13 +115,14 @@ public class AppSettingService {
     @Transactional
     public void updateSettings(List<AppSettingDTO> settings) {
         for (AppSettingDTO dto : settings) {
-            AppSetting setting = repository.findById(dto.getKey()).orElseGet(AppSetting::new);
+            AppSetting setting =
+                    appSettingRepository.findById(dto.getKey()).orElseGet(AppSetting::new);
             setting.setKey(dto.getKey());
             setting.setValue(dto.getValue());
             setting.setType(dto.getType());
             setting.setGroup(dto.getGroup());
             setting.setDescription(dto.getDescription());
-            repository.save(setting);
+            appSettingRepository.save(setting);
             cacheEvict(dto.getKey());
 
             logger.info("Bulk updated setting: {} = {}", dto.getKey(), dto.getValue());

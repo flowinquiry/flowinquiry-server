@@ -30,6 +30,7 @@ import {
   SheetTitle,
 } from "@/components/ui/sheet";
 import WorkflowStateSelect from "@/components/workflows/workflow-state-select";
+import { useAppClientTranslations } from "@/hooks/use-translations";
 import { uploadAttachmentsForEntity } from "@/lib/actions/entity-attachments.action";
 import { createTeamRequest } from "@/lib/actions/teams-request.action";
 import { useError } from "@/providers/error-provider";
@@ -62,6 +63,7 @@ const TaskEditorSheet = ({
   const { setError } = useError();
   const [files, setFiles] = useState<File[]>([]);
   const { data: session } = useSession();
+  const t = useAppClientTranslations();
 
   // Track the current state name when it changes
   const [currentStateName, setCurrentStateName] = useState<string | null>(
@@ -257,14 +259,14 @@ const TaskEditorSheet = ({
                       form={form}
                       fieldName="estimatedCompletionDate"
                       label="Target Completion Date"
-                      placeholder="Select a date"
+                      placeholder={t.common.misc("date_select_place_holder")}
                     />
 
                     <DatePickerField
                       form={form}
                       fieldName="actualCompletionDate"
                       label="Actual Completion Date"
-                      placeholder="Select a date"
+                      placeholder={t.common.misc("date_select_place_holder")}
                     />
 
                     <TicketChannelSelectField form={form} />

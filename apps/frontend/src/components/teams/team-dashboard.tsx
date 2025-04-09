@@ -72,14 +72,14 @@ const TeamDashboard = () => {
                     <div className="text-left">
                       <p className="font-bold">{team.name}</p>
                       <p className="text-sm text-gray-500">
-                        {team.slogan ?? "Stronger Together"}
+                        {team.slogan ?? t.teams.common("default_slogan")}
                       </p>
                     </div>
                   </TooltipContent>
                 </Tooltip>
                 <Heading
-                  title="Dashboard"
-                  description="Overview of your team's performance and activities. Monitor team requests, progress, and key metrics at a glance"
+                  title={t.teams.dashboard("title")}
+                  description={t.teams.dashboard("description")}
                 />
               </div>
               {PermissionUtils.canWrite(permissionLevel) && (
@@ -87,7 +87,8 @@ const TeamDashboard = () => {
                   href={`/portal/teams/${obfuscate(team.id)}/edit`}
                   className={cn(buttonVariants({ variant: "default" }))}
                 >
-                  <Plus className="mr-2 h-4 w-4" /> Edit Team
+                  <Plus className="mr-2 h-4 w-4" />{" "}
+                  {t.teams.dashboard("edit_team")}
                 </Link>
               )}
             </div>

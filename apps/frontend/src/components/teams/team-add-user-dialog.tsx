@@ -23,6 +23,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import MultipleSelector from "@/components/ui/multi-select-dynamic";
+import { useAppClientTranslations } from "@/hooks/use-translations";
 import { addUsersToTeam, findUsersNotInTeam } from "@/lib/actions/teams.action";
 import { useError } from "@/providers/error-provider";
 import { TeamDTO } from "@/types/teams";
@@ -54,6 +55,7 @@ const AddUserToTeamDialog: React.FC<AddUserToTeamDialogProps> = ({
   forceManagerAssignment = false,
 }) => {
   const { setError } = useError();
+  const t = useAppClientTranslations();
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
   });
@@ -83,13 +85,15 @@ const AddUserToTeamDialog: React.FC<AddUserToTeamDialogProps> = ({
         <DialogHeader>
           <DialogTitle>
             {forceManagerAssignment
-              ? `This team requires at least one manager`
-              : `Add a user to team ${teamEntity.name}`}{" "}
+              ? t.teams.dashboard("add_user_dialog.title1")
+              : t.teams.dashboard("add_user_dialog.title2", {
+                  teamName: teamEntity.name,
+                })}
           </DialogTitle>
           <DialogDescription>
             {forceManagerAssignment
-              ? `This team currently has no managers. You must assign at least one manager before proceeding. Begin typing to search for users.`
-              : `Add a user to this team by searching for them. Begin typing to see suggestions that match your input.`}
+              ? t.teams.dashboard("add_user_dialog.description1")
+              : t.teams.dashboard("add_user_dialog.description2")}
           </DialogDescription>
         </DialogHeader>
         <Form {...form}>
@@ -99,15 +103,19 @@ const AddUserToTeamDialog: React.FC<AddUserToTeamDialogProps> = ({
               name="users"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Users</FormLabel>
+                  <FormLabel>
+                    {t.teams.dashboard("add_user_dialog.users")}
+                  </FormLabel>
                   <FormControl>
                     <MultipleSelector
                       {...field}
                       onSearch={searchUsers}
-                      placeholder="Add user to team..."
+                      placeholder={t.teams.dashboard(
+                        "add_user_dialog.user_select_place_holder",
+                      )}
                       emptyIndicator={
                         <p className="text-center text-lg leading-10 text-gray-600 dark:text-gray-400">
-                          no results found.
+                          {t.common.misc("no_results_found")}
                         </p>
                       }
                     />
@@ -117,7 +125,10 @@ const AddUserToTeamDialog: React.FC<AddUserToTeamDialogProps> = ({
               )}
             />
             <TeamRoleSelectField />
-            <SubmitButton label="Save" labelWhileLoading="Saving ..." />
+            <SubmitButton
+              label={t.common.buttons("save")}
+              labelWhileLoading={t.common.buttons("saving")}
+            />
           </form>
         </Form>
       </DialogContent>

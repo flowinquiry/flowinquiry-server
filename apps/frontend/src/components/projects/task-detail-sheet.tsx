@@ -42,7 +42,7 @@ import {
   PRIORITY_CONFIG,
 } from "@/lib/constants/ticket-priorities";
 import { TeamRequestDTO, TeamRequestPriority } from "@/types/team-requests";
-import { UserWithTeamRoleDTO } from "@/types/users";
+import { UserWithTeamRoleDTO } from "@/types/teams";
 
 type TaskDetailSheetProps = {
   isOpen: boolean;

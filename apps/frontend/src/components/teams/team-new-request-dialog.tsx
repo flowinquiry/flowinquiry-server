@@ -33,6 +33,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import WorkflowStateSelectField from "@/components/workflows/workflow-state-select-field";
+import { useAppClientTranslations } from "@/hooks/use-translations";
 import { uploadAttachmentsForEntity } from "@/lib/actions/entity-attachments.action";
 import { createTeamRequest } from "@/lib/actions/teams-request.action";
 import { useError } from "@/providers/error-provider";
@@ -62,6 +63,7 @@ const NewRequestToTeamDialog: React.FC<NewRequestToTeamDialogProps> = ({
   const [files, setFiles] = React.useState<File[]>([]);
   const { data: session } = useSession();
   const { setError } = useError();
+  const t = useAppClientTranslations();
 
   const form = useForm<z.infer<typeof TeamRequestDTOSchema>>({
     resolver: zodResolver(TeamRequestDTOSchema),
@@ -110,12 +112,10 @@ const NewRequestToTeamDialog: React.FC<NewRequestToTeamDialogProps> = ({
       <DialogContent className="sm:max-w-[56rem] max-h-[90vh] p-4 sm:p-6 flex flex-col overflow-y-auto">
         <DialogHeader>
           <DialogTitle>
-            [{workflow?.requestName}]: Create a New Ticket Request
+            [{workflow?.requestName}]: {t.teams.tickets.new_dialog("title")}
           </DialogTitle>
           <DialogDescription>
-            Submit a request to the team to get assistance or initiate a task.
-            Provide all necessary details to help the team understand and
-            address your request effectively.
+            {t.teams.tickets.new_dialog("description")}
           </DialogDescription>
         </DialogHeader>
 
@@ -130,7 +130,7 @@ const NewRequestToTeamDialog: React.FC<NewRequestToTeamDialogProps> = ({
                   <ExtInputField
                     form={form}
                     fieldName="requestTitle"
-                    label="Title"
+                    label={t.teams.tickets.form.base("name")}
                     required={true}
                   />
                 </div>
@@ -142,7 +142,7 @@ const NewRequestToTeamDialog: React.FC<NewRequestToTeamDialogProps> = ({
                     render={({ field }) => (
                       <FormItem>
                         <FormLabel>
-                          Description{" "}
+                          {t.teams.tickets.form.base("description")}{" "}
                           <span className="text-destructive"> *</span>
                         </FormLabel>
                         <FormControl>
@@ -171,7 +171,9 @@ const NewRequestToTeamDialog: React.FC<NewRequestToTeamDialogProps> = ({
                   name="priority"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Priority</FormLabel>
+                      <FormLabel>
+                        {t.teams.tickets.form.base("priority")}
+                      </FormLabel>
                       <FormControl>
                         <TeamRequestPrioritySelect
                           value={field.value}
@@ -188,28 +190,28 @@ const NewRequestToTeamDialog: React.FC<NewRequestToTeamDialogProps> = ({
                 <TeamUserSelectField
                   form={form}
                   fieldName="assignUserId"
-                  label="Assignee"
+                  label={t.teams.tickets.form.base("assignee")}
                   teamId={teamEntity.id!}
                 />
 
                 <DatePickerField
                   form={form}
                   fieldName="estimatedCompletionDate"
-                  label="Target Completion Date"
-                  placeholder="Select a date"
+                  label={t.teams.tickets.form.base("target_completion_date")}
+                  placeholder={t.common.misc("date_select_place_holder")}
                 />
 
                 <DatePickerField
                   form={form}
                   fieldName="actualCompletionDate"
-                  label="Actual Completion Date"
-                  placeholder="Select a date"
+                  label={t.teams.tickets.form.base("actual_completion_date")}
+                  placeholder={t.common.misc("date_select_place_holder")}
                 />
                 <TicketChannelSelectField form={form} />
                 <WorkflowStateSelectField
                   form={form}
                   name="currentStateId"
-                  label="State"
+                  label={t.teams.tickets.form.base("state")}
                   required
                   workflowId={workflow?.id!}
                   includeSelf
@@ -218,7 +220,10 @@ const NewRequestToTeamDialog: React.FC<NewRequestToTeamDialogProps> = ({
             </div>
 
             <div className="pt-4 flex justify-start gap-4">
-              <SubmitButton label="Save" labelWhileLoading="Saving ..." />
+              <SubmitButton
+                label={t.common.buttons("save")}
+                labelWhileLoading={t.common.buttons("saving")}
+              />
               <Button
                 type="button"
                 variant="outline"

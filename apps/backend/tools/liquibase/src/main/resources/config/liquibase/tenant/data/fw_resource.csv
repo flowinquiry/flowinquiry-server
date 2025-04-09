@@ -1,6 +1,7 @@
 name;description
-Users;
-Teams;
-Organizations;
-Authorities;
-Workflows;
+users;
+teams;
+organizations;
+authorities;
+workflows;
+mail;

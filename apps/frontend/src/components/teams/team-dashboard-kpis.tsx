@@ -17,6 +17,7 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import { useAppClientTranslations } from "@/hooks/use-translations";
 import {
   getCountOverdueTicketsByTeamId,
   getTicketStatisticsByTeamId,
@@ -28,6 +29,7 @@ const TeamDashboardTopSection = ({ teamId }: { teamId: number }) => {
   const router = useRouter();
   const { setError } = useError();
   const { timeRange, customDates } = useTimeRange();
+  const t = useAppClientTranslations();
 
   const dateParams =
     timeRange === "custom"
@@ -49,36 +51,36 @@ const TeamDashboardTopSection = ({ teamId }: { teamId: number }) => {
   // Metrics configuration
   const metrics = [
     {
-      title: "Total Tickets",
-      description: "All tickets received",
+      title: t.teams.dashboard("summary.total.title"),
+      description: t.teams.dashboard("summary.total.description"),
       value: ticketStats?.totalTickets ?? 0,
       color: "text-gray-700 dark:text-gray-300",
       link: "#",
-      tooltip: "View all team tickets.",
+      tooltip: t.teams.dashboard("summary.total.tooltip"),
     },
     {
-      title: "Pending Tickets",
-      description: "Tickets yet to be addressed",
+      title: t.teams.dashboard("summary.pending.title"),
+      description: t.teams.dashboard("summary.pending.description"),
       value: ticketStats?.pendingTickets ?? 0,
       color: "text-yellow-500",
       link: "#",
-      tooltip: "View tickets that are still pending.",
+      tooltip: t.teams.dashboard("summary.pending.tooltip"),
     },
     {
-      title: "Completed Tickets",
-      description: "Successfully resolved tickets",
+      title: t.teams.dashboard("summary.completed.title"),
+      description: t.teams.dashboard("summary.completed.description"),
       value: ticketStats?.completedTickets ?? 0,
       color: "text-green-500",
       link: "#",
-      tooltip: "View tickets that have been resolved.",
+      tooltip: t.teams.dashboard("summary.completed.tooltip"),
     },
     {
-      title: "Overdue Tickets",
-      description: "Tickets past their deadline",
+      title: t.teams.dashboard("summary.overdue.title"),
+      description: t.teams.dashboard("summary.overdue.description"),
       value: overdueTickets ?? 0,
       color: "text-red-500",
       link: "#",
-      tooltip: "View overdue tickets that need attention.",
+      tooltip: t.teams.dashboard("summary.overdue.tooltip"),
     },
   ];
 

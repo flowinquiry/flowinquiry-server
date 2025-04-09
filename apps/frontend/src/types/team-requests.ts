@@ -92,28 +92,28 @@ export type TeamRequestConversationHealthDTO = z.infer<
 >;
 
 export type TicketChannel =
-  | "Email"
-  | "Phone"
-  | "Web Portal"
-  | "Chat"
-  | "Social Media"
-  | "In-person"
-  | "Mobile App"
-  | "API"
-  | "System-generated"
-  | "Internal";
+  | "email"
+  | "phone"
+  | "web_portal"
+  | "chat"
+  | "social_media"
+  | "in_person"
+  | "mobile_app"
+  | "api"
+  | "system_generated"
+  | "internal";
 
 export const ticketChannels = [
-  "Email",
-  "Phone",
-  "Web Portal",
-  "Chat",
-  "Social Media",
-  "In-person",
-  "Mobile App",
-  "API",
-  "System-generated",
-  "Internal",
+  "email",
+  "phone",
+  "web_portal",
+  "chat",
+  "social_media",
+  "in_person",
+  "mobile_app",
+  "api",
+  "system_generated",
+  "internal",
 ] as const;
 
 export type TicketDistributionDTO = {

@@ -9,6 +9,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { ExtInputField, ExtTextAreaField } from "@/components/ui/ext-form";
 import { Form } from "@/components/ui/form";
 import WorkflowStatesSelectField from "@/components/workflows/workflow-states-select-field";
+import { useAppClientTranslations } from "@/hooks/use-translations";
 import { WorkflowDetailDTO, WorkflowDetailSchema } from "@/types/workflows";
 
 let temporaryIdCounter = -1;
@@ -24,6 +25,7 @@ const WorkflowEditForm = ({
   onSave: (values: WorkflowDetailDTO) => void;
   onPreviewChange: (values: WorkflowDetailDTO) => void; // New prop for live preview
 }) => {
+  const t = useAppClientTranslations();
   const form = useForm<WorkflowDetailDTO>({
     resolver: zodResolver(WorkflowDetailSchema),
     defaultValues: workflowDetail,
@@ -64,8 +66,10 @@ const WorkflowEditForm = ({
   };
 
   return (
-    <div className="p-4 border rounded mb-4">
-      <h2 className="text-lg font-bold mb-4">Edit Workflow</h2>
+    <>
+      <h2 className="text-lg font-bold mb-4">
+        {t.workflows.add("edit_workflow")}
+      </h2>
       <Form {...form}>
         <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-6">
           <div>
@@ -73,28 +77,27 @@ const WorkflowEditForm = ({
               <ExtInputField
                 form={form}
                 fieldName="name"
-                label="Workflow Name"
-                placeholder="Enter workflow name"
+                label={t.workflows.add("name")}
                 required
               />
               <ExtInputField
                 form={form}
                 fieldName="requestName"
-                label="Ticket Type"
-                placeholder="Enter ticket type"
+                label={t.workflows.add("ticket_type")}
                 required
               />
             </div>
             <ExtTextAreaField
               form={form}
               fieldName="description"
-              label="Description"
-              placeholder="Enter workflow description (optional)"
+              label={t.workflows.add("field_description")}
             />
           </div>
           {/* States Section */}
           <div>
-            <h3 className="text-md font-semibold mb-4">States</h3>
+            <h3 className="text-md font-semibold mb-4">
+              {t.workflows.add("states")}
+            </h3>
             {stateFields.map((state, index) => (
               <div
                 key={state.id || index}
@@ -104,13 +107,14 @@ const WorkflowEditForm = ({
                   <ExtInputField
                     form={form}
                     fieldName={`states.${index}.stateName`}
-                    label="State Name"
-                    placeholder="Enter state name"
+                    label={t.workflows.add("state_name")}
                     required
                   />
                 </div>
                 <div className="flex items-center gap-2">
-                  <label className="text-sm">Initial</label>
+                  <label className="text-sm">
+                    {t.workflows.add("initial")}
+                  </label>
                   <Checkbox
                     checked={form.watch(`states.${index}.isInitial`)}
                     onCheckedChange={(value) =>
@@ -119,7 +123,7 @@ const WorkflowEditForm = ({
                   />
                 </div>
                 <div className="flex items-center gap-2">
-                  <label className="text-sm">Final</label>
+                  <label className="text-sm">{t.workflows.add("final")}</label>
                   <Checkbox
                     checked={form.watch(`states.${index}.isFinal`)}
                     onCheckedChange={(value) =>
@@ -132,7 +136,7 @@ const WorkflowEditForm = ({
                   onClick={() => removeState(index)}
                   className="h-10"
                 >
-                  Remove
+                  {t.common.buttons("remove")}
                 </Button>
               </div>
             ))}
@@ -149,13 +153,15 @@ const WorkflowEditForm = ({
               }
               variant="secondary"
             >
-              Add State
+              {t.workflows.add("add_state")}
             </Button>
           </div>
 
           {/* Transitions Section */}
           <div>
-            <h3 className="text-md font-semibold mb-4">Transitions</h3>
+            <h3 className="text-md font-semibold mb-4">
+              {t.workflows.add("transitions")}
+            </h3>
             {transitionFields.map((transition, index) => (
               <div
                 key={transition.id || index}
@@ -165,8 +171,8 @@ const WorkflowEditForm = ({
                   <WorkflowStatesSelectField
                     fieldName={`transitions.${index}.sourceStateId`}
                     form={form}
-                    label="Source State"
-                    placeholder="Select source state"
+                    label={t.workflows.add("source_state")}
+                    placeholder={t.workflows.add("source_state_place_holder")}
                     options={watchedValues.states.map((state) => ({
                       label: state.stateName,
                       value: state.id!,
@@ -178,8 +184,8 @@ const WorkflowEditForm = ({
                   <WorkflowStatesSelectField
                     fieldName={`transitions.${index}.targetStateId`}
                     form={form}
-                    label="Target State"
-                    placeholder="Select target state"
+                    label={t.workflows.add("target_state")}
+                    placeholder={t.workflows.add("target_state_place_holder")}
                     options={watchedValues.states.map((state) => ({
                       label: state.stateName,
                       value: state.id!,
@@ -191,8 +197,7 @@ const WorkflowEditForm = ({
                   <ExtInputField
                     form={form}
                     fieldName={`transitions.${index}.eventName`}
-                    label="Event Name"
-                    placeholder="Enter event name"
+                    label={t.workflows.add("event_name")}
                     required
                   />
                 </div>
@@ -200,13 +205,14 @@ const WorkflowEditForm = ({
                   <ExtInputField
                     form={form}
                     fieldName={`transitions.${index}.slaDuration`}
-                    label="SLA Duration (hrs)"
-                    placeholder="Enter SLA duration"
+                    label={t.workflows.add("sla_duration")}
                     type="number"
                   />
                 </div>
                 <div className="flex items-center gap-2">
-                  <label className="text-sm">Escalate</label>
+                  <label className="text-sm">
+                    {t.workflows.add("escalate")}
+                  </label>
                   <Checkbox
                     checked={form.watch(
                       `transitions.${index}.escalateOnViolation`,
@@ -224,7 +230,7 @@ const WorkflowEditForm = ({
                   onClick={() => removeTransition(index)}
                   className="h-10"
                 >
-                  Remove
+                  {t.common.buttons("remove")}
                 </Button>
               </div>
             ))}
@@ -242,19 +248,19 @@ const WorkflowEditForm = ({
               }
               variant="secondary"
             >
-              Add Transition
+              {t.workflows.add("add_transition")}
             </Button>
           </div>
 
           <div className="flex justify-start space-x-4">
-            <Button type="submit">Save</Button>
+            <Button type="submit">{t.common.buttons("save")}</Button>
             <Button type="button" variant="secondary" onClick={onCancel}>
-              Discard
+              {t.common.buttons("discard")}
             </Button>
           </div>
         </form>
       </Form>
-    </div>
+    </>
   );
 };
 

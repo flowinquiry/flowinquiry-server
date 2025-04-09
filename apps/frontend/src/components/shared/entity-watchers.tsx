@@ -45,8 +45,8 @@ const EntityWatchers = ({ entityType, entityId }: EntityWatchersProps) => {
   // ✅ Define write permissions
   const canWrite =
     PermissionUtils.canWrite(permissionLevel) ||
-    teamRole === "Manager" ||
-    teamRole === "Member";
+    teamRole === "manager" ||
+    teamRole === "member";
 
   // Fetch watchers on component mount
   useEffect(() => {

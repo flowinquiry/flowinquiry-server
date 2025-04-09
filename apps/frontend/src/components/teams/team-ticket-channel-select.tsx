@@ -16,6 +16,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { useAppClientTranslations } from "@/hooks/use-translations";
 import { TicketChannel } from "@/types/team-requests";
 
 type TicketChannelSelectFieldProps = {
@@ -23,25 +24,26 @@ type TicketChannelSelectFieldProps = {
 };
 
 const ticketChannels: TicketChannel[] = [
-  "Email",
-  "Phone",
-  "Web Portal",
-  "Chat",
-  "Social Media",
-  "In-person",
-  "Mobile App",
-  "API",
-  "System-generated",
-  "Internal",
+  "email",
+  "phone",
+  "web_portal",
+  "chat",
+  "social_media",
+  "in_person",
+  "mobile_app",
+  "api",
+  "system_generated",
+  "internal",
 ];
 
 const TicketChannelSelectField: React.FC<TicketChannelSelectFieldProps> = ({
   form,
 }) => {
+  const t = useAppClientTranslations();
   useEffect(() => {
     // Set default value if the field is empty
     if (!form.getValues("channel")) {
-      form.setValue("channel", "Internal", { shouldValidate: true });
+      form.setValue("channel", "internal", { shouldValidate: true });
     }
   }, [form]);
 
@@ -51,19 +53,23 @@ const TicketChannelSelectField: React.FC<TicketChannelSelectFieldProps> = ({
       name="channel"
       render={({ field }) => (
         <FormItem>
-          <FormLabel>Ticket Channel</FormLabel>
+          <FormLabel>{t.teams.tickets.form.base("channel")}</FormLabel>
           <FormControl>
             <Select
               onValueChange={field.onChange}
-              value={field.value || "Internal"} // Use "Internal" as fallback
+              value={field.value || "internal"} // Use "internal" as fallback
             >
               <SelectTrigger className="w-[16rem]">
-                <SelectValue placeholder="Select a channel" />
+                <SelectValue
+                  placeholder={t.teams.tickets.form.base(
+                    "channel_place_holder",
+                  )}
+                />
               </SelectTrigger>
               <SelectContent className="w-[16rem]">
                 {ticketChannels.map((channel) => (
                   <SelectItem key={channel} value={channel}>
-                    {channel}
+                    {t.teams.tickets.form.channels(channel)}
                   </SelectItem>
                 ))}
               </SelectContent>

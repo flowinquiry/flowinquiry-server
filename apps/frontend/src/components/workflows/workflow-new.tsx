@@ -24,8 +24,8 @@ const WorkflowNew = () => {
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-4">
           <Heading
-            title="Create New Workflow"
-            description="Select how you want to create the workflow"
+            title={t.workflows.add("title")}
+            description={t.workflows.add("description")}
           />
         </div>
       </div>

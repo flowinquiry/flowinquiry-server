@@ -1,0 +1,384 @@
+"use client";
+
+import { zodResolver } from "@hookform/resolvers/zod";
+import { EyeIcon, EyeOffIcon } from "lucide-react";
+import { useEffect, useState } from "react";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+
+import { Button } from "@/components/ui/button";
+import {
+  Form,
+  FormControl,
+  FormDescription,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { useToast } from "@/components/ui/use-toast";
+import {
+  findAppSettingsByGroup,
+  updateAppSettings,
+} from "@/lib/actions/settings.action";
+import { useError } from "@/providers/error-provider";
+import { AppSettingDTO } from "@/types/commons";
+
+export const emailSettingsSchema = z.object({
+  "mail.host": z.string().min(1, "SMTP host is required"),
+  "mail.port": z.string().min(1, "SMTP port is required"),
+  "mail.username": z.string().min(1, "Username is required"),
+  "mail.password": z.string().min(1, "Password is required"),
+  "mail.protocol": z.string().min(1, "Protocol is required"),
+  "mail.from": z
+    .string()
+    .email("Invalid email address")
+    .min(1, "From address is required"),
+  "mail.fromName": z.string().min(1, "Sender name is required"),
+  "mail.smtp.auth": z.enum(["true", "false"]).default("true"),
+  "mail.smtp.starttls.enable": z.enum(["true", "false"]).default("true"),
+  "mail.smtp.ssl.enable": z.enum(["true", "false"]).default("false"),
+  "mail.debug": z.enum(["true", "false"]).default("false"),
+});
+
+const FIELD_META: Record<
+  keyof z.infer<typeof emailSettingsSchema>,
+  {
+    label: string;
+    type: "string" | "boolean" | "password";
+    description?: string;
+  }
+> = {
+  "mail.host": { label: "SMTP Host", type: "string" },
+  "mail.port": { label: "SMTP Port", type: "string" },
+  "mail.username": { label: "Username", type: "string" },
+  "mail.password": {
+    label: "Password",
+    type: "password",
+    description: "Encrypted using secret:aes256",
+  },
+  "mail.protocol": { label: "Protocol", type: "string" },
+  "mail.from": { label: "From Address", type: "string" },
+  "mail.fromName": { label: "Sender Name", type: "string" },
+  "mail.smtp.auth": { label: "SMTP Auth", type: "boolean" },
+  "mail.smtp.starttls.enable": { label: "STARTTLS", type: "boolean" },
+  "mail.smtp.ssl.enable": { label: "SSL", type: "boolean" },
+  "mail.debug": { label: "Debug Logging", type: "boolean" },
+};
+
+const FIELD_GROUPS: Record<string, (keyof typeof FIELD_META)[]> = {
+  "SMTP Server": ["mail.host", "mail.port", "mail.protocol"],
+  Authentication: ["mail.username", "mail.password", "mail.smtp.auth"],
+  "Sender Info": ["mail.from", "mail.fromName"],
+  "Advanced Options": [
+    "mail.smtp.starttls.enable",
+    "mail.smtp.ssl.enable",
+    "mail.debug",
+  ],
+};
+
+function toAppSettings(input: Record<string, string>): AppSettingDTO[] {
+  return Object.entries(input).map(([key, value]) => ({
+    key,
+    value,
+    type: key === "mail.password" ? "secret:aes256" : "string",
+    group: "mail",
+    description:
+      FIELD_META[key as keyof typeof FIELD_META]?.description ?? null,
+  }));
+}
+
+function fromAppSettings(settings: AppSettingDTO[]): Record<string, string> {
+  return Object.fromEntries(settings.map(({ key, value }) => [key, value]));
+}
+
+export function MailSettings() {
+  const { setError } = useError();
+  const [loading, setLoading] = useState(true);
+  const [showPassword, setShowPassword] = useState(false);
+  const [submitAttempted, setSubmitAttempted] = useState(false);
+  const { toast } = useToast();
+
+  // Define the form state with proper typing to match the schema
+  const [formValues, setFormValues] = useState<
+    z.infer<typeof emailSettingsSchema>
+  >({
+    "mail.host": "",
+    "mail.port": "",
+    "mail.username": "",
+    "mail.password": "",
+    "mail.protocol": "smtp",
+    "mail.from": "",
+    "mail.fromName": "",
+    "mail.smtp.auth": "true" as const,
+    "mail.smtp.starttls.enable": "true" as const,
+    "mail.smtp.ssl.enable": "false" as const,
+    "mail.debug": "false" as const,
+  });
+
+  // Initialize form with proper typing
+  const form = useForm<z.infer<typeof emailSettingsSchema>>({
+    resolver: zodResolver(emailSettingsSchema),
+    defaultValues: formValues,
+    mode: "onSubmit", // Only validate on form submission
+    reValidateMode: "onSubmit", // Only revalidate on form submission
+  });
+
+  // Handle field value change with proper typing
+  const handleValueChange = (fieldName: string, value: string) => {
+    setFormValues((prev) => ({
+      ...prev,
+      [fieldName]: value as any,
+    }));
+
+    // Update the form state
+    form.setValue(fieldName as any, value as any, {
+      shouldDirty: true,
+      shouldValidate: false,
+    });
+
+    // Clear the error for this field if it exists
+    if (
+      form.formState.errors[
+        fieldName as keyof z.infer<typeof emailSettingsSchema>
+      ]
+    ) {
+      form.clearErrors(fieldName as any);
+    }
+
+    // Optionally validate just this field for immediate feedback
+    if (submitAttempted) {
+      // Only validate individual fields after first submission attempt
+      validateField(fieldName, value);
+    }
+  };
+
+  // Validate a single field
+  const validateField = (fieldName: string, value: string) => {
+    try {
+      // Create a schema just for this field
+      const fieldSchema = z.object({
+        [fieldName]:
+          emailSettingsSchema.shape[
+            fieldName as keyof z.infer<typeof emailSettingsSchema>
+          ],
+      });
+
+      // Validate just this field
+      fieldSchema.parse({ [fieldName]: value });
+
+      // Clear error if validation passes
+      form.clearErrors(fieldName as any);
+    } catch (error) {
+      if (error instanceof z.ZodError) {
+        // Set error if validation fails
+        const fieldError = error.errors.find((e) => e.path[0] === fieldName);
+        if (fieldError) {
+          form.setError(fieldName as any, {
+            type: "manual",
+            message: fieldError.message,
+          });
+        }
+      }
+    }
+  };
+
+  // Load settings
+  useEffect(() => {
+    const loadSettings = async () => {
+      try {
+        const settings = await findAppSettingsByGroup("mail", setError);
+        if (settings && settings.length > 0) {
+          const loadedValues = fromAppSettings(settings);
+
+          // Ensure all required boolean fields have default values
+          const completeValues = {
+            ...formValues,
+            ...loadedValues,
+            "mail.smtp.auth": (loadedValues["mail.smtp.auth"] || "true") as
+              | "true"
+              | "false",
+            "mail.smtp.starttls.enable": (loadedValues[
+              "mail.smtp.starttls.enable"
+            ] || "true") as "true" | "false",
+            "mail.smtp.ssl.enable": (loadedValues["mail.smtp.ssl.enable"] ||
+              "false") as "true" | "false",
+            "mail.debug": (loadedValues["mail.debug"] || "false") as
+              | "true"
+              | "false",
+            "mail.protocol": loadedValues["mail.protocol"] || "smtp",
+          };
+
+          // Set our local state
+          setFormValues(completeValues);
+
+          // Reset form with loaded values
+          form.reset(completeValues);
+        }
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadSettings();
+  }, [setError]);
+
+  // Handle form submission
+  const onSubmit = async () => {
+    setSubmitAttempted(true);
+
+    // First validate form against our custom values
+    const validationResult =
+      await emailSettingsSchema.safeParseAsync(formValues);
+
+    if (validationResult.success) {
+      console.log("Form validation successful");
+
+      const payload = toAppSettings(formValues);
+      console.log("Submitting payload:", payload);
+
+      await updateAppSettings(payload, setError);
+      toast({ description: "Settings saved successfully" });
+    } else {
+      console.log("Form validation failed:", validationResult.error);
+
+      // Clear all existing errors first
+      form.clearErrors();
+
+      // Set the errors in the form
+      const errors = validationResult.error.flatten().fieldErrors;
+      Object.entries(errors).forEach(([field, errorMessages]) => {
+        if (errorMessages && errorMessages.length > 0) {
+          form.setError(field as any, {
+            type: "manual",
+            message: errorMessages[0],
+          });
+        }
+      });
+    }
+  };
+
+  if (loading) {
+    return <p className="text-muted-foreground text-sm">Loading settings...</p>;
+  }
+
+  return (
+    <Form {...form}>
+      <form
+        onSubmit={(e) => {
+          e.preventDefault();
+          onSubmit();
+        }}
+        className="space-y-6 max-w-5xl"
+      >
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          {Object.entries(FIELD_GROUPS).map(([groupLabel, keys]) => (
+            <div
+              key={groupLabel}
+              className="space-y-4 border p-4 rounded-lg h-full"
+            >
+              <h3 className="text-lg font-semibold mb-2">{groupLabel}</h3>
+              {keys.map((key) => {
+                const meta = FIELD_META[key];
+                // Use type casting to handle the FormField typing issue
+                const fieldKey = key as any;
+
+                return (
+                  <FormField
+                    key={key}
+                    control={form.control as any}
+                    name={fieldKey}
+                    render={({ field }) => (
+                      <FormItem className="space-y-2">
+                        <FormLabel>
+                          {meta.label}
+                          {(key === "mail.host" || key === "mail.port") && " *"}
+                        </FormLabel>
+                        <FormControl>
+                          {meta.type === "boolean" ? (
+                            <Select
+                              value={formValues[key as keyof typeof formValues]}
+                              onValueChange={(value) =>
+                                handleValueChange(key, value)
+                              }
+                              defaultValue={
+                                key.includes("ssl") || key.includes("debug")
+                                  ? "false"
+                                  : "true"
+                              }
+                            >
+                              <SelectTrigger className="w-full">
+                                <SelectValue />
+                              </SelectTrigger>
+                              <SelectContent>
+                                <SelectItem value="true">True</SelectItem>
+                                <SelectItem value="false">False</SelectItem>
+                              </SelectContent>
+                            </Select>
+                          ) : meta.type === "password" ? (
+                            <div className="relative">
+                              <Input
+                                type={showPassword ? "text" : "password"}
+                                value={
+                                  formValues[key as keyof typeof formValues]
+                                }
+                                onChange={(e) =>
+                                  handleValueChange(key, e.target.value)
+                                }
+                                className="pr-10"
+                              />
+                              <button
+                                type="button"
+                                onClick={() => setShowPassword((prev) => !prev)}
+                                className="absolute right-2 top-2 text-muted-foreground hover:text-foreground"
+                              >
+                                {showPassword ? (
+                                  <EyeOffIcon className="w-4 h-4" />
+                                ) : (
+                                  <EyeIcon className="w-4 h-4" />
+                                )}
+                              </button>
+                            </div>
+                          ) : (
+                            <Input
+                              value={formValues[key as keyof typeof formValues]}
+                              onChange={(e) =>
+                                handleValueChange(key, e.target.value)
+                              }
+                            />
+                          )}
+                        </FormControl>
+                        {meta.description && (
+                          <FormDescription>{meta.description}</FormDescription>
+                        )}
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                );
+              })}
+            </div>
+          ))}
+        </div>
+
+        {submitAttempted && Object.keys(form.formState.errors).length > 0 && (
+          <div className="text-destructive font-medium p-3 bg-destructive/10 rounded-md">
+            Please fill in all required fields before submitting
+          </div>
+        )}
+
+        <Button type="submit" disabled={form.formState.isSubmitting}>
+          {form.formState.isSubmitting ? "Saving..." : "Save Settings"}
+        </Button>
+      </form>
+    </Form>
+  );
+}

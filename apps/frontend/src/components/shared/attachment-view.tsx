@@ -60,14 +60,14 @@ const AttachmentView = ({ entityType, entityId }: AttachmentViewProps) => {
   // ✅ Define permissions
   const canView =
     PermissionUtils.canRead(permissionLevel) ||
-    teamRole === "Manager" ||
-    teamRole === "Member" ||
-    teamRole === "Guest";
+    teamRole === "manager" ||
+    teamRole === "member" ||
+    teamRole === "guest";
 
   const canWrite =
     PermissionUtils.canWrite(permissionLevel) ||
-    teamRole === "Manager" ||
-    teamRole === "Member";
+    teamRole === "manager" ||
+    teamRole === "member";
 
   // Fetch attachments using SWR
   const {

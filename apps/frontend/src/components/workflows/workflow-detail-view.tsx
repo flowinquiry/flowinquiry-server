@@ -91,13 +91,16 @@ const GlobalWorkflowDetailView = ({ workflowId }: { workflowId: number }) => {
         </div>
 
         <div className="text-sm text-muted-foreground">
-          Ticket type: {workflowDetail.requestName}
+          {t.workflows.detail("ticket_type_label", {
+            requestName: workflowDetail.requestName,
+          })}
         </div>
         {/* Buttons Row */}
         <div className="flex justify-end space-x-4">
           {PermissionUtils.canWrite(permissionLevel) && (
             <Button onClick={() => setIsEditing(!isEditing)}>
-              {isEditing ? "Cancel Edit" : <Edit />} Customize Workflow
+              {isEditing ? t.workflows.detail("cancel_edit") : <Edit />}{" "}
+              {t.workflows.detail("customize_workflow")}
             </Button>
           )}
           {PermissionUtils.canAccess(permissionLevel) &&
@@ -106,7 +109,7 @@ const GlobalWorkflowDetailView = ({ workflowId }: { workflowId: number }) => {
                 variant="destructive"
                 onClick={() => removeWorkflow(workflowDetail)}
               >
-                <Trash /> Delete
+                <Trash /> {t.common.buttons("delete")}
               </Button>
             )}
         </div>

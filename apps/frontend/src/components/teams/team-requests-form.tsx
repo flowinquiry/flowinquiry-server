@@ -100,7 +100,7 @@ export const TeamRequestForm = ({
   if (loading) {
     return (
       <div className="py-4 flex justify-center items-center">
-        <Spinner>Loading data...</Spinner>
+        <Spinner>{t.common.misc("loading_data")}</Spinner>
       </div>
     );
   }
@@ -108,8 +108,8 @@ export const TeamRequestForm = ({
   if (!teamRequest) {
     return (
       <div className="py-4">
-        <h1 className="text-2xl font-bold">Error</h1>
-        <p className="text-red-500 mt-4">Team request not found</p>
+        <h1 className="text-2xl font-bold">{t.common.misc("error")}</h1>
+        <p className="text-red-500 mt-4">Ticket does not exist.</p>
         <div className="mt-4">
           <Button variant="secondary" onClick={() => router.back()}>
             Go Back
@@ -174,7 +174,7 @@ export const TeamRequestForm = ({
             <ExtInputField
               form={form}
               fieldName="requestTitle"
-              label="Title"
+              label={t.teams.tickets.form.base("name")}
               required
             />
           </div>
@@ -186,7 +186,8 @@ export const TeamRequestForm = ({
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>
-                    Description <span className="text-destructive"> *</span>
+                    {t.teams.tickets.form.base("description")}{" "}
+                    <span className="text-destructive"> *</span>
                   </FormLabel>
                   <FormControl>
                     <RichTextEditor
@@ -203,7 +204,7 @@ export const TeamRequestForm = ({
           <TeamUserSelectField
             form={form}
             fieldName="assignUserId"
-            label="Assignee"
+            label={t.teams.tickets.form.base("assignee")}
             teamId={teamRequest.teamId!}
           />
 
@@ -212,7 +213,7 @@ export const TeamRequestForm = ({
             name="priority"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Priority</FormLabel>
+                <FormLabel>{t.teams.tickets.form.base("priority")}</FormLabel>
                 <FormControl>
                   <TeamRequestPrioritySelect
                     value={field.value}
@@ -229,22 +230,22 @@ export const TeamRequestForm = ({
           <DatePickerField
             form={form}
             fieldName="estimatedCompletionDate"
-            label="Target Completion Date"
-            placeholder="Select a date"
+            label={t.teams.tickets.form.base("target_completion_date")}
+            placeholder={t.common.misc("date_select_place_holder")}
           />
 
           <DatePickerField
             form={form}
             fieldName="actualCompletionDate"
-            label="Actual Completion Date"
-            placeholder="Select a date"
+            label={t.teams.tickets.form.base("actual_completion_date")}
+            placeholder={t.common.misc("date_select_place_holder")}
           />
 
           <TicketChannelSelectField form={form} />
           <WorkflowStateSelectField
             form={form}
             name="currentStateId"
-            label="State"
+            label={t.teams.tickets.form.base("state")}
             required
             workflowId={teamRequest.workflowId!}
             workflowStateId={teamRequest.currentStateId!}
@@ -253,8 +254,8 @@ export const TeamRequestForm = ({
 
           <div className="col-span-1 sm:col-span-2 flex flex-row gap-4">
             <SubmitButton
-              label="Save changes"
-              labelWhileLoading="Saving changes..."
+              label={t.common.buttons("save")}
+              labelWhileLoading={t.common.buttons("saving")}
             />
             <Button variant="secondary" onClick={() => router.back()}>
               {t.common.buttons("discard")}

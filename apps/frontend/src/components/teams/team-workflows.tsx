@@ -93,7 +93,7 @@ const TeamWorkflowsView = () => {
                   <div className="text-left">
                     <p className="font-bold">{team.name}</p>
                     <p className="text-sm text-gray-500">
-                      {team.slogan ?? "Stronger Together"}
+                      {team.slogan ?? t.teams.common("default_slogan")}
                     </p>
                   </div>
                 </TooltipContent>
@@ -104,7 +104,7 @@ const TeamWorkflowsView = () => {
               />
             </div>
             {(PermissionUtils.canWrite(permissionLevel) ||
-              teamRole === "Manager") && (
+              teamRole === "manager") && (
               <Link
                 href={`/portal/teams/${obfuscate(team.id)}/workflows/new`}
                 className={cn(buttonVariants({ variant: "default" }))}
@@ -137,7 +137,7 @@ const TeamWorkflowsView = () => {
                   {workflow.description}
                 </div>
                 {(PermissionUtils.canWrite(permissionLevel) ||
-                  teamRole === "Manager") &&
+                  teamRole === "manager") &&
                   !workflow.useForProject && (
                     <DropdownMenu>
                       <DropdownMenuTrigger asChild>

@@ -16,6 +16,7 @@ import useSWR from "swr";
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Spinner } from "@/components/ui/spinner";
+import { useAppClientTranslations } from "@/hooks/use-translations";
 import { getTicketCreationDaySeries } from "@/lib/actions/teams-request.action";
 import { useError } from "@/providers/error-provider";
 import { useTimeRange } from "@/providers/time-range-provider";
@@ -24,6 +25,7 @@ const TicketCreationByDaySeriesChart = ({ teamId }: { teamId: number }) => {
   const { setError } = useError();
   const { timeRange, customDates } = useTimeRange();
   const [collapsed, setCollapsed] = useState(false);
+  const t = useAppClientTranslations();
 
   // Calculate `days` dynamically based on timeRange selection
   const days = useMemo(() => {
@@ -73,7 +75,7 @@ const TicketCreationByDaySeriesChart = ({ teamId }: { teamId: number }) => {
             )}
           </button>
           <CardTitle className="text-left">
-            Daily Ticket Trends (Created & Closed)
+            {t.teams.dashboard("tickets_times_series.title")}
           </CardTitle>
         </div>
       </CardHeader>
@@ -83,11 +85,14 @@ const TicketCreationByDaySeriesChart = ({ teamId }: { teamId: number }) => {
           {isValidating ? (
             <div className="flex flex-col items-center justify-center">
               <Spinner className="mb-4">
-                <span>Loading chart data...</span>
+                <span>{t.common.misc("loading_data")}</span>
               </Spinner>
             </div>
           ) : formattedData.length === 0 ? (
-            <p className="text-center">No ticket data available.</p>
+            <p className="text-center">
+              {" "}
+              {t.teams.dashboard("tickets_times_series.no_data")}
+            </p>
           ) : (
             <ResponsiveContainer width="100%" height="100%">
               <LineChart
@@ -101,8 +106,12 @@ const TicketCreationByDaySeriesChart = ({ teamId }: { teamId: number }) => {
                   formatter={(value: number, name: string) => [
                     `${value}`,
                     name === "createdCount"
-                      ? "Created Tickets"
-                      : "Closed Tickets",
+                      ? t.teams.dashboard(
+                          "tickets_times_series.created_tickets",
+                        )
+                      : t.teams.dashboard(
+                          "tickets_times_series.closed_tickets",
+                        ),
                   ]}
                   labelFormatter={(label: string) => {
                     const date = formattedData.find(
@@ -117,13 +126,17 @@ const TicketCreationByDaySeriesChart = ({ teamId }: { teamId: number }) => {
                   dataKey="createdCount"
                   stroke="#8884d8"
                   activeDot={{ r: 8 }}
-                  name="Created Tickets"
+                  name={t.teams.dashboard(
+                    "tickets_times_series.created_tickets",
+                  )}
                 />
                 <Line
                   type="monotone"
                   dataKey="closedCount"
                   stroke="#82ca9d"
-                  name="Closed Tickets"
+                  name={t.teams.dashboard(
+                    "tickets_times_series.closed_tickets",
+                  )}
                 />
               </LineChart>
             </ResponsiveContainer>

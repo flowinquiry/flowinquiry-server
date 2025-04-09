@@ -40,6 +40,7 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import WorkflowStateSelectField from "@/components/workflows/workflow-state-select-field";
+import { useAppClientTranslations } from "@/hooks/use-translations";
 import { updateTeamRequest } from "@/lib/actions/teams-request.action";
 import { obfuscate } from "@/lib/endecode";
 import { cn, getSpecifiedColor } from "@/lib/utils";
@@ -111,6 +112,7 @@ const TeamRequestDetailSheet: React.FC<RequestDetailsProps> = ({
   const [isEditingCompletionDate, setIsEditingCompletionDate] = useState(false);
   const [isEditingAssignment, setIsEditingAssignment] = useState(false);
   const { setError } = useError();
+  const t = useAppClientTranslations();
 
   const form = useForm<TeamRequestDTOWithStringDates>({
     defaultValues: teamRequest as unknown as TeamRequestDTOWithStringDates,
@@ -481,9 +483,13 @@ const TeamRequestDetailSheet: React.FC<RequestDetailsProps> = ({
                           onEdit={() => setIsEditingChannel(true)}
                         >
                           <Badge variant="outline">
-                            {teamRequest.channel ||
-                              request.channel ||
-                              "Internal"}
+                            {teamRequest?.channel
+                              ? t.teams.tickets.form.channels(
+                                  teamRequest.channel,
+                                )
+                              : request?.channel
+                                ? t.teams.tickets.form.channels(request.channel)
+                                : t.teams.tickets.form.channels("internal")}
                           </Badge>
                         </EditableSection>
                       )}

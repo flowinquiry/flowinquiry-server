@@ -24,6 +24,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import { useAppClientTranslations } from "@/hooks/use-translations";
 
 interface ImageCropperProps {
   dialogOpen: boolean;
@@ -42,6 +43,7 @@ export function ImageCropper({
 
   const imgRef = React.useRef<HTMLImageElement | null>(null);
 
+  const t = useAppClientTranslations();
   const [crop, setCrop] = React.useState<Crop>();
   const [croppedImageUrl, setCroppedImageUrl] = React.useState<string>("");
   const [croppedImage, setCroppedImage] = React.useState<string>("");
@@ -133,7 +135,7 @@ export function ImageCropper({
                 onLoad={onImageLoad}
               />
               <AvatarFallback className="size-full min-h-[460px] rounded-none">
-                Loading...
+                {t.common.buttons("loading")}
               </AvatarFallback>
             </Avatar>
           </ReactCrop>
@@ -150,7 +152,7 @@ export function ImageCropper({
               }}
             >
               <Trash2Icon className="mr-1.5 size-4" />
-              Cancel
+              {t.common.buttons("cancel")}
             </Button>
           </DialogClose>
           <Button type="submit" size={"sm"} className="w-fit" onClick={onCrop}>

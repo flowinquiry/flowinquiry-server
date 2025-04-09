@@ -11,6 +11,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 
 import { Breadcrumbs } from "@/components/breadcrumbs";
+import { useAppClientTranslations } from "@/hooks/use-translations";
 import { obfuscate } from "@/lib/endecode";
 import { cn } from "@/lib/utils";
 import { useBreadcrumb } from "@/providers/breadcrumb-provider";
@@ -23,31 +24,32 @@ const TeamNavLayout = ({
   children: React.ReactNode;
 }) => {
   const pathname = usePathname();
+  const t = useAppClientTranslations();
 
   const teamFeatures = [
     {
       href: `/portal/teams/${obfuscate(teamId)}/dashboard`,
-      label: "Dashboard",
+      label: t.common.navigation("dashboard"),
       icon: Activity,
     },
     {
       href: `/portal/teams/${obfuscate(teamId)}/members`,
-      label: "Members",
+      label: t.common.navigation("members"),
       icon: Users,
     },
     {
       href: `/portal/teams/${obfuscate(teamId)}/requests`,
-      label: "Tickets",
+      label: t.common.navigation("tickets"),
       icon: ArrowRightCircleIcon,
     },
     {
       href: `/portal/teams/${obfuscate(teamId)}/projects`,
-      label: "Projects",
+      label: t.common.navigation("projects"),
       icon: FolderKanban,
     },
     {
       href: `/portal/teams/${obfuscate(teamId)}/workflows`,
-      label: "Workflows",
+      label: t.common.navigation("workflows"),
       icon: Shuffle,
     },
   ];

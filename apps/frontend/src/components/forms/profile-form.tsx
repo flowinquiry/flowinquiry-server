@@ -34,6 +34,7 @@ import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
 import { useImageCropper } from "@/hooks/use-image-cropper";
 import { useToast } from "@/hooks/use-toast";
+import { useAppClientTranslations } from "@/hooks/use-translations";
 import {
   changePassword,
   findUserById,
@@ -58,6 +59,7 @@ type UserTypeWithFile = z.infer<typeof userSchemaWithFile>;
 export const ProfileForm = () => {
   const router = useRouter();
   const { data: session } = useSession();
+  const t = useAppClientTranslations();
   const { toast } = useToast();
   const {
     selectedFile,
@@ -129,8 +131,8 @@ export const ProfileForm = () => {
   return (
     <div className="grid grid-cols-1 gap-4">
       <Heading
-        title="Profile"
-        description="Manage your account details here. Update your email, profile picture, password, and other personal information to keep your profile accurate and secure."
+        title={t.users.profile("title")}
+        description={t.users.profile("description")}
       />
       <Separator />
 
@@ -164,12 +166,14 @@ export const ProfileForm = () => {
             >
               <DialogTrigger asChild>
                 <Button variant="link" className="mt-2">
-                  Change Password
+                  {t.users.profile("change_password")}
                 </Button>
               </DialogTrigger>
               <DialogContent>
                 <DialogHeader>
-                  <DialogTitle>Change Password</DialogTitle>
+                  <DialogTitle>
+                    {t.users.profile("change_password")}
+                  </DialogTitle>
                 </DialogHeader>
                 <Form {...passwordForm}>
                   <form
@@ -182,7 +186,9 @@ export const ProfileForm = () => {
                       name="currentPassword"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel>Current Password</FormLabel>
+                          <FormLabel>
+                            {t.users.profile("current_password")}
+                          </FormLabel>
                           <FormControl>
                             <div className="relative">
                               <Input
@@ -192,7 +198,6 @@ export const ProfileForm = () => {
                                     ? "text"
                                     : "password"
                                 }
-                                placeholder="Enter current password"
                               />
                               <button
                                 type="button"
@@ -223,7 +228,9 @@ export const ProfileForm = () => {
                       name="newPassword"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel>New Password</FormLabel>
+                          <FormLabel>
+                            {t.users.profile("new_password")}
+                          </FormLabel>
                           <FormControl>
                             <div className="relative">
                               <Input
@@ -233,7 +240,6 @@ export const ProfileForm = () => {
                                     ? "text"
                                     : "password"
                                 }
-                                placeholder="Enter new password"
                               />
                               <button
                                 type="button"
@@ -260,13 +266,13 @@ export const ProfileForm = () => {
 
                     {/* Submit and Cancel Buttons */}
                     <div className="flex flex-row gap-4">
-                      <Button type="submit">Save</Button>
+                      <Button type="submit">{t.common.buttons("save")}</Button>
                       <Button
                         variant="secondary"
                         type="button"
                         onClick={() => setPasswordDialogOpen(false)}
                       >
-                        Cancel
+                        {t.common.buttons("cancel")}
                       </Button>
                     </div>
                   </form>
@@ -281,9 +287,9 @@ export const ProfileForm = () => {
               name="email"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Email</FormLabel>
+                  <FormLabel>{t.users.form("email")}</FormLabel>
                   <FormControl>
-                    <Input placeholder="Email" {...field} readOnly />
+                    <Input {...field} readOnly />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -293,50 +299,45 @@ export const ProfileForm = () => {
               form={form}
               required={true}
               fieldName="timezone"
-              label="Timezone"
+              label={t.users.form("timezone")}
             />
             <ExtInputField
               form={form}
               required={true}
               fieldName="firstName"
-              label="First Name"
-              placeholder="First Name"
+              label={t.users.form("first_name")}
             />
             <ExtInputField
               form={form}
               required={true}
               fieldName="lastName"
-              label="Last Name"
-              placeholder="Last Name"
+              label={t.users.form("last_name")}
             />
             <ExtTextAreaField form={form} fieldName="about" label="About" />
             <ExtInputField
               form={form}
               fieldName="address"
-              label="Address"
-              placeholder="Address"
+              label={t.users.form("address")}
             />
             <ExtInputField
               form={form}
               fieldName="city"
-              label="City"
-              placeholder="City"
+              label={t.users.form("city")}
             />
             <ExtInputField
               form={form}
               fieldName="state"
-              label="State"
-              placeholder="State"
+              label={t.users.form("city")}
             />
             <CountrySelectField
               form={form}
               fieldName="country"
-              label="Country"
+              label={t.users.form("country")}
             />
             <div className="md:col-span-2 flex flex-row gap-4">
-              <Button type="submit">Submit</Button>
+              <Button type="submit">{t.common.buttons("submit")}</Button>
               <Button variant="secondary" onClick={() => router.back()}>
-                Discard
+                {t.common.buttons("discard")}
               </Button>
             </div>
           </div>

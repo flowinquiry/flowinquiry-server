@@ -17,15 +17,17 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { useAppClientTranslations } from "@/hooks/use-translations";
 import { TeamRole } from "@/types/teams";
 
-const roles = ["Manager", "Member", "Guest", "None"] as const;
+const roles = ["manager", "member", "guest", "none"] as const;
 
 type FormValues = {
   role: TeamRole;
 };
 
 const TeamRoleSelectField = () => {
+  const t = useAppClientTranslations();
   const form = useFormContext<FormValues>();
 
   return (
@@ -34,16 +36,16 @@ const TeamRoleSelectField = () => {
       name="role"
       render={({ field }) => (
         <FormItem>
-          <FormLabel>Role</FormLabel>
+          <FormLabel>{t.teams.common("role")}</FormLabel>
           <FormControl>
             <Select onValueChange={field.onChange} defaultValue={field.value}>
               <SelectTrigger>
-                <SelectValue placeholder="Select a role" />
+                <SelectValue />
               </SelectTrigger>
               <SelectContent>
                 {roles.map((role) => (
                   <SelectItem key={role} value={role}>
-                    {role}
+                    {t.teams.roles(role)}
                   </SelectItem>
                 ))}
               </SelectContent>

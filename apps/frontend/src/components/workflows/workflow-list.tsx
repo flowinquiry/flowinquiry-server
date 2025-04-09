@@ -26,6 +26,7 @@ import {
 } from "@/components/ui/tooltip";
 import { useDebouncedCallback } from "@/hooks/use-debounced-callback";
 import { usePagePermission } from "@/hooks/use-page-permission";
+import { useAppClientTranslations } from "@/hooks/use-translations";
 import {
   deleteWorkflow,
   searchWorkflows,
@@ -49,6 +50,7 @@ const WorkflowsView = () => {
   const [sortDirection, setSortDirection] = useState<"asc" | "desc">("asc");
   const { setError } = useError();
   const permissionLevel = usePagePermission();
+  const t = useAppClientTranslations();
 
   const searchParams = useSearchParams();
   const { replace } = useRouter();
@@ -134,14 +136,14 @@ const WorkflowsView = () => {
     <div className="grid grid-cols-1 gap-4">
       <div className="flex flex-row justify-between">
         <Heading
-          title={`Workflows (${totalElements})`}
-          description="Centralize and manage all workflows effortlessly with clear visibility, ticket types, and descriptions at a glance."
+          title={t.workflows.list("title", { totalElements })}
+          description={t.workflows.list("description")}
         />
 
         <div className="flex space-x-4">
           <Input
             className="w-[18rem]"
-            placeholder="Search workflow names ..."
+            placeholder={t.workflows.common("search_workflow")}
             onChange={(e) => {
               handleSearchTeams(e.target.value);
             }}
@@ -164,7 +166,8 @@ const WorkflowsView = () => {
               href={"/portal/settings/workflows/new"}
               className={cn(buttonVariants({ variant: "default" }))}
             >
-              <Plus className="mr-2 h-4 w-4" /> New workflow
+              <Plus className="mr-2 h-4 w-4" />{" "}
+              {t.workflows.list("new_workflow")}
             </Link>
           )}
         </div>
@@ -172,7 +175,7 @@ const WorkflowsView = () => {
       <Separator />
       {loading ? (
         <LoadingPlaceholder
-          message="Loading workflows..."
+          message={t.common.misc("loading_data")}
           skeletonCount={3}
           skeletonWidth="28rem"
         />

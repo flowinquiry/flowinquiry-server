@@ -9,6 +9,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { useAppClientTranslations } from "@/hooks/use-translations";
 import { getValidTargetStates } from "@/lib/actions/workflows.action";
 import { useError } from "@/providers/error-provider";
 import { WorkflowStateDTO } from "@/types/workflows";
@@ -35,6 +36,7 @@ const WorkflowStateSelect: React.FC<WorkflowStateSelectProps> = ({
   const [workflowStates, setWorkflowStates] = useState<WorkflowStateDTO[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const { setError } = useError();
+  const t = useAppClientTranslations();
 
   useEffect(() => {
     const loadWorkflowStates = async () => {
@@ -80,8 +82,10 @@ const WorkflowStateSelect: React.FC<WorkflowStateSelectProps> = ({
       disabled={disabled || isLoading || workflowStates.length === 0}
     >
       <SelectTrigger className="w-full">
-        <SelectValue placeholder="Select a state">
-          {selectedState?.stateName || "Loading states..."}
+        <SelectValue
+          placeholder={t.workflows.common("state_select_place_holder")}
+        >
+          {selectedState?.stateName || t.common.misc("loading_data")}
         </SelectValue>
       </SelectTrigger>
       <SelectContent>

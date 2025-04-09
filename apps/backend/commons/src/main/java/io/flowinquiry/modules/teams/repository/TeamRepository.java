@@ -82,7 +82,7 @@ public interface TeamRepository extends JpaRepository<Team, Long>, JpaSpecificat
         @QueryHint(name = "org.hibernate.cacheRegion", value = "queryWorkflows")
     })
     @Query(
-            "SELECT COUNT(ut) > 0 FROM UserTeam ut WHERE ut.team.id = :teamId AND ut.role.name = 'Manager'")
+            "SELECT COUNT(ut) > 0 FROM UserTeam ut WHERE ut.team.id = :teamId AND ut.role.name = 'manager'")
     boolean existsManagerInTeam(@Param("teamId") Long teamId);
 
     /**
@@ -98,7 +98,7 @@ public interface TeamRepository extends JpaRepository<Team, Long>, JpaSpecificat
     @Query(
             """
         SELECT ut.user FROM UserTeam ut
-        WHERE ut.team.id = :teamId AND ut.role.name = 'Manager'
+        WHERE ut.team.id = :teamId AND ut.role.name = 'manager'
     """)
     List<User> findManagersByTeamId(@Param("teamId") Long teamId);
 }

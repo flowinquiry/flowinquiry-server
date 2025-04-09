@@ -27,17 +27,18 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
+import { useAppClientTranslations } from "@/hooks/use-translations";
 import { ENABLE_SOCIAL_LOGIN } from "@/lib/constants";
 
-const formSchema = z.object({
-  email: z
-    .string()
-    .email({ message: "Invalid email" })
-    .min(1, { message: "Email is required" }),
-  password: z.string().min(1, { message: "Password is required" }),
-});
-
 const LoginForm = () => {
+  const t = useAppClientTranslations();
+  const formSchema = z.object({
+    email: z
+      .string()
+      .email({ message: t.login.form("invalid_email") })
+      .min(1, { message: t.login.form("required_email") }),
+    password: z.string().min(1, { message: t.login.form("required_password") }),
+  });
   const router = useRouter();
   const { data: session, status } = useSession();
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
@@ -60,14 +61,14 @@ const LoginForm = () => {
     if (response?.error === null) {
       router.push("/portal");
     } else {
-      setErrorMessage("Login failed. Please try again.");
+      setErrorMessage(t.login.form("login_failed_message"));
     }
   };
 
   const handleGoogleSignIn = async () => {
     const response = await signIn("google", { redirect: false });
     if (response?.error) {
-      setErrorMessage("Google login failed. Please try again.");
+      setErrorMessage(t.login.form("google_login_failed_message"));
       return;
     }
   };
@@ -83,7 +84,7 @@ const LoginForm = () => {
       <div className="mb-4 flex flex-col items-center">
         <AppLogo size={100} />
         <p className="mt-2 text-lg font-semibold text-gray-600 dark:text-gray-300">
-          Your Partner in Keeping Customers Happy and Requests On Track
+          {t.login.form("title")}
         </p>
       </div>
 
@@ -129,7 +130,7 @@ const LoginForm = () => {
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel className="text-xs font-bold text-zinc-500 dark:text-white">
-                      Password
+                      {t.login.form("password")}
                     </FormLabel>
                     <FormControl>
                       <Input
@@ -146,10 +147,12 @@ const LoginForm = () => {
               />
               <div className="flex flex-row justify-items-center">
                 <Button variant="link" className="py-0 h-auto">
-                  <Link href="/forgot-password">Forgot password</Link>
+                  <Link href="/forgot-password">
+                    {t.login.form("forgot_password_cta")}
+                  </Link>
                 </Button>
               </div>
-              <Button className="w-full">Sign In</Button>
+              <Button className="w-full">{t.login.form("signin")}</Button>
             </form>
           </Form>
 
@@ -173,7 +176,7 @@ const LoginForm = () => {
                     alt="Google"
                     className="h-5 w-5"
                   />
-                  <span>Sign In with Google</span>
+                  <span>{t.login.form("signin_google")}</span>
                 </Button>
               </div>
             </>

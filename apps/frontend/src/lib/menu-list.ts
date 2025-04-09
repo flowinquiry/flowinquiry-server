@@ -1,11 +1,4 @@
-import {
-  Layers,
-  LayoutGrid,
-  LucideIcon,
-  ShieldCheck,
-  Shuffle,
-  Users,
-} from "lucide-react";
+import { Layers, LayoutGrid, LucideIcon } from "lucide-react";
 import { createTranslator, Messages } from "next-intl";
 
 import { Permission } from "@/providers/permissions-provider";
@@ -99,25 +92,35 @@ export function getMenuList(
       ],
     },
     {
-      groupLabel: comT("settings"),
+      groupLabel: "",
       menus: [
         {
-          href: "/portal/users",
-          label: comT("users"),
-          resource: "Users",
-          icon: Users,
-        },
-        {
-          href: "/portal/settings/authorities",
-          label: comT("authorities"),
-          resource: "Authorities",
-          icon: ShieldCheck,
-        },
-        {
-          href: "/portal/settings/workflows",
-          label: comT("workflows"),
-          resource: "Workflows",
-          icon: Shuffle,
+          href: "/portal/settings",
+          label: comT("settings"),
+          resource: "Teams",
+          icon: Layers,
+          submenus: [
+            {
+              href: "/portal/users",
+              label: comT("users"),
+              resource: "Users",
+            },
+            {
+              href: "/portal/settings/authorities",
+              label: comT("authorities"),
+              resource: "Authorities",
+            },
+            {
+              href: "/portal/settings/workflows",
+              label: comT("workflows"),
+              resource: "Workflows",
+            },
+            {
+              href: "/portal/settings/mail",
+              label: comT("mail"),
+              resource: "Mail",
+            },
+          ],
         },
       ],
     },

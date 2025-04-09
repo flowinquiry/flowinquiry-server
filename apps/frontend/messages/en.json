@@ -35,7 +35,8 @@
       "projects": "Projects",
       "tickets": "Tickets",
       "profile": "Profile",
-      "members": "Members"
+      "members": "Members",
+      "mail": "Mail"
     }
   },
   "header": {
@@ -43,6 +44,13 @@
       "title": "My tickets",
       "reported_tickets": "My reported tickets",
       "assigned_tickets": "My assigned tickets"
+    },
+    "nav": {
+      "profile": "Profile",
+      "about": "About",
+      "logout": "Logout",
+      "intro": "FlowInquiry is a powerful request management solution for teams.\n              It empowers organizations to track, manage, and customize customer\n              inquiries through flexible workflows, enhancing collaboration and\n              productivity.",
+      "copyright": "All rights reserved"
     }
   },
   "dashboard": {
@@ -139,5 +147,6 @@
       "remove_dialog_title": "Confirm Deletion",
       "remove_dialog_content": "Are you sure you want to delete <strong>{name}</strong>? This action cannot be undone."
     }
-  }
+  },
+  "mail": {}
 }

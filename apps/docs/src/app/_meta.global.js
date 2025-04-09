@@ -37,6 +37,7 @@ export default {
           kubernetes: "Kubernetes",
         },
       },
+      documentation: "Documentation",
     },
   },
   how_to_contributes: {

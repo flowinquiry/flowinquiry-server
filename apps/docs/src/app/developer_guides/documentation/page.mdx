@@ -1,0 +1,101 @@
+---
+sidebarTitle: Documentation
+description: Learn how to write the FlowInquiry documentation to guide FlowInquiry's users how to use and enhance the platform properly.
+---
+
+import { Callout, FileTree } from "nextra/components";
+
+# Getting started
+
+Flowinquiry uses [Nextra](https://nextra.site/) as the static site generator to generate the content on
+[FlowInquiry docs](https://docs.flowinquiry.io).
+
+## Get the latest sources from GitHub
+
+The source code for FlowInquiry’s docs is available at: https://github.com/flowinquiry/flowinquiry/tree/main/apps/docs
+
+You can also clone the repository to your local machine using the command below and navigate to the docs directory:
+
+```bash
+git clone https://github.com/flowinquiry/flowinquiry.git
+cd flowinquiry/apps/docs
+```
+
+## Add or edit content
+
+FlowInquiry has the below folder structure
+
+<FileTree>
+  <FileTree.Folder name="docs" defaultOpen>
+    <FileTree.Folder name="src/app" defaultOpen>
+      <FileTree.Folder name="about" defaultOpen />
+      <FileTree.Folder name="developer_guides" defaultOpen />
+      <FileTree.Folder name="how_to_contributes" defaultOpen />
+      <FileTree.Folder name="user_guides" defaultOpen />
+      <FileTree.File name="_meta.global.js" defaultOpen />
+    </FileTree.Folder>
+  </FileTree.Folder>
+</FileTree>
+
+File `_meta.global.js` is used as a centralized place to define global navigation and sidebar settings
+across the FlowInquiry's documentation
+
+```
+export default {
+  index: {
+    title: "Introduction",
+    type: "page",
+    display: "hidden",
+  },
+  developer_guides: {
+    type: "page",
+    title: "Developer Guides",
+    items: {
+      index: "Programming languages and development tools",
+      frontend: "Front-end",
+      backend: {
+        title: "Back-end",
+        items: {
+          getting_started: "Getting-started",
+          high_level_architect: "High-level architect",
+          database_migration: "Database migration",
+          integration_testing: "Integration Testing", //added the integrating section
+        },
+      },
+      deployment: {
+        title: "Deployment",
+        items: {
+          build_docker_image: "Build FlowInquiry Docker Images (Optional)",
+          docker: "Docker",
+          kubernetes: "Kubernetes",
+        },
+      },
+      documentation: "Documentation"
+    },
+  },
+  // ...
+  about: {
+    type: "page",
+    title: "About",
+  },
+};
+```
+
+Please make sure when you add the new content to the FlowInquiry's documentation, you put the proper entry into
+documentation's section such as `developer_guides`, `user_guides`, etc.
+
+# Launch the documentation side
+
+Run the command `pnpm dev:docs` then goes to `http://localhost:4000` to preview the FlowInquiry doc on your local machine
+
+```
+flowinquiry-docs:dev: > flowinquiry-docs@ dev docs
+flowinquiry-docs:dev: > next -p 4000
+flowinquiry-docs:dev:
+flowinquiry-docs:dev:    ▲ Next.js 15.2.4
+flowinquiry-docs:dev:    - Local:        http://localhost:4000
+flowinquiry-docs:dev:    - Network:      http://10.30.197.126:4000
+flowinquiry-docs:dev:
+flowinquiry-docs:dev:  ✓ Starting...
+flowinquiry-docs:dev:  ✓ Ready in 1871ms
+```

@@ -64,6 +64,22 @@ public class AppSettingService {
                 .toList();
     }
 
+    public List<AppSettingDTO> getSettingsByGroup(String group) {
+        List<AppSetting> settings =
+                repository.findAll(); // or create a custom query for better performance
+        return settings.stream()
+                .filter(s -> Objects.equals(s.getGroup(), group))
+                .map(
+                        s ->
+                                new AppSettingDTO(
+                                        s.getKey(),
+                                        s.getValue(),
+                                        s.getType(),
+                                        s.getGroup(),
+                                        s.getDescription()))
+                .toList();
+    }
+
     public Map<String, String> getAllValues() {
         List<AppSetting> all = repository.findAll();
         Map<String, String> result = new LinkedHashMap<>();

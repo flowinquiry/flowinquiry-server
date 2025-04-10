@@ -21,5 +21,8 @@ export function useAppClientTranslations() {
       common: useTranslations("authorities.common"),
       list: useTranslations("authorities.list"),
     },
+    header: {
+      nav: useTranslations("header.nav"),
+    },
   };
 }

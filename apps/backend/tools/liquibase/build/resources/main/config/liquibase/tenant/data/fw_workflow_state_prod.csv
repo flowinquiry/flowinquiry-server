@@ -1,8 +1,0 @@
-id;workflow_id;state_name;is_initial;is_final
-1;1;Backlog;True;False
-2;1;Ready;True;False
-3;1;In Progress;True;False
-4;1;Review;True;False
-5;1;Done;False;True
-6;2;Open;True;False
-7;2;Closed;False;True

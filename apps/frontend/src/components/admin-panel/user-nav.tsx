@@ -30,10 +30,12 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import { useAppClientTranslations } from "@/hooks/use-translations";
 import { BASE_URL } from "@/lib/constants";
 
 export function UserNav() {
   const { data: session } = useSession();
+  const t = useAppClientTranslations();
 
   return (
     <Dialog>
@@ -75,7 +77,7 @@ export function UserNav() {
             <DropdownMenuItem className="hover:cursor-pointer" asChild>
               <Link href="/portal/profile" className="flex items-center">
                 <CircleUserRound className="w-4 h-4 mr-3 text-muted-foreground" />
-                Profile
+                {t.header.nav("profile")}
               </Link>
             </DropdownMenuItem>
           </DropdownMenuGroup>
@@ -84,7 +86,7 @@ export function UserNav() {
             <DialogTrigger asChild>
               <DropdownMenuItem className="hover:cursor-pointer">
                 <Info className="w-4 h-4 mr-3 text-muted-foreground" />
-                About
+                {t.header.nav("about")}
               </DropdownMenuItem>
             </DialogTrigger>
           </DropdownMenuGroup>
@@ -94,7 +96,7 @@ export function UserNav() {
             onClick={() => signOut({ redirectTo: BASE_URL, redirect: true })}
           >
             <LogOut className="w-4 h-4 mr-3 text-muted-foreground" />
-            Sign out
+            {t.header.nav("logout")}
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
@@ -109,10 +111,7 @@ export function UserNav() {
               FlowInquiry
             </DialogTitle>
             <DialogDescription className="text-gray-600 dark:text-gray-400">
-              FlowInquiry is a powerful request management solution for teams.
-              It empowers organizations to track, manage, and customize customer
-              inquiries through flexible workflows, enhancing collaboration and
-              productivity.
+              {t.header.nav("intro")}
             </DialogDescription>
           </div>
         </DialogHeader>
@@ -121,7 +120,8 @@ export function UserNav() {
         <div className="mt-2 flex justify-between items-center border-t pt-2">
           {/* Copyright and Year */}
           <div className="text-sm text-gray-500 dark:text-gray-400">
-            © {new Date().getFullYear()} FlowInquiry. All rights reserved.
+            © {new Date().getFullYear()} FlowInquiry.{" "}
+            {t.header.nav("copyright")}.
           </div>
 
           {/* Website Link */}

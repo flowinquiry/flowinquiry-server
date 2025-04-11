@@ -29,7 +29,6 @@ if [ -f "$output_file" ]; then
   esac
 else
   # If the file doesn't exist, proceed with running the scripts
-  run_script_stop_when_fail "backend_mail_config.sh"
   run_script_stop_when_fail "backend_create_secrets.sh"
 fi
 

@@ -28,15 +28,7 @@ Running backend_create_secrets.sh...
 Enter your database password: 
 Sensitive data has been written to ./.backend.env with restricted permissions.
 backend_create_secrets.sh succeeded.
-Running backend_mail_config.sh...
-Enter your SMTP host: smtp.google.com
-Enter your SMTP port: 587
-Enter your username: <your_email>
-Enter your password: Does SMTP require STARTTLS (y/n)? y
-Please enter the email address that will be used as the sender for outgoing emails: noreply@flowinquiry.io
-Please enter the base URL that will be used for the email template: https://flowinquiry.io
 Configuration has been saved to .env.local
-backend_mail_config.sh succeeded.
 ```
 
 3. Start the services:

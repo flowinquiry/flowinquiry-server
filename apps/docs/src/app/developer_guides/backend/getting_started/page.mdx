@@ -45,16 +45,11 @@ cd flowinquiry/apps/backend
 
 ### Configure the application
 
-To run the FlowInquiry backend, users need to provide their input in the local configuration file .env.local. FlowInquiry offers two options for creating this configuration file:
+To run the FlowInquiry backend, users need to provide their input in the local configuration file .env.local.
 
-- Using Bash Scripts: Users can run provided Bash scripts, which prompt for inputs, validate the information, and then automatically generate the configuration file.
-- Editing a Template Manually: A template configuration file (.env.local.example) is provided, allowing users to manually edit and create their .env.local file. This option is recommended for Windows users who cannot run Bash scripts.
+#### Checking environments
 
-<Tabs items={['Creat config file by script', 'Edit config file manually']}>
-    <Tabs.Tab>
-        #### Checking environments
-
-        FlowInquiry's front-end requires Node and pnpm to be installed on your machine. You can run the command `pnpm check-env` in the flowinquiry root folder to verify if your machine is set up to work with FlowInquiry
+FlowInquiry's front-end requires Node and pnpm to be installed on your machine. You can run the command `pnpm check-env` in the flowinquiry root folder to verify if your machine is set up to work with FlowInquiry
 
         ```bash
         ➜  flowinquiry ✗ pnpm check-env
@@ -93,7 +88,9 @@ To run the FlowInquiry backend, users need to provide their input in the local c
 
         ```
 
-        then you run the command `pnpm setup:backend` in the flowinquiry's root folder to create a file `.env.local` in the folder `apps/backend`
+#### Create a local configuration file `.env.local`
+
+Run the command `pnpm setup:backend` in the flowinquiry's root folder to create a file `.env.local` in the folder `apps/backend`
 
         ```bash
         ➜  flowinquiry✗ pnpm setup:backend
@@ -106,39 +103,6 @@ To run the FlowInquiry backend, users need to provide their input in the local c
         ✅ Sensitive data has been written to /apps/backend/.env.local with restricted permissions.
         🌱 Environment check passed.
         ````
-        </Tabs.Tab>
-        <Tabs.Tab>
-            Rename the file `.env.local.example` to `.env.local`, and edit the file content per instructions inline
-
-            ```bash
-            #!/bin/bash
-
-            ################################################
-            # PostgreSQL Configuration
-            ################################################
-
-            # Password for the PostgreSQL database.
-            # This is critical for securing database access. Store it securely.
-            POSTGRES_PASSWORD='choose your own password'
-
-            # Username for connecting to the PostgreSQL database.
-            # Required for authentication with the database.
-            SPRING_DATASOURCE_USERNAME=flowinquiry
-
-            ################################################
-            # JWT Configuration
-            ################################################
-
-            # Base64-encoded secret key used for signing and verifying JWT tokens.
-            # This key is generated from a 50-character random string consisting of A-Z and 0-9.
-            # For development purposes, a pre-defined string is provided, but it is strongly recommended
-            # to generate your own unique key, especially for production environments.
-            # This key is critical for securing authentication and must be stored securely.
-            JWT_BASE64_SECRET='alBEd1VVQWpuVkxrNEQ4YnFBZmtvUk1pU2NoQ0x2UG92SW00cUZZaGx4UmRzUEUyM0dWR01yQWxPUURud0sxRDNpeVZQY1NtNGNCTElsc25kUEg4TDlySGVt'
-            ```
-        </Tabs.Tab>
-
-</Tabs>
 
 ### Run application
 

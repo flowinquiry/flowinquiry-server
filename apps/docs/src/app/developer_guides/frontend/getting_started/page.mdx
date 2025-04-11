@@ -36,16 +36,12 @@ cd flowinquiry/apps/front-end
 
 ### Configure the application
 
-To run the FlowInquiry frontend, users need to provide their input in the local configuration file .env.local. FlowInquiry offers two options for creating this configuration file:
+To run the FlowInquiry frontend, users need to provide their input in the local configuration file `.env.local`. To do that you need to execute scripts in the bash environments to create
+the `.env.local` file.
 
-- Using Bash Scripts: Users can run provided Bash scripts, which prompt for inputs, validate the information, and then automatically generate the configuration file.
-- Editing a Template Manually: A template configuration file (.env.local.example) is provided, allowing users to manually edit and create their .env.local file. This option is recommended for Windows users who cannot run Bash scripts.
+#### Checking environments
 
-<Tabs items={['Creat config file by script', 'Edit config file manually']}>
-    <Tabs.Tab>
-    #### Checking environments
-
-    FlowInquiry's front-end requires Node and pnpm to be installed on your machine. You can run the command `pnpm check-env` in the flowinquiry root folder to verify if your machine is set up to work with FlowInquiry
+FlowInquiry's front-end requires Node and pnpm to be installed on your machine. You can run the command `pnpm check-env` in the flowinquiry root folder to verify if your machine is set up to work with FlowInquiry
 
     ```bash
         ➜  flowinquiry ✗ pnpm check-env
@@ -84,40 +80,9 @@ To run the FlowInquiry frontend, users need to provide their input in the local 
 
         ```
 
-    #### Setup scripts
+#### Create the local configuration file `.env.local`
 
-        Run the command `pnpm `
-
-    <Callout emoji="💡">
-        You can run the `scripts/all.sh` script, which will check your environment
-        settings and perform the necessary configurations, eliminating the need to run
-        multiple scripts individually
-    </Callout>
-    </Tabs.Tab>
-    <Tabs.Tab>
-        Rename `.env.local.example` to `.env.local` and update its content following the inline instructions
-        ```bash
-        # BACK_END_URL: The base URL of the backend API that the Next.js application communicates with.
-        # Typically used for server-side API calls in your application. Example: http://localhost:8080
-        BACK_END_URL=
-
-        # NEXT_PUBLIC_BASE_URL: A publicly exposed base URL for the backend API.
-        # Variables prefixed with NEXT_PUBLIC_ are exposed to the browser and used for client-side API calls.
-        # Example: http://localhost:8080
-        NEXT_PUBLIC_BASE_URL=
-
-        # AUTH_SECRET: A secret key used by the authentication library (`auth.js`) for securing tokens.
-        # This was automatically added by running `npx auth`.
-        # For production, it is recommended to use a securely generated key. Learn more: https://cli.authjs.dev
-        AUTH_SECRET=
-        ```
-    </Tabs.Tab>
-
-</Tabs>
-
-#### Run in dev mode
-
-Open the terminal and run the command `pnpm setup:frontend` in the flowinquiry's root folder
+Run the command `pnpm setup:frontend` in the flowinquiry's root folder
 
 ```bash
 ➜  flowinquiry✗ pnpm setup:frontend
@@ -131,9 +96,11 @@ Appended output of auth secret to flowinquiry/apps/frontend/.env.local.
 Initialization complete.
 ```
 
-then you launch the nextjs development server by running `pnpm dev:frontend` in the flowinquiry's root folder
+#### Run in dev mode
 
-it will launch the process to start the FlowInquiry frontend development server at the default port `3000`
+You can launch the nextjs development server by running `pnpm dev:frontend` in the flowinquiry's root folder
+
+it will start the FlowInquiry frontend development server at the default port `3000`
 
 ```bash
 ➜  flowinquiry ✗ pnpm dev:frontend

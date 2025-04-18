@@ -30,6 +30,7 @@
       "no_results_found": "No results found",
       "no_data_available": "No data available",
       "loading_data": "Loading data ...",
+      "fail_to_load_data": "Oops! We couldn’t load the data. Try refreshing the page",
       "zoom_in": "Zoom In",
       "zoom_out": "Zoom Out",
       "switch_to_light_mode": "Switch to light mode",
@@ -48,7 +49,8 @@
       "profile": "Profile",
       "members": "Members",
       "organizations": "Organizations",
-      "mail": "Mail"
+      "mail": "Mail",
+      "my_tickets": "My tickets"
     },
     "permission": {
       "ACCESS": "Access",
@@ -58,6 +60,10 @@
     }
   },
   "header": {
+    "notifications": {
+      "no_data": "You're all caught up!",
+      "clear_all": "Clear all"
+    },
     "my_tickets": {
       "title": "My tickets",
       "reported_tickets": "My reported tickets",
@@ -95,7 +101,13 @@
   "teams": {
     "common": {
       "default_slogan": "Stronger Together",
-      "role": "Role"
+      "role": "Role",
+      "project": "Project",
+      "team": "Team",
+      "modified_at": "Modified at",
+      "assigned_to": "Assigned to",
+      "priority_sort_ascending": "Sort by priority: Ascending",
+      "priority_sort_descending": "Sort by priority: Descending"
     },
     "roles": {
       "manager": "Manager",
@@ -150,6 +162,20 @@
       "recent_activities": {
         "title": "Recent Activities",
         "no_data": "No activity logs available"
+      },
+      "unassigned_tickets": {
+        "title": "Unassigned Tickets ({totalTickets})",
+        "no_data": "No unassigned tickets available"
+      },
+      "priority_tickets_distribution": {
+        "title": "Ticket Priority Distribution"
+      },
+      "assigned_tickets_per_user": {
+        "title": "Tickets Assigned per User"
+      },
+      "overdue_tickets": {
+        "title": "Overdue Tickets ({totalTickets})",
+        "no_data": "No overdue tickets found"
       }
     },
     "list": {
@@ -159,7 +185,7 @@
       "sort_a_z": "Sort by name: A → Z",
       "sort_z_a": "Sort by name: Z → A",
       "my_teams_only": "My Teams Only",
-      "new_team": "New Team"
+      "new_team": "New team"
     },
     "tickets": {
       "list": {
@@ -198,8 +224,8 @@
         "user_select_no_data": "No user found.",
         "user_select_no_choose": "None (Unassign User)",
         "user_select_unassigned": "Unassigned",
-        "target_completion_date": "Target Completion Date",
-        "actual_completion_date": "Actual Completion Date",
+        "target_completion_date": "Target completion date",
+        "actual_completion_date": "Actual completion date",
         "state": "State",
         "channel": "Channel",
         "channel_place_holder": "Select a channel",
@@ -328,7 +354,14 @@
       "description": "Description"
     }
   },
-  "mail": {},
+  "mail": {
+    "title": "Mail",
+    "description": "Use this form to configure SMTP server credentials and email delivery options for FlowInquiry. These settings control how the system sends notifications such as password resets, workflow updates, and alerts. You can customize connection parameters (host, port, protocol), authentication credentials, sender identity, and advanced options like SSL/TLS and debug mode.",
+    "smtp_server": "SMTP Server",
+    "authentication": "Authentication",
+    "sender_info": "Sender Info",
+    "advanced_options": "Advanced Options"
+  },
   "login": {
     "form": {
       "invalid_email": "Invalid email",
@@ -353,7 +386,11 @@
     "list": {
       "title": "Workflows ({totalElements})",
       "description": "Centralize and manage all workflows effortlessly with clear visibility, ticket types, and descriptions at a glance.",
-      "new_workflow": "New workflow"
+      "new_workflow": "New workflow",
+      "sort_a_z": "Sort workflow names A → Z",
+      "sort_z_a": "Sort workflow names Z → A",
+      "delete_workflow": "Delete workflow",
+      "delete_workflow_tooltip_1": "This action will remove workflow {workflowName} out of the team {teamName}"
     },
     "detail": {
       "cancel_edit": "Cancel edit",
@@ -381,6 +418,11 @@
       "ticket_type": "Ticket type",
       "field_description": "Description",
       "edit_workflow": "Edit workflow"
+    }
+  },
+  "settings": {
+    "list": {
+      "description": "Configure and manage all system settings in one place to tailor the platform to your organization's needs."
     }
   }
 }

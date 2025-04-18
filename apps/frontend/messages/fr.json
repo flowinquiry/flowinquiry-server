@@ -30,6 +30,7 @@
       "no_results_found": "Aucun résultat trouvé",
       "no_data_available": "Aucune donnée disponible",
       "loading_data": "Chargement des données ...",
+      "fail_to_load_data": "Oups ! Nous n’avons pas pu charger les données. Veuillez essayer de rafraîchir la page.",
       "zoom_in": "Agrandir",
       "zoom_out": "Rétrécir",
       "switch_to_light_mode": "Passer en mode clair",
@@ -48,7 +49,8 @@
       "profile": "Profil",
       "members": "Membres",
       "organizations": "Organisations",
-      "mail": "Messagerie"
+      "mail": "Messagerie",
+      "my_tickets": "Mes tickets"
     },
     "permission": {
       "ACCESS": "Accès",
@@ -58,6 +60,10 @@
     }
   },
   "header": {
+    "notifications": {
+      "no_data": "Vous êtes à jour !",
+      "clear_all": "Tout effacer"
+    },
     "my_tickets": {
       "title": "Mes tickets",
       "reported_tickets": "Tickets signalés par moi",
@@ -95,7 +101,13 @@
   "teams": {
     "common": {
       "default_slogan": "Plus forts ensemble",
-      "role": "Rôle"
+      "role": "Rôle",
+      "project": "Projet",
+      "team": "Équipe",
+      "modified_at": "Modifié le",
+      "assigned_to": "Assigné à",
+      "priority_sort_ascending": "Trier par priorité : croissante",
+      "priority_sort_descending": "Trier par priorité : décroissante"
     },
     "roles": {
       "manager": "Manager",
@@ -150,6 +162,20 @@
       "recent_activities": {
         "title": "Activités récentes",
         "no_data": "Aucune activité disponible"
+      },
+      "unassigned_tickets": {
+        "title": "Tickets non assignés ({totalTickets})",
+        "no_data": "Aucun ticket non assigné disponible"
+      },
+      "priority_tickets_distribution": {
+        "title": "Répartition des tickets par priorité"
+      },
+      "assigned_tickets_per_user": {
+        "title": "Tickets assignés par utilisateur"
+      },
+      "overdue_tickets": {
+        "title": "Tickets en retard ({totalTickets})",
+        "no_data": "Aucun ticket en retard trouvé"
       }
     },
     "list": {
@@ -328,7 +354,10 @@
       "description": "Description"
     }
   },
-  "mail": {},
+  "mail": {
+    "title": "Courriel",
+    "description": "Utilisez ce formulaire pour configurer les identifiants du serveur SMTP et les options d'envoi des e-mails pour FlowInquiry. Ces paramètres contrôlent la manière dont le système envoie les notifications telles que les réinitialisations de mot de passe, les mises à jour de flux de travail et les alertes. Vous pouvez personnaliser les paramètres de connexion (hôte, port, protocole), les identifiants d'authentification, l'identité de l'expéditeur et les options avancées comme le mode SSL/TLS et le mode débogage."
+  },
   "login": {
     "form": {
       "invalid_email": "Email invalide",
@@ -380,7 +409,16 @@
     "list": {
       "title": "Flux de travail ({totalElements})",
       "description": "Centralisez et gérez tous les flux de travail en toute simplicité avec une visibilité claire, les types de tickets et les descriptions en un coup d'œil.",
-      "new_workflow": "Nouveau flux de travail"
+      "new_workflow": "Nouveau flux de travail",
+      "sort_a_z": "Trier les noms de flux de travail de A à Z",
+      "sort_z_a": "Trier les noms de flux de travail de Z à A",
+      "delete_workflow": "Supprimer le flux de travail",
+      "delete_workflow_tooltip_1": "Cette action supprimera le flux de travail {workflowName} de l’équipe {teamName}"
+    }
+  },
+  "settings": {
+    "list": {
+      "description": "Configurez et gérez tous les paramètres du système en un seul endroit pour adapter la plateforme aux besoins de votre organisation."
     }
   }
 }

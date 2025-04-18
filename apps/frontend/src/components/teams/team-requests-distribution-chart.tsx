@@ -17,6 +17,7 @@ import useSWR from "swr";
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Spinner } from "@/components/ui/spinner";
+import { useAppClientTranslations } from "@/hooks/use-translations";
 import { getTicketsAssignmentDistributionByTeam } from "@/lib/actions/teams-request.action";
 import { useError } from "@/providers/error-provider";
 import { useTimeRange } from "@/providers/time-range-provider";
@@ -51,6 +52,7 @@ const TicketDistributionChart: React.FC<TicketDistributionChartProps> = ({
   const [collapsed, setCollapsed] = useState(false);
   const { setError } = useError();
   const { timeRange, customDates } = useTimeRange();
+  const t = useAppClientTranslations();
 
   // Generate date parameters
   const dateParams =
@@ -127,7 +129,9 @@ const TicketDistributionChart: React.FC<TicketDistributionChartProps> = ({
               <ChevronDown className="w-5 h-5" />
             )}
           </button>
-          <CardTitle>Ticket Distribution</CardTitle>
+          <CardTitle>
+            {t.teams.dashboard("assigned_tickets_per_user.title")}
+          </CardTitle>
         </div>
       </CardHeader>
 
@@ -137,12 +141,10 @@ const TicketDistributionChart: React.FC<TicketDistributionChartProps> = ({
           {isValidating ? (
             <div className="flex flex-col items-center justify-center h-64">
               <Spinner className="h-8 w-8 mb-4" />
-              <span>Loading chart data...</span>
+              <span>{t.common.misc("loading_data")}</span>
             </div>
           ) : chartData.length === 0 ? (
-            <p className="text-center">
-              No ticket distribution data available.
-            </p>
+            <p className="text-center">{t.common.misc("no_data_available")}</p>
           ) : (
             <div className="w-full h-64 md:h-96">
               <ResponsiveContainer width="100%" height="100%">

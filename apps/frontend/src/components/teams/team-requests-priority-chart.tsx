@@ -61,7 +61,9 @@ const TicketPriorityPieChart = ({ teamId }: { teamId: number }) => {
               <ChevronDown className="w-5 h-5" />
             )}
           </button>
-          <CardTitle>Priority Distribution</CardTitle>
+          <CardTitle>
+            {t.teams.dashboard("priority_tickets_distribution.title")}
+          </CardTitle>
         </div>
       </CardHeader>
 
@@ -71,7 +73,7 @@ const TicketPriorityPieChart = ({ teamId }: { teamId: number }) => {
           {isValidating ? (
             <div className="flex flex-col items-center justify-center h-64">
               <Spinner className="h-8 w-8 mb-4" />
-              <span>Loading chart data...</span>
+              <span>{t.common.misc("loading_data")}</span>
             </div>
           ) : priorityData.length === 0 ? (
             <p className="text-center">{t.common.misc("no_data_available")}</p>

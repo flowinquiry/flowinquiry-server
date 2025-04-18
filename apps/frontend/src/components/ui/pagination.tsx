@@ -2,6 +2,7 @@ import { ChevronLeft, ChevronRight, MoreHorizontal } from "lucide-react";
 import * as React from "react";
 
 import { ButtonProps, buttonVariants } from "@/components/ui/button";
+import { useAppClientTranslations } from "@/hooks/use-translations";
 import { cn } from "@/lib/utils";
 
 const Pagination = ({ className, ...props }: React.ComponentProps<"nav">) => (
@@ -70,7 +71,7 @@ const PaginationPrevious = ({
     {...props}
   >
     <ChevronLeft className="h-4 w-4" />
-    <span>Previous</span>
+    <span>{useAppClientTranslations().common.buttons("previous")}</span>
   </PaginationLink>
 );
 PaginationPrevious.displayName = "PaginationPrevious";
@@ -85,7 +86,7 @@ const PaginationNext = ({
     className={cn("gap-1 pr-2.5", className)}
     {...props}
   >
-    <span>Next</span>
+    <span>{useAppClientTranslations().common.buttons("next")}</span>
     <ChevronRight className="h-4 w-4" />
   </PaginationLink>
 );

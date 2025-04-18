@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-export type ProjectStatus = "Active" | "Closed";
+export type ProjectStatus = "Active" | "Closed" | "Cancelled";
 
 export const ProjectSchema = z.object({
   id: z.number().int().positive().optional(), // Nullable for cases where it's not set yet
@@ -32,8 +32,8 @@ export type ProjectIterationDTO = z.infer<typeof ProjectIterationDTOSchema>;
 
 export const ProjectEpicDTOSchema = z.object({
   id: z.number().optional(),
-  projectId: z.number(), // required
-  name: z.string(), // required
+  projectId: z.number(),
+  name: z.string(),
   description: z.string().optional(),
   startDate: z.date().nullish(),
   endDate: z.date().nullish(),

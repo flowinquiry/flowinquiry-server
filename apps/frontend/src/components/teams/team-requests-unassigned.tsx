@@ -16,6 +16,7 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import { useAppClientTranslations } from "@/hooks/use-translations";
 import { getUnassignedTickets } from "@/lib/actions/teams-request.action";
 import { formatDateTimeDistanceToNow } from "@/lib/datetime";
 import { obfuscate } from "@/lib/endecode";
@@ -28,6 +29,7 @@ const UnassignedTickets = ({ teamId }: { teamId: number }) => {
   const [sortDirection, setSortDirection] = useState<"asc" | "desc">("asc");
   const [collapsed, setCollapsed] = useState(false);
   const { setError } = useError();
+  const t = useAppClientTranslations();
 
   // Reset to page 1 when sort direction changes
   useEffect(() => {
@@ -94,7 +96,7 @@ const UnassignedTickets = ({ teamId }: { teamId: number }) => {
               )}
             </Button>
             <CardTitle className="text-left">
-              Unassigned Tickets ({totalTickets})
+              {t.teams.dashboard("unassigned_tickets.title", { totalTickets })}
             </CardTitle>
           </div>
 
@@ -112,13 +114,15 @@ const UnassignedTickets = ({ teamId }: { teamId: number }) => {
                   ) : (
                     <ChevronRight className="w-4 h-4" />
                   )}
-                  <span className="text-sm">Priority</span>
+                  <span className="text-sm">
+                    {t.teams.tickets.form.base("priority")}
+                  </span>
                 </Button>
               </TooltipTrigger>
               <TooltipContent>
                 {sortDirection === "asc"
-                  ? "Sort by priority: Ascending"
-                  : "Sort by priority: Descending"}
+                  ? t.teams.common("priority_sort_ascending")
+                  : t.teams.common("priority_sort_descending")}
               </TooltipContent>
             </Tooltip>
           </div>
@@ -131,12 +135,12 @@ const UnassignedTickets = ({ teamId }: { teamId: number }) => {
           {isLoading ? (
             <div className="flex justify-center items-center h-[200px]">
               <Spinner className="h-8 w-8">
-                <span>Loading data ...</span>
+                <span>{t.common.misc("loading_data")}</span>
               </Spinner>
             </div>
           ) : error ? (
             <p className="text-sm text-red-500">
-              Failed to load tickets. Please try refreshing the page.
+              {t.common.misc("fail_to_load_data")}
             </p>
           ) : (
             <div className="space-y-4">
@@ -177,7 +181,7 @@ const UnassignedTickets = ({ teamId }: { teamId: number }) => {
                           ticket.projectName && (
                             <div className="mt-1 ml-4 flex items-center gap-2">
                               <span className="text-xs bg-emerald-200 text-emerald-800 px-2 py-0.5 rounded">
-                                Project
+                                {t.teams.common("project")}
                               </span>
                               <Link
                                 href={`/portal/teams/${obfuscate(ticket.teamId)}/projects/${obfuscate(ticket.projectId)}`}
@@ -194,7 +198,7 @@ const UnassignedTickets = ({ teamId }: { teamId: number }) => {
                         />
                         {ticket.projectId === undefined && (
                           <span className="text-xs bg-gray-200 text-gray-800 px-2 py-0.5 rounded mt-1">
-                            Team
+                            {t.teams.common("team")}
                           </span>
                         )}
                       </div>
@@ -224,7 +228,7 @@ const UnassignedTickets = ({ teamId }: { teamId: number }) => {
                 ))
               ) : (
                 <p className="text-sm text-gray-500 dark:text-gray-400">
-                  No unassigned tickets available
+                  {t.teams.dashboard("unassigned_tickets.no_data")}
                 </p>
               )}
             </div>

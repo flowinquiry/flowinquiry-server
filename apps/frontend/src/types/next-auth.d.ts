@@ -23,6 +23,7 @@ declare module "next-auth" {
     provider?: string; // Add provider for OAuth2
     user: DefaultUser & {
       id: string;
+      langKey: string;
     };
     error?: string; // Custom property for handling errors
   }

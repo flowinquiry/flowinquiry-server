@@ -2,6 +2,7 @@ import {
   deleteExec,
   doAdvanceSearch,
   get,
+  patch,
   post,
   put,
   SecurityMode,
@@ -139,6 +140,13 @@ export const changePassword = async (
     },
     setError,
   );
+};
+
+export const setLocale = async (
+  newLocale: string,
+  setError?: (error: HttpError | string | null) => void,
+) => {
+  await patch(`/api/users/locale`, { langKey: newLocale }, setError);
 };
 
 export const getOrgChart = async (

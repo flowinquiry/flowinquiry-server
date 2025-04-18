@@ -5,7 +5,7 @@ import { MailSettings } from "@/components/mail/mail-settings";
 import { getAppTranslations } from "@/lib/translation";
 
 const Page = async () => {
-  const t = await getAppTranslations("en");
+  const t = await getAppTranslations();
   const breadcrumbItems = [
     { title: t.common.navigation("dashboard"), link: "/portal" },
     { title: t.common.navigation("settings"), link: "/portal/settings" },

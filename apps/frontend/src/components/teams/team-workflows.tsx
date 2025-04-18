@@ -42,7 +42,7 @@ const TeamWorkflowsView = () => {
     { title: t.common.navigation("dashboard"), link: "/portal" },
     { title: t.common.navigation("teams"), link: "/portal/teams" },
     { title: team.name, link: `/portal/teams/${obfuscate(team.id)}` },
-    { title: t.common.navigation("workflow"), link: "#" },
+    { title: t.common.navigation("workflows"), link: "#" },
   ];
 
   const permissionLevel = usePagePermission();
@@ -99,8 +99,8 @@ const TeamWorkflowsView = () => {
                 </TooltipContent>
               </Tooltip>
               <Heading
-                title={`Workflows`}
-                description="All workflows are available in the team, allowing you to manage request processes, track progress, and automate transitions efficiently."
+                title={t.common.navigation("workflows")}
+                description={t.workflows.list("description")}
               />
             </div>
             {(PermissionUtils.canWrite(permissionLevel) ||
@@ -109,7 +109,8 @@ const TeamWorkflowsView = () => {
                 href={`/portal/teams/${obfuscate(team.id)}/workflows/new`}
                 className={cn(buttonVariants({ variant: "default" }))}
               >
-                <Plus className="mr-2 h-4 w-4" /> New Workflow
+                <Plus className="mr-2 h-4 w-4" />{" "}
+                {t.workflows.list("new_workflow")}
               </Link>
             )}
           </div>
@@ -151,13 +152,15 @@ const TeamWorkflowsView = () => {
                                 className="cursor-pointer"
                                 onClick={() => deleteWorkflowFromTeam(workflow)}
                               >
-                                <Trash /> Delete workflow
+                                <Trash /> {t.workflows.list("delete_workflow")}
                               </DropdownMenuItem>
                             </TooltipTrigger>
                             <TooltipContent>
                               <p>
-                                This action will remove workflow {workflow.name}{" "}
-                                out of the team {team.name}
+                                {t.workflows.list("delete_workflow_tooltip_1", {
+                                  workflowName: workflow.name,
+                                  teamName: team.name,
+                                })}
                               </p>
                             </TooltipContent>
                           </Tooltip>

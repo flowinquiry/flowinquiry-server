@@ -26,6 +26,7 @@ export const { handlers, auth } = NextAuth({
           throw new Error("Authentication failed");
         }
         // Return an object that matches AdapterUser type
+        console.log(`User ${JSON.stringify(user)}`);
         return user;
       },
     }),

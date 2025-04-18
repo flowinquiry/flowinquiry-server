@@ -19,6 +19,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 import org.slf4j.Logger;
@@ -35,6 +36,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -248,5 +250,14 @@ public class PublicUserController {
         return userService.searchUsers(userTerm, pageRequest).getContent().stream()
                 .map(userMapper::toDto)
                 .toList();
+    }
+
+    @PatchMapping("/locale")
+    public void updateLocale(@RequestBody Map<String, String> body) {
+        String langKey = body.get("langKey");
+        if (langKey == null || langKey.isBlank()) {
+            return;
+        }
+        userService.updateCurrentUserLocale(langKey);
     }
 }

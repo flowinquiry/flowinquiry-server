@@ -41,6 +41,9 @@ import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -453,5 +456,16 @@ public class UserService {
      */
     public Page<User> searchUsers(String userTerm, Pageable pageable) {
         return userRepository.findByUserTerm(userTerm, pageable);
+    }
+
+    public void updateCurrentUserLocale(String langKey) {
+        Long userId = 1L;
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        User user =
+                userRepository
+                        .findById(userId)
+                        .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+        user.setLangKey(langKey);
+        userRepository.save(user);
     }
 }

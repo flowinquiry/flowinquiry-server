@@ -5,7 +5,7 @@ import { AuthoritiesView } from "@/components/authorities/authority-list";
 import { getAppTranslations } from "@/lib/translation";
 
 const Page = async () => {
-  const t = await getAppTranslations("en");
+  const t = await getAppTranslations();
 
   const breadcrumbItems = [
     { title: t.common.navigation("dashboard"), link: "/portal" },

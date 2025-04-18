@@ -28,6 +28,7 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { useToast } from "@/components/ui/use-toast";
+import { useAppClientTranslations } from "@/hooks/use-translations";
 import useWebSocket from "@/hooks/use-websocket";
 import {
   getUnReadNotificationsByUserId,
@@ -43,6 +44,7 @@ const NotificationsDropdown = () => {
   const { data: session } = useSession();
   const { setError } = useError();
   const { toast } = useToast();
+  const t = useAppClientTranslations();
 
   const [notifications, setNotifications] = useState<NotificationDTO[]>(() => {
     if (typeof window !== "undefined") {
@@ -252,7 +254,7 @@ const NotificationsDropdown = () => {
               onClick={handleMarkAllRead}
               className="text-xs h-8 hover:bg-gray-100 dark:hover:bg-gray-800"
             >
-              Clear all
+              {t.header.notifications("clear_all")}
             </Button>
           )}
         </div>
@@ -309,7 +311,7 @@ const NotificationsDropdown = () => {
           <div className="flex flex-col items-center justify-center p-6 text-center">
             <Bell className="text-gray-400 w-8 h-8 mb-2" />
             <p className="text-sm text-gray-500 dark:text-gray-400">
-              No new notifications
+              {t.header.notifications("no_data")}
             </p>
           </div>
         )}

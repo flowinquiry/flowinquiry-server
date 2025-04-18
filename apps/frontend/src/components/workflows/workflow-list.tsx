@@ -157,8 +157,8 @@ const WorkflowsView = () => {
             </TooltipTrigger>
             <TooltipContent>
               {sortDirection === "asc"
-                ? "Sort workflow names A → Z"
-                : "Sort workflow names Z → A"}
+                ? t.workflows.list("sort_a_z")
+                : t.workflows.list("sort_z_a")}
             </TooltipContent>
           </Tooltip>
           {PermissionUtils.canWrite(permissionLevel) && (

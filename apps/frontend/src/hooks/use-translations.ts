@@ -43,7 +43,10 @@ export function useAppClientTranslations() {
     },
     header: {
       nav: useTranslations("header.nav"),
+      my_tickets: useTranslations("header.my_tickets"),
+      notifications: useTranslations("header.notifications"),
     },
+    mail: useTranslations("mail"),
     workflows: {
       add: useTranslations("workflows.add"),
       common: useTranslations("workflows.common"),

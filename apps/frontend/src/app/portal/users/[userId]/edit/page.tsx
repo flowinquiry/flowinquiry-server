@@ -8,7 +8,7 @@ const Page = async (props: { params: Promise<{ userId: string | "new" }> }) => {
   const userId =
     params.userId !== "new" ? deobfuscateToNumber(params.userId) : undefined;
 
-  const t = await getAppTranslations("en");
+  const t = await getAppTranslations();
 
   const breadcrumbItems = [
     { title: t.common.navigation("dashboard"), link: "/portal" },

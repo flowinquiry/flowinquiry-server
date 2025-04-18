@@ -17,6 +17,7 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import { useAppClientTranslations } from "@/hooks/use-translations";
 import { getOverdueTicketsByTeam } from "@/lib/actions/teams-request.action";
 import { formatDateTimeDistanceToNow } from "@/lib/datetime";
 import { obfuscate } from "@/lib/endecode";
@@ -29,6 +30,7 @@ const TeamOverdueTickets = ({ teamId }: { teamId: number }) => {
   const [sortDirection, setSortDirection] = useState<"asc" | "desc">("asc");
   const [collapsed, setCollapsed] = useState(false);
   const { setError } = useError();
+  const t = useAppClientTranslations();
 
   // Reset to page 1 when sort direction changes
   useEffect(() => {
@@ -90,7 +92,7 @@ const TeamOverdueTickets = ({ teamId }: { teamId: number }) => {
               )}
             </Button>
             <CardTitle className="text-left">
-              Overdue Tickets ({totalTickets})
+              {t.teams.dashboard("overdue_tickets.title", { totalTickets })}
             </CardTitle>
           </div>
 
@@ -108,13 +110,15 @@ const TeamOverdueTickets = ({ teamId }: { teamId: number }) => {
                   ) : (
                     <ChevronRight className="w-4 h-4" />
                   )}
-                  <span className="text-sm">Priority</span>
+                  <span className="text-sm">
+                    {t.teams.tickets.form.base("priority")}
+                  </span>
                 </Button>
               </TooltipTrigger>
               <TooltipContent>
                 {sortDirection === "asc"
-                  ? "Sort by priority: Ascending"
-                  : "Sort by priority: Descending"}
+                  ? t.teams.common("priority_sort_ascending")
+                  : t.teams.common("priority_sort_descending")}
               </TooltipContent>
             </Tooltip>
           </div>
@@ -127,12 +131,12 @@ const TeamOverdueTickets = ({ teamId }: { teamId: number }) => {
           {isLoading ? (
             <div className="flex justify-center items-center h-[200px]">
               <Spinner className="h-8 w-8">
-                <span>Loading data ...</span>
+                <span>{t.common.misc("loading_data")}</span>
               </Spinner>
             </div>
           ) : error ? (
             <p className="text-sm text-red-500">
-              Failed to load tickets. Please try refreshing the page.
+              {t.common.misc("fail_to_load_data")}
             </p>
           ) : (
             <div className="space-y-4">
@@ -191,7 +195,7 @@ const TeamOverdueTickets = ({ teamId }: { teamId: number }) => {
                         {ticket.assignUserId && (
                           <div className="mt-1 ml-4 flex items-center gap-2">
                             <span className="text-xs text-gray-500">
-                              Assigned to:
+                              {t.teams.common("assigned_to")}:
                             </span>
                             <UserAvatar imageUrl={ticket.assignUserImageUrl} />
                             <span className="text-xs font-medium">
@@ -221,7 +225,7 @@ const TeamOverdueTickets = ({ teamId }: { teamId: number }) => {
                     />
 
                     <p className="text-xs text-gray-500 dark:text-gray-400 mt-2">
-                      Modified at:{" "}
+                      {t.teams.common("modified_at")}::{" "}
                       <Tooltip>
                         <TooltipTrigger asChild>
                           <span className="cursor-pointer">
@@ -241,7 +245,7 @@ const TeamOverdueTickets = ({ teamId }: { teamId: number }) => {
                 ))
               ) : (
                 <p className="text-sm text-gray-500 dark:text-gray-400">
-                  No overdue tickets available
+                  {t.teams.dashboard("overdue_tickets.no_data")}
                 </p>
               )}
             </div>

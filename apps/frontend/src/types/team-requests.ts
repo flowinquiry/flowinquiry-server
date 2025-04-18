@@ -36,9 +36,7 @@ export const TeamRequestDTOSchema = z.object({
   workflowRequestName: z.string().nullish(),
   projectId: z.number().nullish(),
   projectName: z.string().nullish(),
-  priority: z
-    .enum(["Critical", "High", "Medium", "Low", "Trivial"])
-    .default("Medium"),
+  priority: z.enum(["Critical", "High", "Medium", "Low", "Trivial"]),
   requestUserId: z.number().optional(),
   requestUserName: z.string().nullish(),
   requestUserImageUrl: z.string().nullish(),
@@ -51,34 +49,14 @@ export const TeamRequestDTOSchema = z.object({
   iterationName: z.string().optional(),
   epicId: z.number().optional(),
   epicName: z.string().optional(),
-  requestTitle: z.string().default(""),
-  requestDescription: z.string().default(""),
+  requestTitle: z.string(),
+  requestDescription: z.string(),
   isNew: z.boolean().optional(),
   isCompleted: z.boolean().optional(),
-  createdAt: z.preprocess((value) => {
-    if (typeof value === "string") {
-      return new Date(value);
-    }
-    return value;
-  }, z.date().nullish()),
-  modifiedAt: z.preprocess((value) => {
-    if (typeof value === "string") {
-      return new Date(value);
-    }
-    return value;
-  }, z.date().nullish()),
-  estimatedCompletionDate: z.preprocess((value) => {
-    if (typeof value === "string") {
-      return new Date(value);
-    }
-    return value;
-  }, z.date().nullish()),
-  actualCompletionDate: z.preprocess((value) => {
-    if (typeof value === "string") {
-      return new Date(value);
-    }
-    return value;
-  }, z.date().nullish()),
+  createdAt: z.string().optional(),
+  modifiedAt: z.date().optional(),
+  estimatedCompletionDate: z.date().nullish(),
+  actualCompletionDate: z.date().nullish(),
   channel: z.string().nullish(),
   numberAttachments: z.number().optional(),
   numberWatchers: z.number().optional(),

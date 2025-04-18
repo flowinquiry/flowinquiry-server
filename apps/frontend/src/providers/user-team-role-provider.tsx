@@ -20,7 +20,7 @@ export const UserTeamRoleProvider: React.FC<{
   teamId: number;
   children: React.ReactNode;
 }> = ({ teamId, children }) => {
-  const [role, setRole] = useState<TeamRole>("Guest");
+  const [role, setRole] = useState<TeamRole>("guest");
   const { setError } = useError();
   const { data: session, status } = useSession();
 

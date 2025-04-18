@@ -97,7 +97,7 @@ const TaskEditorSheet = ({
       form.reset({
         requestTitle: "",
         requestDescription: "",
-        priority: "Medium",
+        priority: "Medium" as TeamRequestPriority,
         assignUserId: null,
         teamId: teamId,
         projectId: projectId,
@@ -237,7 +237,7 @@ const TaskEditorSheet = ({
                           <FormLabel>Priority</FormLabel>
                           <FormControl>
                             <TeamRequestPrioritySelect
-                              value={field.value}
+                              value={field.value as TeamRequestPriority}
                               onChange={(value: TeamRequestPriority) =>
                                 field.onChange(value)
                               }

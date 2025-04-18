@@ -35,10 +35,7 @@ export const WorkflowTransitionSchema = z.object({
   sourceStateId: z.number().nullish(),
   targetStateId: z.number().nullish(),
   eventName: z.string().min(1),
-  slaDuration: z.preprocess(
-    (value) => (value === "" || value === null ? null : Number(value)), // Convert empty string or null to null, otherwise convert to number
-    z.number().nullable(), // Validate as nullable number
-  ),
+  slaDuration: z.number().nullish(),
   escalateOnViolation: z.boolean(),
 });
 

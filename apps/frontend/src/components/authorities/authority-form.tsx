@@ -71,7 +71,7 @@ const AuthorityForm = ({
   const { setError } = useError();
   const t = useAppClientTranslations();
 
-  const form = useForm<FormData>({
+  const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       authority: {

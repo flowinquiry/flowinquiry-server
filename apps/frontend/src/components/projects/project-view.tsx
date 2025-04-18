@@ -496,10 +496,14 @@ export const ProjectView = ({ projectId }: { projectId: number }) => {
   // Helper to get iteration status display
   const getIterationStatus = (iteration: ProjectIterationDTO) => {
     const now = new Date();
-    const startDate = new Date(iteration.startDate);
-    const endDate = new Date(iteration.endDate);
+    const startDate = iteration.startDate
+      ? new Date(iteration.startDate)
+      : null;
+    const endDate = iteration.endDate ? new Date(iteration.endDate) : null;
 
-    if (now < startDate) {
+    if (!startDate || !endDate) {
+      return "Not Scheduled";
+    } else if (now < startDate) {
       return "Planned";
     } else if (now <= endDate) {
       return "In Progress";
@@ -633,8 +637,19 @@ export const ProjectView = ({ projectId }: { projectId: number }) => {
                           <div>{iteration.name}</div>
                           <div className="text-xs text-muted-foreground">
                             {getIterationStatus(iteration)} |{" "}
-                            {new Date(iteration.startDate).toLocaleDateString()}{" "}
-                            - {new Date(iteration.endDate).toLocaleDateString()}
+                            {iteration.startDate
+                              ? new Date(
+                                  iteration.startDate,
+                                ).toLocaleDateString()
+                              : "Not scheduled"}{" "}
+                            {iteration.startDate || iteration.endDate
+                              ? "- "
+                              : ""}
+                            {iteration.endDate
+                              ? new Date(iteration.endDate).toLocaleDateString()
+                              : iteration.startDate
+                                ? "Ongoing"
+                                : ""}
                           </div>
                         </div>
                       </DropdownMenuItem>

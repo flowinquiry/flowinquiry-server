@@ -64,8 +64,8 @@ const ProjectEditDialog: React.FC<ProjectDialogProps> = ({
       name: "",
       description: "",
       status: "Active" as ProjectStatus,
-      startDate: null,
-      endDate: null,
+      startDate: undefined,
+      endDate: undefined,
     },
   });
 
@@ -78,8 +78,8 @@ const ProjectEditDialog: React.FC<ProjectDialogProps> = ({
           name: project.name || "",
           description: project.description || "",
           status: project.status || "Active",
-          startDate: project.startDate || null,
-          endDate: project.endDate || null,
+          startDate: project.startDate || undefined,
+          endDate: project.endDate || undefined,
         });
       } else {
         form.reset({
@@ -87,8 +87,8 @@ const ProjectEditDialog: React.FC<ProjectDialogProps> = ({
           name: "",
           description: "",
           status: "Active",
-          startDate: null,
-          endDate: null,
+          startDate: undefined,
+          endDate: undefined,
         });
       }
       editorMountedRef.current = true;

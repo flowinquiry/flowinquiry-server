@@ -43,10 +43,10 @@ export const emailSettingsSchema = z.object({
     .email("Invalid email address")
     .min(1, "From address is required"),
   "mail.fromName": z.string().min(1, "Sender name is required"),
-  "mail.smtp.auth": z.enum(["true", "false"]).default("true"),
-  "mail.smtp.starttls.enable": z.enum(["true", "false"]).default("true"),
-  "mail.smtp.ssl.enable": z.enum(["true", "false"]).default("false"),
-  "mail.debug": z.enum(["true", "false"]).default("false"),
+  "mail.smtp.auth": z.enum(["true", "false"]),
+  "mail.smtp.starttls.enable": z.enum(["true", "false"]),
+  "mail.smtp.ssl.enable": z.enum(["true", "false"]),
+  "mail.debug": z.enum(["true", "false"]),
 });
 
 const FIELD_META: Record<

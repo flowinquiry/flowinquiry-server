@@ -24,6 +24,7 @@ import {
 } from "@/components/ui/drawer";
 import { useMediaQuery } from "@/hooks/use-media-query";
 import { useToast } from "@/hooks/use-toast";
+import { useAppClientTranslations } from "@/hooks/use-translations";
 
 export interface EntitiesDeleteDialogProps<TEntity extends Record<string, any>>
   extends React.ComponentPropsWithoutRef<typeof Dialog> {
@@ -45,6 +46,7 @@ export function EntitiesDeleteDialog<TEntity extends Record<string, any>>({
   entityName,
   ...props
 }: EntitiesDeleteDialogProps<TEntity>) {
+  const t = useAppClientTranslations();
   const { toast } = useToast();
   const [isDeletePending, startDeleteTransition] = React.useTransition();
   const isDesktop = useMediaQuery("(min-width: 640px)");
@@ -97,7 +99,7 @@ export function EntitiesDeleteDialog<TEntity extends Record<string, any>>({
           </DialogHeader>
           <DialogFooter className="gap-2 sm:space-x-0">
             <DialogClose asChild>
-              <Button variant="outline">Cancel</Button>
+              <Button variant="outline">{t.common.buttons("cancel")}</Button>
             </DialogClose>
             <Button
               aria-label="Delete selected rows"
@@ -111,7 +113,7 @@ export function EntitiesDeleteDialog<TEntity extends Record<string, any>>({
                   aria-hidden="true"
                 />
               )}
-              Delete
+              {t.common.buttons("delete")}
             </Button>
           </DialogFooter>
         </DialogContent>

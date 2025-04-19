@@ -11,6 +11,7 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import { useAppClientTranslations } from "@/hooks/use-translations";
 import {
   createNewComment,
   getCommentsForEntity,
@@ -35,6 +36,7 @@ const CommentsView: React.FC<CommentsViewProps> = ({
   const [submitting, setSubmitting] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
   const { setError } = useError();
+  const t = useAppClientTranslations();
 
   useEffect(() => {
     if (entityId) {
@@ -72,7 +74,9 @@ const CommentsView: React.FC<CommentsViewProps> = ({
   return (
     <div>
       <div className="pt-4">
-        <h3 className="text-lg font-semibold mb-2">Add a Comment</h3>
+        <h3 className="text-lg font-semibold mb-2">
+          {t.common.misc("add_comment")}
+        </h3>
 
         <RichTextEditor
           value={newComment}
@@ -83,14 +87,18 @@ const CommentsView: React.FC<CommentsViewProps> = ({
           onClick={handleAddComment}
           disabled={submitting || !newComment.trim()}
         >
-          {submitting ? "Submitting..." : "Add Comment"}
+          {submitting
+            ? t.common.buttons("submitting")
+            : t.common.buttons("add_comment")}
         </Button>
       </div>
 
       <div className="pt-4">
-        <h3 className="text-lg font-semibold mb-2">Comments</h3>
+        <h3 className="text-lg font-semibold mb-2">
+          {t.common.misc("comments")}
+        </h3>
         {loading ? (
-          <div>Loading comments...</div>
+          <div>{t.common.misc("loading_data")}</div>
         ) : comments.length > 0 ? (
           <ul className="space-y-4">
             {comments.map((comment) => (
@@ -147,7 +155,7 @@ const CommentsView: React.FC<CommentsViewProps> = ({
             ))}
           </ul>
         ) : (
-          <div>No comments available.</div>
+          <div>{t.common.misc("no_comments")}.</div>
         )}
       </div>
     </div>

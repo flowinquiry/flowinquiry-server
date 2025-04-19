@@ -12,6 +12,7 @@ import {
 } from "@/components/ui/select";
 import { Locale } from "@/i18n/config";
 import { setLocale } from "@/lib/actions/users.action";
+import { setUserLocale } from "@/lib/locale";
 import { useError } from "@/providers/error-provider";
 
 type Props = {
@@ -32,6 +33,7 @@ export default function LocaleSwitcherSelect({
     const locale = value as Locale;
     startTransition(() => {
       setLocale(locale as string, setError);
+      setUserLocale(locale);
     });
   }
 

@@ -193,11 +193,13 @@ const TeamRequestDetailView = ({
       <Card className="my-4">
         <CardHeader>
           <CardTitle className="text-2xl font-bold text-red-500">
-            Ticket Not Found
+            {t.teams.tickets.detail("ticket_not_found_title")}
           </CardTitle>
         </CardHeader>
         <CardContent>
-          <p className="mb-4">The requested ticket could not be found.</p>
+          <p className="mb-4">
+            {t.teams.tickets.detail("ticket_not_found_description")}
+          </p>
           <Button variant="secondary" onClick={() => router.back()}>
             <ArrowLeft className="mr-2 h-4 w-4" /> {t.common.buttons("go_back")}
           </Button>
@@ -329,13 +331,15 @@ const TeamRequestDetailView = ({
                   )
                 }
               >
-                <Edit className="mr-2 h-4 w-4" /> Edit ticket
+                <Edit className="mr-2 h-4 w-4" />{" "}
+                {t.teams.tickets.detail("edit_ticket")}
               </Button>
             )}
 
             {canComment && (
               <Button variant="outline" onClick={handleFocusComments}>
-                <MessageSquarePlus className="mr-2 h-4 w-4" /> Add comment
+                <MessageSquarePlus className="mr-2 h-4 w-4" />{" "}
+                {t.teams.tickets.detail("add_comment")}
               </Button>
             )}
 
@@ -343,7 +347,8 @@ const TeamRequestDetailView = ({
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <Button className="flex items-center gap-2">
-                    Change Status <ArrowRight className="ml-1 h-4 w-4" />
+                    {t.teams.tickets.detail("change_status")}{" "}
+                    <ArrowRight className="ml-1 h-4 w-4" />
                   </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent className="w-56">
@@ -366,7 +371,7 @@ const TeamRequestDetailView = ({
                       (state) => state.id !== teamRequest.currentStateId,
                     ).length === 0 && (
                       <DropdownMenuItem disabled>
-                        No available states
+                        {t.teams.tickets.detail("no_available_states")}
                       </DropdownMenuItem>
                     )}
 
@@ -375,7 +380,8 @@ const TeamRequestDetailView = ({
                       onClick={handleViewWorkflow}
                       className="cursor-pointer"
                     >
-                      <Eye className="mr-2 h-4 w-4" /> View workflow
+                      <Eye className="mr-2 h-4 w-4" />{" "}
+                      {t.teams.tickets.detail("view_workflow")}
                     </DropdownMenuItem>
                   </DropdownMenuGroup>
                 </DropdownMenuContent>
@@ -384,7 +390,8 @@ const TeamRequestDetailView = ({
 
             {!canEdit && canComment && (
               <Button variant="outline" onClick={handleViewWorkflow}>
-                <Eye className="mr-2 h-4 w-4" /> View workflow
+                <Eye className="mr-2 h-4 w-4" />{" "}
+                {t.teams.tickets.detail("view_workflow")}
               </Button>
             )}
           </div>
@@ -401,7 +408,8 @@ const TeamRequestDetailView = ({
               <div className="p-6 space-y-6">
                 <div>
                   <h3 className="text-lg font-medium mb-2 flex items-center">
-                    <FileText className="mr-2 h-5 w-5" /> Description
+                    <FileText className="mr-2 h-5 w-5" />{" "}
+                    {t.teams.tickets.form.base("description")}
                   </h3>
                   <div
                     className="prose max-w-none text-muted-foreground"
@@ -416,13 +424,14 @@ const TeamRequestDetailView = ({
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div className="space-y-4">
                     <h3 className="text-sm font-medium mb-2 flex items-center">
-                      <Users className="mr-2 h-4 w-4" /> People
+                      <Users className="mr-2 h-4 w-4" />{" "}
+                      {t.teams.tickets.detail("people")}
                     </h3>
 
                     <div className="space-y-3">
                       <div>
                         <p className="text-xs text-muted-foreground mb-1">
-                          Requester
+                          {t.teams.tickets.form.base("requester")}
                         </p>
                         <div className="flex items-center gap-2">
                           <UserAvatar
@@ -440,7 +449,7 @@ const TeamRequestDetailView = ({
 
                       <div>
                         <p className="text-xs text-muted-foreground mb-1">
-                          Assigned To
+                          {t.teams.tickets.form.base("assignee")}
                         </p>
                         {teamRequest.assignUserId ? (
                           <div className="flex items-center gap-2">
@@ -457,7 +466,7 @@ const TeamRequestDetailView = ({
                           </div>
                         ) : (
                           <span className="text-sm text-muted-foreground">
-                            Unassigned
+                            {t.teams.tickets.detail("unassigned")}
                           </span>
                         )}
                       </div>
@@ -466,13 +475,14 @@ const TeamRequestDetailView = ({
 
                   <div className="space-y-4">
                     <h3 className="text-sm font-medium mb-2 flex items-center">
-                      <FileText className="mr-2 h-4 w-4" /> Ticket Details
+                      <FileText className="mr-2 h-4 w-4" />{" "}
+                      {t.teams.tickets.detail("ticker_detail")}
                     </h3>
 
                     <div className="grid grid-cols-2 gap-3">
                       <div>
                         <p className="text-xs text-muted-foreground mb-1">
-                          Type
+                          {t.teams.tickets.form.base("type")}
                         </p>
                         <Badge variant="outline" className="font-normal">
                           {teamRequest.workflowRequestName}
@@ -481,7 +491,7 @@ const TeamRequestDetailView = ({
 
                       <div>
                         <p className="text-xs text-muted-foreground mb-1">
-                          Status
+                          {t.teams.tickets.form.base("state")}
                         </p>
                         <Badge variant="outline" className="font-normal">
                           {teamRequest.currentStateName}
@@ -490,7 +500,7 @@ const TeamRequestDetailView = ({
 
                       <div>
                         <p className="text-xs text-muted-foreground mb-1">
-                          Priority
+                          {t.teams.tickets.form.base("priority")}
                         </p>
                         <PriorityDisplay priority={teamRequest.priority} />
                       </div>
@@ -498,7 +508,7 @@ const TeamRequestDetailView = ({
                       {teamRequest.channel && (
                         <div>
                           <p className="text-xs text-muted-foreground mb-1">
-                            Channel
+                            {t.teams.tickets.form.base("channel")}
                           </p>
                           <Badge variant="outline" className="font-normal">
                             {t.teams.tickets.form.channels(teamRequest.channel)}
@@ -511,13 +521,14 @@ const TeamRequestDetailView = ({
 
                 <div className="mt-6">
                   <h3 className="text-sm font-medium mb-2 flex items-center">
-                    <Calendar className="mr-2 h-4 w-4" /> Important Dates
+                    <Calendar className="mr-2 h-4 w-4" />{" "}
+                    {t.teams.tickets.detail("important_dates")}
                   </h3>
 
                   <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
                     <div>
                       <p className="text-xs text-muted-foreground mb-1">
-                        Created
+                        {t.teams.tickets.form.base("created_at")}
                       </p>
                       <TooltipProvider>
                         <Tooltip>
@@ -537,7 +548,7 @@ const TeamRequestDetailView = ({
 
                     <div>
                       <p className="text-xs text-muted-foreground mb-1">
-                        Last Modified
+                        {t.teams.tickets.form.base("last_modified_at")}
                       </p>
                       <TooltipProvider>
                         <Tooltip>
@@ -557,27 +568,27 @@ const TeamRequestDetailView = ({
 
                     <div>
                       <p className="text-xs text-muted-foreground mb-1">
-                        Target Completion
+                        {t.teams.tickets.form.base("target_completion_date")}
                       </p>
                       <p className="text-sm">
                         {teamRequest.estimatedCompletionDate
                           ? new Date(
                               teamRequest.estimatedCompletionDate,
                             ).toDateString()
-                          : "Not set"}
+                          : t.teams.tickets.detail("not_set")}
                       </p>
                     </div>
 
                     <div>
                       <p className="text-xs text-muted-foreground mb-1">
-                        Actual Completion
+                        {t.teams.tickets.form.base("actual_completion_date")}
                       </p>
                       <p className="text-sm">
                         {teamRequest.actualCompletionDate
                           ? new Date(
                               teamRequest.actualCompletionDate,
                             ).toDateString()
-                          : "Not completed"}
+                          : t.teams.tickets.detail("not_completed")}
                       </p>
                     </div>
                   </div>
@@ -588,7 +599,8 @@ const TeamRequestDetailView = ({
                 <div className="space-y-4 mt-6">
                   <div>
                     <h3 className="text-sm font-medium mb-2 flex items-center">
-                      <FileText className="mr-2 h-4 w-4" /> Attachments
+                      <FileText className="mr-2 h-4 w-4" />{" "}
+                      {t.teams.tickets.detail("attachments")}
                     </h3>
                     <AttachmentView
                       entityType="Team_Request"
@@ -598,7 +610,8 @@ const TeamRequestDetailView = ({
 
                   <div>
                     <h3 className="text-sm font-medium mb-2 flex items-center">
-                      <Users className="mr-2 h-4 w-4" /> Watchers
+                      <Users className="mr-2 h-4 w-4" />{" "}
+                      {t.teams.tickets.detail("watchers")}
                     </h3>
                     <EntityWatchers
                       entityType="Team_Request"
@@ -622,19 +635,22 @@ const TeamRequestDetailView = ({
                       value="comments"
                       className="data-[state=active]:bg-background data-[state=active]:shadow-sm"
                     >
-                      <MessageSquarePlus className="mr-2 h-4 w-4" /> Comments
+                      <MessageSquarePlus className="mr-2 h-4 w-4" />{" "}
+                      {t.teams.tickets.detail("comments")}
                     </TabsTrigger>
                     <TabsTrigger
                       value="changes-history"
                       className="data-[state=active]:bg-background data-[state=active]:shadow-sm"
                     >
-                      <Clock className="mr-2 h-4 w-4" /> Changes History
+                      <Clock className="mr-2 h-4 w-4" />{" "}
+                      {t.teams.tickets.detail("changes_history")}
                     </TabsTrigger>
                     <TabsTrigger
                       value="timeline-history"
                       className="data-[state=active]:bg-background data-[state=active]:shadow-sm"
                     >
-                      <FileText className="mr-2 h-4 w-4" /> Timeline
+                      <FileText className="mr-2 h-4 w-4" />{" "}
+                      {t.teams.tickets.detail("timeline")}
                     </TabsTrigger>
                   </TabsList>
 

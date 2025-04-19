@@ -205,8 +205,8 @@ const TeamRequestsStatusView = ({
 
                       {/* Description section */}
                       <div className="mb-6">
-                        <div className="text-sm font-medium text-gray-600 mb-1">
-                          Description
+                        <div className="text-xs font-medium text-gray-500 mb-1">
+                          {t.teams.tickets.form.base("description")}
                         </div>
                         <TruncatedHtmlLabel
                           htmlContent={request.requestDescription!}
@@ -219,7 +219,7 @@ const TeamRequestsStatusView = ({
                         {/* Requester */}
                         <div>
                           <div className="text-xs font-medium text-gray-500 mb-1">
-                            Requested By
+                            {t.teams.tickets.form.base("requester")}
                           </div>
                           <div className="flex items-center gap-2">
                             <UserAvatar
@@ -238,7 +238,7 @@ const TeamRequestsStatusView = ({
                         {/* Assigned User */}
                         <div>
                           <div className="text-xs font-medium text-gray-500 mb-1">
-                            Assigned To
+                            {t.teams.tickets.form.base("assignee")}
                           </div>
                           <div className="flex items-center gap-2">
                             {request.assignUserId ? (
@@ -256,7 +256,7 @@ const TeamRequestsStatusView = ({
                               </>
                             ) : (
                               <span className="text-sm text-gray-500">
-                                Unassigned
+                                {t.teams.tickets.detail("unassigned")}
                               </span>
                             )}
                           </div>
@@ -277,21 +277,23 @@ const TeamRequestsStatusView = ({
                         {/* Due Date */}
                         <div>
                           <div className="text-xs font-medium text-gray-500 mb-1">
-                            Target Completion
+                            {t.teams.tickets.form.base(
+                              "target_completion_date",
+                            )}
                           </div>
                           <div className="text-sm">
                             {request.estimatedCompletionDate
                               ? new Date(
                                   request.estimatedCompletionDate,
                                 ).toLocaleDateString()
-                              : "No due date"}
+                              : ""}
                           </div>
                         </div>
 
                         {/* State */}
                         <div>
                           <div className="text-xs font-medium text-gray-500 mb-1">
-                            Current State
+                            {t.teams.tickets.form.base("state")}
                           </div>
                           <Badge variant="outline">
                             {request.currentStateName}

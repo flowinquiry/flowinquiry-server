@@ -8,6 +8,7 @@
     "buttons": {
       "create": "Créer",
       "submit": "Soumettre",
+      "submitting": "Envoi en cours...",
       "cancel": "Annuler",
       "previous": "Précédent",
       "next": "Suivant",
@@ -23,7 +24,9 @@
       "remove": "Supprimer",
       "new": "Nouveau",
       "go_back": "Retour",
-      "loading": "Chargement..."
+      "loading": "Chargement...",
+      "add_comment": "Ajouter un commentaire",
+      "download": "Télécharger"
     },
     "misc": {
       "error": "Erreur",
@@ -35,7 +38,14 @@
       "zoom_out": "Rétrécir",
       "switch_to_light_mode": "Passer en mode clair",
       "switch_to_dark_mode": "Passer en mode sombre",
-      "date_select_place_holder": "Sélectionnez une date"
+      "date_select_place_holder": "Sélectionnez une date",
+      "comments": "Commentaires",
+      "add_comment": "Ajouter un commentaire",
+      "no_comments": "Aucun commentaire disponible",
+      "attachment_place_holder": "Cliquez ou glissez pour téléverser",
+      "attachment_file_name": "Nom du fichier",
+      "attachment_type": "Type",
+      "attachment_size": "Taille"
     },
     "navigation": {
       "dashboard": "Tableau de bord",
@@ -204,7 +214,28 @@
       },
       "detail": {
         "next_ticket": "Ticket suivant",
-        "previous_ticket": "Ticket précédent"
+        "previous_ticket": "Ticket précédent",
+        "ticket_not_found_title": "Ticket introuvable",
+        "ticket_not_found_description": "Le ticket demandé est introuvable.",
+        "edit_ticket": "Modifier le ticket",
+        "add_comment": "Ajouter un commentaire",
+        "change_status": "Changer le statut",
+        "view_workflow": "Voir le workflow",
+        "no_available_states": "Aucun état disponible",
+        "people": "Personnes",
+        "unassigned": "Non assigné",
+        "ticker_detail": "Détails du ticket",
+        "important_dates": "Dates importantes",
+        "not_set": "Non défini",
+        "not_completed": "Non complété",
+        "attachments": "Pièces jointes",
+        "watchers": "Observateurs",
+        "comments": "Commentaires",
+        "changes_history": "Historique des modifications",
+        "timeline": "Chronologie",
+        "click_to_edit": "Cliquez pour modifier",
+        "people_assignment": "Personnes et attribution",
+        "state_priority": "Statut et priorité"
       },
       "timeline": {
         "no_data": "Aucune transition trouvée pour ce ticket.",
@@ -219,15 +250,19 @@
         "name": "Nom",
         "description": "Description",
         "priority": "Priorité",
+        "requester": "Demandeur",
         "assignee": "Attribué à",
         "user_select_place_holder": "Rechercher un utilisateur...",
         "user_select_no_data": "Aucun utilisateur trouvé.",
         "user_select_no_choose": "Aucun (désassigner l'utilisateur)",
         "user_select_unassigned": "Non assigné",
+        "created_at": "Date de création",
+        "last_modified_at": "Date de dernière modification",
         "target_completion_date": "Date d'achèvement cible",
         "actual_completion_date": "Date réelle d'achèvement",
         "state": "État",
         "channel": "Canal",
+        "type": "Type",
         "channel_place_holder": "Sélectionner un canal",
         "project": "Projet",
         "channels": {

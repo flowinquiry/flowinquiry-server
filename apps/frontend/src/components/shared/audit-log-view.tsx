@@ -11,6 +11,7 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import { useAppClientTranslations } from "@/hooks/use-translations";
 import { getActivityLogs } from "@/lib/actions/activity-logs.action";
 import { formatDateTimeDistanceToNow } from "@/lib/datetime";
 import { obfuscate } from "@/lib/endecode";
@@ -33,6 +34,7 @@ const AuditLogView: React.FC<AuditLogViewProps> = ({
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(0);
   const { setError } = useError();
+  const t = useAppClientTranslations();
 
   useEffect(() => {
     const fetchAuditLogs = async () => {
@@ -48,7 +50,7 @@ const AuditLogView: React.FC<AuditLogViewProps> = ({
   }, [entityType, entityId, currentPage]);
 
   if (loading) {
-    return <div>Loading history...</div>;
+    return <div>{t.common.misc("loading_data")}</div>;
   }
 
   if (activityLogs.length === 0) {

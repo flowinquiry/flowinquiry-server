@@ -8,6 +8,7 @@
     "buttons": {
       "create": "Create",
       "submit": "Submit",
+      "submitting": "Submitting ...",
       "cancel": "Cancel",
       "previous": "Previous",
       "next": "Next",
@@ -23,7 +24,9 @@
       "remove": "Remove",
       "new": "New",
       "go_back": "Go back",
-      "loading": "Loading..."
+      "loading": "Loading...",
+      "add_comment": "Add comment",
+      "download": "Download"
     },
     "misc": {
       "error": "Error",
@@ -35,7 +38,14 @@
       "zoom_out": "Zoom Out",
       "switch_to_light_mode": "Switch to light mode",
       "switch_to_dark_mode": "Switch to dark mode",
-      "date_select_place_holder": "Select a date"
+      "date_select_place_holder": "Select a date",
+      "comments": "Comments",
+      "add_comment": "Add a comment",
+      "no_comments": "No comments available",
+      "attachment_place_holder": "Click or Drag to upload",
+      "attachment_file_name": "File name",
+      "attachment_type": "Type",
+      "attachment_size": "Size"
     },
     "navigation": {
       "dashboard": "Dashboard",
@@ -204,7 +214,28 @@
       },
       "detail": {
         "next_ticket": "Next ticket",
-        "previous_ticket": "Previous ticket"
+        "previous_ticket": "Previous ticket",
+        "ticket_not_found_title": "Ticket not found",
+        "ticket_not_found_description": "The requested ticket could not be found.",
+        "edit_ticket": "Edit ticket",
+        "add_comment": "Add comment",
+        "change_status": "Change status",
+        "view_workflow": "View workflow",
+        "no_available_states": "No available states",
+        "people": "People",
+        "unassigned": "Unassigned",
+        "ticker_detail": "Ticket details",
+        "important_dates": "Important Dates",
+        "not_set": "Not set",
+        "not_completed": "Not completed",
+        "attachments": "Attachments",
+        "watchers": "Watchers",
+        "comments": "Comments",
+        "changes_history": "Changes history",
+        "timeline": "Timeline",
+        "click_to_edit": "Click to edit",
+        "people_assignment": "People and Assignment",
+        "state_priority": "Status and Priority"
       },
       "timeline": {
         "no_data": "No transitions found for this ticket.",
@@ -219,15 +250,19 @@
         "name": "Name",
         "description": "Description",
         "priority": "Priority",
+        "requester": "Requester",
         "assignee": "Assignee",
         "user_select_place_holder": "Search user...",
         "user_select_no_data": "No user found.",
         "user_select_no_choose": "None (Unassign User)",
         "user_select_unassigned": "Unassigned",
+        "created_at": "Created time",
+        "last_modified_at": "Last modified time",
         "target_completion_date": "Target completion date",
         "actual_completion_date": "Actual completion date",
         "state": "State",
         "channel": "Channel",
+        "type": "Type",
         "channel_place_holder": "Select a channel",
         "project": "Project",
         "channels": {

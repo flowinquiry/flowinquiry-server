@@ -260,7 +260,7 @@ export const CountrySelectField = ({
               <Command>
                 <CommandInput placeholder="Search country..." className="h-9" />
                 <CommandList>
-                  <CommandEmpty>No framework found.</CommandEmpty>
+                  <CommandEmpty>No country found.</CommandEmpty>
                   <CommandGroup>
                     {countries.map((country) => (
                       <CommandItem

@@ -13,6 +13,7 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { usePagePermission } from "@/hooks/use-page-permission";
+import { useAppClientTranslations } from "@/hooks/use-translations";
 import { getSecureBlobResource } from "@/lib/actions/commons.action";
 import {
   deleteEntityAttachment,
@@ -56,6 +57,7 @@ const AttachmentView = ({ entityType, entityId }: AttachmentViewProps) => {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const permissionLevel = usePagePermission();
   const teamRole = useUserTeamRole().role;
+  const t = useAppClientTranslations();
 
   // ✅ Define permissions
   const canView =
@@ -166,7 +168,7 @@ const AttachmentView = ({ entityType, entityId }: AttachmentViewProps) => {
         canWrite && (
           <div className="flex items-center justify-start gap-2 text-gray-500 cursor-pointer">
             <FilePlus className="w-5 h-5" />
-            <span>Click or Drag to upload</span>
+            <span>{t.common.misc("attachment_place_holder")}</span>
           </div>
         )
       ) : (
@@ -197,14 +199,17 @@ const AttachmentView = ({ entityType, entityId }: AttachmentViewProps) => {
                   <TooltipContent>
                     <div className="text-sm">
                       <p>
-                        <strong>File Name:</strong> {attachment.fileName}
+                        <strong>
+                          {t.common.misc("attachment_file_name")}:
+                        </strong>{" "}
+                        {attachment.fileName}
                       </p>
                       <p>
-                        <strong>Type:</strong>{" "}
+                        <strong>{t.common.misc("attachment_type")}:</strong>{" "}
                         {attachment.fileType ?? "Unknown"}
                       </p>
                       <p>
-                        <strong>Size:</strong>{" "}
+                        <strong>{t.common.misc("attachment_size")}:</strong>{" "}
                         {formatFileSize(attachment.fileSize)}
                       </p>
                       <p>
@@ -234,7 +239,9 @@ const AttachmentView = ({ entityType, entityId }: AttachmentViewProps) => {
                           <Download className="w-4 h-4" />
                         </Button>
                       </TooltipTrigger>
-                      <TooltipContent>Download</TooltipContent>
+                      <TooltipContent>
+                        {t.common.misc("download")}
+                      </TooltipContent>
                     </Tooltip>
                   )}
 
@@ -257,7 +264,7 @@ const AttachmentView = ({ entityType, entityId }: AttachmentViewProps) => {
                           )}
                         </Button>
                       </TooltipTrigger>
-                      <TooltipContent>Delete</TooltipContent>
+                      <TooltipContent>{t.common.misc("delete")}</TooltipContent>
                     </Tooltip>
                   )}
                 </div>

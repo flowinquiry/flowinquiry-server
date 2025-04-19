@@ -57,6 +57,7 @@ const EditableSection = ({
   editableClassName?: string;
 }) => {
   const [isHovered, setIsHovered] = useState(false);
+  const t = useAppClientTranslations();
 
   const handleClick = (e: React.MouseEvent) => {
     e.preventDefault();
@@ -81,7 +82,7 @@ const EditableSection = ({
         <Tooltip>
           <TooltipTrigger className="absolute inset-0 z-10 cursor-pointer" />
           <TooltipContent side="bottom">
-            <p>Click to edit</p>
+            <p>{t.teams.tickets.detail("click_to_edit")}</p>
           </TooltipContent>
         </Tooltip>
       </TooltipProvider>
@@ -222,7 +223,7 @@ const TeamRequestDetailSheet: React.FC<RequestDetailsProps> = ({
                             setIsEditingTitle(false);
                           }}
                         >
-                          Save
+                          {t.common.buttons("save")}
                         </Button>
                         <Button
                           type="button"
@@ -280,7 +281,7 @@ const TeamRequestDetailSheet: React.FC<RequestDetailsProps> = ({
                   <div className="flex items-center gap-3 mb-3">
                     <FileText className="w-5 h-5 text-gray-600 dark:text-gray-300" />
                     <h3 className="text-sm font-semibold text-gray-700 dark:text-gray-200">
-                      Description
+                      {t.teams.tickets.form.base("description")}
                     </h3>
                   </div>
 
@@ -331,13 +332,13 @@ const TeamRequestDetailSheet: React.FC<RequestDetailsProps> = ({
                   <div className="flex items-center gap-3 mb-3">
                     <div>{getRequestStatusIcon()}</div>
                     <h3 className="text-sm font-semibold text-gray-700 dark:text-gray-200">
-                      Status and Priority
+                      {t.teams.tickets.detail("state_priority")}
                     </h3>
                   </div>
                   <div className="grid grid-cols-2 gap-4">
                     <div>
                       <span className="text-xs text-gray-500 dark:text-gray-400 block mb-1">
-                        Current Status
+                        {t.teams.tickets.form.base("state")}
                       </span>
                       {isEditingStatus ? (
                         <div
@@ -365,7 +366,7 @@ const TeamRequestDetailSheet: React.FC<RequestDetailsProps> = ({
                                 setIsEditingStatus(false);
                               }}
                             >
-                              Save
+                              {t.common.buttons("save")}
                             </Button>
                             <Button
                               type="button"
@@ -373,7 +374,7 @@ const TeamRequestDetailSheet: React.FC<RequestDetailsProps> = ({
                               size="sm"
                               onClick={() => setIsEditingStatus(false)}
                             >
-                              Cancel
+                              {t.common.buttons("cancel")}
                             </Button>
                           </div>
                         </div>
@@ -428,7 +429,7 @@ const TeamRequestDetailSheet: React.FC<RequestDetailsProps> = ({
                               size="sm"
                               onClick={() => setIsEditingPriority(false)}
                             >
-                              Cancel
+                              {t.common.buttons("cancel")}
                             </Button>
                           </div>
                         </div>
@@ -466,7 +467,7 @@ const TeamRequestDetailSheet: React.FC<RequestDetailsProps> = ({
                                 setIsEditingChannel(false);
                               }}
                             >
-                              Save
+                              {t.common.buttons("save")}
                             </Button>
                             <Button
                               type="button"
@@ -474,7 +475,7 @@ const TeamRequestDetailSheet: React.FC<RequestDetailsProps> = ({
                               size="sm"
                               onClick={() => setIsEditingChannel(false)}
                             >
-                              Cancel
+                              {t.common.buttons("cancel")}
                             </Button>
                           </div>
                         </div>
@@ -498,7 +499,7 @@ const TeamRequestDetailSheet: React.FC<RequestDetailsProps> = ({
                     {/* Target Completion - Editable */}
                     <div>
                       <span className="text-xs text-gray-500 dark:text-gray-400 block mb-1">
-                        Target Completion
+                        {t.teams.tickets.form.base("target_completion_date")}
                       </span>
                       {isEditingCompletionDate ? (
                         <div
@@ -553,7 +554,7 @@ const TeamRequestDetailSheet: React.FC<RequestDetailsProps> = ({
                   <div className="flex items-center gap-3 mb-3">
                     <Paperclip className="w-5 h-5 text-gray-600 dark:text-gray-300" />
                     <h3 className="text-sm font-semibold text-gray-700 dark:text-gray-200">
-                      Attachments
+                      {t.teams.tickets.detail("attachments")}
                     </h3>
                   </div>
                   <AttachmentView
@@ -574,13 +575,13 @@ const TeamRequestDetailSheet: React.FC<RequestDetailsProps> = ({
                   <div className="flex items-center gap-3 mb-3">
                     <User className="w-5 h-5 text-gray-600 dark:text-gray-300" />
                     <h3 className="text-sm font-semibold text-gray-700 dark:text-gray-200">
-                      People and Assignment
+                      {t.teams.tickets.detail("people_assignment")}
                     </h3>
                   </div>
                   <div className="space-y-4">
                     <div>
                       <span className="text-xs text-gray-500 dark:text-gray-400 block mb-1">
-                        Requested By
+                        {t.teams.tickets.form.base("requester")}
                       </span>
                       <div className="flex items-center gap-2">
                         <UserAvatar
@@ -598,7 +599,7 @@ const TeamRequestDetailSheet: React.FC<RequestDetailsProps> = ({
 
                     <div>
                       <span className="text-xs text-gray-500 dark:text-gray-400 block mb-1">
-                        Assigned To
+                        {t.teams.tickets.form.base("assignee")}
                       </span>
                       {isEditingAssignment ? (
                         <div
@@ -621,7 +622,7 @@ const TeamRequestDetailSheet: React.FC<RequestDetailsProps> = ({
                                 setIsEditingAssignment(false);
                               }}
                             >
-                              Save
+                              {t.common.buttons("save")}
                             </Button>
                             <Button
                               type="button"
@@ -629,7 +630,7 @@ const TeamRequestDetailSheet: React.FC<RequestDetailsProps> = ({
                               size="sm"
                               onClick={() => setIsEditingAssignment(false)}
                             >
-                              Cancel
+                              {t.common.buttons("cancel")}
                             </Button>
                           </div>
                         </div>
@@ -658,7 +659,7 @@ const TeamRequestDetailSheet: React.FC<RequestDetailsProps> = ({
                               </>
                             ) : (
                               <span className="text-sm text-gray-500">
-                                Unassigned
+                                {t.teams.tickets.detail("unassigned")}
                               </span>
                             )}
                           </div>
@@ -679,7 +680,7 @@ const TeamRequestDetailSheet: React.FC<RequestDetailsProps> = ({
                   <div className="flex items-center gap-3 mb-3">
                     <Eye className="w-5 h-5 text-gray-600 dark:text-gray-300" />
                     <h3 className="text-sm font-semibold text-gray-700 dark:text-gray-200">
-                      Watchers
+                      {t.teams.tickets.detail("watchers")}
                     </h3>
                   </div>
                   <EntityWatchers
@@ -693,7 +694,7 @@ const TeamRequestDetailSheet: React.FC<RequestDetailsProps> = ({
                   <div className="flex items-center gap-3">
                     <User className="w-5 h-5 text-gray-600 dark:text-gray-300" />
                     <h3 className="text-sm font-semibold text-gray-700 dark:text-gray-200">
-                      Comments
+                      {t.teams.tickets.detail("comments")}
                     </h3>
                   </div>
                   <CommentsView

@@ -63,10 +63,6 @@ By tailoring workflows to these and other scenarios, FlowInquiry empowers teams 
     <img src="assets/shadcn-ui.svg" alt="Shadcn" width="80" height="80" title="Serves as the foundation of the FlowInquiry UI, providing a consistent and accessible design system. All FlowInquiry components are built on top of ShadCN, ensuring a cohesive and extensible user interface across the application">
 </div>
 
-## Stay Up-to-Date
-
-![Follow FlowInquiry](assets/github_project_star.gif)
-
 ## Getting Started
 
 FlowInquiry uses a [monorepo](https://monorepo.tools/) structure to manage all parts of the application — including the backend, frontend, and documentation — in a single repository. This approach ensures consistency, shared tooling, and easier cross-service collaboration.
@@ -84,11 +80,19 @@ To get started with setting up the frontend and backend locally, follow the offi
 
 * [Backend Setup Guide](https://docs.flowinquiry.io/developer_guides/backend/getting_started)
 
+* [Documentation Setup Guide](https://docs.flowinquiry.io/developer_guides/documentation)
+
 These guides provide step-by-step instructions to help you configure your environment, install dependencies, and run the services in development mode.
 
 ## Deploy FlowInquiry
 To ensure a smooth deployment process, we provide detailed guidelines for deploying FlowInquiry in various environments. These instructions cover setup steps, configuration details, and best practices for deploying the service effectively. You can find the deployment documentation [here](https://docs.flowinquiry.io/developer_guides/deployment)
 
+## Stay Up-to-Date
+
+![Follow FlowInquiry](assets/github_project_star.gif)
+
+## Project Statistics
+![Alt](https://repobeats.axiom.co/api/embed/a4b95deb1b8371f68316459561be3df65e4e0e89.svg "Repobeats analytics image")
 
 ## License
 This project is licensed under the [AGPLv3](LICENSE) License.

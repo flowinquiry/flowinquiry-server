@@ -116,8 +116,6 @@ export const ProjectView = ({ projectId }: { projectId: number }) => {
     try {
       const data = await findIterationsByProjectId(projectId, setError);
       setIterations(data || []);
-    } catch (error) {
-      console.error("Failed to fetch iterations:", error);
     } finally {
       setLoadingIterations(false);
     }
@@ -131,8 +129,6 @@ export const ProjectView = ({ projectId }: { projectId: number }) => {
     try {
       const data = await findEpicsByProjectId(projectId, setError);
       setEpics(data || []);
-    } catch (error) {
-      console.error("Failed to fetch epics:", error);
     } finally {
       setLoadingEpics(false);
     }
@@ -547,7 +543,7 @@ export const ProjectView = ({ projectId }: { projectId: number }) => {
                 className="flex items-center gap-2"
               >
                 <Edit className="w-4 h-4" />
-                Edit project
+                {t.teams.projects.view("edit_project")}
               </Button>
             )}
           </div>
@@ -561,7 +557,7 @@ export const ProjectView = ({ projectId }: { projectId: number }) => {
             {project.status && (
               <div className="flex items-center">
                 <span className="text-sm font-medium text-gray-500 dark:text-gray-400 mr-2">
-                  Status:
+                  {t.teams.projects.form("status")}:
                 </span>
                 <Badge variant="default">{project.status}</Badge>
               </div>
@@ -570,7 +566,7 @@ export const ProjectView = ({ projectId }: { projectId: number }) => {
             {project.startDate && (
               <div className="flex items-center">
                 <span className="text-sm font-medium text-gray-500 dark:text-gray-400 mr-2">
-                  Start:
+                  {t.teams.projects.form("start_date")}:
                 </span>
                 <span className="text-sm">
                   {new Date(project.startDate).toLocaleDateString()}
@@ -581,7 +577,7 @@ export const ProjectView = ({ projectId }: { projectId: number }) => {
             {project.endDate && (
               <div className="flex items-center">
                 <span className="text-sm font-medium text-gray-500 dark:text-gray-400 mr-2">
-                  End:
+                  {t.teams.projects.form("end_date")}:
                 </span>
                 <span className="text-sm">
                   {new Date(project.endDate).toLocaleDateString()}
@@ -592,7 +588,7 @@ export const ProjectView = ({ projectId }: { projectId: number }) => {
             {project.startDate && project.endDate && (
               <div className="flex items-center">
                 <span className="text-sm font-medium text-gray-500 dark:text-gray-400 mr-2">
-                  Duration:
+                  {t.teams.projects.view("duration")}:
                 </span>
                 <span className="text-sm">
                   {calculateDuration(project.startDate, project.endDate)}
@@ -604,13 +600,15 @@ export const ProjectView = ({ projectId }: { projectId: number }) => {
           {/* Epic and Iteration Filters */}
           <div className="flex flex-wrap items-center gap-4 mb-4 p-3 bg-muted rounded-md">
             <div className="flex items-center">
-              <span className="text-sm font-medium mr-2">Iteration:</span>
+              <span className="text-sm font-medium mr-2">
+                {t.teams.projects.view("iteration")}:
+              </span>
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <Button variant="outline" size="sm" className="h-8">
                     {selectedIteration
                       ? iterations.find((i) => i.id === selectedIteration)?.name
-                      : "All Iterations"}
+                      : t.teams.projects.view("all_iterations")}
                     <ChevronDown className="ml-2 h-4 w-4" />
                   </Button>
                 </DropdownMenuTrigger>
@@ -619,12 +617,12 @@ export const ProjectView = ({ projectId }: { projectId: number }) => {
                     onClick={() => setSelectedIteration(null)}
                     className="cursor-pointer"
                   >
-                    All Iterations
+                    {t.teams.projects.view("all_iterations")}
                   </DropdownMenuItem>
                   <DropdownMenuSeparator />
                   {loadingIterations ? (
                     <DropdownMenuItem disabled>
-                      Loading iterations...
+                      {t.common.misc("loading_data")}
                     </DropdownMenuItem>
                   ) : iterations.length > 0 ? (
                     iterations.map((iteration) => (
@@ -656,7 +654,7 @@ export const ProjectView = ({ projectId }: { projectId: number }) => {
                     ))
                   ) : (
                     <DropdownMenuItem disabled>
-                      No iterations found
+                      {t.teams.projects.view("no_iterations_found")}
                     </DropdownMenuItem>
                   )}
                   <DropdownMenuSeparator />
@@ -665,20 +663,22 @@ export const ProjectView = ({ projectId }: { projectId: number }) => {
                     className="cursor-pointer text-primary"
                   >
                     <Plus className="mr-2 h-4 w-4" />
-                    Add New Iteration
+                    {t.teams.projects.view("add_new_iteration")}
                   </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
             </div>
 
             <div className="flex items-center">
-              <span className="text-sm font-medium mr-2">Epic:</span>
+              <span className="text-sm font-medium mr-2">
+                {t.teams.projects.view("epic")}:
+              </span>
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <Button variant="outline" size="sm" className="h-8">
                     {selectedEpic
                       ? epics.find((e) => e.id === selectedEpic)?.name
-                      : "All Epics"}
+                      : t.teams.projects.view("all_epics")}
                     <ChevronDown className="ml-2 h-4 w-4" />
                   </Button>
                 </DropdownMenuTrigger>
@@ -687,12 +687,12 @@ export const ProjectView = ({ projectId }: { projectId: number }) => {
                     onClick={() => setSelectedEpic(null)}
                     className="cursor-pointer"
                   >
-                    All Epics
+                    {t.teams.projects.view("all_epics")}
                   </DropdownMenuItem>
                   <DropdownMenuSeparator />
                   {loadingEpics ? (
                     <DropdownMenuItem disabled>
-                      Loading epics...
+                      {t.common.misc("loading_data")}
                     </DropdownMenuItem>
                   ) : epics.length > 0 ? (
                     epics.map((epic) => (
@@ -713,7 +713,9 @@ export const ProjectView = ({ projectId }: { projectId: number }) => {
                       </DropdownMenuItem>
                     ))
                   ) : (
-                    <DropdownMenuItem disabled>No epics found</DropdownMenuItem>
+                    <DropdownMenuItem disabled>
+                      {t.teams.projects.view("no_epics_found")}
+                    </DropdownMenuItem>
                   )}
                   <DropdownMenuSeparator />
                   <DropdownMenuItem
@@ -721,7 +723,7 @@ export const ProjectView = ({ projectId }: { projectId: number }) => {
                     className="cursor-pointer text-primary"
                   >
                     <Plus className="mr-2 h-4 w-4" />
-                    Add New Epic
+                    {t.teams.projects.view("add_new_epic")}
                   </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
@@ -734,7 +736,7 @@ export const ProjectView = ({ projectId }: { projectId: number }) => {
                 onClick={handleClearFilters}
                 className="ml-auto"
               >
-                Clear Filters
+                {t.common.buttons("clear_filters")}
               </Button>
             )}
           </div>
@@ -748,7 +750,7 @@ export const ProjectView = ({ projectId }: { projectId: number }) => {
                   <div className="flex flex-col sm:flex-row sm:items-center gap-2 p-2 bg-secondary/20 rounded-md">
                     <div className="flex-1">
                       <div className="font-medium">
-                        Iteration:{" "}
+                        {t.teams.projects.view("iteration")}:{" "}
                         {
                           iterations.find((i) => i.id === selectedIteration)
                             ?.name
@@ -776,7 +778,7 @@ export const ProjectView = ({ projectId }: { projectId: number }) => {
                       }}
                     >
                       <Edit className="h-4 w-4" />
-                      Edit Iteration
+                      {t.teams.projects.view("edit_iteration")}
                     </Button>
                   </div>
                 )}
@@ -795,7 +797,8 @@ export const ProjectView = ({ projectId }: { projectId: number }) => {
                           color: getEpicColor(selectedEpic),
                         }}
                       >
-                        Epic: {epics.find((e) => e.id === selectedEpic)?.name}
+                        {t.teams.projects.view("epic")}:{" "}
+                        {epics.find((e) => e.id === selectedEpic)?.name}
                       </div>
                       <div className="text-xs text-muted-foreground mt-1">
                         {epics.find((e) => e.id === selectedEpic)?.description}
@@ -815,7 +818,7 @@ export const ProjectView = ({ projectId }: { projectId: number }) => {
                       }}
                     >
                       <Edit className="h-4 w-4" />
-                      Edit Epic
+                      {t.teams.projects.view("edit_epic")}
                     </Button>
                   </div>
                 )}
@@ -824,7 +827,9 @@ export const ProjectView = ({ projectId }: { projectId: number }) => {
           )}
         </>
       ) : (
-        <p className="text-red-500">Project not found.</p>
+        <p className="text-red-500">
+          {t.teams.projects.view("project_not_found")}.
+        </p>
       )}
 
       <DndContext

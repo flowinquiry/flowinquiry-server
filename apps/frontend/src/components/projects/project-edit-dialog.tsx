@@ -34,6 +34,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { useAppClientTranslations } from "@/hooks/use-translations";
 import { createProject, updateProject } from "@/lib/actions/project.action";
 import { useError } from "@/providers/error-provider";
 import { ProjectDTO, ProjectSchema, ProjectStatus } from "@/types/projects";
@@ -55,6 +56,7 @@ const ProjectEditDialog: React.FC<ProjectDialogProps> = ({
   onSaveSuccess,
 }) => {
   const { setError } = useError();
+  const t = useAppClientTranslations();
   const editorMountedRef = useRef(false);
 
   const form = useForm<z.infer<typeof ProjectSchema>>({
@@ -143,12 +145,14 @@ const ProjectEditDialog: React.FC<ProjectDialogProps> = ({
         >
           <DialogHeader>
             <DialogTitle>
-              {project ? "Edit Project" : "New Project"}
+              {project
+                ? t.teams.projects.new_dialog("edit_project")
+                : t.teams.projects.new_dialog("new_project")}
             </DialogTitle>
             <DialogDescription>
               {project
-                ? "Modify the project details."
-                : "Every great project starts with a first step. Let's begin!"}
+                ? t.teams.projects.new_dialog("edit_project_description")
+                : t.teams.projects.new_dialog("new_project_description")}
             </DialogDescription>
           </DialogHeader>
           <Form {...form}>
@@ -164,7 +168,7 @@ const ProjectEditDialog: React.FC<ProjectDialogProps> = ({
                     <ExtInputField
                       form={form}
                       fieldName="name"
-                      label="Name"
+                      label={t.teams.projects.form("name")}
                       required
                     />
                   </div>
@@ -177,7 +181,7 @@ const ProjectEditDialog: React.FC<ProjectDialogProps> = ({
                       render={({ field }) => (
                         <FormItem>
                           <FormLabel>
-                            Description{" "}
+                            {t.teams.projects.form("description")}{" "}
                             <span className="text-destructive">*</span>
                           </FormLabel>
                           <FormControl>
@@ -207,7 +211,8 @@ const ProjectEditDialog: React.FC<ProjectDialogProps> = ({
                       render={({ field }) => (
                         <FormItem>
                           <FormLabel>
-                            Status <span className="text-destructive">*</span>
+                            {t.teams.projects.form("status")}{" "}
+                            <span className="text-destructive">*</span>
                           </FormLabel>
                           <Select
                             onValueChange={field.onChange}
@@ -216,7 +221,7 @@ const ProjectEditDialog: React.FC<ProjectDialogProps> = ({
                           >
                             <FormControl>
                               <SelectTrigger>
-                                <SelectValue placeholder="Select a status" />
+                                <SelectValue />
                               </SelectTrigger>
                             </FormControl>
                             <SelectContent>
@@ -236,16 +241,16 @@ const ProjectEditDialog: React.FC<ProjectDialogProps> = ({
                     <DatePickerField
                       form={form}
                       fieldName="startDate"
-                      label="Start Date"
-                      placeholder="Select a date"
+                      label={t.teams.projects.form("start_date")}
+                      placeholder={t.common.misc("date_select_place_holder")}
                     />
                   </div>
                   <div className="col-span-1">
                     <DatePickerField
                       form={form}
                       fieldName="endDate"
-                      label="End Date"
-                      placeholder="Select a date"
+                      label={t.teams.projects.form("end_date")}
+                      placeholder={t.common.misc("date_select_place_holder")}
                     />
                   </div>
                 </div>
@@ -253,8 +258,12 @@ const ProjectEditDialog: React.FC<ProjectDialogProps> = ({
 
               <div className="pt-4">
                 <SubmitButton
-                  label={project ? "Save Changes" : "Save"}
-                  labelWhileLoading="Saving ..."
+                  label={
+                    project
+                      ? t.common.buttons("save_changes")
+                      : t.common.buttons("save")
+                  }
+                  labelWhileLoading={t.common.buttons("saving")}
                 />
               </div>
             </form>

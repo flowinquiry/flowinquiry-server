@@ -13,6 +13,7 @@ import { Progress } from "@/components/ui/progress";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { useControllableState } from "@/hooks/use-controllable-state";
 import { useToast } from "@/hooks/use-toast";
+import { useAppClientTranslations } from "@/hooks/use-translations";
 import { cn, formatBytes } from "@/lib/utils";
 
 interface FileUploaderProps extends React.HTMLAttributes<HTMLDivElement> {
@@ -94,6 +95,7 @@ interface FileUploaderProps extends React.HTMLAttributes<HTMLDivElement> {
 
 export function FileUploader(props: FileUploaderProps) {
   const { toast } = useToast();
+  const t = useAppClientTranslations();
 
   const {
     value: valueProp,
@@ -121,7 +123,7 @@ export function FileUploader(props: FileUploaderProps) {
       if (!multiple && maxFileCount === 1 && acceptedFiles.length > 1) {
         toast({
           variant: "destructive",
-          description: "Cannot upload more than 1 file at a time",
+          description: t.common.upload("can_not_upload_more_than_1_file_desc"),
         });
         return;
       }
@@ -129,7 +131,9 @@ export function FileUploader(props: FileUploaderProps) {
       if ((files?.length ?? 0) + acceptedFiles.length > maxFileCount) {
         toast({
           variant: "destructive",
-          description: `Cannot upload more than ${maxFileCount} files`,
+          description: t.common.upload("file_upload_limit_error", {
+            maxFileCount,
+          }),
         });
         return;
       }
@@ -148,7 +152,9 @@ export function FileUploader(props: FileUploaderProps) {
         rejectedFiles.forEach(({ file }) => {
           toast({
             variant: "destructive",
-            description: `File ${file.name} was rejected`,
+            description: t.common.upload("file_rejected_error", {
+              fileName: file.name,
+            }),
           });
         });
       }
@@ -164,7 +170,7 @@ export function FileUploader(props: FileUploaderProps) {
         const loadingToast = toast({
           variant: "default",
           title: `Uploading ${target}...`,
-          description: "Please wait while the upload completes.",
+          description: t.common.upload("toast_uploading_description"),
         });
 
         try {
@@ -173,7 +179,7 @@ export function FileUploader(props: FileUploaderProps) {
           // Update toast to success
           toast({
             variant: "default",
-            title: "Upload Successful",
+            title: t.common.upload("toast_upload_success"),
             description: `${target} uploaded`,
           });
 
@@ -246,7 +252,7 @@ export function FileUploader(props: FileUploaderProps) {
                   />
                 </div>
                 <p className="font-medium text-muted-foreground">
-                  Drop the files here
+                  {t.common.upload("drop_file_place_holder")}
                 </p>
               </div>
             ) : (
@@ -324,7 +330,9 @@ function FileCard({ file, progress, onRemove }: FileCardProps) {
           onClick={onRemove}
         >
           <X className="size-4" aria-hidden="true" />
-          <span className="sr-only">Remove file</span>
+          <span className="sr-only">
+            {useAppClientTranslations().common.upload("remove_file")}
+          </span>
         </Button>
       </div>
     </div>

@@ -37,6 +37,7 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import WorkflowStateSelect from "@/components/workflows/workflow-state-select";
+import { useAppClientTranslations } from "@/hooks/use-translations";
 import {
   PRIORITIES_ORDERED,
   PRIORITY_CONFIG,
@@ -59,6 +60,7 @@ const TaskDetailSheet: React.FC<TaskDetailSheetProps> = ({
 }) => {
   // Keep a local copy of the task for UI updates
   const [task, setTask] = useState<TeamRequestDTO | null>(initialTask);
+  const t = useAppClientTranslations();
 
   // Editing states
   const [isEditingTitle, setIsEditingTitle] = useState(false);
@@ -366,7 +368,8 @@ const TaskDetailSheet: React.FC<TaskDetailSheetProps> = ({
                 className="flex items-center gap-1"
                 onClick={handleFocusComments}
               >
-                <MessageSquarePlus className="h-4 w-4" /> Add comment
+                <MessageSquarePlus className="h-4 w-4" />{" "}
+                {t.common.buttons("add_comment")}
               </Button>
             </div>
           </SheetTitle>
@@ -379,7 +382,7 @@ const TaskDetailSheet: React.FC<TaskDetailSheetProps> = ({
               {/* Priority Section */}
               <div>
                 <h3 className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                  Priority
+                  {t.teams.tickets.form.base("priority")}
                 </h3>
 
                 {isEditingPriority ? (
@@ -484,7 +487,7 @@ const TaskDetailSheet: React.FC<TaskDetailSheetProps> = ({
               {/* Status Section */}
               <div>
                 <h3 className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                  State
+                  {t.teams.tickets.form.base("state")}
                 </h3>
 
                 {isEditingState && task.workflowId ? (
@@ -540,14 +543,16 @@ const TaskDetailSheet: React.FC<TaskDetailSheetProps> = ({
                       size="sm"
                       onClick={() => setIsEditingDescription(false)}
                     >
-                      Cancel
+                      {t.common.buttons("cancel")}
                     </Button>
                     <Button
                       size="sm"
                       onClick={handleDescriptionSave}
                       disabled={isSaving}
                     >
-                      {isSaving ? "Saving..." : "Save"}
+                      {isSaving
+                        ? t.common.buttons("saving")
+                        : t.common.buttons("save")}
                     </Button>
                   </div>
                 </div>
@@ -582,12 +587,14 @@ const TaskDetailSheet: React.FC<TaskDetailSheetProps> = ({
             </div>
 
             <div className="col-span-1 sm:col-span-2 text-sm font-medium flex items-start gap-4">
-              <span className="pt-1">Attachments</span>
+              <span className="pt-1">
+                {t.teams.tickets.detail("attachments")}
+              </span>
               <AttachmentView entityType="Team_Request" entityId={task.id!} />
             </div>
 
             <div className="col-span-1 sm:col-span-2 text-sm font-medium flex items-start gap-4">
-              <span className="pt-1">Watchers</span>
+              <span className="pt-1">{t.teams.tickets.detail("watchers")}</span>
               <EntityWatchers entityType="Team_Request" entityId={task.id!} />
             </div>
 
@@ -596,12 +603,12 @@ const TaskDetailSheet: React.FC<TaskDetailSheetProps> = ({
             {/* Assignment & People Section */}
             <div>
               <h3 className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">
-                People
+                {t.teams.tickets.detail("people")}
               </h3>
               <div className="grid grid-cols-2 gap-4">
                 <div>
                   <p className="text-xs text-gray-500 dark:text-gray-400">
-                    Requester
+                    {t.teams.tickets.form.base("requester")}
                   </p>
                   <div className="flex items-center mt-1 gap-2">
                     <UserAvatar imageUrl={task.requestUserImageUrl} />
@@ -613,7 +620,7 @@ const TaskDetailSheet: React.FC<TaskDetailSheetProps> = ({
 
                 <div>
                   <p className="text-xs text-gray-500 dark:text-gray-400">
-                    Assignee
+                    {t.teams.tickets.form.base("assignee")}
                   </p>
 
                   {isEditingAssignee ? (
@@ -662,12 +669,12 @@ const TaskDetailSheet: React.FC<TaskDetailSheetProps> = ({
             {/* Dates Section */}
             <div>
               <h3 className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">
-                Dates & Time
+                {t.teams.tickets.detail("date_time")}
               </h3>
               <div className="grid grid-cols-2 gap-4">
                 <div>
                   <p className="text-xs text-gray-500 dark:text-gray-400">
-                    Created
+                    {t.teams.tickets.form.base("created_at")}
                   </p>
                   <p className="text-sm mt-1">
                     {task.createdAt
@@ -687,7 +694,7 @@ const TaskDetailSheet: React.FC<TaskDetailSheetProps> = ({
 
                 <div>
                   <p className="text-xs text-gray-500 dark:text-gray-400">
-                    Last Modified
+                    {t.teams.tickets.form.base("last_modified_at")}
                   </p>
                   <p className="text-sm mt-1">
                     {task.modifiedAt
@@ -705,7 +712,7 @@ const TaskDetailSheet: React.FC<TaskDetailSheetProps> = ({
                       ? new Date(
                           task.estimatedCompletionDate,
                         ).toLocaleDateString()
-                      : "Not set"}
+                      : t.teams.tickets.detail("not_set")}
                   </p>
                 </div>
 
@@ -732,12 +739,14 @@ const TaskDetailSheet: React.FC<TaskDetailSheetProps> = ({
               onValueChange={handleTabChange}
             >
               <TabsList className="grid w-full grid-cols-3">
-                <TabsTrigger value="comments">Comments</TabsTrigger>
+                <TabsTrigger value="comments">
+                  {t.common.misc("comments")}
+                </TabsTrigger>
                 <TabsTrigger value="changes-history">
-                  Changes History
+                  {t.teams.tickets.detail("changes_history")}
                 </TabsTrigger>
                 <TabsTrigger value="timeline-history">
-                  Timeline History
+                  {t.teams.tickets.detail("timeline")}
                 </TabsTrigger>
               </TabsList>
               <TabsContent value="comments">
@@ -766,7 +775,7 @@ const TaskDetailSheet: React.FC<TaskDetailSheetProps> = ({
 
         <div className="mt-6 flex justify-end space-x-2">
           <Button variant="outline" onClick={() => setIsOpen(false)}>
-            Close
+            {t.common.buttons("close")}
           </Button>
         </div>
       </SheetContent>

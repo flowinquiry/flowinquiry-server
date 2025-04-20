@@ -61,10 +61,10 @@ const ProjectListView = () => {
   const team = useTeam();
   const t = useAppClientTranslations();
   const breadcrumbItems = [
-    { title: "Dashboard", link: "/portal" },
-    { title: "Teams", link: "/portal/teams" },
+    { title: t.common.navigation("dashboard"), link: "/portal" },
+    { title: t.common.navigation("teams"), link: "/portal/teams" },
     { title: team.name, link: `/portal/teams/${obfuscate(team.id)}` },
-    { title: "Projects", link: "#" },
+    { title: t.common.navigation("projects"), link: "#" },
   ];
 
   const permissionLevel = usePagePermission();
@@ -180,8 +180,8 @@ const ProjectListView = () => {
                 </TooltipContent>
               </Tooltip>
               <Heading
-                title={`Projects (${totalElements})`}
-                description="Manage and track your team's projects efficiently."
+                title={t.teams.projects.list("title", { totalElements })}
+                description={t.teams.projects.list("description")}
               />
             </div>
             {(PermissionUtils.canWrite(permissionLevel) ||
@@ -193,7 +193,7 @@ const ProjectListView = () => {
                     setOpenDialog(true);
                   }}
                 >
-                  New Project
+                  {t.teams.projects.list("new_project")}
                 </Button>
                 <ProjectEditDialog
                   open={openDialog}
@@ -210,7 +210,7 @@ const ProjectListView = () => {
           <div className="flex items-center gap-4 p-4 bg-gray-50 dark:bg-gray-900 rounded-lg shadow-md border border-gray-300 dark:border-gray-700">
             <Input
               type="text"
-              placeholder="Search projects..."
+              placeholder={t.teams.projects.list("search_place_holder")}
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               className="flex-1"
@@ -239,11 +239,15 @@ const ProjectListView = () => {
                 <Table>
                   <TableHeader>
                     <TableRow>
-                      <TableHead>Project Name</TableHead>
-                      <TableHead>Status</TableHead>
-                      <TableHead>Start Date</TableHead>
-                      <TableHead>End Date</TableHead>
-                      <TableHead>Created At</TableHead>
+                      <TableHead>{t.teams.projects.form("name")}</TableHead>
+                      <TableHead>{t.teams.projects.form("status")}</TableHead>
+                      <TableHead>
+                        {t.teams.projects.form("start_date")}
+                      </TableHead>
+                      <TableHead>{t.teams.projects.form("end_date")}</TableHead>
+                      <TableHead>
+                        {t.teams.projects.form("created_at")}
+                      </TableHead>
                       <TableHead></TableHead>
                     </TableRow>
                   </TableHeader>
@@ -299,7 +303,8 @@ const ProjectListView = () => {
                                   setOpenDialog(true);
                                 }}
                               >
-                                <Pencil className="w-4 h-4 mr-2" /> Edit
+                                <Pencil className="w-4 h-4 mr-2" />{" "}
+                                {t.common.buttons("edit")}
                               </DropdownMenuItem>
                               {project.status === "Active" ? (
                                 <DropdownMenuItem
@@ -308,8 +313,8 @@ const ProjectListView = () => {
                                     handleStatusChange(project, "Closed")
                                   }
                                 >
-                                  <Archive className="w-4 h-4 mr-2" /> Close
-                                  Project
+                                  <Archive className="w-4 h-4 mr-2" />{" "}
+                                  {t.teams.projects.list("close_project")}
                                 </DropdownMenuItem>
                               ) : (
                                 <DropdownMenuItem
@@ -318,15 +323,16 @@ const ProjectListView = () => {
                                     handleStatusChange(project, "Active")
                                   }
                                 >
-                                  <Archive className="w-4 h-4 mr-2" /> Reopen
-                                  Project
+                                  <Archive className="w-4 h-4 mr-2" />{" "}
+                                  {t.teams.projects.list("reopen_project")}
                                 </DropdownMenuItem>
                               )}
                               <DropdownMenuItem
                                 className="cursor-pointer text-red-600"
                                 onClick={() => confirmDelete(project)}
                               >
-                                <Trash className="w-4 h-4 mr-2" /> Delete
+                                <Trash className="w-4 h-4 mr-2" />{" "}
+                                {t.common.buttons("delete")}
                               </DropdownMenuItem>
                             </DropdownMenuContent>
                           </DropdownMenu>
@@ -342,7 +348,9 @@ const ProjectListView = () => {
                 />
               </>
             ) : (
-              <p className="text-gray-500 text-center">No projects found.</p>
+              <p className="text-gray-500 text-center">
+                {t.teams.projects.list("no_projects_found")}
+              </p>
             )}
           </div>
         </div>
@@ -351,10 +359,13 @@ const ProjectListView = () => {
         <AlertDialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
           <AlertDialogContent>
             <AlertDialogHeader>
-              <AlertDialogTitle>Confirm Project Deletion</AlertDialogTitle>
+              <AlertDialogTitle>
+                {t.teams.projects.list("delete_project_dialog_title")}
+              </AlertDialogTitle>
               <AlertDialogDescription>
-                Are you sure you want to delete the project "
-                {selectedProject?.name}"? This action cannot be undone.
+                {t.teams.projects.list("delete_project_dialog_confirmation", {
+                  projectName: selectedProject?.name ?? "",
+                })}
               </AlertDialogDescription>
             </AlertDialogHeader>
             <AlertDialogFooter>
@@ -363,7 +374,7 @@ const ProjectListView = () => {
                 onClick={handleDelete}
                 className="bg-red-600 hover:bg-red-700 text-white"
               >
-                Delete
+                {t.common.buttons("delete")}
               </AlertDialogAction>
             </AlertDialogFooter>
           </AlertDialogContent>

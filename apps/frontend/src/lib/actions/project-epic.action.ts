@@ -1,4 +1,4 @@
-import { get, post } from "@/lib/actions/commons.action";
+import { get, post, put } from "@/lib/actions/commons.action";
 import { HttpError } from "@/lib/errors";
 import { ProjectEpicDTO } from "@/types/projects";
 
@@ -8,6 +8,18 @@ export const createProjectEpic = async (
 ) => {
   return post<ProjectEpicDTO, ProjectEpicDTO>(
     `/api/project-epics`,
+    projectEpic,
+    setError,
+  );
+};
+
+export const updateProjectEpic = (
+  projectEpicId: number,
+  projectEpic: ProjectEpicDTO,
+  setError?: (error: HttpError | string | null) => void,
+) => {
+  return put<ProjectEpicDTO, ProjectEpicDTO>(
+    `/api/project-epics/${projectEpicId}`,
     projectEpic,
     setError,
   );

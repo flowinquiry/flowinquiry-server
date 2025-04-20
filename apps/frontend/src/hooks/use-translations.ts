@@ -19,6 +19,12 @@ export function useAppClientTranslations() {
         new_dialog: useTranslations("teams.tickets.new_dialog"),
         timeline: useTranslations("teams.tickets.timeline"),
       },
+      projects: {
+        form: useTranslations("teams.projects.form"),
+        list: useTranslations("teams.projects.list"),
+        new_dialog: useTranslations("teams.projects.new_dialog"),
+        view: useTranslations("teams.projects.view"),
+      },
     },
     users: {
       list: useTranslations("users.list"),
@@ -33,6 +39,7 @@ export function useAppClientTranslations() {
       misc: useTranslations("common.misc"),
       navigation: useTranslations("common.navigation"),
       permission: useTranslations("common.permission"),
+      upload: useTranslations("common.upload"),
     },
     authorities: {
       common: useTranslations("authorities.common"),

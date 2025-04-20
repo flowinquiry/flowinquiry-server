@@ -26,7 +26,9 @@
       "go_back": "Retour",
       "loading": "Chargement...",
       "add_comment": "Ajouter un commentaire",
-      "download": "Télécharger"
+      "download": "Télécharger",
+      "save_changes": "Enregistrer les modifications",
+      "clear_filters": "Réinitialiser les filtres"
     },
     "misc": {
       "error": "Erreur",
@@ -67,6 +69,15 @@
       "WRITE": "Écriture",
       "READ": "Lecture",
       "NONE": "Aucun"
+    },
+    "upload": {
+      "can_not_upload_more_than_1_file_desc": "Impossible de téléverser plus d'un fichier à la fois",
+      "file_upload_limit_error": "Impossible de téléverser plus de {maxFileCount} fichiers",
+      "file_rejected_error": "Le fichier {fileName} a été rejeté",
+      "toast_uploading_description": "Veuillez patienter pendant le téléversement",
+      "toast_upload_success": "Téléversement réussi",
+      "remove_file": "Supprimer le fichier",
+      "drop_file_place_holder": "Déposez les fichiers ici"
     }
   },
   "header": {
@@ -226,6 +237,7 @@
         "unassigned": "Non assigné",
         "ticker_detail": "Détails du ticket",
         "important_dates": "Dates importantes",
+        "date_time": "Dates et heure",
         "not_set": "Non défini",
         "not_completed": "Non complété",
         "attachments": "Pièces jointes",
@@ -294,6 +306,50 @@
       "remove_user_from_team": "Cette action supprimera l'utilisateur <b>{firstName} {lastName}</b> de l'équipe <b>{teamName}</b>.",
       "remove_only_manager_dialog_error_title": "Rôle de manager requis",
       "remove_only_manager_dialog_error_description": "Vous ne pouvez pas supprimer le seul manager de l'équipe"
+    },
+    "projects": {
+      "form": {
+        "name": "Nom",
+        "description": "Description",
+        "status": "Statut",
+        "start_date": "Date de début",
+        "end_date": "Date de fin",
+        "created_at": "Créé le"
+      },
+      "list": {
+        "title": "Projets ({totalElements})",
+        "description": "Gérez et suivez efficacement les projets de votre équipe",
+        "search_place_holder": "Rechercher des projets...",
+        "new_project": "Nouveau projet",
+        "no_projects_found": "Aucun projet trouvé",
+        "close_project": "Clôturer le projet",
+        "reopen_project": "Rouvrir le projet",
+        "delete_project_dialog_title": "Confirmer la suppression du projet",
+        "delete_project_dialog_confirmation": "Êtes-vous sûr de vouloir supprimer le projet \"{projectName}\" ? Cette action est irréversible."
+      },
+      "view": {
+        "add_new_task_to_state": "Ajouter une nouvelle tâche à {stateName}",
+        "new_task": "Ajouter une tâche",
+        "project_not_found": "Projet introuvable",
+        "edit_project": "Modifier le projet",
+        "duration": "Durée",
+        "iteration": "Itération",
+        "all_iterations": "Toutes les itérations",
+        "no_iterations_found": "Aucune itération trouvée",
+        "edit_iteration": "Modifier l'itération",
+        "add_new_iteration": "Ajouter une nouvelle itération",
+        "epic": "Épique",
+        "all_epics": "Tous les épiques",
+        "no_epics_found": "Aucun épique trouvé",
+        "add_new_epic": "Ajouter un nouvel épique",
+        "edit_epic": "Modifier l'épique"
+      },
+      "new_dialog": {
+        "new_project": "Nouveau projet",
+        "new_project_description": "Chaque grand projet commence par un premier pas. Commençons !",
+        "edit_project": "Modifier le projet",
+        "edit_project_description": "Modifiez les détails du projet"
+      }
     }
   },
   "users": {

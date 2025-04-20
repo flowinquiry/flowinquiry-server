@@ -163,7 +163,9 @@ const TaskEditorSheet = ({
           <div className="p-6 border-b">
             <SheetHeader>
               <SheetTitle>
-                Add New Task to {selectedWorkflowState?.stateName}
+                {t.teams.projects.view("add_new_task_to_state", {
+                  stateName: selectedWorkflowState?.stateName ?? "unknown",
+                })}
               </SheetTitle>
             </SheetHeader>
           </div>
@@ -182,7 +184,7 @@ const TaskEditorSheet = ({
                       <ExtInputField
                         form={form}
                         fieldName="requestTitle"
-                        label="Title"
+                        label={t.teams.tickets.form.base("name")}
                         required
                       />
                     </div>
@@ -195,7 +197,7 @@ const TaskEditorSheet = ({
                         render={({ field }) => (
                           <FormItem>
                             <FormLabel>
-                              Description{" "}
+                              {t.teams.tickets.form.base("description")}{" "}
                               <span className="text-destructive">*</span>
                             </FormLabel>
                             <FormControl>
@@ -234,7 +236,9 @@ const TaskEditorSheet = ({
                       name="priority"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel>Priority</FormLabel>
+                          <FormLabel>
+                            {t.teams.tickets.form.base("priority")}
+                          </FormLabel>
                           <FormControl>
                             <TeamRequestPrioritySelect
                               value={field.value as TeamRequestPriority}
@@ -251,14 +255,16 @@ const TaskEditorSheet = ({
                     <TeamUserSelectField
                       form={form}
                       fieldName="assignUserId"
-                      label="Assignee"
+                      label={t.teams.tickets.form.base("assignee")}
                       teamId={teamId}
                     />
 
                     <DatePickerField
                       form={form}
                       fieldName="estimatedCompletionDate"
-                      label="Target Completion Date"
+                      label={t.teams.tickets.form.base(
+                        "target_completion_date",
+                      )}
                       placeholder={t.common.misc("date_select_place_holder")}
                     />
 
@@ -274,7 +280,8 @@ const TaskEditorSheet = ({
                     {/* Modified workflow state field to capture state name changes */}
                     <FormItem className="mb-16">
                       <FormLabel>
-                        State <span className="text-destructive">*</span>
+                        {t.teams.tickets.form.base("state")}{" "}
+                        <span className="text-destructive">*</span>
                       </FormLabel>
                       <FormControl>
                         <WorkflowStateSelect
@@ -291,13 +298,16 @@ const TaskEditorSheet = ({
 
               {/* Fixed footer with buttons */}
               <div className="p-6 mt-auto border-t flex gap-4 sticky bottom-0 bg-background z-10">
-                <SubmitButton label="Save" labelWhileLoading="Saving ..." />
+                <SubmitButton
+                  label={t.common.buttons("save")}
+                  labelWhileLoading={t.common.buttons("saving")}
+                />
                 <button
                   type="button"
                   className="px-4 py-2 border rounded-md bg-gray-200 hover:bg-gray-300 dark:bg-gray-800 dark:hover:bg-gray-700"
                   onClick={() => setIsOpen(false)}
                 >
-                  Discard
+                  {t.common.buttons("discard")}
                 </button>
               </div>
             </form>

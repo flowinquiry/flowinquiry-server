@@ -26,7 +26,9 @@
       "go_back": "Go back",
       "loading": "Loading...",
       "add_comment": "Add comment",
-      "download": "Download"
+      "download": "Download",
+      "save_changes": "Save changes",
+      "clear_filters": "Clear Filters"
     },
     "misc": {
       "error": "Error",
@@ -67,6 +69,15 @@
       "WRITE": "Write",
       "READ": "Read",
       "NONE": "None"
+    },
+    "upload": {
+      "can_not_upload_more_than_1_file_desc": "Cannot upload more than 1 file at a time",
+      "file_upload_limit_error": "Cannot upload more than {maxFileCount} files",
+      "file_rejected_error": "File {fileName} was rejected",
+      "toast_uploading_description": "Please wait while the upload completes",
+      "toast_upload_success": "Upload successful",
+      "remove_file": "Remove file",
+      "drop_file_place_holder": "Drop the files here"
     }
   },
   "header": {
@@ -226,6 +237,7 @@
         "unassigned": "Unassigned",
         "ticker_detail": "Ticket details",
         "important_dates": "Important Dates",
+        "date_time": "Dates & Time",
         "not_set": "Not set",
         "not_completed": "Not completed",
         "attachments": "Attachments",
@@ -235,7 +247,7 @@
         "timeline": "Timeline",
         "click_to_edit": "Click to edit",
         "people_assignment": "People and Assignment",
-        "state_priority": "Status and Priority"
+        "state_priority": "State and Priority"
       },
       "timeline": {
         "no_data": "No transitions found for this ticket.",
@@ -294,6 +306,50 @@
       "remove_user_from_team": "This action will remove user <b>{firstName} {lastName}</b> from team <b>{teamName}</b>.",
       "remove_only_manager_dialog_error_title": "Manager Role Require",
       "remove_only_manager_dialog_error_description": "You cannot remove the only Manager from the team"
+    },
+    "projects": {
+      "list": {
+        "title": "Projects ({totalElements})",
+        "description": "Manage and track your team's projects efficiently",
+        "search_place_holder": "Search projects...",
+        "new_project": "New project",
+        "no_projects_found": "No projects found",
+        "close_project": "Close project",
+        "reopen_project": "Reopen project",
+        "delete_project_dialog_title": "Confirm project deletion",
+        "delete_project_dialog_confirmation": "Are you sure you want to delete the project \"{projectName}\"? This action cannot be undone."
+      },
+      "form": {
+        "name": "Name",
+        "description": "Description",
+        "status": "Status",
+        "start_date": "Start date",
+        "end_date": "End date",
+        "created_at": "Created at"
+      },
+      "view": {
+        "add_new_task_to_state": "Add new task to {stateName}",
+        "new_task": "Add task",
+        "project_not_found": "Project not found",
+        "edit_project": "Edit project",
+        "duration": "Duration",
+        "iteration": "Iteration",
+        "all_iterations": "All Iterations",
+        "no_iterations_found": "No iterations found",
+        "edit_iteration": "Edit iteration",
+        "add_new_iteration": "Add new iteration",
+        "epic": "Epic",
+        "all_epics": "All Epics",
+        "no_epics_found": "No epics found",
+        "add_new_epic": "Add new epic",
+        "edit_epic": "Edit epic"
+      },
+      "new_dialog": {
+        "new_project": "New project",
+        "new_project_description": "Every great project starts with a first step. Let's begin!",
+        "edit_project": "Edit project",
+        "edit_project_description": "Modify the project details"
+      }
     }
   },
   "users": {

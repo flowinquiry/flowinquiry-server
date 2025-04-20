@@ -11,6 +11,7 @@ import { Plus } from "lucide-react";
 
 import { DraggableTaskWrapper } from "@/components/projects/draggable-task-wrapper";
 import { usePagePermission } from "@/hooks/use-page-permission";
+import { useAppClientTranslations } from "@/hooks/use-translations";
 import { useUserTeamRole } from "@/providers/user-team-role-provider";
 import { PermissionUtils } from "@/types/resources";
 import { TeamRequestDTO } from "@/types/team-requests";
@@ -36,6 +37,7 @@ const StateColumn: React.FC<ColumnProps> = ({
   columnColor,
   onTaskClick,
 }) => {
+  const t = useAppClientTranslations();
   const permissionLevel = usePagePermission();
   const teamRole = useUserTeamRole().role;
   const { isOver, setNodeRef } = useDroppable({
@@ -100,7 +102,7 @@ const StateColumn: React.FC<ColumnProps> = ({
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.95 }}
         >
-          <Plus className="w-5 h-5" /> Add item
+          <Plus className="w-5 h-5" /> {t.teams.projects.view("new_task")}
         </motion.button>
       )}
     </motion.div>

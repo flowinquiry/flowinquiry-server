@@ -34,21 +34,45 @@ FlowInquiry is a free, open-source solution that embraces transparency as an alt
 
 ![FlowInquiry](assets/flowinquiry_slide.gif)
 
-### Problems FlowInquiry Solves with Specific Use Cases
+## ✅ Real-World Use Cases Solved by FlowInquiry
+FlowInquiry helps teams manage requests, projects, and collaboration with clarity and control. Here are common ways organizations use it:
 
-FlowInquiry addresses several challenges faced by organizations in managing cases, tickets, and team communication. Here are some specific use cases:
+* Project & Task Management
+Organize tasks, set priorities, track progress, and ensure deadlines with workflow automation and SLAs.
 
-* **Project management** Teams can use FlowInquiry as a project management tool to create, assign, and prioritize tasks, track progress with workflows, and ensure timely completion with SLAs and automation. Its collaboration features, real-time updates, and integration capabilities streamline workflows and boost productivity.
+* Cross-Team Collaboration
+Centralize communication across teams, reduce misalignment, and route requests through well-defined workflows.
 
-* **Team Communication and Collaboration** Effective communication within and across teams can be difficult in large organizations, especially when requests involve multiple departments or external stakeholders. FlowInquiry acts as a centralized platform where requests are logged, tracked, and routed through clearly defined workflows. This reduces miscommunication, prevents delays, and ensures all parties are aligned on priorities.
+* IT & Internal Support
+Manage service desk tickets like access requests or software issues with automated handling and clear ownership.
 
-* **Service Request Tracking for IT Teams** IT teams managing internal service requests often encounter bottlenecks due to unclear processes or manual tracking. FlowInquiry allows IT departments to automate workflows for common requests such as software installation, access management, or issue resolution. The system ensures each request is assigned, processed, and resolved within agreed SLAs.
+* Incident & On-Call Management
+Track incidents with SLAs, escalation rules, and accountability—ideal for rotating shifts and critical operations.
 
-* **On-Call System Management** In an on-call system, teams often face challenges in managing incoming requests or incidents, particularly when multiple shifts or team members are involved. FlowInquiry ensures that each request follows a well-defined workflow, with SLAs for escalation and resolution. This helps reduce response times, avoids missed escalations, and provides clear accountability for handling incidents.
+* CRM Case Handling
+Customize workflows for handling customer requests, complaints, or inquiries to improve resolution time and satisfaction.
 
-* **Case Management in CRM Applications**  CRM applications often struggle to manage customer cases effectively, especially when handling inquiries, complaints, or service requests. FlowInquiry enables teams to define custom workflows tailored to specific case types, such as refunds, escalations, or product inquiries. SLAs for each workflow stage ensure customers receive timely updates and resolutions, enhancing customer satisfaction and loyalty.
+## ⚙️ Key Features of FlowInquiry
 
-By tailoring workflows to these and other scenarios, FlowInquiry empowers teams to streamline operations, meet deadlines, and deliver exceptional service to both internal and external stakeholders.
+* 🧩 Custom Workflows – Tailor request lifecycles with state transitions and actions
+
+* ⏱ SLA Enforcement – Track deadlines, escalate overdue items
+
+* 👥 Comments & Watchers – Collaborate with full visibility
+
+* 📅 Timeline View – Visualize request history and changes
+
+* 📂 Projects & Iterations – Group work into structured cycles
+
+* 🧵 Change History – Full audit trail of updates
+
+* 🔐 Role-Based Access – Secure, granular permissions
+
+* 🌍 Multilingual Support – Serve global teams and users
+
+* 🔄 Integrations – Connect with Slack, Email, and more
+
+* 🚀 Flexible Deployment – Run on Docker, Kubernetes, or your own infra
 
 ## Built With
 
@@ -72,6 +96,7 @@ All core services are located in the apps/ directory:
 * apps:
   * backend: The Spring Boot service that powers the API layer, business logic, database integrations, workflows, and backend features of FlowInquiry.
   * frontend: The Next.js web application that provides the user interface for the platform. It integrates with the backend via REST APIs, handles authentication, and supports both freemium and premium features through dynamic configuration.
+  * ops: the central repository that provides artifacts and configuration files to help customers deploy FlowInquiry using Docker, Kubernetes, and other environments.
   * docs: A documentation site built with a [Nextra](https://nextra.site/) static site generator, providing guides, and setup instructions for developers and users.
 
 To get started with setting up the frontend and backend locally, follow the official developer guides:

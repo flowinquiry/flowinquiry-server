@@ -1,6 +1,6 @@
-import { get, post } from "@/lib/actions/commons.action";
+import { get, post, put } from "@/lib/actions/commons.action";
 import { HttpError } from "@/lib/errors";
-import { ProjectIterationDTO } from "@/types/projects";
+import { ProjectEpicDTO, ProjectIterationDTO } from "@/types/projects";
 
 export const createProjectIteration = async (
   projectIteration: ProjectIterationDTO,
@@ -8,6 +8,18 @@ export const createProjectIteration = async (
 ) => {
   return post<ProjectIterationDTO, ProjectIterationDTO>(
     `/api/project-iterations`,
+    projectIteration,
+    setError,
+  );
+};
+
+export const updateProjectIteration = (
+  projectIterationId: number,
+  projectIteration: ProjectIterationDTO,
+  setError?: (error: HttpError | string | null) => void,
+) => {
+  return put<ProjectEpicDTO, ProjectEpicDTO>(
+    `/api/project-iterations/${projectIterationId}`,
     projectIteration,
     setError,
   );

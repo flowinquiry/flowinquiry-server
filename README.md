@@ -1,6 +1,7 @@
 # FlowInquiry Server
 [![Build Status](https://github.com/flowinquiry/flowinquiry/actions/workflows/ci.yml/badge.svg)](https://github.com/flowinquiry/flowinquiry/actions/workflows/ci.yml)
 [![Contributors](https://img.shields.io/github/contributors/flowinquiry/flowinquiry.svg)](https://github.com/flowinquiry/flowinquiry/graphs/contributors)
+[![Codacy Badge](https://app.codacy.com/project/badge/Grade/69704fb598fa40b5b053916ba4272797)](https://app.codacy.com/gh/flowinquiry/flowinquiry/dashboard?utm_source=gh&utm_medium=referral&utm_content=&utm_campaign=Badge_grade)
 [![Frontend Docker Pulls](https://img.shields.io/docker/pulls/flowinquiry/flowinquiry-frontend?label=frontend%20pulls&logo=docker)](https://hub.docker.com/r/flowinquiry/flowinquiry-frontend)
 [![Backend Docker Pulls](https://img.shields.io/docker/pulls/flowinquiry/flowinquiry-server?label=backend%20pulls&logo=docker)](https://hub.docker.com/r/flowinquiry/flowinquiry-server)
 [![GitHub stars](https://img.shields.io/github/stars/flowinquiry/flowinquiry-server.svg?style=social)](https://github.com/flowinquiry/flowinquiry-server/stargazers)

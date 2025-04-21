@@ -1,7 +1,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { format } from "date-fns";
 import { CalendarIcon } from "lucide-react";
-import { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 
 import { Button } from "@/components/ui/button";
@@ -29,66 +29,88 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { Textarea } from "@/components/ui/textarea";
-import { useToast } from "@/components/ui/use-toast";
 import { useAppClientTranslations } from "@/hooks/use-translations";
-import { createProjectEpic } from "@/lib/actions/project-epic.action";
+import {
+  createProjectEpic,
+  updateProjectEpic,
+} from "@/lib/actions/project-epic.action";
 import { useError } from "@/providers/error-provider";
 import { ProjectEpicDTO, ProjectEpicDTOSchema } from "@/types/projects";
 
-interface CreateEpicDialogProps {
+interface ProjectEpicDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   onSave?: (epic: ProjectEpicDTO) => void;
   onCancel?: () => void;
   projectId: number;
+  epic?: ProjectEpicDTO | null; // Optional epic for edit mode
 }
 
-export function CreateEpicDialog({
+export function ProjectEpicDialog({
   open,
   onOpenChange,
   onSave,
   onCancel,
   projectId,
-}: CreateEpicDialogProps) {
+  epic,
+}: ProjectEpicDialogProps) {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { setError } = useError();
-  const { toast } = useToast();
   const t = useAppClientTranslations();
-  // Initialize form with the ProjectEpicDTOSchema
 
+  // Determine if we're in edit mode
+  const isEditMode = !!epic?.id;
+
+  // Initialize form with the ProjectEpicDTOSchema
   const form = useForm<ProjectEpicDTO>({
     resolver: zodResolver(ProjectEpicDTOSchema),
     defaultValues: {
+      id: epic?.id,
       projectId,
-      name: "",
-      description: "",
-      startDate: new Date(),
-      endDate: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000), // Default to 30 days
-      totalTickets: 0,
+      name: epic?.name || "",
+      description: epic?.description || "",
+      startDate: epic?.startDate ? new Date(epic.startDate) : new Date(),
+      endDate: epic?.endDate
+        ? new Date(epic.endDate)
+        : new Date(Date.now() + 30 * 24 * 60 * 60 * 1000), // Default to 30 days
+      totalTickets: epic?.totalTickets || 0,
     },
   });
 
-  // Reset form when dialog opens/closes
-  useState(() => {
+  // Reset form when dialog opens/closes or epic changes
+  useEffect(() => {
     if (open) {
       form.reset({
+        id: epic?.id,
         projectId,
-        name: "",
-        description: "",
-        startDate: new Date(),
-        endDate: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
-        totalTickets: 0,
+        name: epic?.name || "",
+        description: epic?.description || "",
+        startDate: epic?.startDate ? new Date(epic.startDate) : new Date(),
+        endDate: epic?.endDate
+          ? new Date(epic.endDate)
+          : new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
+        totalTickets: epic?.totalTickets || 0,
       });
     }
-  });
+  }, [open, epic, projectId, form]);
 
   const handleSubmit = async (values: ProjectEpicDTO) => {
     setIsSubmitting(true);
     try {
-      const createdEpic = await createProjectEpic(values, setError);
+      let result: ProjectEpicDTO;
+
+      if (isEditMode && epic?.id) {
+        // Update existing epic
+        result = await updateProjectEpic(epic.id, values, setError);
+      } else {
+        // Create new epic
+        result = await createProjectEpic(values, setError);
+      }
+
       onOpenChange(false);
+
       if (onSave) {
-        onSave(createdEpic);
+        onSave(result);
       }
     } finally {
       setIsSubmitting(false);
@@ -100,10 +122,14 @@ export function CreateEpicDialog({
       <DialogContent className="sm:max-w-[60rem]">
         <DialogHeader>
           <DialogTitle>
-            {t.teams.projects.epic("create_dialog_title")}
+            {isEditMode
+              ? t.teams.projects.epic("edit_dialog_title")
+              : t.teams.projects.epic("create_dialog_title")}
           </DialogTitle>
           <DialogDescription>
-            {t.teams.projects.epic("create_dialog_description")}
+            {isEditMode
+              ? t.teams.projects.epic("edit_dialog_description")
+              : t.teams.projects.epic("create_dialog_description")}
           </DialogDescription>
         </DialogHeader>
 
@@ -249,8 +275,12 @@ export function CreateEpicDialog({
               </Button>
               <Button type="submit" disabled={isSubmitting}>
                 {isSubmitting
-                  ? t.common.buttons("creating")
-                  : t.teams.projects.epic("form.create_epic")}
+                  ? isEditMode
+                    ? t.common.buttons("saving")
+                    : t.common.buttons("creating")
+                  : isEditMode
+                    ? t.common.buttons("save_changes")
+                    : t.teams.projects.epic("form.create_epic")}
               </Button>
             </DialogFooter>
           </form>
@@ -260,4 +290,4 @@ export function CreateEpicDialog({
   );
 }
 
-export default CreateEpicDialog;
+export default ProjectEpicDialog;

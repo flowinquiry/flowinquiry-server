@@ -347,6 +347,8 @@
       "epic": {
         "create_dialog_title": "Create new epic",
         "create_dialog_description": "Add a new epic to organize related features or large pieces of work",
+        "edit_dialog_title": "Edit epic",
+        "edit_dialog_description": "Update the details of this epic",
         "form": {
           "name": "Name",
           "name_place_holder": "User Authentication",

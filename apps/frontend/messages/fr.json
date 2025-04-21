@@ -364,6 +364,8 @@
       "epic": {
         "create_dialog_title": "Créer une nouvelle épopée",
         "create_dialog_description": "Ajoutez une nouvelle épopée pour organiser des fonctionnalités connexes ou des blocs de travail importants",
+        "edit_dialog_title": "Modifier l’épopée",
+        "edit_dialog_description": "Mettre à jour les détails de cette épopée",
         "form": {
           "name": "Nom",
           "name_place_holder": "Authentification utilisateur",

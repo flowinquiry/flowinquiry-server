@@ -55,15 +55,17 @@ Customize workflows for handling customer requests, complaints, or inquiries to 
 
 ## ⚙️ Key Features of FlowInquiry
 
+* 📂 Projects – Organize tasks using a Kanban board, grouped by iterations and epics
+
 * 🧩 Custom Workflows – Tailor request lifecycles with state transitions and actions
 
 * ⏱ SLA Enforcement – Track deadlines, escalate overdue items
 
+* 🔄 Real-time Updates – Stay instantly informed of changes in your teams, projects, or organizations
+
 * 👥 Comments & Watchers – Collaborate with full visibility
 
 * 📅 Timeline View – Visualize request history and changes
-
-* 📂 Projects & Iterations – Group work into structured cycles
 
 * 🧵 Change History – Full audit trail of updates
 
@@ -71,9 +73,9 @@ Customize workflows for handling customer requests, complaints, or inquiries to 
 
 * 🌍 Multilingual Support – Serve global teams and users
 
-* 🔄 Integrations – Connect with Slack, Email, and more
+* 🔄 Integrations – Connect with Email, Slack (upcoming), Github (upcoming) and more
 
-* 🚀 Flexible Deployment – Run on Docker, Kubernetes, or your own infra
+* 🚀 Flexible Deployment – Run on Docker, Kubernetes (upcoming), or your own infra
 
 ## Built With
 

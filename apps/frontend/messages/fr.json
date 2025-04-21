@@ -7,6 +7,8 @@
   "common": {
     "buttons": {
       "create": "Créer",
+      "creating": "Création en cours...",
+      "clear": "Effacer",
       "submit": "Soumettre",
       "submitting": "Envoi en cours...",
       "cancel": "Annuler",
@@ -343,6 +345,32 @@
         "no_epics_found": "Aucun épique trouvé",
         "add_new_epic": "Ajouter un nouvel épique",
         "edit_epic": "Modifier l'épique"
+      },
+      "iteration": {
+        "create_dialog_title": "Créer une nouvelle itération",
+        "create_dialog_description": "Ajoutez une nouvelle itération pour organiser vos tâches en sprints ou phases",
+        "form": {
+          "name": "Nom",
+          "name_place_holder": "Sprint 1",
+          "start_date": "Date de début",
+          "end_date": "Date de fin",
+          "description": "Description",
+          "description_place_holder": "Brève description des objectifs de cette itération",
+          "create_iteration": "Créer l’itération"
+        }
+      },
+      "epic": {
+        "create_dialog_title": "Créer une nouvelle épopée",
+        "create_dialog_description": "Ajoutez une nouvelle épopée pour organiser des fonctionnalités connexes ou des blocs de travail importants",
+        "form": {
+          "name": "Nom",
+          "name_place_holder": "Authentification utilisateur",
+          "start_date": "Date de début",
+          "end_date": "Date de fin",
+          "description": "Description",
+          "description_place_holder": "Décrivez la portée et les objectifs de cette épopée",
+          "create_epic": "Créer l’épopée"
+        }
       },
       "new_dialog": {
         "new_project": "Nouveau projet",

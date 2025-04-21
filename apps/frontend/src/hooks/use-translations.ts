@@ -24,6 +24,8 @@ export function useAppClientTranslations() {
         list: useTranslations("teams.projects.list"),
         new_dialog: useTranslations("teams.projects.new_dialog"),
         view: useTranslations("teams.projects.view"),
+        iteration: useTranslations("teams.projects.iteration"),
+        epic: useTranslations("teams.projects.epic"),
       },
     },
     users: {

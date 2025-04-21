@@ -21,6 +21,7 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { Textarea } from "@/components/ui/textarea";
+import { useAppClientTranslations } from "@/hooks/use-translations";
 import { cn } from "@/lib/utils";
 import { UiAttributes } from "@/types/ui-components";
 
@@ -140,6 +141,7 @@ export const DatePickerField: React.FC<
   allowPastDates = false,
   required = false,
 }) => {
+  const clearText = useAppClientTranslations().common.buttons("clear");
   return (
     <FormField
       control={form.control}
@@ -194,7 +196,7 @@ export const DatePickerField: React.FC<
                 size="sm"
                 onClick={() => field.onChange(undefined)}
               >
-                Clear
+                {clearText}
               </Button>
             )}
           </div>

@@ -271,7 +271,9 @@ const TaskEditorSheet = ({
                     <DatePickerField
                       form={form}
                       fieldName="actualCompletionDate"
-                      label="Actual Completion Date"
+                      label={t.teams.tickets.form.base(
+                        "actual_completion_date",
+                      )}
                       placeholder={t.common.misc("date_select_place_holder")}
                     />
 

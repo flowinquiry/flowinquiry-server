@@ -7,6 +7,8 @@
   "common": {
     "buttons": {
       "create": "Create",
+      "creating": "Creating ...",
+      "clear": "Clear",
       "submit": "Submit",
       "submitting": "Submitting ...",
       "cancel": "Cancel",
@@ -326,6 +328,32 @@
         "start_date": "Start date",
         "end_date": "End date",
         "created_at": "Created at"
+      },
+      "iteration": {
+        "create_dialog_title": "Create new iteration",
+        "create_dialog_description": "Add a new iteration to organize your tasks into sprints or phases",
+        "form": {
+          "name": "Name",
+          "name_place_holder": "Sprint 1",
+          "start_date": "Start date",
+          "end_date": "End date",
+          "description": "Description",
+          "description_place_holder": "Brief description of this iteration's goals",
+          "create_iteration": "Create iteration"
+        }
+      },
+      "epic": {
+        "create_dialog_title": "Create new epic",
+        "create_dialog_description": "Add a new epic to organize related features or large pieces of work",
+        "form": {
+          "name": "Name",
+          "name_place_holder": "User Authentication",
+          "start_date": "Start date",
+          "end_date": "End date",
+          "description": "Description",
+          "description_place_holder": "Describe the scope and goals of this epic",
+          "create_epic": "Create epic"
+        }
       },
       "view": {
         "add_new_task_to_state": "Add new task to {stateName}",

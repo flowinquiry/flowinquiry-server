@@ -15,7 +15,6 @@ import { DatePickerField } from "@/components/ui/ext-form";
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -96,11 +95,13 @@ export function CreateIterationDialog({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-[500px]">
+      <DialogContent className="sm:max-w-[60rem]">
         <DialogHeader>
-          <DialogTitle>Create New Iteration</DialogTitle>
+          <DialogTitle>
+            {t.teams.projects.iteration("create_dialog_title")}
+          </DialogTitle>
           <DialogDescription>
-            Add a new iteration to organize your tasks into sprints or phases.
+            {t.teams.projects.iteration("create_dialog_description")}
           </DialogDescription>
         </DialogHeader>
 
@@ -114,13 +115,17 @@ export function CreateIterationDialog({
               name="name"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Name</FormLabel>
+                  <FormLabel>
+                    {t.teams.projects.iteration("form.name")}
+                  </FormLabel>
                   <FormControl>
-                    <Input placeholder="Sprint 1" {...field} />
+                    <Input
+                      placeholder={t.teams.projects.iteration(
+                        "form.name_place_holder",
+                      )}
+                      {...field}
+                    />
                   </FormControl>
-                  <FormDescription>
-                    A short, descriptive name for this iteration.
-                  </FormDescription>
                   <FormMessage />
                 </FormItem>
               )}
@@ -130,14 +135,14 @@ export function CreateIterationDialog({
               <DatePickerField
                 form={form}
                 fieldName="startDate"
-                label="Start date"
+                label={t.teams.projects.iteration("form.start_date")}
                 placeholder={t.common.misc("date_select_place_holder")}
               />
 
               <DatePickerField
                 form={form}
                 fieldName="endDate"
-                label="End date"
+                label={t.teams.projects.iteration("form.end_date")}
                 placeholder={t.common.misc("date_select_place_holder")}
               />
             </div>
@@ -147,17 +152,18 @@ export function CreateIterationDialog({
               name="description"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Description</FormLabel>
+                  <FormLabel>
+                    {t.teams.projects.iteration("form.description")}
+                  </FormLabel>
                   <FormControl>
                     <Textarea
-                      placeholder="Brief description of this iteration's goals"
+                      placeholder={t.teams.projects.iteration(
+                        "form.description_place_holder",
+                      )}
                       {...field}
                       rows={3}
                     />
                   </FormControl>
-                  <FormDescription>
-                    Optional: Provide additional context for this iteration.
-                  </FormDescription>
                   <FormMessage />
                 </FormItem>
               )}
@@ -170,10 +176,12 @@ export function CreateIterationDialog({
                 onClick={onCancel}
                 disabled={isSubmitting}
               >
-                Cancel
+                {t.common.buttons("cancel")}
               </Button>
               <Button type="submit" disabled={isSubmitting}>
-                {isSubmitting ? "Creating..." : "Create Iteration"}
+                {isSubmitting
+                  ? t.common.buttons("creating")
+                  : t.teams.projects.iteration("form.create_iteration")}
               </Button>
             </DialogFooter>
           </form>

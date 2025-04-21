@@ -17,7 +17,6 @@ import {
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -54,9 +53,9 @@ export function CreateEpicDialog({
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { setError } = useError();
   const { toast } = useToast();
+  const t = useAppClientTranslations();
   // Initialize form with the ProjectEpicDTOSchema
 
-  const t = useAppClientTranslations();
   const form = useForm<ProjectEpicDTO>({
     resolver: zodResolver(ProjectEpicDTOSchema),
     defaultValues: {
@@ -98,11 +97,13 @@ export function CreateEpicDialog({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-[500px]">
+      <DialogContent className="sm:max-w-[60rem]">
         <DialogHeader>
-          <DialogTitle>Create New Epic</DialogTitle>
+          <DialogTitle>
+            {t.teams.projects.epic("create_dialog_title")}
+          </DialogTitle>
           <DialogDescription>
-            Add a new epic to organize related features or large pieces of work.
+            {t.teams.projects.epic("create_dialog_description")}
           </DialogDescription>
         </DialogHeader>
 
@@ -116,13 +117,10 @@ export function CreateEpicDialog({
               name="name"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Name</FormLabel>
+                  <FormLabel>{t.teams.projects.epic("form.name")}</FormLabel>
                   <FormControl>
                     <Input placeholder="User Authentication" {...field} />
                   </FormControl>
-                  <FormDescription>
-                    A short, descriptive name for this epic.
-                  </FormDescription>
                   <FormMessage />
                 </FormItem>
               )}
@@ -134,7 +132,9 @@ export function CreateEpicDialog({
                 name="startDate"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Start Date</FormLabel>
+                    <FormLabel>
+                      {t.teams.projects.epic("form.start_date")}
+                    </FormLabel>
                     <Popover>
                       <PopoverTrigger asChild>
                         <FormControl>
@@ -176,7 +176,9 @@ export function CreateEpicDialog({
                 name="endDate"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Target End Date</FormLabel>
+                    <FormLabel>
+                      {t.teams.projects.epic("form.end_date")}
+                    </FormLabel>
                     <Popover>
                       <PopoverTrigger asChild>
                         <FormControl>
@@ -219,17 +221,18 @@ export function CreateEpicDialog({
               name="description"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Description</FormLabel>
+                  <FormLabel>
+                    {t.teams.projects.epic("form.description")}
+                  </FormLabel>
                   <FormControl>
                     <Textarea
-                      placeholder="Describe the scope and goals of this epic"
+                      placeholder={t.teams.projects.epic(
+                        "form.description_place_holder",
+                      )}
                       {...field}
                       rows={3}
                     />
                   </FormControl>
-                  <FormDescription>
-                    Provide details about what this epic encompasses.
-                  </FormDescription>
                   <FormMessage />
                 </FormItem>
               )}
@@ -242,10 +245,12 @@ export function CreateEpicDialog({
                 onClick={onCancel}
                 disabled={isSubmitting}
               >
-                Cancel
+                {t.common.buttons("cancel")}
               </Button>
               <Button type="submit" disabled={isSubmitting}>
-                {isSubmitting ? "Creating..." : "Create Epic"}
+                {isSubmitting
+                  ? t.common.buttons("creating")
+                  : t.teams.projects.epic("form.create_epic")}
               </Button>
             </DialogFooter>
           </form>

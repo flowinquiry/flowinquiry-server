@@ -49,7 +49,8 @@
       "attachment_place_holder": "Cliquez ou glissez pour téléverser",
       "attachment_file_name": "Nom du fichier",
       "attachment_type": "Type",
-      "attachment_size": "Taille"
+      "attachment_size": "Taille",
+      "none": "Aucun"
     },
     "navigation": {
       "dashboard": "Tableau de bord",
@@ -279,6 +280,8 @@
         "type": "Type",
         "channel_place_holder": "Sélectionner un canal",
         "project": "Projet",
+        "iteration": "Itération",
+        "epic": "Épopée",
         "channels": {
           "email": "Email",
           "phone": "Téléphone",
@@ -351,6 +354,8 @@
         "create_dialog_description": "Ajoutez une nouvelle itération pour organiser vos tâches en sprints ou phases",
         "edit_dialog_title": "Modifier l’itération",
         "edit_dialog_description": "Mettre à jour les détails de cette itération",
+        "no_data": "Aucune itération trouvée pour ce projet",
+        "select_place_holder": "Sélectionnez une itération",
         "form": {
           "name": "Nom",
           "name_place_holder": "Sprint 1",
@@ -366,6 +371,8 @@
         "create_dialog_description": "Ajoutez une nouvelle épopée pour organiser des fonctionnalités connexes ou des blocs de travail importants",
         "edit_dialog_title": "Modifier l’épopée",
         "edit_dialog_description": "Mettre à jour les détails de cette épopée",
+        "no_data": "Aucune épopée trouvée pour ce projet",
+        "select_place_holder": "Sélectionnez une épopée",
         "form": {
           "name": "Nom",
           "name_place_holder": "Authentification utilisateur",

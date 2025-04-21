@@ -1,4 +1,4 @@
-import React, { useEffect,useState } from "react";
+import React, { useEffect, useState } from "react";
 
 import {
   FormControl,
@@ -15,6 +15,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { useAppClientTranslations } from "@/hooks/use-translations";
 import { findIterationsByProjectId } from "@/lib/actions/project-iteration.action";
 import { useError } from "@/providers/error-provider";
 import { ProjectIterationDTO } from "@/types/projects";
@@ -36,6 +37,7 @@ export function IterationFormField({
   description,
   required = false,
 }: IterationFormFieldProps) {
+  const t = useAppClientTranslations();
   const [iterations, setIterations] = useState<ProjectIterationDTO[]>([]);
   const [loading, setLoading] = useState(false);
   const { setError } = useError();
@@ -58,7 +60,7 @@ export function IterationFormField({
     }
 
     loadIterations();
-  }, [projectId]);
+  }, [projectId, setError]);
 
   return (
     <FormField
@@ -72,19 +74,36 @@ export function IterationFormField({
           </FormLabel>
           <FormControl>
             <Select
-              disabled={loading || iterations.length === 0}
-              onValueChange={field.onChange}
-              value={field.value?.toString()}
-              defaultValue={field.value?.toString()}
+              disabled={loading || (iterations.length === 0 && required)}
+              onValueChange={(value) => {
+                // Convert string to number or set to undefined for "none" value
+                if (value === "none") {
+                  field.onChange(undefined);
+                } else {
+                  field.onChange(parseInt(value, 10));
+                }
+              }}
+              // Check for both undefined and null values
+              value={
+                field.value !== undefined && field.value !== null
+                  ? field.value.toString()
+                  : "none"
+              }
             >
               <SelectTrigger className="w-full">
                 <SelectValue
                   placeholder={
-                    loading ? "Loading iterations..." : "Select an iteration"
+                    loading
+                      ? t.common.misc("loading_data")
+                      : t.teams.projects.iteration("select_place_holder")
                   }
                 />
               </SelectTrigger>
               <SelectContent>
+                {/* Add None option at the top of the list */}
+                {!required && (
+                  <SelectItem value="none">{t.common.misc("none")}</SelectItem>
+                )}
                 {iterations.map((iteration) => (
                   <SelectItem
                     key={iteration.id}
@@ -94,8 +113,8 @@ export function IterationFormField({
                   </SelectItem>
                 ))}
                 {iterations.length === 0 && !loading && (
-                  <SelectItem value="none" disabled>
-                    No iterations found for this project
+                  <SelectItem value="no_data" disabled>
+                    {t.teams.projects.iteration("no_data")}
                   </SelectItem>
                 )}
               </SelectContent>

@@ -1,4 +1,4 @@
-import React, { useEffect,useState } from "react";
+import React, { useEffect, useState } from "react";
 
 import {
   FormControl,
@@ -57,7 +57,7 @@ export function EpicFormField({
     }
 
     loadEpics();
-  }, [projectId]);
+  }, [projectId, setError]);
 
   return (
     <FormField
@@ -71,27 +71,44 @@ export function EpicFormField({
           </FormLabel>
           <FormControl>
             <Select
-              disabled={loading || epics.length === 0}
-              onValueChange={field.onChange}
-              value={field.value?.toString()}
-              defaultValue={field.value?.toString()}
+              disabled={loading || (epics.length === 0 && required)}
+              onValueChange={(value) => {
+                // Convert string to number or set to undefined for "none" value
+                if (value === "none") {
+                  field.onChange(undefined);
+                } else {
+                  field.onChange(parseInt(value, 10));
+                }
+              }}
+              // Check for both undefined and null values
+              value={
+                field.value !== undefined && field.value !== null
+                  ? field.value.toString()
+                  : "none"
+              }
             >
               <SelectTrigger className="w-full">
                 <SelectValue
                   placeholder={
-                    loading ? t.common.misc("loading_data") : "Select an epic"
+                    loading
+                      ? t.common.misc("loading_data")
+                      : t.teams.projects.epic("select_place_holder")
                   }
                 />
               </SelectTrigger>
               <SelectContent>
+                {/* Add None option at the top of the list */}
+                {!required && (
+                  <SelectItem value="none">{t.common.misc("none")}</SelectItem>
+                )}
                 {epics.map((epic) => (
                   <SelectItem key={epic.id} value={epic.id!.toString()}>
                     {epic.name}
                   </SelectItem>
                 ))}
                 {epics.length === 0 && !loading && (
-                  <SelectItem value="none" disabled>
-                    No epics found for this project
+                  <SelectItem value="no_data" disabled>
+                    {t.teams.projects.epic("no_data")}
                   </SelectItem>
                 )}
               </SelectContent>

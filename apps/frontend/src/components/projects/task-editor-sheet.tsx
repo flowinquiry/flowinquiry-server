@@ -301,14 +301,14 @@ const TaskEditorSheet = ({
                       form={form}
                       projectId={projectId}
                       name="iterationId"
-                      label="Iteration"
+                      label={t.teams.tickets.form.base("iteration")}
                     />
 
                     <EpicFormField
                       form={form}
                       projectId={projectId}
                       name="epicId"
-                      label="Epic"
+                      label={t.teams.tickets.form.base("epic")}
                     />
                   </div>
                 </div>

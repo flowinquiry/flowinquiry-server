@@ -49,7 +49,8 @@
       "attachment_place_holder": "Click or Drag to upload",
       "attachment_file_name": "File name",
       "attachment_type": "Type",
-      "attachment_size": "Size"
+      "attachment_size": "Size",
+      "none": "None"
     },
     "navigation": {
       "dashboard": "Dashboard",
@@ -279,6 +280,8 @@
         "type": "Type",
         "channel_place_holder": "Select a channel",
         "project": "Project",
+        "iteration": "Iteration",
+        "epic": "Epic",
         "channels": {
           "email": "Email",
           "phone": "Phone",
@@ -334,6 +337,8 @@
         "create_dialog_description": "Add a new iteration to organize your tasks into sprints or phases",
         "edit_dialog_title": "Edit iteration",
         "edit_dialog_description": "Update the details of this iteration",
+        "no_data": "No iterations found for this project",
+        "select_place_holder": "Select an iteration",
         "form": {
           "name": "Name",
           "name_place_holder": "Sprint 1",
@@ -349,6 +354,8 @@
         "create_dialog_description": "Add a new epic to organize related features or large pieces of work",
         "edit_dialog_title": "Edit epic",
         "edit_dialog_description": "Update the details of this epic",
+        "no_data": "No epics found for this project",
+        "select_place_holder": "Select an epic",
         "form": {
           "name": "Name",
           "name_place_holder": "User Authentication",

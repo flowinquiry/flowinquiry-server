@@ -1,5 +1,5 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 
 import { Button } from "@/components/ui/button";
@@ -24,69 +24,95 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/components/ui/use-toast";
 import { useAppClientTranslations } from "@/hooks/use-translations";
-import { createProjectIteration } from "@/lib/actions/project-iteration.action";
+import {
+  createProjectIteration,
+  updateProjectIteration,
+} from "@/lib/actions/project-iteration.action";
 import { useError } from "@/providers/error-provider";
 import {
   ProjectIterationDTO,
   ProjectIterationDTOSchema,
 } from "@/types/projects";
 
-interface CreateIterationDialogProps {
+interface ProjectIterationDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   onSave?: (iteration: ProjectIterationDTO) => void;
   onCancel?: () => void;
   projectId: number;
+  iteration?: ProjectIterationDTO | null; // Optional iteration for edit mode
 }
 
-export function CreateIterationDialog({
+export function ProjectIterationDialog({
   open,
   onOpenChange,
   onSave,
   onCancel,
   projectId,
-}: CreateIterationDialogProps) {
+  iteration,
+}: ProjectIterationDialogProps) {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { setError } = useError();
   const { toast } = useToast();
   const t = useAppClientTranslations();
 
+  // Determine if we're in edit mode
+  const isEditMode = !!iteration?.id;
+
   // Initialize form with the ProjectIterationDTOSchema
   const form = useForm<ProjectIterationDTO>({
     resolver: zodResolver(ProjectIterationDTOSchema),
     defaultValues: {
-      projectId,
-      name: "",
-      description: "",
-      startDate: new Date(),
-      endDate: new Date(Date.now() + 14 * 24 * 60 * 60 * 1000), // Default to 2 weeks
-      totalTickets: 0,
+      id: iteration?.id,
+      projectId: projectId,
+      name: iteration?.name || "",
+      description: iteration?.description || "",
+      startDate: iteration?.startDate
+        ? new Date(iteration.startDate)
+        : new Date(),
+      endDate: iteration?.endDate
+        ? new Date(iteration.endDate)
+        : new Date(Date.now() + 14 * 24 * 60 * 60 * 1000), // Default to 2 weeks
+      totalTickets: iteration?.totalTickets || 0,
     },
   });
 
-  // Reset form when dialog opens/closes
-  useState(() => {
+  // Reset form when dialog opens/closes or iteration changes
+  useEffect(() => {
     if (open) {
       form.reset({
-        projectId,
-        name: "",
-        description: "",
-        startDate: new Date(),
-        endDate: new Date(Date.now() + 14 * 24 * 60 * 60 * 1000),
-        totalTickets: 0,
+        id: iteration?.id,
+        projectId: projectId,
+        name: iteration?.name || "",
+        description: iteration?.description || "",
+        startDate: iteration?.startDate
+          ? new Date(iteration.startDate)
+          : new Date(),
+        endDate: iteration?.endDate
+          ? new Date(iteration.endDate)
+          : new Date(Date.now() + 14 * 24 * 60 * 60 * 1000),
+        totalTickets: iteration?.totalTickets || 0,
       });
     }
-  });
+  }, [open, iteration, projectId, form]);
 
   const handleSubmit = async (values: ProjectIterationDTO) => {
     setIsSubmitting(true);
     try {
-      const createdIteration = await createProjectIteration(values, setError);
+      let result: ProjectIterationDTO;
+
+      if (isEditMode && iteration?.id) {
+        // Update existing iteration
+        result = await updateProjectIteration(iteration.id, values, setError);
+      } else {
+        // Create new iteration
+        result = await createProjectIteration(values, setError);
+      }
 
       onOpenChange(false);
 
       if (onSave) {
-        onSave(createdIteration);
+        onSave(result);
       }
     } finally {
       setIsSubmitting(false);
@@ -98,10 +124,14 @@ export function CreateIterationDialog({
       <DialogContent className="sm:max-w-[60rem]">
         <DialogHeader>
           <DialogTitle>
-            {t.teams.projects.iteration("create_dialog_title")}
+            {isEditMode
+              ? t.teams.projects.iteration("edit_dialog_title")
+              : t.teams.projects.iteration("create_dialog_title")}
           </DialogTitle>
           <DialogDescription>
-            {t.teams.projects.iteration("create_dialog_description")}
+            {isEditMode
+              ? t.teams.projects.iteration("edit_dialog_description")
+              : t.teams.projects.iteration("create_dialog_description")}
           </DialogDescription>
         </DialogHeader>
 
@@ -180,8 +210,12 @@ export function CreateIterationDialog({
               </Button>
               <Button type="submit" disabled={isSubmitting}>
                 {isSubmitting
-                  ? t.common.buttons("creating")
-                  : t.teams.projects.iteration("form.create_iteration")}
+                  ? isEditMode
+                    ? t.common.buttons("saving")
+                    : t.common.buttons("creating")
+                  : isEditMode
+                    ? t.common.buttons("save_changes")
+                    : t.teams.projects.iteration("form.create_iteration")}
               </Button>
             </DialogFooter>
           </form>
@@ -191,4 +225,4 @@ export function CreateIterationDialog({
   );
 }
 
-export default CreateIterationDialog;
+export default ProjectIterationDialog;

@@ -332,6 +332,8 @@
       "iteration": {
         "create_dialog_title": "Create new iteration",
         "create_dialog_description": "Add a new iteration to organize your tasks into sprints or phases",
+        "edit_dialog_title": "Edit iteration",
+        "edit_dialog_description": "Update the details of this iteration",
         "form": {
           "name": "Name",
           "name_place_holder": "Sprint 1",

@@ -349,6 +349,8 @@
       "iteration": {
         "create_dialog_title": "Créer une nouvelle itération",
         "create_dialog_description": "Ajoutez une nouvelle itération pour organiser vos tâches en sprints ou phases",
+        "edit_dialog_title": "Modifier l’itération",
+        "edit_dialog_description": "Mettre à jour les détails de cette itération",
         "form": {
           "name": "Nom",
           "name_place_holder": "Sprint 1",

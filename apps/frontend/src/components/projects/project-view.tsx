@@ -13,7 +13,7 @@ import React, { useCallback, useEffect, useState } from "react";
 import { Breadcrumbs } from "@/components/breadcrumbs";
 import ProjectEditDialog from "@/components/projects/project-edit-dialog";
 import CreateEpicDialog from "@/components/projects/project-epic-dialog";
-import CreateIterationDialog from "@/components/projects/project-iteration-dialog";
+import ProjectIterationDialog from "@/components/projects/project-iteration-dialog";
 import StateColumn from "@/components/projects/state-column";
 import TaskBlock from "@/components/projects/task-block";
 import TaskDetailSheet from "@/components/projects/task-detail-sheet";
@@ -107,6 +107,12 @@ export const ProjectView = ({ projectId }: { projectId: number }) => {
   const [isDragging, setIsDragging] = useState(false);
   // Track the time when drag starts
   const [dragStartTime, setDragStartTime] = useState<number | null>(null);
+
+  // Update state variables in the ProjectView component
+  // (Keep the existing isCreateIterationDialogOpen but rename it for clarity)
+  const [isIterationDialogOpen, setIsIterationDialogOpen] = useState(false);
+  const [selectedIterationForEdit, setSelectedIterationForEdit] =
+    useState<ProjectIterationDTO | null>(null);
 
   // Function to fetch iterations
   const fetchIterations = useCallback(async () => {
@@ -233,7 +239,8 @@ export const ProjectView = ({ projectId }: { projectId: number }) => {
 
   // Handler for adding a new iteration
   const handleAddNewIteration = () => {
-    setIsCreateIterationDialogOpen(true);
+    setSelectedIterationForEdit(null); // Ensure no iteration is selected for edit
+    setIsIterationDialogOpen(true);
   };
 
   // Handler for saving a new iteration
@@ -241,8 +248,18 @@ export const ProjectView = ({ projectId }: { projectId: number }) => {
     // Refresh iterations list after creating a new one
     await fetchIterations();
 
-    // Close the dialog
-    setIsCreateIterationDialogOpen(false);
+    // Close the dialog and reset selected iteration
+    setIsIterationDialogOpen(false);
+    setSelectedIterationForEdit(null);
+  };
+
+  // Add new handler for editing an iteration
+  const handleEditIteration = (iterationId: number) => {
+    const iterationToEdit = iterations.find((i) => i.id === iterationId);
+    if (iterationToEdit) {
+      setSelectedIterationForEdit(iterationToEdit);
+      setIsIterationDialogOpen(true);
+    }
   };
 
   // Handler for adding a new epic
@@ -529,7 +546,7 @@ export const ProjectView = ({ projectId }: { projectId: number }) => {
   return (
     <div className="p-6 h-screen flex flex-col">
       {loading ? (
-        <p className="text-lg font-semibold">Loading project...</p>
+        <p className="text-lg font-semibold">{t.common.misc("loading_data")}</p>
       ) : project ? (
         <>
           <Breadcrumbs items={breadcrumbItems} />
@@ -768,14 +785,12 @@ export const ProjectView = ({ projectId }: { projectId: number }) => {
                         ).toLocaleDateString()}
                       </div>
                     </div>
+                    {/*// Update the Edit Iteration button in the Active Filters section*/}
                     <Button
                       variant="secondary"
                       size="sm"
                       className="h-8 gap-1 self-start"
-                      onClick={() => {
-                        // TODO: Implement edit iteration functionality
-                        console.log("Edit iteration", selectedIteration);
-                      }}
+                      onClick={() => handleEditIteration(selectedIteration)}
                     >
                       <Edit className="h-4 w-4" />
                       {t.teams.projects.view("edit_iteration")}
@@ -904,13 +919,17 @@ export const ProjectView = ({ projectId }: { projectId: number }) => {
         }}
       />
 
-      {/* Create Iteration Dialog */}
-      <CreateIterationDialog
-        open={isCreateIterationDialogOpen}
-        onOpenChange={setIsCreateIterationDialogOpen}
+      {/* Iteration Dialog (Create/Edit) */}
+      <ProjectIterationDialog
+        open={isIterationDialogOpen}
+        onOpenChange={setIsIterationDialogOpen}
         onSave={handleSaveIteration}
-        onCancel={() => setIsCreateIterationDialogOpen(false)}
+        onCancel={() => {
+          setIsIterationDialogOpen(false);
+          setSelectedIterationForEdit(null);
+        }}
         projectId={projectId}
+        iteration={selectedIterationForEdit}
       />
 
       {/* Create Epic Dialog */}

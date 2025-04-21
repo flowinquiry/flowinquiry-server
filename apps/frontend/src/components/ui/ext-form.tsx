@@ -127,8 +127,10 @@ type DatePickerFieldProps = {
   label: string;
   description?: string;
   placeholder?: string;
-  allowPastDates?: boolean;
+  dateSelectionMode?: DateSelectionMode;
 };
+
+type DateSelectionMode = "past" | "future" | "any";
 
 export const DatePickerField: React.FC<
   DatePickerFieldProps & { required?: boolean }
@@ -138,7 +140,7 @@ export const DatePickerField: React.FC<
   label,
   description,
   placeholder = "Pick a date",
-  allowPastDates = false,
+  dateSelectionMode = "any",
   required = false,
 }) => {
   const clearText = useAppClientTranslations().common.buttons("clear");
@@ -176,15 +178,30 @@ export const DatePickerField: React.FC<
                 <Calendar
                   mode="single"
                   selected={field.value || undefined}
-                  onSelect={field.onChange}
+                  onSelect={(date) => {
+                    field.onChange(date);
+                    // Force the Calendar to update its internal state
+                    if (date === undefined) {
+                      form.setValue(fieldName, undefined, {
+                        shouldValidate: true,
+                      });
+                    }
+                  }}
                   disabled={(date) => {
+                    if (dateSelectionMode === "any") {
+                      return false; // No dates are disabled
+                    }
+
                     const today = new Date();
                     today.setHours(0, 0, 0, 0);
-                    if (allowPastDates) {
-                      return date > today;
-                    } else {
-                      return date < today;
+
+                    if (dateSelectionMode === "past") {
+                      return date > today; // Disable future dates
+                    } else if (dateSelectionMode === "future") {
+                      return date < today; // Disable past dates
                     }
+
+                    return false;
                   }}
                   initialFocus
                 />
@@ -194,7 +211,18 @@ export const DatePickerField: React.FC<
               <Button
                 variant="ghost"
                 size="sm"
-                onClick={() => field.onChange(undefined)}
+                onClick={(e) => {
+                  e.preventDefault(); // Prevent default button behavior
+                  e.stopPropagation(); // Stop event from bubbling up
+                  field.onChange(undefined);
+
+                  // Force re-render if needed by triggering form state update
+                  form.setValue(fieldName, undefined, {
+                    shouldValidate: true,
+                    shouldDirty: true,
+                    shouldTouch: true,
+                  });
+                }}
               >
                 {clearText}
               </Button>

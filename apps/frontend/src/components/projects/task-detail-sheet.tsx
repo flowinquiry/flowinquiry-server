@@ -496,125 +496,6 @@ const TaskDetailSheet: React.FC<TaskDetailSheetProps> = ({
 
         <ScrollArea className="h-[calc(100vh-200px)] mt-6">
           <div className="space-y-6 pr-4">
-            {/* Epic and Iteration Section */}
-            <div className="grid grid-cols-2 gap-4">
-              {/* Epic Section */}
-              <div>
-                <h3 className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                  Epic
-                </h3>
-
-                {isEditingEpic ? (
-                  <div className="bg-gray-50 dark:bg-gray-800 p-2 rounded-md">
-                    <Form {...form}>
-                      <EpicFormField
-                        form={form}
-                        projectId={task.projectId!}
-                        name="epicId"
-                      />
-                      <div className="flex justify-end mt-2 gap-2">
-                        <Button
-                          variant="outline"
-                          size="sm"
-                          onClick={() => setIsEditingEpic(false)}
-                        >
-                          {t.common.buttons("cancel")}
-                        </Button>
-                        <Button
-                          size="sm"
-                          onClick={handleEpicSave}
-                          disabled={isSaving}
-                        >
-                          {isSaving
-                            ? t.common.buttons("saving")
-                            : t.common.buttons("save")}
-                        </Button>
-                      </div>
-                    </Form>
-                  </div>
-                ) : (
-                  <TooltipProvider>
-                    <Tooltip>
-                      <TooltipTrigger asChild>
-                        <div
-                          className={`p-2 rounded-md bg-gray-50 dark:bg-gray-800 ${editableClass}`}
-                          onClick={canEdit ? handleEditEpic : undefined}
-                        >
-                          <span>{task.epicName || "None"}</span>
-                          {canEdit && (
-                            <Edit2 className="h-3 w-3 float-right mt-1 opacity-0 group-hover:opacity-100 text-gray-400" />
-                          )}
-                        </div>
-                      </TooltipTrigger>
-                      {canEdit && (
-                        <TooltipContent>
-                          <p>Click to change epic</p>
-                        </TooltipContent>
-                      )}
-                    </Tooltip>
-                  </TooltipProvider>
-                )}
-              </div>
-
-              {/* Iteration Section */}
-              <div>
-                <h3 className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                  Iteration
-                </h3>
-
-                {isEditingIteration ? (
-                  <div className="bg-gray-50 dark:bg-gray-800 p-2 rounded-md">
-                    <Form {...form}>
-                      <IterationFormField
-                        form={form}
-                        projectId={task.projectId!}
-                        name="iterationId"
-                      />
-                      <div className="flex justify-end mt-2 gap-2">
-                        <Button
-                          variant="outline"
-                          size="sm"
-                          onClick={() => setIsEditingIteration(false)}
-                        >
-                          {t.common.buttons("cancel")}
-                        </Button>
-                        <Button
-                          size="sm"
-                          onClick={handleIterationSave}
-                          disabled={isSaving}
-                        >
-                          {isSaving
-                            ? t.common.buttons("saving")
-                            : t.common.buttons("save")}
-                        </Button>
-                      </div>
-                    </Form>
-                  </div>
-                ) : (
-                  <TooltipProvider>
-                    <Tooltip>
-                      <TooltipTrigger asChild>
-                        <div
-                          className={`p-2 rounded-md bg-gray-50 dark:bg-gray-800 ${editableClass}`}
-                          onClick={canEdit ? handleEditIteration : undefined}
-                        >
-                          <span>{task.iterationName || "None"}</span>
-                          {canEdit && (
-                            <Edit2 className="h-3 w-3 float-right mt-1 opacity-0 group-hover:opacity-100 text-gray-400" />
-                          )}
-                        </div>
-                      </TooltipTrigger>
-                      {canEdit && (
-                        <TooltipContent>
-                          <p>Click to change iteration</p>
-                        </TooltipContent>
-                      )}
-                    </Tooltip>
-                  </TooltipProvider>
-                )}
-              </div>
-            </div>
-
             {/* Status and Priority Section */}
             <div className="grid grid-cols-2 gap-4">
               {/* Priority Section */}
@@ -824,6 +705,125 @@ const TaskDetailSheet: React.FC<TaskDetailSheetProps> = ({
               )}
             </div>
 
+            {/* Epic and Iteration Section */}
+            <div className="grid grid-cols-2 gap-4">
+              {/* Epic Section */}
+              <div>
+                <h3 className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                  Epic
+                </h3>
+
+                {isEditingEpic ? (
+                  <div className="bg-gray-50 dark:bg-gray-800 p-2 rounded-md">
+                    <Form {...form}>
+                      <EpicFormField
+                        form={form}
+                        projectId={task.projectId!}
+                        name="epicId"
+                      />
+                      <div className="flex justify-end mt-2 gap-2">
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => setIsEditingEpic(false)}
+                        >
+                          {t.common.buttons("cancel")}
+                        </Button>
+                        <Button
+                          size="sm"
+                          onClick={handleEpicSave}
+                          disabled={isSaving}
+                        >
+                          {isSaving
+                            ? t.common.buttons("saving")
+                            : t.common.buttons("save")}
+                        </Button>
+                      </div>
+                    </Form>
+                  </div>
+                ) : (
+                  <TooltipProvider>
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <div
+                          className={`p-2 rounded-md bg-gray-50 dark:bg-gray-800 ${editableClass}`}
+                          onClick={canEdit ? handleEditEpic : undefined}
+                        >
+                          <span>{task.epicName || "None"}</span>
+                          {canEdit && (
+                            <Edit2 className="h-3 w-3 float-right mt-1 opacity-0 group-hover:opacity-100 text-gray-400" />
+                          )}
+                        </div>
+                      </TooltipTrigger>
+                      {canEdit && (
+                        <TooltipContent>
+                          <p>Click to change epic</p>
+                        </TooltipContent>
+                      )}
+                    </Tooltip>
+                  </TooltipProvider>
+                )}
+              </div>
+
+              {/* Iteration Section */}
+              <div>
+                <h3 className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                  Iteration
+                </h3>
+
+                {isEditingIteration ? (
+                  <div className="bg-gray-50 dark:bg-gray-800 p-2 rounded-md">
+                    <Form {...form}>
+                      <IterationFormField
+                        form={form}
+                        projectId={task.projectId!}
+                        name="iterationId"
+                      />
+                      <div className="flex justify-end mt-2 gap-2">
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => setIsEditingIteration(false)}
+                        >
+                          {t.common.buttons("cancel")}
+                        </Button>
+                        <Button
+                          size="sm"
+                          onClick={handleIterationSave}
+                          disabled={isSaving}
+                        >
+                          {isSaving
+                            ? t.common.buttons("saving")
+                            : t.common.buttons("save")}
+                        </Button>
+                      </div>
+                    </Form>
+                  </div>
+                ) : (
+                  <TooltipProvider>
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <div
+                          className={`p-2 rounded-md bg-gray-50 dark:bg-gray-800 ${editableClass}`}
+                          onClick={canEdit ? handleEditIteration : undefined}
+                        >
+                          <span>{task.iterationName || "None"}</span>
+                          {canEdit && (
+                            <Edit2 className="h-3 w-3 float-right mt-1 opacity-0 group-hover:opacity-100 text-gray-400" />
+                          )}
+                        </div>
+                      </TooltipTrigger>
+                      {canEdit && (
+                        <TooltipContent>
+                          <p>Click to change iteration</p>
+                        </TooltipContent>
+                      )}
+                    </Tooltip>
+                  </TooltipProvider>
+                )}
+              </div>
+            </div>
+
             <div className="col-span-1 sm:col-span-2 text-sm font-medium flex items-start gap-4">
               <span className="pt-1">
                 {t.teams.tickets.detail("attachments")}
@@ -909,7 +909,7 @@ const TaskDetailSheet: React.FC<TaskDetailSheetProps> = ({
               <h3 className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">
                 {t.teams.tickets.detail("date_time")}
               </h3>
-              <div className="grid grid-cols-2gap-4">
+              <div className="grid grid-cols-2 gap-4">
                 <div>
                   <p className="text-xs text-gray-500 dark:text-gray-400">
                     {t.teams.tickets.form.base("created_at")}

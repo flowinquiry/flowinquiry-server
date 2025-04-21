@@ -5,6 +5,8 @@ import { useSession } from "next-auth/react";
 import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 
+import { EpicFormField } from "@/components/projects/epic-form-field";
+import { IterationFormField } from "@/components/projects/iteration-form-field";
 import RichTextEditor from "@/components/shared/rich-text-editor";
 import { TeamRequestPrioritySelect } from "@/components/teams/team-requests-priority-select";
 import TicketChannelSelectField from "@/components/teams/team-ticket-channel-select";
@@ -280,7 +282,7 @@ const TaskEditorSheet = ({
                     <TicketChannelSelectField form={form} />
 
                     {/* Modified workflow state field to capture state name changes */}
-                    <FormItem className="mb-16">
+                    <FormItem>
                       <FormLabel>
                         {t.teams.tickets.form.base("state")}{" "}
                         <span className="text-destructive">*</span>
@@ -294,6 +296,20 @@ const TaskEditorSheet = ({
                       </FormControl>
                       <FormMessage />
                     </FormItem>
+
+                    <IterationFormField
+                      form={form}
+                      projectId={projectId}
+                      name="iterationId"
+                      label="Iteration"
+                    />
+
+                    <EpicFormField
+                      form={form}
+                      projectId={projectId}
+                      name="epicId"
+                      label="Epic"
+                    />
                   </div>
                 </div>
               </div>

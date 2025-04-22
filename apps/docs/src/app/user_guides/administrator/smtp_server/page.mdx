@@ -2,8 +2,21 @@
 description: Learn how to configure SMTP settings in FlowInquiry to enable email notifications for user invitations, ticket updates, and workflow alerts. This guide covers required properties, authentication setup, and common troubleshooting tips
 ---
 
+import { Callout } from "nextra/components";
+
 # Getting Started
 
 FlowInquiry supports email notifications for a variety of system events, including user registration, password recovery, ticket updates, and workflow alerts. To enable these features, you must configure the SMTP (Simple Mail Transfer Protocol) settings in your environment. This configuration allows FlowInquiry to send transactional emails securely through your email server or third-party provider (such as Gmail, SendGrid, or Amazon SES).
 
 Proper email setup is essential for ensuring that users receive important communications, such as invitation links, status updates, and SLA escalations. This guide walks you through the required configuration properties, authentication setup, and best practices to help you get started quickly and reliably.
+
+Navigate to Settings > Mail from the main menu, or go directly to site/portal/settings/mail in your browser.
+
+<Callout type="info" emoji="ℹ️">
+  Only users with admin privileges can view and modify the mail settings.
+</Callout>
+
+![FlowInquiry Mail Setting](/user_guides/administrator/smtp_server/mail_settings.png)
+
+Fill in all mandatory fields using your SMTP server details. The Base URL should be set to the web address of your FlowInquiry instance, such as http://localhost or https://yourdomain.
+Once you save the settings, FlowInquiry will be able to send emails—provided the SMTP configuration is correct.

@@ -16,7 +16,7 @@ const Page = async () => {
   ];
   return (
     <SimpleContentView
-      title={t.common.navigation("workflows")}
+      title={t.common.navigation("mail")}
       breadcrumbItems={breadcrumbItems}
     >
       <MailSettings />

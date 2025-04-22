@@ -35,6 +35,10 @@ FlowInquiry is a free, open-source solution that embraces transparency as an alt
 
 ![FlowInquiry](assets/flowinquiry_slide.gif)
 
+## Stay Up-to-Date
+
+![Follow FlowInquiry](assets/github_project_star.gif)
+
 ## ✅ Real-World Use Cases Solved by FlowInquiry
 FlowInquiry helps teams manage requests, projects, and collaboration with clarity and control. Here are common ways organizations use it:
 
@@ -115,13 +119,6 @@ These guides provide step-by-step instructions to help you configure your enviro
 ## Deploy FlowInquiry
 To ensure a smooth deployment process, we provide detailed guidelines for deploying FlowInquiry in various environments. These instructions cover setup steps, configuration details, and best practices for deploying the service effectively. You can find the deployment documentation [here](https://docs.flowinquiry.io/developer_guides/deployment)
 
-## Stay Up-to-Date
-
-![Follow FlowInquiry](assets/github_project_star.gif)
-
-## Project Statistics
-![Alt](https://repobeats.axiom.co/api/embed/a4b95deb1b8371f68316459561be3df65e4e0e89.svg "Repobeats analytics image")
-
 ## License
 This project is licensed under the [AGPLv3](LICENSE) License.
 
@@ -144,3 +141,16 @@ Read the full guide: [How to Contribute to FlowInquiry](https://docs.flowinquiry
 Thanks to all the contributors! 🙌  
 
 [![Contributors](https://contrib.rocks/image?repo=flowinquiry/flowinquiry-server)](https://github.com/flowinquiry/flowinquiry-server/graphs/contributors)
+
+## Project Statistics
+![Alt](https://repobeats.axiom.co/api/embed/a4b95deb1b8371f68316459561be3df65e4e0e89.svg "Repobeats analytics image")
+
+## Star History
+
+<a href="https://www.star-history.com/#flowinquiry/flowinquiry&Date">
+ <picture>
+   <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/svg?repos=flowinquiry/flowinquiry&type=Date&theme=dark" />
+   <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/svg?repos=flowinquiry/flowinquiry&type=Date" />
+   <img alt="Star History Chart" src="https://api.star-history.com/svg?repos=flowinquiry/flowinquiry&type=Date" />
+ </picture>
+</a>

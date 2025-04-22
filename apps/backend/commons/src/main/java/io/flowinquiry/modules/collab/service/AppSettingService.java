@@ -114,6 +114,8 @@ public class AppSettingService {
 
     @Transactional
     public void updateSettings(List<AppSettingDTO> settings) {
+        boolean hasMailSettings = false;
+
         for (AppSettingDTO dto : settings) {
             AppSetting setting =
                     appSettingRepository.findById(dto.getKey()).orElseGet(AppSetting::new);
@@ -127,9 +129,15 @@ public class AppSettingService {
 
             logger.info("Bulk updated setting: {} = {}", dto.getKey(), dto.getValue());
 
+            // Check if this is a mail setting, but don't publish event yet
             if (dto.getKey().startsWith("mail.")) {
-                eventPublisher.publishEvent(new MailSettingsUpdatedEvent(this));
+                hasMailSettings = true;
             }
+        }
+
+        // Publish event only once after all settings are updated
+        if (hasMailSettings) {
+            eventPublisher.publishEvent(new MailSettingsUpdatedEvent(this));
         }
     }
 
@@ -140,10 +148,10 @@ public class AppSettingService {
 
     // 🔐 Placeholder for encryption — replace with real implementation
     private String decrypt(String encryptedValue, String algorithm) {
-        return "[decrypted]" + encryptedValue;
+        return encryptedValue;
     }
 
     private String encrypt(String plainValue, String algorithm) {
-        return "[encrypted]" + plainValue;
+        return plainValue;
     }
 }

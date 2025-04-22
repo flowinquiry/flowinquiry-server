@@ -46,6 +46,7 @@ export function MailSettings() {
   const emailSettingsSchema = z.object({
     "mail.host": z.string().min(1, "SMTP host is required"),
     "mail.port": z.string().min(1, "SMTP port is required"),
+    "mail.base_url": z.string().min(1, "Base URL is required"),
     "mail.username": z.string().min(1, "Username is required"),
     "mail.password": z.string().min(1, "Password is required"),
     "mail.protocol": z.string().min(1, "Protocol is required"),
@@ -70,11 +71,15 @@ export function MailSettings() {
   > = {
     "mail.host": { label: "SMTP Host", type: "string" },
     "mail.port": { label: "SMTP Port", type: "string" },
+    "mail.base_url": {
+      label: "Base URL",
+      type: "string",
+      description: "Base URL for email links and references",
+    },
     "mail.username": { label: "Username", type: "string" },
     "mail.password": {
       label: "Password",
       type: "password",
-      description: "Encrypted using secret:aes256",
     },
     "mail.protocol": { label: "Protocol", type: "string" },
     "mail.from": { label: "From Address", type: "string" },
@@ -86,7 +91,7 @@ export function MailSettings() {
   };
 
   const FIELD_GROUPS: Record<string, (keyof typeof FIELD_META)[]> = {
-    "SMTP Server": ["mail.host", "mail.port", "mail.protocol"],
+    "SMTP Server": ["mail.host", "mail.port", "mail.protocol", "mail.base_url"],
     Authentication: ["mail.username", "mail.password", "mail.smtp.auth"],
     "Sender Info": ["mail.from", "mail.fromName"],
     "Advanced Options": [
@@ -117,6 +122,7 @@ export function MailSettings() {
   >({
     "mail.host": "",
     "mail.port": "",
+    "mail.base_url": "",
     "mail.username": "",
     "mail.password": "",
     "mail.protocol": "smtp",

@@ -11,6 +11,7 @@ import io.flowinquiry.modules.teams.service.event.NewTeamRequestCreatedEvent;
 import io.flowinquiry.modules.usermanagement.service.mapper.UserMapper;
 import java.util.List;
 import java.util.Locale;
+import org.springframework.context.event.EventListener;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -36,7 +37,7 @@ public class NewTeamRequestCreatedMailEventListener {
 
     @Async("asyncTaskExecutor")
     @Transactional
-    //    @EventListener
+    @EventListener
     public void onNewTeamRequestCreated(NewTeamRequestCreatedEvent event) {
         TeamRequestDTO teamRequestDTO =
                 teamRequestService.getTeamRequestById(event.getTeamRequest().getId());

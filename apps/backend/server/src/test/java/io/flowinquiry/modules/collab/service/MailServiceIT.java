@@ -5,9 +5,11 @@ import static org.assertj.core.api.Assertions.fail;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.doThrow;
-import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import com.icegreen.greenmail.configuration.GreenMailConfiguration;
+import com.icegreen.greenmail.junit5.GreenMailExtension;
+import com.icegreen.greenmail.util.ServerSetupTest;
 import io.flowinquiry.IntegrationTest;
 import io.flowinquiry.config.FlowInquiryProperties;
 import io.flowinquiry.modules.shared.Constants;
@@ -21,8 +23,8 @@ import java.io.ByteArrayOutputStream;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.RegisterExtension;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,7 +34,6 @@ import org.springframework.test.context.bean.override.mockito.MockitoBean;
 
 /** Integration tests for {@link MailService}. */
 @IntegrationTest
-@Disabled
 class MailServiceIT {
 
     private static final String[] languages = {"en"};
@@ -48,6 +49,14 @@ class MailServiceIT {
 
     @Autowired private MailService mailService;
 
+    @RegisterExtension
+    static GreenMailExtension greenMail =
+            new GreenMailExtension(ServerSetupTest.SMTP)
+                    .withConfiguration(
+                            GreenMailConfiguration.aConfig()
+                                    .withUser("noreply@flowinquiry.io", "user", "pass"))
+                    .withPerMethodLifecycle(true);
+
     @BeforeEach
     public void setup() {
         doNothing().when(javaMailSender).send(any(MimeMessage.class));
@@ -57,63 +66,76 @@ class MailServiceIT {
     @Test
     void testSendEmail() throws Exception {
         mailService.sendEmail("john.doe@example.com", "testSubject", "testContent", false, false);
-        verify(javaMailSender).send(messageCaptor.capture());
-        MimeMessage message = messageCaptor.getValue();
-        assertThat(message.getSubject()).isEqualTo("testSubject");
-        assertThat(message.getAllRecipients()[0]).hasToString("john.doe@example.com");
-        assertThat(message.getFrom()[0]).hasToString(flowInquiryProperties.getMail().getFrom());
-        assertThat(message.getContent()).isInstanceOf(String.class);
-        assertThat(message.getContent()).hasToString("testContent");
-        assertThat(message.getDataHandler().getContentType())
+
+        greenMail.waitForIncomingEmail(1);
+        MimeMessage[] receivedMessages = greenMail.getReceivedMessages();
+        assertThat(receivedMessages).hasSize(1);
+        MimeMessage receivedMessage = receivedMessages[0];
+        assertThat(receivedMessage.getSubject()).isEqualTo("testSubject");
+        assertThat(receivedMessage.getContent()).isEqualTo("testContent");
+        assertThat(receivedMessage.getContent()).isInstanceOf(String.class);
+        assertThat(receivedMessage.getFrom()[0]).hasToString(mailService.getFrom());
+        assertThat(receivedMessage.getAllRecipients()[0]).hasToString("john.doe@example.com");
+        assertThat(receivedMessage.getDataHandler().getContentType())
                 .isEqualTo("text/plain; charset=UTF-8");
     }
 
     @Test
     void testSendHtmlEmail() throws Exception {
         mailService.sendEmail("john.doe@example.com", "testSubject", "testContent", false, true);
-        verify(javaMailSender).send(messageCaptor.capture());
-        MimeMessage message = messageCaptor.getValue();
-        assertThat(message.getSubject()).isEqualTo("testSubject");
-        assertThat(message.getAllRecipients()[0]).hasToString("john.doe@example.com");
-        assertThat(message.getFrom()[0]).hasToString(flowInquiryProperties.getMail().getFrom());
-        assertThat(message.getContent()).isInstanceOf(String.class);
-        assertThat(message.getContent()).hasToString("testContent");
-        assertThat(message.getDataHandler().getContentType()).isEqualTo("text/html;charset=UTF-8");
+
+        greenMail.waitForIncomingEmail(1);
+        MimeMessage[] receivedMessages = greenMail.getReceivedMessages();
+        assertThat(receivedMessages).hasSize(1);
+        MimeMessage receivedMessage = receivedMessages[0];
+        assertThat(receivedMessage.getSubject()).isEqualTo("testSubject");
+        assertThat(receivedMessage.getContent()).isEqualTo("testContent");
+        assertThat(receivedMessage.getAllRecipients()[0]).hasToString("john.doe@example.com");
+        assertThat(receivedMessage.getFrom()[0]).hasToString(mailService.getFrom());
+        assertThat(receivedMessage.getContent()).isInstanceOf(String.class);
+        assertThat(receivedMessage.getDataHandler().getContentType())
+                .isEqualTo("text/html;charset=UTF-8");
     }
 
     @Test
     void testSendMultipartEmail() throws Exception {
         mailService.sendEmail("john.doe@example.com", "testSubject", "testContent", true, false);
-        verify(javaMailSender).send(messageCaptor.capture());
-        MimeMessage message = messageCaptor.getValue();
-        MimeMultipart mp = (MimeMultipart) message.getContent();
+
+        greenMail.waitForIncomingEmail(1);
+        MimeMessage[] receivedMessages = greenMail.getReceivedMessages();
+        assertThat(receivedMessages).hasSize(1);
+        MimeMessage receivedMessage = receivedMessages[0];
+
+        MimeMultipart mp = (MimeMultipart) receivedMessage.getContent();
         MimeBodyPart part =
                 (MimeBodyPart) ((MimeMultipart) mp.getBodyPart(0).getContent()).getBodyPart(0);
         ByteArrayOutputStream aos = new ByteArrayOutputStream();
         part.writeTo(aos);
-        assertThat(message.getSubject()).isEqualTo("testSubject");
-        assertThat(message.getAllRecipients()[0]).hasToString("john.doe@example.com");
-        assertThat(message.getFrom()[0]).hasToString(flowInquiryProperties.getMail().getFrom());
-        assertThat(message.getContent()).isInstanceOf(Multipart.class);
-        assertThat(aos).hasToString("\r\ntestContent");
+        assertThat(receivedMessage.getSubject()).isEqualTo("testSubject");
+        assertThat(receivedMessage.getAllRecipients()[0]).hasToString("john.doe@example.com");
+        assertThat(receivedMessage.getFrom()[0]).hasToString(mailService.getFrom());
+        assertThat(receivedMessage.getContent()).isInstanceOf(Multipart.class);
         assertThat(part.getDataHandler().getContentType()).isEqualTo("text/plain; charset=UTF-8");
     }
 
     @Test
     void testSendMultipartHtmlEmail() throws Exception {
         mailService.sendEmail("john.doe@example.com", "testSubject", "testContent", true, true);
-        verify(javaMailSender).send(messageCaptor.capture());
-        MimeMessage message = messageCaptor.getValue();
-        MimeMultipart mp = (MimeMultipart) message.getContent();
+
+        greenMail.waitForIncomingEmail(1);
+        MimeMessage[] receivedMessages = greenMail.getReceivedMessages();
+        assertThat(receivedMessages).hasSize(1);
+        MimeMessage receivedMessage = receivedMessages[0];
+
+        MimeMultipart mp = (MimeMultipart) receivedMessage.getContent();
         MimeBodyPart part =
                 (MimeBodyPart) ((MimeMultipart) mp.getBodyPart(0).getContent()).getBodyPart(0);
         ByteArrayOutputStream aos = new ByteArrayOutputStream();
         part.writeTo(aos);
-        assertThat(message.getSubject()).isEqualTo("testSubject");
-        assertThat(message.getAllRecipients()[0]).hasToString("john.doe@example.com");
-        assertThat(message.getFrom()[0]).hasToString(flowInquiryProperties.getMail().getFrom());
-        assertThat(message.getContent()).isInstanceOf(Multipart.class);
-        assertThat(aos).hasToString("\r\ntestContent");
+        assertThat(receivedMessage.getSubject()).isEqualTo("testSubject");
+        assertThat(receivedMessage.getAllRecipients()[0]).hasToString("john.doe@example.com");
+        assertThat(receivedMessage.getFrom()[0]).hasToString(mailService.getFrom());
+        assertThat(receivedMessage.getContent()).isInstanceOf(Multipart.class);
         assertThat(part.getDataHandler().getContentType()).isEqualTo("text/html;charset=UTF-8");
     }
 
@@ -123,12 +145,16 @@ class MailServiceIT {
         user.setLangKey(Constants.DEFAULT_LANGUAGE);
         user.setEmail("john.doe@example.com");
         mailService.sendActivationEmail(user);
-        verify(javaMailSender).send(messageCaptor.capture());
-        MimeMessage message = messageCaptor.getValue();
-        assertThat(message.getAllRecipients()[0]).hasToString(user.getEmail());
-        assertThat(message.getFrom()[0]).hasToString(flowInquiryProperties.getMail().getFrom());
-        assertThat(message.getContent().toString()).isNotEmpty();
-        assertThat(message.getDataHandler().getContentType()).isEqualTo("text/html;charset=UTF-8");
+
+        greenMail.waitForIncomingEmail(1);
+        MimeMessage[] receivedMessages = greenMail.getReceivedMessages();
+        assertThat(receivedMessages).hasSize(1);
+        MimeMessage receivedMessage = receivedMessages[0];
+        assertThat(receivedMessage.getAllRecipients()[0]).hasToString(user.getEmail());
+        assertThat(receivedMessage.getFrom()[0]).hasToString(mailService.getFrom());
+        assertThat(receivedMessage.getContent().toString()).isNotEmpty();
+        assertThat(receivedMessage.getDataHandler().getContentType())
+                .isEqualTo("text/html;charset=UTF-8");
     }
 
     @Test
@@ -137,12 +163,16 @@ class MailServiceIT {
         user.setLangKey(Constants.DEFAULT_LANGUAGE);
         user.setEmail("john.doe@example.com");
         mailService.sendCreationEmail(user);
-        verify(javaMailSender).send(messageCaptor.capture());
-        MimeMessage message = messageCaptor.getValue();
-        assertThat(message.getAllRecipients()[0]).hasToString(user.getEmail());
-        assertThat(message.getFrom()[0]).hasToString(flowInquiryProperties.getMail().getFrom());
-        assertThat(message.getContent().toString()).isNotEmpty();
-        assertThat(message.getDataHandler().getContentType()).isEqualTo("text/html;charset=UTF-8");
+
+        greenMail.waitForIncomingEmail(1);
+        MimeMessage[] receivedMessages = greenMail.getReceivedMessages();
+        assertThat(receivedMessages).hasSize(1);
+        MimeMessage receivedMessage = receivedMessages[0];
+        assertThat(receivedMessage.getAllRecipients()[0]).hasToString(user.getEmail());
+        assertThat(receivedMessage.getFrom()[0]).hasToString(mailService.getFrom());
+        assertThat(receivedMessage.getContent().toString()).isNotEmpty();
+        assertThat(receivedMessage.getDataHandler().getContentType())
+                .isEqualTo("text/html;charset=UTF-8");
     }
 
     @Test
@@ -151,12 +181,16 @@ class MailServiceIT {
         user.setLangKey(Constants.DEFAULT_LANGUAGE);
         user.setEmail("john.doe@example.com");
         mailService.sendPasswordResetMail(user);
-        verify(javaMailSender).send(messageCaptor.capture());
-        MimeMessage message = messageCaptor.getValue();
-        assertThat(message.getAllRecipients()[0]).hasToString(user.getEmail());
-        assertThat(message.getFrom()[0]).hasToString(flowInquiryProperties.getMail().getFrom());
-        assertThat(message.getContent().toString()).isNotEmpty();
-        assertThat(message.getDataHandler().getContentType()).isEqualTo("text/html;charset=UTF-8");
+
+        greenMail.waitForIncomingEmail(1);
+        MimeMessage[] receivedMessages = greenMail.getReceivedMessages();
+        assertThat(receivedMessages).hasSize(1);
+        MimeMessage receivedMessage = receivedMessages[0];
+        assertThat(receivedMessage.getAllRecipients()[0]).hasToString(user.getEmail());
+        assertThat(receivedMessage.getFrom()[0]).hasToString(mailService.getFrom());
+        assertThat(receivedMessage.getContent().toString()).isNotEmpty();
+        assertThat(receivedMessage.getDataHandler().getContentType())
+                .isEqualTo("text/html;charset=UTF-8");
     }
 
     @Test

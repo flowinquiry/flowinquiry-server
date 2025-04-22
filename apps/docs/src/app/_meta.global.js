@@ -12,6 +12,12 @@ export default {
       getting_started: "Get started",
       workflow_management: "Workflow management",
       working_with_requests: "Working with requests",
+      administrator: {
+        title: "Administrator",
+        items: {
+          smtp_server: "Email Setup Guide (SMTP Configuration)",
+        },
+      },
     },
   },
   developer_guides: {

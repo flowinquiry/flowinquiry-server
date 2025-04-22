@@ -9,21 +9,11 @@ import org.springframework.web.cors.CorsConfiguration;
 @Getter
 public class FlowInquiryProperties {
 
-    private final Mail mail = new Mail();
-
     private final Http http = new Http();
 
     private final Security security = new Security();
 
     private final CorsConfiguration cors = new CorsConfiguration();
-
-    @Getter
-    @Setter
-    public static class Mail {
-        private boolean enabled = false;
-        private String from = "";
-        private String baseUrl = "";
-    }
 
     @Getter
     public static class Http {

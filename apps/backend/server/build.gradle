@@ -57,7 +57,7 @@ configurations {
 dependencies {
     implementation( project(":apps:backend:commons"))
 
-
+    testImplementation("com.icegreen:greenmail-junit5:2.1.3")
     testImplementation("org.testcontainers:jdbc")
     testImplementation("org.testcontainers:junit-jupiter")
     testImplementation("org.testcontainers:testcontainers")

@@ -511,10 +511,11 @@
 			usePreparedStatements="true" />
 	</changeSet>
 	<changeSet author="flowinquiry"
-		id="000:11-insert-default-fw-app-setting">
+		id="000:11-insert-default-fw-app-setting" context="test">
 		<loadData
-			file="config/liquibase/tenant/data/fw_app_settings.csv" separator=";"
-			tableName="fw_app_settings" usePreparedStatements="true">
+			file="config/liquibase/tenant/data/fw_app_settings_test.csv"
+			separator=";" tableName="fw_app_settings"
+			usePreparedStatements="true">
 			<column name="setting_key" type="STRING" />
 			<column name="setting_value" type="STRING" />
 			<column name="setting_type" type="STRING" />

@@ -1,7 +1,7 @@
 package io.flowinquiry.modules.collab;
 
-import io.flowinquiry.config.FlowInquiryProperties;
 import io.flowinquiry.config.SpringContextProvider;
+import io.flowinquiry.modules.collab.service.MailService;
 import io.flowinquiry.modules.usermanagement.service.dto.UserDTO;
 import java.util.Locale;
 import org.springframework.context.MessageSource;
@@ -21,10 +21,9 @@ public class EmailContext {
         this.locale = locale;
         thymeleafContext = new Context(locale);
 
-        FlowInquiryProperties properties =
-                SpringContextProvider.getContext().getBean(FlowInquiryProperties.class);
+        MailService mailService = SpringContextProvider.getContext().getBean(MailService.class);
         messageSource = SpringContextProvider.getContext().getBean(MessageSource.class);
-        thymeleafContext.setVariable(BASE_URL, properties.getMail().getBaseUrl());
+        thymeleafContext.setVariable(BASE_URL, mailService.getBaseUrl());
     }
 
     public EmailContext setToUser(UserDTO toUser) {

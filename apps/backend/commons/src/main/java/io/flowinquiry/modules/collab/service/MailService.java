@@ -1,6 +1,5 @@
 package io.flowinquiry.modules.collab.service;
 
-import io.flowinquiry.config.FlowInquiryProperties;
 import io.flowinquiry.modules.collab.EmailContext;
 import io.flowinquiry.modules.collab.service.event.MailSettingsUpdatedEvent;
 import io.flowinquiry.modules.usermanagement.service.dto.UserDTO;
@@ -10,6 +9,7 @@ import jakarta.mail.internet.MimeMessage;
 import java.nio.charset.StandardCharsets;
 import java.util.Locale;
 import java.util.Properties;
+import lombok.Getter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.MessageSource;
@@ -35,23 +35,34 @@ public class MailService {
 
     private static final String USER = "user";
 
-    private static final String BASE_URL = "baseUrl";
+    static final String HOST = "mail.host";
+    static final String PORT = "mail.port";
+    static final String USERNAME = "mail.username";
+    static final String PASSWORD = "mail.password";
+    static final String PROTOCOL = "mail.protocol";
+    static final String SMTP_AUTH = "mail.smtp.auth";
+    static final String SMTP_STARTTLS = "mail.smtp.starttls.enable";
+    static final String DEBUG = "mail.debug";
+    static final String FROM = "mail.from";
+    static final String BASE_URL = "mail.base_url";
 
-    private final FlowInquiryProperties flowInquiryProperties;
     private final AppSettingService appSettingService;
     private final MessageSource messageSource;
     private final SpringTemplateEngine templateEngine;
 
     private JavaMailSenderImpl mailSender;
-    private boolean mailEnabled = false;
+
+    @Getter private boolean mailEnabled = false;
+
+    @Getter private String from = "undefined";
+
+    @Getter private String baseUrl;
 
     public MailService(
             AppSettingService appSettingService,
-            FlowInquiryProperties flowInquiryProperties,
             MessageSource messageSource,
             SpringTemplateEngine templateEngine) {
         this.appSettingService = appSettingService;
-        this.flowInquiryProperties = flowInquiryProperties;
         this.messageSource = messageSource;
         this.templateEngine = templateEngine;
     }
@@ -68,8 +79,8 @@ public class MailService {
     }
 
     private void reloadMailSender() {
-        String host = appSettingService.getValue("mail.host").orElse(null);
-        String portStr = appSettingService.getValue("mail.port").orElse(null);
+        String host = appSettingService.getValue(HOST).orElse(null);
+        String portStr = appSettingService.getValue(PORT).orElse(null);
 
         if (host == null || portStr == null) {
             mailEnabled = false;
@@ -81,16 +92,20 @@ public class MailService {
             JavaMailSenderImpl sender = new JavaMailSenderImpl();
             sender.setHost(host);
             sender.setPort(Integer.parseInt(portStr));
-            sender.setUsername(appSettingService.getValue("mail.username").orElse(""));
-            sender.setPassword(appSettingService.getDecryptedValue("mail.password").orElse(""));
+            sender.setUsername(appSettingService.getValue(USERNAME).orElse(""));
+            sender.setPassword(appSettingService.getDecryptedValue(PASSWORD).orElse(""));
 
             Properties props = sender.getJavaMailProperties();
             props.put(
-                    "mail.transport.protocol",
-                    appSettingService.getValue("mail.protocol").orElse("smtp"));
-            props.put("mail.smtp.auth", "true");
-            props.put("mail.smtp.starttls.enable", "true");
-            props.put("mail.debug", "false");
+                    "mail.transport.protocol", appSettingService.getValue(PROTOCOL).orElse("smtp"));
+            props.put("mail.smtp.auth", appSettingService.getValue(SMTP_AUTH).orElse("true"));
+            props.put(
+                    "mail.smtp.starttls.enable",
+                    appSettingService.getValue(SMTP_STARTTLS).orElse("true"));
+            props.put("mail.debug", appSettingService.getValue(DEBUG).orElse("false"));
+
+            from = appSettingService.getValue(FROM).orElse("undefined");
+            baseUrl = appSettingService.getValue(BASE_URL).orElse("");
 
             this.mailSender = sender;
             this.mailEnabled = true;
@@ -132,7 +147,7 @@ public class MailService {
             MimeMessageHelper message =
                     new MimeMessageHelper(mimeMessage, isMultipart, StandardCharsets.UTF_8.name());
             message.setTo(to);
-            message.setFrom(flowInquiryProperties.getMail().getFrom());
+            message.setFrom(from);
             message.setSubject(subject);
             message.setText(content, isHtml);
             sender.send(mimeMessage);
@@ -151,7 +166,7 @@ public class MailService {
         Locale locale = Locale.forLanguageTag(user.getLangKey() != null ? user.getLangKey() : "en");
         Context context = new Context(locale);
         context.setVariable(USER, user);
-        context.setVariable(BASE_URL, flowInquiryProperties.getMail().getBaseUrl());
+        context.setVariable(BASE_URL, baseUrl);
         String content = templateEngine.process(templateName, context);
         String subject = messageSource.getMessage(titleKey, null, locale);
 

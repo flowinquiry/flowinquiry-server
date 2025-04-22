@@ -15,8 +15,6 @@ spring:
   jackson:
     serialization:
       write-durations-as-timestamps: false
-  mail:
-    host: localhost
   main:
     allow-bean-definition-overriding: true
   messages:
@@ -45,20 +43,12 @@ server:
   port: 10344
   address: localhost
 
-management:
-  health:
-    mail:
-      enabled: false
-
 # ===================================================================
 # Application specific properties
 # Add your own application properties here, see the ApplicationProperties class
 # to have type-safe configuration
 # ===================================================================
 flowinquiry:
-  mail:
-    from: flowinquiry-app@localhost.com
-    base-url: http://127.0.0.1:8080
   security:
     authentication:
       jwt:

@@ -34,15 +34,15 @@ export default withNextra({
     });
     return config;
   },
-  experimental: {
-    turbo: {
-      rules: {
-        "./src/components/icons/*.svg": {
-          loaders: ["@svgr/webpack"],
-          as: "*.js",
-        },
+  turbopack: {
+    rules: {
+      "./components/icons/*.svg": {
+        loaders: ["@svgr/webpack"],
+        as: "*.js",
       },
     },
+  },
+  experimental: {
     optimizePackageImports: ["@components/icons"],
   },
 });

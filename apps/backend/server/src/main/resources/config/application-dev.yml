@@ -48,9 +48,6 @@ server:
 
 
 flowinquiry:
-  mail:
-    from: flowinquiry-app@localhost.com
-    base_url: http://127.0.0.1:3000
   # CORS is only enabled by default with the "dev" profile
   cors:
     allowed-origins: 'http://localhost:3000,http://localhost:8080'

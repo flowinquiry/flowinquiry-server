@@ -17,3 +17,7 @@ export const findEntitiesFilterOptions = async (
   const data = await findEntitiesFn();
   return mapEntityToFilterOptions(data);
 };
+
+export const getVersion = async () => {
+  return get<{ version: string }>(`/api/versions`);
+};

@@ -25,9 +25,16 @@ export default {
     title: "Developer Guides",
     items: {
       index: "Programming languages and development tools",
-      frontend: "Front-end",
+      frontend: {
+        title: "Frontend",
+        items: {
+          getting_started: "Get started",
+          project_structure: "Project Structure",
+          localization: "Localization",
+        },
+      },
       backend: {
-        title: "Back-end",
+        title: "Backend",
         items: {
           getting_started: "Getting-started",
           overview: {

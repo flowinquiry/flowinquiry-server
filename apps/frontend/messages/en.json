@@ -95,6 +95,7 @@
     },
     "nav": {
       "profile": "Profile",
+      "user_guide": "User guides",
       "about": "About",
       "logout": "Logout",
       "intro": "FlowInquiry is a powerful request management solution for teams. It empowers organizations to track, manage, and customize customer inquiries through flexible workflows, enhancing collaboration and productivity.",

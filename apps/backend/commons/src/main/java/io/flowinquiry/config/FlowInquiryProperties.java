@@ -1,13 +1,21 @@
 package io.flowinquiry.config;
 
+import io.flowinquiry.modules.shared.service.dto.EditionType;
+import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.cors.CorsConfiguration;
 
 @ConfigurationProperties(prefix = "flowinquiry")
+@Validated
 @Getter
 public class FlowInquiryProperties {
+
+    @Setter @NotNull private String version;
+
+    @Setter @NotNull private EditionType edition;
 
     private final Http http = new Http();
 

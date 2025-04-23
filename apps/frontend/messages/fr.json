@@ -95,6 +95,7 @@
     },
     "nav": {
       "profile": "Profil",
+      "user_guide": "Guides d’utilisation",
       "about": "À propos",
       "logout": "Se déconnecter",
       "intro": "FlowInquiry est une solution puissante de gestion des demandes pour les équipes. Elle permet aux organisations de suivre, gérer et personnaliser les demandes des clients via des flux de travail flexibles, améliorant la collaboration et la productivité.",

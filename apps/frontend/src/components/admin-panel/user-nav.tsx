@@ -1,8 +1,9 @@
 "use client";
 
-import { CircleUserRound, Info, LogOut } from "lucide-react";
+import { BookText, CircleUserRound, Info, LogOut } from "lucide-react";
 import Link from "next/link";
 import { signOut, useSession } from "next-auth/react";
+import { useEffect, useState } from "react";
 
 import AppLogo from "@/components/app-logo";
 import { UserAvatar } from "@/components/shared/avatar-display";
@@ -31,11 +32,22 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { useAppClientTranslations } from "@/hooks/use-translations";
+import { getVersion } from "@/lib/actions/shared.action";
 import { BASE_URL } from "@/lib/constants";
 
 export function UserNav() {
   const { data: session } = useSession();
   const t = useAppClientTranslations();
+
+  const [versionInfo, setVersionInfo] = useState<{ version: string } | null>(
+    null,
+  );
+
+  useEffect(() => {
+    getVersion().then((data) => {
+      setVersionInfo(data);
+    });
+  }, []);
 
   return (
     <Dialog>
@@ -83,6 +95,17 @@ export function UserNav() {
           </DropdownMenuGroup>
           <DropdownMenuSeparator />
           <DropdownMenuGroup>
+            <DropdownMenuItem className="hover:cursor-pointer" asChild>
+              <Link
+                href="https://docs.flowinquiry.io/user_guides/introduction"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center"
+              >
+                <BookText className="w-4 h-4 mr-3 text-muted-foreground" />
+                {t.header.nav("user_guide")}
+              </Link>
+            </DropdownMenuItem>
             <DialogTrigger asChild>
               <DropdownMenuItem className="hover:cursor-pointer">
                 <Info className="w-4 h-4 mr-3 text-muted-foreground" />
@@ -108,7 +131,7 @@ export function UserNav() {
 
           <div>
             <DialogTitle className="text-2xl font-bold">
-              FlowInquiry
+              FlowInquiry {versionInfo?.version}
             </DialogTitle>
             <DialogDescription className="text-gray-600 dark:text-gray-400">
               {t.header.nav("intro")}

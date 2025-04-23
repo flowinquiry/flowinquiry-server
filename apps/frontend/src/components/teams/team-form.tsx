@@ -53,11 +53,9 @@ export const TeamForm = ({ teamId }: { teamId: number | undefined }) => {
   const { setError } = useError();
   const t = useAppClientTranslations();
 
-  const defaultValues = TeamDTOSchema.parse({});
-
   const form = useForm<TeamDTO>({
     resolver: zodResolver(TeamDTOSchema),
-    defaultValues,
+    defaultValues: undefined,
   });
 
   useEffect(() => {
@@ -70,8 +68,10 @@ export const TeamForm = ({ teamId }: { teamId: number | undefined }) => {
             throw new Error("Team not found.");
           }
           setTeam(data);
+          form.reset(data); // ✅ set form values after fetch
         } else {
           setTeam(undefined);
+          form.reset();
         }
       } finally {
         setLoading(false);
@@ -87,7 +87,7 @@ export const TeamForm = ({ teamId }: { teamId: number | undefined }) => {
       form.reset(team);
     } else {
       // If no team is fetched (e.g. creation mode), reset with defaults
-      form.reset(defaultValues);
+      form.reset(undefined);
     }
   }, [team]);
 

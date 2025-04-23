@@ -263,6 +263,8 @@
         "description": "Soumettez un ticket à l'équipe pour obtenir de l'aide ou initier une tâche. Fournissez tous les détails nécessaires afin d'aider l'équipe à comprendre et traiter votre demande efficacement."
       },
       "form": {
+        "edit_ticket_title": "Modifier le ticket",
+        "edit_ticket_description": "Modifiez les détails de votre ticket",
         "name": "Nom",
         "description": "Description",
         "priority": "Priorité",

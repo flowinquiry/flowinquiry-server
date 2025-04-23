@@ -263,6 +263,8 @@
         "description": "Submit a ticket to the team to get assistance or initiate a task. Provide all necessary details to help the team understand and address your request effectively."
       },
       "form": {
+        "edit_ticket_title": "Edit ticket",
+        "edit_ticket_description": "Edit the details of your ticket",
         "name": "Name",
         "description": "Description",
         "priority": "Priority",

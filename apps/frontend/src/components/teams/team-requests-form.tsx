@@ -56,12 +56,9 @@ export const TeamRequestForm = ({
   const [loading, setLoading] = useState(true);
   const t = useAppClientTranslations();
 
-  // Parse empty object to get schema defaults
-  const defaultValues = TeamRequestDTOSchema.parse({});
-
   const form = useForm<TeamRequestDTO>({
     resolver: zodResolver(TeamRequestDTOSchema),
-    defaultValues,
+    defaultValues: undefined,
     mode: "onChange",
   });
 
@@ -71,6 +68,7 @@ export const TeamRequestForm = ({
       try {
         const data = await findRequestById(teamRequestId, setError);
         setTeamRequest(data);
+        console.log("fetchTeamRequest", data);
       } finally {
         setLoading(false);
       }
@@ -82,7 +80,7 @@ export const TeamRequestForm = ({
     if (teamRequest) {
       form.reset(teamRequest);
     } else {
-      form.reset(defaultValues);
+      form.reset(undefined);
     }
   }, [teamRequest]);
 
@@ -160,8 +158,8 @@ export const TeamRequestForm = ({
       <Breadcrumbs items={breadcrumbItems} />
       <div className="flex items-center justify-between mb-4 mt-4">
         <Heading
-          title={`${teamRequest?.workflowRequestName}: Edit Ticket`}
-          description="Edit the details of your ticket"
+          title={`${teamRequest?.workflowRequestName}: ${t.teams.tickets.form.base("edit_ticket_title")}`}
+          description={t.teams.tickets.form.base("edit_ticket_description")}
         />
       </div>
 
@@ -216,7 +214,7 @@ export const TeamRequestForm = ({
                 <FormLabel>{t.teams.tickets.form.base("priority")}</FormLabel>
                 <FormControl>
                   <TeamRequestPrioritySelect
-                    value={field.value}
+                    value={field.value || ("Medium" as TeamRequestPriority)}
                     onChange={(value: TeamRequestPriority) =>
                       field.onChange(value)
                     }

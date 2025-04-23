@@ -188,7 +188,9 @@ const UserTeamsOverdueTickets = () => {
                       <Tooltip>
                         <TooltipTrigger asChild>
                           <span className="cursor-pointer">
-                            {formatDateTimeDistanceToNow(ticket.modifiedAt)}
+                            {formatDateTimeDistanceToNow(
+                              new Date(ticket.modifiedAt!),
+                            )}
                           </span>
                         </TooltipTrigger>
                         <TooltipContent>

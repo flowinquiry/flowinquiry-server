@@ -1,4 +1,5 @@
-import { formatDistanceToNow } from "date-fns";
+import { format, formatDistanceToNow, parseISO } from "date-fns";
+import { toZonedTime } from "date-fns-tz";
 
 export const formatDateTimeDistanceToNow = (date?: Date | null) => {
   if (!date) {
@@ -55,4 +56,48 @@ export const calculateDuration = (
   } else {
     return `${diffDays} day${diffDays !== 1 ? "s" : ""}`;
   }
+};
+
+/**
+ * Converts a date from UTC to local timezone for display
+ * @param date The UTC date (from server/database)
+ * @returns Date in local timezone
+ */
+export const utcToLocalDate = (date: Date | string | null | undefined) => {
+  if (!date) return undefined;
+
+  const dateObj = typeof date === "string" ? parseISO(date) : date;
+  const userTimeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+  return toZonedTime(dateObj, userTimeZone);
+};
+
+/**
+ * Converts a date from local timezone to UTC for storage
+ * @param date The local date (from user input)
+ * @returns Date in UTC
+ */
+export const localToUtcDate = (date: Date | string | null | undefined) => {
+  if (!date) return undefined;
+
+  const dateObj = typeof date === "string" ? parseISO(date) : date;
+  const userTimeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+  // Convert to UTC by creating a zoned time and then extracting its value
+  const zonedDate = toZonedTime(dateObj, "UTC");
+  return new Date(zonedDate);
+};
+
+/**
+ * Formats a date for display
+ * @param date The date to format
+ * @param formatStr Format string (defaults to 'PPP' - e.g., 'April 29, 2023')
+ * @returns Formatted date string
+ */
+export const formatDisplayDate = (
+  date: Date | string | null | undefined,
+  formatStr = "PPP",
+) => {
+  if (!date) return "";
+
+  const localDate = utcToLocalDate(date);
+  return localDate ? format(localDate, formatStr) : "";
 };

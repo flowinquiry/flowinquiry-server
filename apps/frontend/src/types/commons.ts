@@ -102,3 +102,11 @@ export const AppSettingSchema = z.object({
 });
 
 export type AppSettingDTO = z.infer<typeof AppSettingSchema>;
+
+export interface VersionCheckResponse {
+  isOutdated: boolean;
+  latestVersion: string;
+  releaseDate: string;
+  releaseNotes: string;
+  instruction_link: string;
+}

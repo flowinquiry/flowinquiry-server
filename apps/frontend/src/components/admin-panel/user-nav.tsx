@@ -39,9 +39,10 @@ export function UserNav() {
   const { data: session } = useSession();
   const t = useAppClientTranslations();
 
-  const [versionInfo, setVersionInfo] = useState<{ version: string } | null>(
-    null,
-  );
+  const [versionInfo, setVersionInfo] = useState<{
+    version: string;
+    edition: string;
+  } | null>(null);
 
   useEffect(() => {
     getVersion().then((data) => {
@@ -131,7 +132,7 @@ export function UserNav() {
 
           <div>
             <DialogTitle className="text-2xl font-bold">
-              FlowInquiry {versionInfo?.version}
+              FlowInquiry {versionInfo?.edition} {versionInfo?.version}
             </DialogTitle>
             <DialogDescription className="text-gray-600 dark:text-gray-400">
               {t.header.nav("intro")}

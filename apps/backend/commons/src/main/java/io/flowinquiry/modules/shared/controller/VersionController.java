@@ -2,10 +2,16 @@ package io.flowinquiry.modules.shared.controller;
 
 import io.flowinquiry.config.FlowInquiryProperties;
 import io.flowinquiry.modules.shared.service.dto.EditionType;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageConverter;
+import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -16,26 +22,33 @@ import org.springframework.web.client.RestTemplate;
 public class VersionController {
 
     private final FlowInquiryProperties flowInquiryProperties;
-    ;
 
-    private final RestTemplate restTemplate = new RestTemplate();
+    private final RestTemplate restTemplate;
     private static final String LATEST_VERSION_URL =
             "https://raw.githubusercontent.com/flowinquiry/flowinquiry/main/version.json";
 
     public VersionController(FlowInquiryProperties flowInquiryProperties) {
         this.flowInquiryProperties = flowInquiryProperties;
+
+        this.restTemplate = new RestTemplate();
+        List<HttpMessageConverter<?>> messageConverters = new ArrayList<>();
+        MappingJackson2HttpMessageConverter converter = new MappingJackson2HttpMessageConverter();
+        converter.setSupportedMediaTypes(
+                Arrays.asList(MediaType.APPLICATION_JSON, MediaType.TEXT_PLAIN));
+        messageConverters.add(converter);
+        restTemplate.setMessageConverters(messageConverters);
     }
 
     @GetMapping
     public Map<String, String> getVersion() {
         return Map.of(
                 "version", flowInquiryProperties.getVersion(),
-                "type", flowInquiryProperties.getEdition().name().toLowerCase());
+                "edition", flowInquiryProperties.getEdition().name().toLowerCase());
     }
 
     @GetMapping("/check")
     public ResponseEntity<?> checkVersion() {
-        if (flowInquiryProperties.getEdition() != EditionType.CLOUD) {
+        if (flowInquiryProperties.getEdition() == EditionType.CLOUD) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN)
                     .body("Not applicable for cloud-hosted users.");
         }

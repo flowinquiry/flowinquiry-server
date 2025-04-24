@@ -30,6 +30,7 @@
       "add_comment": "Ajouter un commentaire",
       "download": "Télécharger",
       "save_changes": "Enregistrer les modifications",
+      "saving_changes": "Enregistrement des modifications ...",
       "clear_filters": "Réinitialiser les filtres"
     },
     "misc": {
@@ -132,13 +133,21 @@
       "modified_at": "Modifié le",
       "assigned_to": "Assigné à",
       "priority_sort_ascending": "Trier par priorité : croissante",
-      "priority_sort_descending": "Trier par priorité : décroissante"
+      "priority_sort_descending": "Trier par priorité : décroissante",
+      "upload_team_logo": "Téléverser le logo de l’équipe"
     },
     "roles": {
       "manager": "Manager",
       "member": "Membre",
       "guest": "Invité",
       "none": "Aucun"
+    },
+    "form": {
+      "name": "Nom",
+      "slogan": "Slogan",
+      "description": "Description",
+      "create_team_title": "Créer une équipe",
+      "create_team_description": "Ajouter une nouvelle équipe"
     },
     "dashboard": {
       "title": "Tableau de bord",

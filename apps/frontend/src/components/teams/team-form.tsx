@@ -120,10 +120,18 @@ export const TeamForm = ({ teamId }: { teamId: number | undefined }) => {
   }
 
   const isEdit = !!team;
-  const title = isEdit ? `Edit team ${team?.name}` : "Create team";
-  const description = isEdit ? "Edit team" : "Add a new team";
-  const submitText = isEdit ? "Save changes" : "Create";
-  const submitTextWhileLoading = isEdit ? "Saving changes ..." : "Creating ...";
+  const title = isEdit
+    ? t.teams.form("edit_team_title", { teamName: team?.name })
+    : t.teams.form("create_team_title");
+  const description = isEdit
+    ? t.teams.form("edit_team_description")
+    : t.teams.form("create_team_description");
+  const submitText = isEdit
+    ? t.common.buttons("save_changes")
+    : t.common.buttons("create");
+  const submitTextWhileLoading = isEdit
+    ? t.common.buttons("saving_changes")
+    : t.common.buttons("creating");
 
   const breadcrumbItems = [
     { title: t.common.navigation("dashboard"), link: "/portal" },
@@ -179,7 +187,7 @@ export const TeamForm = ({ teamId }: { teamId: number | undefined }) => {
                 )}
               </TooltipTrigger>
               <TooltipContent>
-                <p>Update Team Logo</p>
+                <p>{t.teams.common("upload_team_logo")}</p>
               </TooltipContent>
             </Tooltip>
           </TooltipProvider>
@@ -193,14 +201,17 @@ export const TeamForm = ({ teamId }: { teamId: number | undefined }) => {
               form={form}
               required
               fieldName="name"
-              label="Name"
-              placeholder="Team Name"
+              label={t.teams.form("name")}
             />
-            <ExtTextAreaField form={form} fieldName="slogan" label="Slogan" />
+            <ExtTextAreaField
+              form={form}
+              fieldName="slogan"
+              label={t.teams.form("slogan")}
+            />
             <ExtTextAreaField
               form={form}
               fieldName="description"
-              label="Description"
+              label={t.teams.form("description")}
             />
             <div className="md:col-span-2 flex flex-row gap-4">
               <SubmitButton

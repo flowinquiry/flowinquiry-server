@@ -30,6 +30,7 @@
       "add_comment": "Add comment",
       "download": "Download",
       "save_changes": "Save changes",
+      "saving_changes": "Saving changes ...",
       "clear_filters": "Clear Filters"
     },
     "misc": {
@@ -132,13 +133,23 @@
       "modified_at": "Modified at",
       "assigned_to": "Assigned to",
       "priority_sort_ascending": "Sort by priority: Ascending",
-      "priority_sort_descending": "Sort by priority: Descending"
+      "priority_sort_descending": "Sort by priority: Descending",
+      "upload_team_logo": "Upload team logo"
     },
     "roles": {
       "manager": "Manager",
       "member": "Member",
       "guest": "Guest",
       "none": "None"
+    },
+    "form": {
+      "name": "Name",
+      "slogan": "Slogan",
+      "description": "Description",
+      "create_team_title": "Create team",
+      "create_team_description": "Add a new team",
+      "edit_team_title": "Edit team {teamName}",
+      "edit_team_description": "Edit team"
     },
     "dashboard": {
       "title": "Dashboard",

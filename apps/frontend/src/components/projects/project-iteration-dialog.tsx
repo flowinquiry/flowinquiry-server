@@ -65,12 +65,8 @@ export function ProjectIterationDialog({
       projectId: projectId,
       name: iteration?.name || "",
       description: iteration?.description || "",
-      startDate: iteration?.startDate
-        ? new Date(iteration.startDate)
-        : new Date(),
-      endDate: iteration?.endDate
-        ? new Date(iteration.endDate)
-        : new Date(Date.now() + 14 * 24 * 60 * 60 * 1000), // Default to 2 weeks
+      startDate: iteration?.startDate,
+      endDate: iteration?.endDate,
       totalTickets: iteration?.totalTickets || 0,
     },
   });
@@ -83,12 +79,8 @@ export function ProjectIterationDialog({
         projectId: projectId,
         name: iteration?.name || "",
         description: iteration?.description || "",
-        startDate: iteration?.startDate
-          ? new Date(iteration.startDate)
-          : new Date(),
-        endDate: iteration?.endDate
-          ? new Date(iteration.endDate)
-          : new Date(Date.now() + 14 * 24 * 60 * 60 * 1000),
+        startDate: iteration?.startDate,
+        endDate: iteration?.endDate,
         totalTickets: iteration?.totalTickets || 0,
       });
     }

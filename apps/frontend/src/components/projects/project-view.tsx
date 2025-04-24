@@ -356,7 +356,7 @@ export const ProjectView = ({ projectId }: { projectId: number }) => {
       // Add current date as modifiedDate
       const taskWithModifiedDate = {
         ...updatedTask,
-        modifiedAt: new Date(),
+        modifiedAt: new Date().toDateString(),
       };
 
       // Then call the API to update on the server
@@ -464,7 +464,7 @@ export const ProjectView = ({ projectId }: { projectId: number }) => {
       ...movedTask,
       currentStateId: targetColumn.id!,
       currentStateName: targetColumn.stateName,
-      modifiedAt: new Date(),
+      modifiedAt: new Date().toDateString(),
     };
 
     // Update both tasks and filteredTasks state

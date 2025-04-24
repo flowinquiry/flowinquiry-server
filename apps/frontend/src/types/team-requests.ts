@@ -55,12 +55,8 @@ export const TeamRequestDTOSchema = z.object({
   isCompleted: z.boolean().optional(),
   createdAt: z.string().optional(),
   modifiedAt: z.string().optional(),
-  estimatedCompletionDate: z
-    .union([z.date(), z.string().transform((str) => new Date(str))])
-    .nullish(),
-  actualCompletionDate: z
-    .union([z.date(), z.string().transform((str) => new Date(str))])
-    .nullish(),
+  estimatedCompletionDate: z.string().optional().nullable(),
+  actualCompletionDate: z.string().optional().nullable(),
   channel: z.string().nullish(),
   numberAttachments: z.number().optional(),
   numberWatchers: z.number().optional(),

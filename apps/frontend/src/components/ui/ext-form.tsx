@@ -179,13 +179,18 @@ export const DatePickerField: React.FC<
                   mode="single"
                   selected={field.value || undefined}
                   onSelect={(date) => {
-                    field.onChange(date);
-                    // Force the Calendar to update its internal state
-                    if (date === undefined) {
-                      form.setValue(fieldName, undefined, {
-                        shouldValidate: true,
-                      });
+                    if (date) {
+                      field.onChange(date.toISOString()); // convert Date -> string
+                    } else {
+                      field.onChange(undefined);
                     }
+                    form.setValue(
+                      fieldName,
+                      date ? date.toISOString() : undefined,
+                      {
+                        shouldValidate: true,
+                      },
+                    );
                   }}
                   disabled={(date) => {
                     if (dateSelectionMode === "any") {

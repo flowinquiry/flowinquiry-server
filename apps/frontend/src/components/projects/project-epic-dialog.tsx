@@ -62,8 +62,8 @@ export function ProjectEpicDialog({
       projectId,
       name: epic?.name || "",
       description: epic?.description || "",
-      startDate: epic?.startDate ? new Date(epic.startDate) : undefined,
-      endDate: epic?.endDate ? new Date(epic.endDate) : undefined,
+      startDate: epic?.startDate,
+      endDate: epic?.endDate,
       totalTickets: epic?.totalTickets || 0,
     },
   });
@@ -76,8 +76,8 @@ export function ProjectEpicDialog({
         projectId,
         name: epic?.name || "",
         description: epic?.description || "",
-        startDate: epic?.startDate ? new Date(epic.startDate) : undefined,
-        endDate: epic?.endDate ? new Date(epic.endDate) : undefined,
+        startDate: epic?.startDate,
+        endDate: epic?.endDate,
         totalTickets: epic?.totalTickets || 0,
       });
     }

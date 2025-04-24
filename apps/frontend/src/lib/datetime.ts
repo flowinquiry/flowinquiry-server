@@ -1,12 +1,20 @@
 import { format, formatDistanceToNow, parseISO } from "date-fns";
 import { toZonedTime } from "date-fns-tz";
 
-export const formatDateTimeDistanceToNow = (date?: Date | null) => {
+export const formatDateTimeDistanceToNow = (
+  date?: Date | string | null,
+): string => {
   if (!date) {
     return "Invalid date";
   }
 
-  return formatDistanceToNow(date, {
+  const parsedDate = typeof date === "string" ? new Date(date) : date;
+
+  if (isNaN(parsedDate.getTime())) {
+    return "Invalid date";
+  }
+
+  return formatDistanceToNow(parsedDate, {
     addSuffix: true,
   });
 };

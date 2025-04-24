@@ -102,6 +102,7 @@
   "devDependencies": {
     "@eslint/compat": "^1.2.8",
     "@eslint/js": "^9.25.1",
+    "@playwright/test": "^1.52.0",
     "@types/node": "^22.14.1",
     "@types/react": "^19.1.2",
     "@types/react-dom": "^19.1.2",

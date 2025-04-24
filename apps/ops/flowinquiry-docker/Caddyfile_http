@@ -1,0 +1,11 @@
+local.flowinquiry.io, localhost {
+  # Reverse proxy API routes (except /api/auth) to back-end
+  @apiNotAuth {
+    path /api/*
+    not path /api/auth/*
+  }
+  reverse_proxy @apiNotAuth back-end:8080
+
+  # Reverse proxy all other requests to the front-end
+  reverse_proxy /* front-end:3000
+}

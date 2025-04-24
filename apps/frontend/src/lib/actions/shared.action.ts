@@ -29,8 +29,26 @@ export const getVersion = async () => {
   return versionCache;
 };
 
+let cachedCheckVersion: VersionCheckResponse | null = null;
+let lastChecked = 0;
+
 export const checkVersion = async (
   setError?: (error: HttpError | string | null) => void,
-) => {
-  return get<VersionCheckResponse>(`/api/versions/check`);
+): Promise<VersionCheckResponse> => {
+  const now = Date.now();
+  const oneHour = 60 * 60 * 1000;
+
+  if (cachedCheckVersion && now - lastChecked < oneHour) {
+    return cachedCheckVersion;
+  }
+
+  try {
+    const result = await get<VersionCheckResponse>(`/api/versions/check`);
+    cachedCheckVersion = result;
+    lastChecked = now;
+    return result;
+  } catch (e) {
+    setError?.(e instanceof Error ? e.message : "Unknown error");
+    throw e;
+  }
 };

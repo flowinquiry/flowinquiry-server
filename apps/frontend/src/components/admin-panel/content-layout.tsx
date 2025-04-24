@@ -1,6 +1,7 @@
 "use client";
 
 import { Navbar } from "@/components/admin-panel/navbar";
+import { VersionUpgradeBanner } from "@/components/dashboard/version-upgrade-banner";
 import { cn } from "@/lib/utils";
 
 interface ContentLayoutProps {
@@ -26,6 +27,7 @@ export function ContentLayout({
 
   return (
     <div className="h-full">
+      <VersionUpgradeBanner />
       <Navbar title={title} />
       <div className={containerClasses}>{children}</div>
     </div>

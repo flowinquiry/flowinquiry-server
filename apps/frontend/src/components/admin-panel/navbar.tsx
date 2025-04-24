@@ -1,7 +1,6 @@
 import { SheetMenu } from "@/components/admin-panel/sheet-menu";
 import { UserNav } from "@/components/admin-panel/user-nav";
 import NotificationsDropdown from "@/components/dashboard/notifications-dropdown";
-import { VersionUpdateBanner } from "@/components/dashboard/system-notification";
 import { UserQuickAction } from "@/components/dashboard/user-quick-actions";
 import LocaleSwitcher from "@/components/shared/locale-switcher";
 
@@ -18,7 +17,6 @@ export function Navbar({ title }: NavbarProps) {
           <h1 className="font-bold">{title}</h1>
         </div>
         <div className="flex flex-1 items-center gap-2 justify-end">
-          <VersionUpdateBanner />
           <UserQuickAction />
           <LocaleSwitcher />
           <NotificationsDropdown />

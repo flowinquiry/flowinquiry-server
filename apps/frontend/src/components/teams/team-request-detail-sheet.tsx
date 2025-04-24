@@ -313,7 +313,7 @@ const TeamRequestDetailSheet: React.FC<RequestDetailsProps> = ({
                       onEdit={() => setIsEditingDescription(true)}
                     >
                       <div
-                        className="prose max-w-none text-gray-700 dark:text-gray-300"
+                        className="prose dark:prose-invert max-w-none"
                         dangerouslySetInnerHTML={{
                           __html: teamRequest.requestDescription!,
                         }}

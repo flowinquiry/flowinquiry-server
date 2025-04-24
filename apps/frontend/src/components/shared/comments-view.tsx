@@ -145,7 +145,7 @@ const CommentsView: React.FC<CommentsViewProps> = ({
                   </div>
 
                   <div
-                    className="prose max-w-none"
+                    className="prose dark:prose-invert max-w-none"
                     dangerouslySetInnerHTML={{
                       __html: comment.content!,
                     }}

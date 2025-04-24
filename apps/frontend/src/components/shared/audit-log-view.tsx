@@ -89,7 +89,7 @@ const AuditLogView: React.FC<AuditLogViewProps> = ({
             <span>made some changes</span>
           </div>
           <div
-            className="prose max-w-none table-consistent-width"
+            className="prose dark:prose-invert max-w-none table-consistent-width"
             dangerouslySetInnerHTML={{
               __html: decodeHTML(activityLog.content!),
             }}

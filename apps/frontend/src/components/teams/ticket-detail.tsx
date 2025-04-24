@@ -412,7 +412,7 @@ const TeamRequestDetailView = ({
                     {t.teams.tickets.form.base("description")}
                   </h3>
                   <div
-                    className="prose max-w-none text-muted-foreground"
+                    className="prose dark:prose-invert max-w-none text-muted-foreground"
                     dangerouslySetInnerHTML={{
                       __html: teamRequest.requestDescription!,
                     }}

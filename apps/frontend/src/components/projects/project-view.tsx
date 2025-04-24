@@ -356,7 +356,7 @@ export const ProjectView = ({ projectId }: { projectId: number }) => {
       // Add current date as modifiedDate
       const taskWithModifiedDate = {
         ...updatedTask,
-        modifiedAt: new Date().toDateString(),
+        modifiedAt: new Date().toISOString(),
       };
 
       // Then call the API to update on the server

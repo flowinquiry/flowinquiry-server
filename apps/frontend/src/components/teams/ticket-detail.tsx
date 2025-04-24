@@ -574,7 +574,7 @@ const TeamRequestDetailView = ({
                         {teamRequest.estimatedCompletionDate
                           ? new Date(
                               teamRequest.estimatedCompletionDate,
-                            ).toDateString()
+                            ).toLocaleDateString()
                           : t.teams.tickets.detail("not_set")}
                       </p>
                     </div>
@@ -587,7 +587,7 @@ const TeamRequestDetailView = ({
                         {teamRequest.actualCompletionDate
                           ? new Date(
                               teamRequest.actualCompletionDate,
-                            ).toDateString()
+                            ).toLocaleDateString()
                           : t.teams.tickets.detail("not_completed")}
                       </p>
                     </div>

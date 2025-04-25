@@ -82,8 +82,8 @@ echo "📥 Downloading necessary files..."
 SCRIPT_FILES=(
     "scripts/all.sh"
     "scripts/shared.sh"
-    "scripts/backend_create_secrets.sh"
-    "scripts/frontend_config.sh"
+    "scripts/backend-env.sh"
+    "scripts/frontend-env.sh"
 )
 
 for file in "${SCRIPT_FILES[@]}"; do
@@ -91,8 +91,7 @@ for file in "${SCRIPT_FILES[@]}"; do
 done
 
 # Download config files
-download_file "$RAW_BASE_URL/Caddyfile_http" "$INSTALL_DIR/Caddyfile_http"
-download_file "$RAW_BASE_URL/Caddyfile_https" "$INSTALL_DIR/Caddyfile_https"
+download_file "$RAW_BASE_URL/Caddyfile" "$INSTALL_DIR/Caddyfile"
 download_file "$RAW_BASE_URL/services_http.yml" "$INSTALL_DIR/services_http.yml"
 download_file "$RAW_BASE_URL/services_https.yml" "$INSTALL_DIR/services_https.yml"
 
@@ -114,39 +113,14 @@ read -p "Do you want to set up FlowInquiry with SSL? (y/n): " use_ssl
 # Determine which configuration to use
 if [[ "$use_ssl" =~ ^[Yy]$ ]]; then
     echo "✅ Setting up with SSL (HTTPS)"
-    cp "$INSTALL_DIR/Caddyfile_https" "$INSTALL_DIR/Caddyfile"
     services_file="$INSTALL_DIR/services_https.yml"
 
     echo "🐳 Starting services with Docker Compose..."
     docker compose -f "$services_file" up
 else
     echo "⚠️ Setting up without SSL (HTTP only)"
-    cp "$INSTALL_DIR/Caddyfile_http" "$INSTALL_DIR/Caddyfile"
-    services_file="$INSTALL_DIR/services_http.yml"
-
-    # Try different methods to get the local IP address
-    if command -v ifconfig >/dev/null 2>&1; then
-        # Use ifconfig if available
-        HOST_IP=$(ifconfig | grep -Eo 'inet (addr:)?([0-9]*\.){3}[0-9]*' | grep -Eo '([0-9]*\.){3}[0-9]*' | grep -v '127.0.0.1' | head -n 1)
-    elif command -v ip >/dev/null 2>&1; then
-        # Use ip command if available
-        HOST_IP=$(ip route get 1 | sed -n 's/^.*src \([0-9.]*\) .*$/\1/p')
-    else
-        # Fallback to a more basic method
-        HOST_IP=$(hostname -i 2>/dev/null || echo "localhost")
-    fi
-
-    # If we couldn't determine the IP, use localhost
-    if [ -z "$HOST_IP" ]; then
-        HOST_IP="localhost"
-        echo "⚠️ Could not determine your local IP address. The server will only be accessible at http://localhost"
-    else
-        echo "🌐 Your server will be accessible in your LAN at: http://$HOST_IP"
-    fi
-
     echo "🐳 Starting services with Docker Compose..."
-    export HOST_IP
-    docker compose -f "$services_file" up
+    sudo docker compose -f "$services_file" up
 fi
 
 echo "✅ FlowInquiry is now running!"

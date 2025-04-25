@@ -38,7 +38,7 @@ update_or_add "POSTGRES_PASSWORD" "$db_password" "$output_file"
 random_string=$(LC_CTYPE=C tr -dc 'a-zA-Z0-9' < /dev/urandom | fold -w 90 | head -n 1)
 
 # Encode the random string in Base64 format
-encoded_string=$(echo -n "$random_string" | base64)
+encoded_string=$(echo -n "$random_string" | base64 | tr -d '\r\n')
 
 update_or_add "JWT_BASE64_SECRET" "$encoded_string" "$output_file"
 

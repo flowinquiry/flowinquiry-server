@@ -28,8 +28,8 @@ if [ -f "$output_file" ]; then
   esac
 else
   # If the file doesn't exist, proceed with running the scripts
-  run_script_stop_when_fail "backend_create_secrets.sh"
+  run_script_stop_when_fail "backend-env.sh"
 fi
 
 # Always run frontend configuration
-run_script_stop_when_fail "frontend_config.sh"
+run_script_stop_when_fail "frontend-env.sh"

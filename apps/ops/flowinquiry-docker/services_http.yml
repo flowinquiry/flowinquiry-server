@@ -19,10 +19,12 @@ services:
     image: flowinquiry/flowinquiry-frontend:latest
     environment:
       - HOSTNAME=0.0.0.0
-      - NEXT_PUBLIC_BASE_URL=https://localhost
+      - NEXT_PUBLIC_BASE_URL=http://${HOST_IP:-localhost}:1234
       - BACK_END_URL=http://back-end:8080  # this value is the internal host of the back-end server that the front-end server side (NextJS server action) communicate with the back-end component
     env_file:
       - ./.frontend.env
+    ports:
+      - '0.0.0.0:1234:3000'
   postgresql:
     image: postgres:16.3
     volumes:
@@ -39,13 +41,3 @@ services:
       retries: 10
     env_file:
       - ./.backend.env
-  caddy:
-    container_name: caddy
-    image: caddy:alpine
-    restart: always
-    environment:
-      - HOST_IP=${HOST_IP:-localhost}
-    volumes:
-      - ./Caddyfile_http:/etc/caddy/Caddyfile
-    ports:
-      - '80:80'

@@ -2,7 +2,7 @@
 name: flowinquiry
 services:
   back-end:
-    image: flowinquiry/flowinquiry-server:latest
+    image: flowinquiry/flowinquiry-server:1.2.0
     volumes:
       - ./volumes/storage/:/storage
     environment:
@@ -16,7 +16,7 @@ services:
     env_file:
       - ./.backend.env
   front-end:
-    image: flowinquiry/flowinquiry-frontend:latest
+    image: flowinquiry/flowinquiry-frontend:1.2.0
     environment:
       - HOSTNAME=0.0.0.0
       - NEXT_PUBLIC_BASE_URL=http://${HOST_IP:-localhost}:1234

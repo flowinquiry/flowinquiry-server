@@ -8,17 +8,17 @@
   ],
   "devDependencies": {
     "@eslint/compat": "^1.2.8",
-    "@eslint/js": "^9.25.0",
+    "@eslint/js": "^9.25.1",
     "@typescript-eslint/parser": "^8.30.1",
     "auth": "^1.2.3",
-    "eslint": "^9.25.0",
+    "eslint": "^9.25.1",
     "eslint-config-next": "^15.3.1",
     "eslint-plugin-react-hooks": "^5.2.0",
     "eslint-plugin-simple-import-sort": "^12.1.1",
     "eslint-plugin-unused-imports": "^4.1.4",
     "globals": "^16.0.0",
     "prettier": "^3.5.3",
-    "turbo": "^2.5.0"
+    "turbo": "^2.5.1"
   },
   "scripts": {
     "dev": "turbo run dev",
@@ -35,7 +35,8 @@
     "docker:up": "docker compose -f docker/services.yml up -d",
     "docker:down": "docker compose -f docker/services.yml down",
     "build:frontend": "turbo run build --filter=flowinquiry-frontend",
-    "build:docs": "turbo run build --filter=flowinquiry-docs"
+    "build:docs": "turbo run build --filter=flowinquiry-docs",
+    "docker:deploy": "sh -c './gradlew :apps:backend:server:jib -Djib.dockerClient.executable=/usr/local/bin/docker && tools/build-frontend-image.sh $TAG'"
   },
   "packageManager": "pnpm@10.6.5+sha512.cdf928fca20832cd59ec53826492b7dc25dc524d4370b6b4adbf65803d32efaa6c1c88147c0ae4e8d579a6c9eec715757b50d4fa35eea179d868eada4ed043af"
 }

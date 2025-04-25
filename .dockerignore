@@ -1,5 +1,5 @@
 Dockerfile
-.dockerignore
+.gitignore
 .idea
 assets
 node_modules
@@ -7,3 +7,4 @@ npm-debug.log
 README.md
 .next
 .git
+*.log

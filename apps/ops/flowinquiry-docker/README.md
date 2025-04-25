@@ -24,10 +24,10 @@ Fill all inputs
 Running frontend_config.sh...
 Environment variables have been written to .frontend.env
 frontend_config.sh succeeded.
-Running backend_create_secrets.sh...
+Running backend-env.sh...
 Enter your database password: 
 Sensitive data has been written to ./.backend.env with restricted permissions.
-backend_create_secrets.sh succeeded.
+backend-env.sh succeeded.
 Configuration has been saved to .env.local
 ```
 

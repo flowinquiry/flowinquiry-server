@@ -16,7 +16,7 @@ if [ -f "$output_file" ]; then
     y|Y )
       echo "Overwriting the existing file..."
       : > "$output_file"  # Clear the file
-      run_script_stop_when_fail "backend_create_secrets.sh"
+      run_script_stop_when_fail "backend-env.sh"
       ;;
     n|N )
       echo "Keeping the existing file. Skipping backend configuration."

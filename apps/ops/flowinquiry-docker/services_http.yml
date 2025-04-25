@@ -43,7 +43,9 @@ services:
     container_name: caddy
     image: caddy:alpine
     restart: always
+    environment:
+      - HOST_IP=${HOST_IP:-localhost}
     volumes:
       - ./Caddyfile_http:/etc/caddy/Caddyfile
     ports:
-      - '443:443'
+      - '80:80'

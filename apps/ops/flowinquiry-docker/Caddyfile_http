@@ -1,4 +1,4 @@
-local.flowinquiry.io, localhost {
+{$HOST_IP}, localhost {
   # Reverse proxy API routes (except /api/auth) to back-end
   @apiNotAuth {
     path /api/*

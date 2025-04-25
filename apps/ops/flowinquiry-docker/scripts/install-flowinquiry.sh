@@ -2,6 +2,35 @@
 
 set -e  # Exit immediately if any command fails
 
+# Function to check if Docker is installed and running
+check_docker() {
+    echo "🔍 Checking Docker installation..."
+
+    if ! command -v docker >/dev/null 2>&1; then
+        echo "❌ Docker is not installed. Please install Docker before running this script."
+        echo "📚 Visit https://docs.docker.com/get-docker/ for installation instructions."
+        exit 1
+    fi
+
+    if ! docker info >/dev/null 2>&1; then
+        echo "❌ Docker daemon is not running or you don't have permission to use Docker."
+        echo "🔄 Please start Docker service or run this script with appropriate permissions."
+        exit 1
+    fi
+
+    # Check for Docker Compose V2
+    if ! docker compose version >/dev/null 2>&1; then
+        echo "❌ Docker Compose V2 is not available."
+        echo "📚 Please ensure you have Docker Compose V2 installed (included with recent Docker Desktop)."
+        exit 1
+    fi
+
+    echo "✅ Docker and Docker Compose are properly installed and running."
+}
+
+# Run Docker check at the beginning
+check_docker
+
 # Define the base URL of the raw GitHub content
 RAW_BASE_URL="https://raw.githubusercontent.com/flowinquiry/flowinquiry/refs/heads/main/apps/ops/flowinquiry-docker"
 
@@ -71,11 +100,10 @@ echo "🔧 Making scripts executable..."
 chmod +x "$SCRIPTS_DIR/"*.sh
 
 echo "🚀 Running setup scripts..."
-# Change to the scripts directory and execute all.sh
-(
-    cd "$SCRIPTS_DIR"
-    bash all.sh
-)
+# Run all.sh directly from the current shell to properly handle interactive prompts
+cd "$SCRIPTS_DIR"
+bash all.sh
+cd - > /dev/null  # Return to previous directory silently
 
 # Ask user about SSL configuration
 echo "🔒 SSL Configuration"
@@ -83,18 +111,42 @@ echo "SSL is recommended when installing FlowInquiry for production use or when 
 echo "For local testing purposes, you may not need SSL."
 read -p "Do you want to set up FlowInquiry with SSL? (y/n): " use_ssl
 
-# Create a symbolic link to the chosen configuration file
+# Determine which configuration to use
 if [[ "$use_ssl" =~ ^[Yy]$ ]]; then
     echo "✅ Setting up with SSL (HTTPS)"
     cp "$INSTALL_DIR/Caddyfile_https" "$INSTALL_DIR/Caddyfile"
     services_file="$INSTALL_DIR/services_https.yml"
+
+    echo "🐳 Starting services with Docker Compose..."
+    docker compose -f "$services_file" up
 else
     echo "⚠️ Setting up without SSL (HTTP only)"
     cp "$INSTALL_DIR/Caddyfile_http" "$INSTALL_DIR/Caddyfile"
     services_file="$INSTALL_DIR/services_http.yml"
-fi
 
-echo "🐳 Starting services with Docker Compose..."
-docker compose -f "$services_file" up
+    # Try different methods to get the local IP address
+    if command -v ifconfig >/dev/null 2>&1; then
+        # Use ifconfig if available
+        HOST_IP=$(ifconfig | grep -Eo 'inet (addr:)?([0-9]*\.){3}[0-9]*' | grep -Eo '([0-9]*\.){3}[0-9]*' | grep -v '127.0.0.1' | head -n 1)
+    elif command -v ip >/dev/null 2>&1; then
+        # Use ip command if available
+        HOST_IP=$(ip route get 1 | sed -n 's/^.*src \([0-9.]*\) .*$/\1/p')
+    else
+        # Fallback to a more basic method
+        HOST_IP=$(hostname -i 2>/dev/null || echo "localhost")
+    fi
+
+    # If we couldn't determine the IP, use localhost
+    if [ -z "$HOST_IP" ]; then
+        HOST_IP="localhost"
+        echo "⚠️ Could not determine your local IP address. The server will only be accessible at http://localhost"
+    else
+        echo "🌐 Your server will be accessible in your LAN at: http://$HOST_IP"
+    fi
+
+    echo "🐳 Starting services with Docker Compose..."
+    export HOST_IP
+    docker compose -f "$services_file" up
+fi
 
 echo "✅ FlowInquiry is now running!"

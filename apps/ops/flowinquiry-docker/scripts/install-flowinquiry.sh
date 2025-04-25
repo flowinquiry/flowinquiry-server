@@ -119,8 +119,9 @@ if [[ "$use_ssl" =~ ^[Yy]$ ]]; then
     docker compose -f "$services_file" up
 else
     echo "⚠️ Setting up without SSL (HTTP only)"
+    services_file="$INSTALL_DIR/services_http.yml"
     echo "🐳 Starting services with Docker Compose..."
-    sudo docker compose -f "$services_file" up
+    docker compose -f "$services_file" up
 fi
 
 echo "✅ FlowInquiry is now running!"

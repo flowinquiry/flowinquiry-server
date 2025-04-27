@@ -18,14 +18,11 @@ services:
     image: flowinquiry/flowinquiry-frontend:1.2.0
     environment:
       - HOSTNAME=0.0.0.0
-      # For browser access
-      - NEXT_PUBLIC_BASE_URL=http://localhost:1234
-      # This is the critical variable used in next.config.mjs
+      # This should use host IP instead of localhost for LAN access
+      - NEXT_PUBLIC_BASE_URL=http://${HOST_IP:-localhost}:1234
       - BACK_END_URL=http://back-end:8080
     env_file:
       - ./.frontend.env
-    ports:
-      - '0.0.0.0:1234:3000'
   postgresql:
     image: postgres:16.3
     volumes:
@@ -42,3 +39,13 @@ services:
       retries: 10
     env_file:
       - ./.backend.env
+  caddy:
+    container_name: caddy
+    image: caddy:alpine
+    restart: always
+    volumes:
+      - ./Caddyfile_http:/etc/caddy/Caddyfile
+    ports:
+      # Explicitly bind to localhost and all interfaces
+      - "127.0.0.1:1234:80"
+      - "0.0.0.0:1234:80"

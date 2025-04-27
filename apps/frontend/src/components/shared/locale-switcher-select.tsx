@@ -31,9 +31,9 @@ export default function LocaleSwitcherSelect({
 
   function onChange(value: string) {
     const locale = value as Locale;
-    startTransition(() => {
-      setLocale(locale as string, setError);
-      setUserLocale(locale);
+    startTransition(async () => {
+      await setLocale(locale as string, setError);
+      await setUserLocale(locale);
     });
   }
 

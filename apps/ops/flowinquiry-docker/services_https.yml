@@ -44,7 +44,7 @@ services:
     image: caddy:alpine
     restart: always
     volumes:
-      - ./Caddyfile:/etc/caddy/Caddyfile
+      - ./Caddyfile_https:/etc/caddy/Caddyfile
       - ./caddy/certificate-authority:/data/caddy/pki/authorities/local
     ports:
       - '443:443'

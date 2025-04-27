@@ -1,0 +1,27 @@
+{
+    # Basic global configuration
+    admin off
+    auto_https off
+    http_port 80
+}
+
+# Listen on all interfaces to make it accessible on LAN
+:80 {
+    # Match and reverse proxy for API routes (except /api/auth)
+    @apiNotAuth {
+        path /api/*
+        not path /api/auth/*
+    }
+
+    # Send API requests to the backend
+    reverse_proxy @apiNotAuth back-end:8080
+
+    # All other requests go to the frontend
+    reverse_proxy front-end:3000
+
+    # Optional: Add logging
+    log {
+        output stdout
+        format json
+    }
+}

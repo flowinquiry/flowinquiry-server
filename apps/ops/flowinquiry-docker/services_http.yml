@@ -1,4 +1,3 @@
-# This configuration is intended for development purpose, it's **your** responsibility to harden it for production
 name: flowinquiry
 services:
   back-end:
@@ -19,8 +18,10 @@ services:
     image: flowinquiry/flowinquiry-frontend:1.2.0
     environment:
       - HOSTNAME=0.0.0.0
-      - NEXT_PUBLIC_BASE_URL=http://${HOST_IP:-localhost}:1234
-      - BACK_END_URL=http://back-end:8080  # this value is the internal host of the back-end server that the front-end server side (NextJS server action) communicate with the back-end component
+      # For browser access
+      - NEXT_PUBLIC_BASE_URL=http://localhost:1234
+      # This is the critical variable used in next.config.mjs
+      - BACK_END_URL=http://back-end:8080
     env_file:
       - ./.frontend.env
     ports:

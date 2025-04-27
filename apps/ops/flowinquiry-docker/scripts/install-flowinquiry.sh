@@ -121,6 +121,11 @@ else
     echo "⚠️ Setting up without SSL (HTTP only)"
     services_file="$INSTALL_DIR/services_http.yml"
     echo "🐳 Starting services with Docker Compose..."
+    # Get the local IP address
+    export HOST_IP=$(hostname -I | awk '{print $1}')
+
+    # Print the IP for confirmation
+    echo "Using host IP address: $HOST_IP"
     docker compose -f "$services_file" up
 fi
 

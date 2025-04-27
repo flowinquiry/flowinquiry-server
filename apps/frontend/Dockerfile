@@ -46,10 +46,15 @@ ENV NEXT_TELEMETRY_DISABLED=1
 RUN addgroup --system --gid 1001 nodejs
 RUN adduser --system --uid 1001 nextjs
 
-# Copy all necessary files
-COPY --from=builder /app/apps/frontend/public ./public
+# Copy the standalone output
 COPY --from=builder /app/apps/frontend/.next/standalone/ ./
-COPY --from=builder /app/apps/frontend/.next/static ./.next/static
+
+# Copy public and static files
+COPY --from=builder /app/apps/frontend/public ./apps/frontend/public
+COPY --from=builder /app/apps/frontend/.next/static ./apps/frontend/.next/static
+
+# Set proper permissions
+RUN chown -R nextjs:nodejs ./apps/frontend/.next
 
 USER nextjs
 
@@ -58,5 +63,5 @@ EXPOSE 3000
 ENV PORT=3000
 ENV HOSTNAME="0.0.0.0"
 
-# Based on your finding, we know the server.js is at /app/apps/frontend/server.js
+# Run the server
 CMD ["node", "apps/frontend/server.js"]

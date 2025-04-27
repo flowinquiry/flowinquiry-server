@@ -28,7 +28,7 @@
     "build": "turbo run build",
     "lint": "turbo run lint",
     "test": "turbo run test",
-    "postinstall": "tools/githooks/setup-pre-commit.sh",
+    "postinstall": "if [ \"$SKIP_POSTINSTALL\" != \"1\" ]; then tools/githooks/setup-pre-commit.sh; fi",
     "check-env": "tools/check-env.sh",
     "setup:backend": "tools/setup/backend-env.sh",
     "setup:frontend": "tools/setup/frontend-env.sh",

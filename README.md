@@ -54,9 +54,6 @@ Manage service desk tickets like access requests or software issues with automat
 * Incident & On-Call Management
 Track incidents with SLAs, escalation rules, and accountability—ideal for rotating shifts and critical operations.
 
-* CRM Case Handling
-Customize workflows for handling customer requests, complaints, or inquiries to improve resolution time and satisfaction.
-
 ## ⚙️ Key Features of FlowInquiry
 
 * 📂 Projects – Organize tasks using a Kanban board, grouped by iterations and epics
@@ -115,6 +112,93 @@ To get started with setting up the frontend and backend locally, follow the offi
 * [Documentation Setup Guide](https://docs.flowinquiry.io/developer_guides/documentation)
 
 These guides provide step-by-step instructions to help you configure your environment, install dependencies, and run the services in development mode.
+
+## 🚀 Quick Launch
+
+Have Docker installed? Get FlowInquiry running in seconds!
+
+```
+# Using wget
+wget -qO- https://raw.githubusercontent.com/flowinquiry/flowinquiry-ops/refs/heads/main/flowinquiry-docker/scripts/install-flowinquiry.sh | bash
+
+# Or using curl
+curl -sSL https://raw.githubusercontent.com/flowinquiry/flowinquiry-ops/refs/heads/main/flowinquiry-docker/scripts/install-flowinquiry.sh | bash
+```
+This will:
+
+* Download the necessary setup scripts directly from FlowInquiry's GitHub repository
+
+* Prompt you for basic inputs (such as whether to enable SSL)
+
+* Automatically configure and launch FlowInquiry
+
+### 🖥️ Example Console Output After Installation
+
+After running the installation script, you will see output similar to the following:
+
+```bash
+➜  flowinquiry-docker git:(main) ✗ install-flowinquiry.sh
+🔍 Checking Docker installation...
+✅ Docker and Docker Compose are properly installed and running.
+📥 Checking installation directory...
+✅ $USER-HOME/flowinquiry-docker already exists, preserving existing files.
+🗑️ Cleaning up scripts directory...
+📥 Downloading necessary files...
+✅ File successfully downloaded to $USER-HOME/flowinquiry-docker/scripts/all.sh using curl
+✅ File successfully downloaded to $USER-HOME/flowinquiry-docker/scripts/shared.sh using curl
+✅ File successfully downloaded to $USER-HOME/flowinquiry-docker/scripts/backend-env.sh using curl
+✅ File successfully downloaded to $USER-HOME/flowinquiry-docker/scripts/frontend-env.sh using curl
+✅ File successfully downloaded to $USER-HOME/flowinquiry-docker/Caddyfile_http using curl
+✅ File successfully downloaded to $USER-HOME/flowinquiry-docker/Caddyfile_https using curl
+✅ File successfully downloaded to $USER-HOME/flowinquiry-docker/services_http.yml using curl
+✅ File successfully downloaded to $USER-HOME/flowinquiry-docker/services_https.yml using curl
+🔧 Making scripts executable...
+🚀 Running setup scripts...
+frontend-env.sh succeeded.
+🔒 SSL Configuration
+SSL is recommended when installing FlowInquiry for production use or when accessing from anywhere.
+For local testing purposes, you may not need SSL.
+Do you want to set up FlowInquiry with SSL? (y/n): n
+⚠️ Setting up without SSL (HTTP only)
+🐳 Starting services with Docker Compose...
+Using host IP address: 192.168.0.78
+Your service will be available at: http://192.168.0.78:1234
+Using host IP address: 192.168.0.78
+[+] Running 4/4
+ ✔ Container flowinquiry-front-end-1                                                                                                                       Recreated                                                                                                                                                                                                                                                                                                      0.0s
+ ✔ Container flowinquiry-back-end-1                                                                                                                        Recreated                                                                                                                                                                                                                                                                                                      0.1s
+ ✔ Container flowinquiry-postgresql-1                                                                                                                      Recreated                                                                                                                                                                                                                                                                                                      0.0s
+ ! back-end The requested image's platform (linux/amd64) does not match the detected host platform (linux/arm64/v8) and no specific platform was requested                                                                                                                                                                                                                                                                                                                0.0s
+Attaching to back-end-1, front-end-1, postgresql-1
+back-end-1    | The application will start in 0s...
+front-end-1   |    ▲ Next.js 15.3.1
+front-end-1   |    - Local:        http://localhost:3000
+front-end-1   |    - Network:      http://0.0.0.0:3000
+front-end-1   |
+front-end-1   |  ✓ Starting...
+front-end-1   |  ✓ Ready in 34ms
+
+back-end-1    | 2025-04-28T00:59:44.011Z  INFO 1 --- [  restartedMain] io.flowinquiry.FlowInquiryApp.logApplicationStartup:120 : ----------------------------------------------------------
+back-end-1    | 2025-04-28T00:59:44.011Z  INFO 1 --- [  restartedMain] io.flowinquiry.FlowInquiryApp.logApplicationStartup:121 :        Application 'FlowInquiry' is running! Access URLs:
+back-end-1    | 2025-04-28T00:59:44.011Z  INFO 1 --- [  restartedMain] io.flowinquiry.FlowInquiryApp.logApplicationStartup:122 :        Local:          http://localhost:8080/
+back-end-1    | 2025-04-28T00:59:44.011Z  INFO 1 --- [  restartedMain] io.flowinquiry.FlowInquiryApp.logApplicationStartup:123 :        External:       http://172.18.0.4:8080/
+back-end-1    | 2025-04-28T00:59:44.012Z  INFO 1 --- [  restartedMain] io.flowinquiry.FlowInquiryApp.logApplicationStartup:124 :        Profile(s):     prod
+```
+
+### 🌐 Accessing FlowInquiry
+1. Open your browser and go to: `http://<LAN_IP>:1234`
+
+2. Find your LAN IP address in the installation logs. Look for a message like:
+```
+Using host IP address: 192.168.0.78
+```
+
+3. Log in with the default administrator credentials:
+- **Username:** `admin@flowinquiry.io`
+- **Password:** `admin`
+
+➡️ For **testing purposes**, it is safe to select **`n`** (no SSL) and run FlowInquiry over plain HTTP within your local network.  
+➡️ For **production deployments**, it is strongly recommended to select **`y`** and configure SSL for secure access.
 
 ## Deploy FlowInquiry
 To ensure a smooth deployment process, we provide detailed guidelines for deploying FlowInquiry in various environments. These instructions cover setup steps, configuration details, and best practices for deploying the service effectively. You can find the deployment documentation [here](https://docs.flowinquiry.io/developer_guides/deployment)

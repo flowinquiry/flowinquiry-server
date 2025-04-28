@@ -109,9 +109,10 @@ for file in "${SCRIPT_FILES[@]}"; do
 done
 
 # Download config files
-#download_file "$RAW_BASE_URL/Caddyfile" "$INSTALL_DIR/Caddyfile"
-#download_file "$RAW_BASE_URL/services_http.yml" "$INSTALL_DIR/services_http.yml"
-#download_file "$RAW_BASE_URL/services_https.yml" "$INSTALL_DIR/services_https.yml"
+download_file "$RAW_BASE_URL/Caddyfile_http" "$INSTALL_DIR/Caddyfile_http"
+download_file "$RAW_BASE_URL/Caddyfile_https" "$INSTALL_DIR/Caddyfile_https"
+download_file "$RAW_BASE_URL/services_http.yml" "$INSTALL_DIR/services_http.yml"
+download_file "$RAW_BASE_URL/services_https.yml" "$INSTALL_DIR/services_https.yml"
 
 echo "🔧 Making scripts executable..."
 chmod +x "$SCRIPTS_DIR/"*.sh

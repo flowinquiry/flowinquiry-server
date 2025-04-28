@@ -175,7 +175,7 @@ export const TeamForm = ({ teamId }: { teamId: number | undefined }) => {
                     setSelectedFile={setSelectedFile}
                   />
                 ) : (
-                  <>
+                  <div>
                     <input {...getInputProps()} />
                     <TeamAvatar
                       {...getRootProps()}
@@ -183,7 +183,7 @@ export const TeamForm = ({ teamId }: { teamId: number | undefined }) => {
                       size="w-36 h-36"
                       className="cursor-pointer ring-offset-2 ring-2 ring-slate-200"
                     />
-                  </>
+                  </div>
                 )}
               </TooltipTrigger>
               <TooltipContent>

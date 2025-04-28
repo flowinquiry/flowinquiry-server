@@ -93,15 +93,20 @@ const TeamWorkflowDetailView = ({ workflowId }: { workflowId: number }) => {
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-4">
               <Tooltip>
-                <TooltipTrigger>
+                <TooltipTrigger asChild>
                   <TeamAvatar imageUrl={team.logoUrl} size="w-20 h-20" />
                 </TooltipTrigger>
-                <TooltipContent>
-                  <div className="text-left">
+                <TooltipContent className="max-w-xs whitespace-pre-wrap break-words">
+                  <div className="text-left space-y-1">
                     <p className="font-bold">{team.name}</p>
                     <p className="text-sm text-gray-500">
                       {team.slogan ?? t.teams.common("default_slogan")}
                     </p>
+                    {team.description && (
+                      <p className="text-sm text-gray-500">
+                        {team.description}
+                      </p>
+                    )}
                   </div>
                 </TooltipContent>
               </Tooltip>

@@ -68,12 +68,17 @@ const TeamWorkflowNew = () => {
                 <TooltipTrigger>
                   <TeamAvatar imageUrl={team.logoUrl} size="w-20 h-20" />
                 </TooltipTrigger>
-                <TooltipContent>
+                <TooltipContent className="max-w-xs whitespace-pre-wrap break-words">
                   <div className="text-left">
                     <p className="font-bold">{team.name}</p>
                     <p className="text-sm text-gray-500">
                       {team.slogan ?? t.teams.common("default_slogan")}
                     </p>
+                    {team.description && (
+                      <p className="text-sm text-gray-500">
+                        {team.description}
+                      </p>
+                    )}
                   </div>
                 </TooltipContent>
               </Tooltip>

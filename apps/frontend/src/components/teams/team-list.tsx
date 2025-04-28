@@ -193,58 +193,89 @@ export const TeamList = () => {
       ) : (
         <>
           <div className="flex flex-row flex-wrap gap-4">
-            {teams.map((team) => (
-              <div
-                key={team.id}
-                className="relative w-[24rem] flex flex-row gap-4 border rounded-2xl"
-              >
-                <div className="px-4 py-4">
-                  <TooltipProvider>
-                    <Tooltip>
-                      <TooltipTrigger asChild>
-                        <TeamAvatar
-                          size="w-24 h-24"
-                          className="cursor-pointer"
-                          imageUrl={team.logoUrl}
-                        />
-                      </TooltipTrigger>
-                      <TooltipContent>{team.slogan}</TooltipContent>
-                    </Tooltip>
-                  </TooltipProvider>
+            {teams.map((team) => {
+              const shortDescription =
+                team.description && team.description.length > 50
+                  ? team.description.substring(0, 50) + "..."
+                  : team.description;
+
+              return (
+                <div
+                  key={team.id}
+                  className="relative w-[24rem] flex flex-row gap-4 border rounded-2xl"
+                >
+                  <div className="px-4 py-4">
+                    <TooltipProvider>
+                      <Tooltip>
+                        <TooltipTrigger>
+                          <TeamAvatar
+                            imageUrl={team.logoUrl}
+                            size="w-20 h-20"
+                          />
+                        </TooltipTrigger>
+                        <TooltipContent className="max-w-xs whitespace-pre-wrap break-words">
+                          <div className="text-left">
+                            <p className="font-bold">{team.name}</p>
+                            <p className="text-sm text-gray-500">
+                              {team.slogan ?? t.teams.common("default_slogan")}
+                            </p>
+                            {team.description && (
+                              <p className="text-sm text-gray-500">
+                                {team.description}
+                              </p>
+                            )}
+                          </div>
+                        </TooltipContent>
+                      </Tooltip>
+                    </TooltipProvider>
+                  </div>
+                  <div>
+                    <Button variant="link" asChild className="px-0">
+                      <Link href={`/portal/teams/${obfuscate(team.id)}`}>
+                        {team.name} ({team.usersCount})
+                      </Link>
+                    </Button>
+
+                    <TooltipProvider>
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <div className="mt-1 text-muted-foreground cursor-pointer">
+                            {shortDescription}
+                          </div>
+                        </TooltipTrigger>
+                        <TooltipContent className="max-w-xs whitespace-pre-wrap break-words">
+                          {team.description}
+                        </TooltipContent>
+                      </Tooltip>
+                    </TooltipProvider>
+                  </div>
+
+                  {PermissionUtils.canWrite(permissionLevel) && (
+                    <DropdownMenu>
+                      <DropdownMenuTrigger asChild>
+                        <Ellipsis className="cursor-pointer absolute top-2 right-2 text-gray-400" />
+                      </DropdownMenuTrigger>
+                      <DropdownMenuContent className="w-[14rem]">
+                        <DropdownMenuItem
+                          onClick={() =>
+                            router.push(
+                              `/portal/teams/${obfuscate(team.id)}/edit`,
+                            )
+                          }
+                        >
+                          <Pencil /> {t.common.buttons("edit")}
+                        </DropdownMenuItem>
+                        <DropdownMenuItem
+                          onClick={() => showDeleteTeamConfirmationDialog(team)}
+                        >
+                          <Trash /> {t.common.buttons("delete")}
+                        </DropdownMenuItem>
+                      </DropdownMenuContent>
+                    </DropdownMenu>
+                  )}
                 </div>
-                <div>
-                  <Button variant="link" asChild className="px-0">
-                    <Link href={`/portal/teams/${obfuscate(team.id)}`}>
-                      {team.name} ({team.usersCount})
-                    </Link>
-                  </Button>
-                  <div>{team.description}</div>
-                </div>
-                {PermissionUtils.canWrite(permissionLevel) && (
-                  <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                      <Ellipsis className="cursor-pointer absolute top-2 right-2 text-gray-400" />
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent className="w-[14rem]">
-                      <DropdownMenuItem
-                        onClick={() =>
-                          router.push(
-                            `/portal/teams/${obfuscate(team.id)}/edit`,
-                          )
-                        }
-                      >
-                        <Pencil /> {t.common.buttons("edit")}
-                      </DropdownMenuItem>
-                      <DropdownMenuItem
-                        onClick={() => showDeleteTeamConfirmationDialog(team)}
-                      >
-                        <Trash /> {t.common.buttons("delete")}
-                      </DropdownMenuItem>
-                    </DropdownMenuContent>
-                  </DropdownMenu>
-                )}
-              </div>
-            ))}
+              );
+            })}
           </div>
           <PaginationExt
             currentPage={currentPage}

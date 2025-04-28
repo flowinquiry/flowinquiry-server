@@ -177,8 +177,17 @@ const TaskEditorSheet = ({
               onSubmit={form.handleSubmit(onSubmit)}
               className="flex flex-col h-full"
             >
-              {/* Scrollable form content */}
-              <div className="flex-1 overflow-y-auto p-6 pb-6">
+              {/* Scrollable form content - fixed height calculations */}
+              <div
+                className="flex-1 overflow-y-auto p-6 pb-6"
+                style={{
+                  maxHeight:
+                    "calc(100vh - 11rem)" /* Adjusted to account for header and footer */,
+                  overflowY: "auto",
+                  display:
+                    "block" /* Ensures the content takes the full width */,
+                }}
+              >
                 <div className="space-y-6">
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                     {/* ✅ Title Field */}
@@ -297,19 +306,25 @@ const TaskEditorSheet = ({
                       <FormMessage />
                     </FormItem>
 
-                    <IterationFormField
-                      form={form}
-                      projectId={projectId}
-                      name="iterationId"
-                      label={t.teams.tickets.form.base("iteration")}
-                    />
+                    {/* Iteration field */}
+                    <div className="col-span-1">
+                      <IterationFormField
+                        form={form}
+                        projectId={projectId}
+                        name="iterationId"
+                        label={t.teams.tickets.form.base("iteration")}
+                      />
+                    </div>
 
-                    <EpicFormField
-                      form={form}
-                      projectId={projectId}
-                      name="epicId"
-                      label={t.teams.tickets.form.base("epic")}
-                    />
+                    {/* Epic field */}
+                    <div className="col-span-1">
+                      <EpicFormField
+                        form={form}
+                        projectId={projectId}
+                        name="epicId"
+                        label={t.teams.tickets.form.base("epic")}
+                      />
+                    </div>
                   </div>
                 </div>
               </div>

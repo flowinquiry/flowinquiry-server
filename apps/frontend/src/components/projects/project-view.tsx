@@ -591,11 +591,11 @@ export default function ProjectView({ projectId }: { projectId: number }) {
               )}
             </div>
 
-            <Breadcrumbs items={breadcrumbItems} className="mb-2" />
+            <Breadcrumbs items={breadcrumbItems} />
 
             {/* Collapsible content */}
             {!isHeaderCollapsed && (
-              <>
+              <div className="mt-4">
                 <div
                   className="text-gray-600 dark:text-gray-300 text-sm mb-4"
                   dangerouslySetInnerHTML={{
@@ -646,7 +646,7 @@ export default function ProjectView({ projectId }: { projectId: number }) {
                     </div>
                   )}
                 </div>
-              </>
+              </div>
             )}
           </div>
 

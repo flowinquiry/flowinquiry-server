@@ -45,6 +45,17 @@ import { WorkflowStateDTO } from "@/types/workflows";
 
 export type TaskBoard = Record<string, TeamRequestDTO[]>;
 
+interface TaskEditorSheetProps {
+  isOpen: boolean;
+  setIsOpen: (open: boolean) => void;
+  selectedWorkflowState: WorkflowStateDTO | null;
+  setTasks: React.Dispatch<React.SetStateAction<TaskBoard>>;
+  projectId: number;
+  projectWorkflowId: number;
+  teamId: number;
+  onTaskCreated?: () => Promise<void>; // New callback for triggering data refresh
+}
+
 const TaskEditorSheet = ({
   isOpen,
   setIsOpen,
@@ -53,15 +64,8 @@ const TaskEditorSheet = ({
   projectId,
   projectWorkflowId,
   teamId,
-}: {
-  isOpen: boolean;
-  setIsOpen: (open: boolean) => void;
-  selectedWorkflowState: WorkflowStateDTO | null;
-  setTasks: React.Dispatch<React.SetStateAction<TaskBoard>>;
-  projectId: number;
-  projectWorkflowId: number;
-  teamId: number;
-}) => {
+  onTaskCreated,
+}: TaskEditorSheetProps) => {
   const { setError } = useError();
   const [files, setFiles] = useState<File[]>([]);
   const { data: session } = useSession();
@@ -123,36 +127,38 @@ const TaskEditorSheet = ({
 
   // ✅ Handle Form Submission
   const onSubmit = async (data: TeamRequestDTO) => {
-    // Create the task with the state name included
-    const taskWithStateName = {
-      ...data,
-      currentStateName: currentStateName,
-    };
+    try {
+      // Create the task with the state name included
+      const taskWithStateName = {
+        ...data,
+        currentStateName: currentStateName,
+      };
 
-    // Create the new task
-    const newTask = await createTeamRequest(taskWithStateName, setError);
-    if (newTask?.id && files.length > 0) {
-      await uploadAttachmentsForEntity("Team_Request", newTask.id, files);
+      // Create the new task on the server
+      const newTask = await createTeamRequest(taskWithStateName, setError);
+
+      if (!newTask) {
+        throw new Error("Failed to create task");
+      }
+
+      // Handle file uploads if needed
+      if (newTask.id && files.length > 0) {
+        await uploadAttachmentsForEntity("Team_Request", newTask.id, files);
+      }
+
+      // Reset Form & Close Sheet
+      form.reset();
+      setFiles([]);
+      setIsOpen(false);
+
+      // Instead of manually updating state,
+      // call the onTaskCreated callback to refresh all project data
+      if (onTaskCreated) {
+        await onTaskCreated();
+      }
+    } catch (error) {
+      console.error("Error creating task:", error);
     }
-
-    // Get the final state ID from the submitted form data
-    const finalStateId = data.currentStateId?.toString();
-
-    if (finalStateId) {
-      // Update Tasks State using the final state ID
-      setTasks((prev) => ({
-        ...prev,
-        [finalStateId]: [
-          ...(prev[finalStateId] || []),
-          // Make sure the task in the UI has the state name
-          { ...newTask, currentStateName },
-        ],
-      }));
-    }
-
-    // Reset Form & Close Sheet
-    form.reset();
-    setIsOpen(false);
   };
 
   return (

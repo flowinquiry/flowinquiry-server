@@ -948,6 +948,7 @@ export default function ProjectView({ projectId }: { projectId: number }) {
         teamId={project?.teamId!}
         projectId={projectId}
         projectWorkflowId={workflow?.id!}
+        onTaskCreated={fetchProjectData} // Pass the fetchProjectData function as a callback
       />
       <TaskDetailSheet
         isOpen={isTaskDetailOpen}

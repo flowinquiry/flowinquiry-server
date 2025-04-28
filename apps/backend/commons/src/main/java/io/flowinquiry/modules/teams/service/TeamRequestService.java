@@ -278,7 +278,7 @@ public class TeamRequestService {
                         workflowId, sourceStateId);
 
         if (transitions.isEmpty()) {
-            throw new IllegalStateException("No transitions defined for the current state.");
+            return null;
         }
 
         // Find the transition with the lowest SLA duration

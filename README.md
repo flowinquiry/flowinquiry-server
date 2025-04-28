@@ -119,10 +119,10 @@ Have Docker installed? Get FlowInquiry running in seconds!
 
 ```
 # Using wget
-wget -qO- https://raw.githubusercontent.com/flowinquiry/flowinquiry-ops/refs/heads/main/flowinquiry-docker/scripts/install-flowinquiry.sh | bash
+wget -O install-flowinquiry.sh https://raw.githubusercontent.com/flowinquiry/flowinquiry/refs/heads/main/apps/ops/flowinquiry-docker/scripts/install-flowinquiry.sh && chmod +x install-flowinquiry.sh && ./install-flowinquiry.sh
 
 # Or using curl
-curl -sSL https://raw.githubusercontent.com/flowinquiry/flowinquiry-ops/refs/heads/main/flowinquiry-docker/scripts/install-flowinquiry.sh | bash
+curl -sSL https://raw.githubusercontent.com/flowinquiry/flowinquiry/refs/heads/main/apps/ops/flowinquiry-docker/scripts/install-flowinquiry.sh -o install-flowinquiry.sh && chmod +x install-flowinquiry.sh && ./install-flowinquiry.sh
 ```
 This will:
 

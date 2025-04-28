@@ -47,5 +47,4 @@ services:
       - ./Caddyfile_http:/etc/caddy/Caddyfile
     ports:
       # Explicitly bind to localhost and all interfaces
-      - "127.0.0.1:1234:80"
-      - "0.0.0.0:1234:80"
+      - "1234:80"

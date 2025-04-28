@@ -7,7 +7,7 @@ import {
   DragOverlay,
   DragStartEvent,
 } from "@dnd-kit/core";
-import { ChevronDown, Edit, Plus } from "lucide-react";
+import { ChevronDown, ChevronUp, Edit, Plus } from "lucide-react";
 import React, { useCallback, useEffect, useState } from "react";
 
 import { Breadcrumbs } from "@/components/breadcrumbs";
@@ -60,7 +60,7 @@ import { WorkflowDetailDTO, WorkflowStateDTO } from "@/types/workflows";
 // Function to generate a constant background color for workflow states.
 const getColumnColor = (_: number): string => "bg-[hsl(var(--card))]";
 
-export const ProjectView = ({ projectId }: { projectId: number }) => {
+export default function ProjectView({ projectId }: { projectId: number }) {
   const team = useTeam();
   const permissionLevel = usePagePermission();
   const teamRole = useUserTeamRole().role;
@@ -75,6 +75,9 @@ export const ProjectView = ({ projectId }: { projectId: number }) => {
   const [epics, setEpics] = useState<ProjectEpicDTO[]>([]);
   const [loadingIterations, setLoadingIterations] = useState(false);
   const [loadingEpics, setLoadingEpics] = useState(false);
+
+  // New state for header collapse
+  const [isHeaderCollapsed, setIsHeaderCollapsed] = useState(false);
 
   const t = useAppClientTranslations();
 
@@ -104,7 +107,6 @@ export const ProjectView = ({ projectId }: { projectId: number }) => {
   const [dragStartTime, setDragStartTime] = useState<number | null>(null);
 
   // Update state variables in the ProjectView component
-  // (Keep the existing isCreateIterationDialogOpen but rename it for clarity)
   const [isIterationDialogOpen, setIsIterationDialogOpen] = useState(false);
   const [selectedIterationForEdit, setSelectedIterationForEdit] =
     useState<ProjectIterationDTO | null>(null);
@@ -553,300 +555,383 @@ export const ProjectView = ({ projectId }: { projectId: number }) => {
   };
 
   return (
-    <div className="p-6 h-screen flex flex-col">
+    <div className="p-6">
       {loading ? (
         <p className="text-lg font-semibold">{t.common.misc("loading_data")}</p>
       ) : project ? (
         <>
-          <Breadcrumbs items={breadcrumbItems} />
-          <div className="flex items-center justify-between mb-2">
-            <h1 className="text-3xl font-bold">{project.name}</h1>
-            {(PermissionUtils.canWrite(permissionLevel) ||
-              teamRole === "manager") && (
-              <Button
-                onClick={() => setIsProjectEditDialogOpen(true)}
-                variant="default"
-                className="flex items-center gap-2"
-              >
-                <Edit className="w-4 h-4" />
-                {t.teams.projects.view("edit_project")}
-              </Button>
-            )}
-          </div>
-
-          <div
-            className="text-gray-600 dark:text-gray-300 text-sm mb-4"
-            dangerouslySetInnerHTML={{ __html: project.description ?? "" }}
-          />
-
-          <div className="flex flex-wrap items-center gap-4 mb-6">
-            {project.status && (
+          {/* Project Header - Collapsible but keeping original styling */}
+          <div className={`mb-4 transition-all duration-300`}>
+            <div className="flex items-center justify-between mb-2">
               <div className="flex items-center">
-                <span className="text-sm font-medium text-gray-500 dark:text-gray-400 mr-2">
-                  {t.teams.projects.form("status")}:
-                </span>
-                <Badge variant="default">{project.status}</Badge>
-              </div>
-            )}
-
-            {project.startDate && (
-              <div className="flex items-center">
-                <span className="text-sm font-medium text-gray-500 dark:text-gray-400 mr-2">
-                  {t.teams.projects.form("start_date")}:
-                </span>
-                <span className="text-sm">
-                  {new Date(project.startDate).toLocaleDateString()}
-                </span>
-              </div>
-            )}
-
-            {project.endDate && (
-              <div className="flex items-center">
-                <span className="text-sm font-medium text-gray-500 dark:text-gray-400 mr-2">
-                  {t.teams.projects.form("end_date")}:
-                </span>
-                <span className="text-sm">
-                  {new Date(project.endDate).toLocaleDateString()}
-                </span>
-              </div>
-            )}
-
-            {project.startDate && project.endDate && (
-              <div className="flex items-center">
-                <span className="text-sm font-medium text-gray-500 dark:text-gray-400 mr-2">
-                  {t.teams.projects.view("duration")}:
-                </span>
-                <span className="text-sm">
-                  {calculateDuration(project.startDate, project.endDate)}
-                </span>
-              </div>
-            )}
-          </div>
-
-          {/* Epic and Iteration Filters */}
-          <div className="flex flex-wrap items-center gap-4 mb-4 p-3 bg-muted rounded-md">
-            <div className="flex items-center">
-              <span className="text-sm font-medium mr-2">
-                {t.teams.projects.view("iteration")}:
-              </span>
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <Button variant="outline" size="sm" className="h-8">
-                    {selectedIteration
-                      ? iterations.find((i) => i.id === selectedIteration)?.name
-                      : t.teams.projects.view("all_iterations")}
-                    <ChevronDown className="ml-2 h-4 w-4" />
-                  </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent align="start">
-                  <DropdownMenuItem
-                    onClick={() => setSelectedIteration(null)}
-                    className="cursor-pointer"
-                  >
-                    {t.teams.projects.view("all_iterations")}
-                  </DropdownMenuItem>
-                  <DropdownMenuSeparator />
-                  {loadingIterations ? (
-                    <DropdownMenuItem disabled>
-                      {t.common.misc("loading_data")}
-                    </DropdownMenuItem>
-                  ) : iterations.length > 0 ? (
-                    iterations.map((iteration) => (
-                      <DropdownMenuItem
-                        key={iteration.id}
-                        onClick={() => setSelectedIteration(iteration.id!)}
-                        className="cursor-pointer"
-                      >
-                        <div>
-                          <div>{iteration.name}</div>
-                          <div className="text-xs text-muted-foreground">
-                            {getIterationStatus(iteration)} |{" "}
-                            {iteration.startDate
-                              ? new Date(
-                                  iteration.startDate,
-                                ).toLocaleDateString()
-                              : "Not scheduled"}{" "}
-                            {iteration.startDate || iteration.endDate
-                              ? "- "
-                              : ""}
-                            {iteration.endDate
-                              ? new Date(iteration.endDate).toLocaleDateString()
-                              : iteration.startDate
-                                ? "Ongoing"
-                                : ""}
-                          </div>
-                        </div>
-                      </DropdownMenuItem>
-                    ))
+                <h1 className="text-3xl font-bold">{project.name}</h1>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => setIsHeaderCollapsed(!isHeaderCollapsed)}
+                  className="ml-2 h-8 w-8 p-0"
+                >
+                  {isHeaderCollapsed ? (
+                    <ChevronDown className="h-4 w-4" />
                   ) : (
-                    <DropdownMenuItem disabled>
-                      {t.teams.projects.view("no_iterations_found")}
-                    </DropdownMenuItem>
+                    <ChevronUp className="h-4 w-4" />
                   )}
-                  <DropdownMenuSeparator />
-                  <DropdownMenuItem
-                    onClick={handleAddNewIteration}
-                    className="cursor-pointer text-primary"
-                  >
-                    <Plus className="mr-2 h-4 w-4" />
-                    {t.teams.projects.view("add_new_iteration")}
-                  </DropdownMenuItem>
-                </DropdownMenuContent>
-              </DropdownMenu>
+                </Button>
+              </div>
+              {(PermissionUtils.canWrite(permissionLevel) ||
+                teamRole === "manager") && (
+                <Button
+                  onClick={() => setIsProjectEditDialogOpen(true)}
+                  variant="default"
+                  className="flex items-center gap-2"
+                >
+                  <Edit className="w-4 h-4" />
+                  {t.teams.projects.view("edit_project")}
+                </Button>
+              )}
             </div>
 
-            <div className="flex items-center">
-              <span className="text-sm font-medium mr-2">
-                {t.teams.projects.view("epic")}:
-              </span>
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <Button variant="outline" size="sm" className="h-8">
-                    {selectedEpic
-                      ? epics.find((e) => e.id === selectedEpic)?.name
-                      : t.teams.projects.view("all_epics")}
-                    <ChevronDown className="ml-2 h-4 w-4" />
-                  </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent align="start">
-                  <DropdownMenuItem
-                    onClick={() => setSelectedEpic(null)}
-                    className="cursor-pointer"
-                  >
-                    {t.teams.projects.view("all_epics")}
-                  </DropdownMenuItem>
-                  <DropdownMenuSeparator />
-                  {loadingEpics ? (
-                    <DropdownMenuItem disabled>
-                      {t.common.misc("loading_data")}
-                    </DropdownMenuItem>
-                  ) : epics.length > 0 ? (
-                    epics.map((epic) => (
-                      <DropdownMenuItem
-                        key={epic.id}
-                        onClick={() => setSelectedEpic(epic.id!)}
-                        className="cursor-pointer"
-                        style={{
-                          borderLeft: `4px solid ${getEpicColor(epic.id!)}`,
-                        }}
-                      >
-                        <div>
-                          <div>{epic.name}</div>
-                          <div className="text-xs text-muted-foreground">
-                            {epic.description}
-                          </div>
-                        </div>
-                      </DropdownMenuItem>
-                    ))
-                  ) : (
-                    <DropdownMenuItem disabled>
-                      {t.teams.projects.view("no_epics_found")}
-                    </DropdownMenuItem>
-                  )}
-                  <DropdownMenuSeparator />
-                  <DropdownMenuItem
-                    onClick={handleAddNewEpic}
-                    className="cursor-pointer text-primary"
-                  >
-                    <Plus className="mr-2 h-4 w-4" />
-                    {t.teams.projects.view("add_new_epic")}
-                  </DropdownMenuItem>
-                </DropdownMenuContent>
-              </DropdownMenu>
-            </div>
+            <Breadcrumbs items={breadcrumbItems} className="mb-2" />
 
-            {(selectedIteration !== null || selectedEpic !== null) && (
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={handleClearFilters}
-                className="ml-auto"
-              >
-                {t.common.buttons("clear_filters")}
-              </Button>
-            )}
-          </div>
+            {/* Collapsible content */}
+            {!isHeaderCollapsed && (
+              <>
+                <div
+                  className="text-gray-600 dark:text-gray-300 text-sm mb-4"
+                  dangerouslySetInnerHTML={{
+                    __html: project.description ?? "",
+                  }}
+                />
 
-          {/* Selected Filters Summary with Edit Options */}
-          {(selectedIteration !== null || selectedEpic !== null) && (
-            <div className="mb-4 p-3 border rounded-md bg-background">
-              <h3 className="text-sm font-medium mb-2">Active Filters:</h3>
-              <div className="space-y-3">
-                {selectedIteration !== null && (
-                  <div className="flex flex-col sm:flex-row sm:items-center gap-2 p-2 bg-secondary/20 rounded-md">
-                    <div className="flex-1">
-                      <div className="font-medium">
-                        {t.teams.projects.view("iteration")}:{" "}
-                        {
-                          iterations.find((i) => i.id === selectedIteration)
-                            ?.name
-                        }
-                      </div>
-                      <div className="text-xs text-muted-foreground mt-1">
-                        {new Date(
-                          iterations.find((i) => i.id === selectedIteration)
-                            ?.startDate || "",
-                        ).toLocaleDateString()}{" "}
-                        -
-                        {new Date(
-                          iterations.find((i) => i.id === selectedIteration)
-                            ?.endDate || "",
-                        ).toLocaleDateString()}
-                      </div>
+                <div className="flex flex-wrap items-center gap-4 mb-6">
+                  {project.status && (
+                    <div className="flex items-center">
+                      <span className="text-sm font-medium text-gray-500 dark:text-gray-400 mr-2">
+                        {t.teams.projects.form("status")}:
+                      </span>
+                      <Badge variant="default">{project.status}</Badge>
                     </div>
-                    {/*// Update the Edit Iteration button in the Active Filters section*/}
-                    <Button
-                      variant="secondary"
-                      size="sm"
-                      className="h-8 gap-1 self-start"
-                      onClick={() => handleEditIteration(selectedIteration)}
-                    >
-                      <Edit className="h-4 w-4" />
-                      {t.teams.projects.view("edit_iteration")}
-                    </Button>
-                  </div>
-                )}
+                  )}
 
-                {selectedEpic !== null && (
-                  <div
-                    className="flex flex-col sm:flex-row sm:items-center gap-2 p-2 rounded-md"
-                    style={{
-                      backgroundColor: `${getEpicColor(selectedEpic)}20`,
-                    }}
-                  >
-                    <div className="flex-1">
-                      <div
-                        className="font-medium"
+                  {project.startDate && (
+                    <div className="flex items-center">
+                      <span className="text-sm font-medium text-gray-500 dark:text-gray-400 mr-2">
+                        {t.teams.projects.form("start_date")}:
+                      </span>
+                      <span className="text-sm">
+                        {new Date(project.startDate).toLocaleDateString()}
+                      </span>
+                    </div>
+                  )}
+
+                  {project.endDate && (
+                    <div className="flex items-center">
+                      <span className="text-sm font-medium text-gray-500 dark:text-gray-400 mr-2">
+                        {t.teams.projects.form("end_date")}:
+                      </span>
+                      <span className="text-sm">
+                        {new Date(project.endDate).toLocaleDateString()}
+                      </span>
+                    </div>
+                  )}
+
+                  {project.startDate && project.endDate && (
+                    <div className="flex items-center">
+                      <span className="text-sm font-medium text-gray-500 dark:text-gray-400 mr-2">
+                        {t.teams.projects.view("duration")}:
+                      </span>
+                      <span className="text-sm">
+                        {calculateDuration(project.startDate, project.endDate)}
+                      </span>
+                    </div>
+                  )}
+                </div>
+              </>
+            )}
+          </div>
+
+          {/* Keep the original filter section, just adding a bit more space efficiency */}
+          <div className="mb-4">
+            {/* Epic and Iteration Filters - Original design */}
+            <div className="flex flex-wrap items-center gap-4 mb-4 p-3 bg-muted rounded-md">
+              <div className="flex items-center">
+                <span className="text-sm font-medium mr-2">
+                  {t.teams.projects.view("iteration")}:
+                </span>
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button variant="outline" size="sm" className="h-8">
+                      {selectedIteration
+                        ? iterations.find((i) => i.id === selectedIteration)
+                            ?.name
+                        : t.teams.projects.view("all_iterations")}
+                      <ChevronDown className="ml-2 h-4 w-4" />
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="start">
+                    <DropdownMenuItem
+                      onClick={() => setSelectedIteration(null)}
+                      className="cursor-pointer"
+                    >
+                      {t.teams.projects.view("all_iterations")}
+                    </DropdownMenuItem>
+                    <DropdownMenuSeparator />
+                    {loadingIterations ? (
+                      <DropdownMenuItem disabled>
+                        {t.common.misc("loading_data")}
+                      </DropdownMenuItem>
+                    ) : iterations.length > 0 ? (
+                      iterations.map((iteration) => (
+                        <DropdownMenuItem
+                          key={iteration.id}
+                          onClick={() => setSelectedIteration(iteration.id!)}
+                          className="cursor-pointer"
+                        >
+                          <div>
+                            <div>{iteration.name}</div>
+                            <div className="text-xs text-muted-foreground">
+                              {getIterationStatus(iteration)} |{" "}
+                              {iteration.startDate
+                                ? new Date(
+                                    iteration.startDate,
+                                  ).toLocaleDateString()
+                                : "Not scheduled"}{" "}
+                              {iteration.startDate || iteration.endDate
+                                ? "- "
+                                : ""}
+                              {iteration.endDate
+                                ? new Date(
+                                    iteration.endDate,
+                                  ).toLocaleDateString()
+                                : iteration.startDate
+                                  ? "Ongoing"
+                                  : ""}
+                            </div>
+                          </div>
+                        </DropdownMenuItem>
+                      ))
+                    ) : (
+                      <DropdownMenuItem disabled>
+                        {t.teams.projects.view("no_iterations_found")}
+                      </DropdownMenuItem>
+                    )}
+                    <DropdownMenuSeparator />
+                    <DropdownMenuItem
+                      onClick={handleAddNewIteration}
+                      className="cursor-pointer text-primary"
+                    >
+                      <Plus className="mr-2 h-4 w-4" />
+                      {t.teams.projects.view("add_new_iteration")}
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              </div>
+
+              <div className="flex items-center">
+                <span className="text-sm font-medium mr-2">
+                  {t.teams.projects.view("epic")}:
+                </span>
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button variant="outline" size="sm" className="h-8">
+                      {selectedEpic
+                        ? epics.find((e) => e.id === selectedEpic)?.name
+                        : t.teams.projects.view("all_epics")}
+                      <ChevronDown className="ml-2 h-4 w-4" />
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="start">
+                    <DropdownMenuItem
+                      onClick={() => setSelectedEpic(null)}
+                      className="cursor-pointer"
+                    >
+                      {t.teams.projects.view("all_epics")}
+                    </DropdownMenuItem>
+                    <DropdownMenuSeparator />
+                    {loadingEpics ? (
+                      <DropdownMenuItem disabled>
+                        {t.common.misc("loading_data")}
+                      </DropdownMenuItem>
+                    ) : epics.length > 0 ? (
+                      epics.map((epic) => (
+                        <DropdownMenuItem
+                          key={epic.id}
+                          onClick={() => setSelectedEpic(epic.id!)}
+                          className="cursor-pointer"
+                          style={{
+                            borderLeft: `4px solid ${getEpicColor(epic.id!)}`,
+                          }}
+                        >
+                          <div>
+                            <div>{epic.name}</div>
+                            <div className="text-xs text-muted-foreground">
+                              {epic.description}
+                            </div>
+                          </div>
+                        </DropdownMenuItem>
+                      ))
+                    ) : (
+                      <DropdownMenuItem disabled>
+                        {t.teams.projects.view("no_epics_found")}
+                      </DropdownMenuItem>
+                    )}
+                    <DropdownMenuSeparator />
+                    <DropdownMenuItem
+                      onClick={handleAddNewEpic}
+                      className="cursor-pointer text-primary"
+                    >
+                      <Plus className="mr-2 h-4 w-4" />
+                      {t.teams.projects.view("add_new_epic")}
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              </div>
+
+              {(selectedIteration !== null || selectedEpic !== null) && (
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={handleClearFilters}
+                  className="ml-auto"
+                >
+                  {t.common.buttons("clear_filters")}
+                </Button>
+              )}
+            </div>
+
+            {/* Selected Filters Summary with Edit Options */}
+            {(selectedIteration !== null || selectedEpic !== null) && (
+              <div className="mb-4 p-3 border rounded-md bg-background">
+                <h3 className="text-sm font-medium mb-2">Active Filters:</h3>
+                <div className="space-y-3">
+                  {selectedIteration !== null && (
+                    <div className="flex flex-col sm:flex-row sm:items-center gap-2 p-2 bg-secondary/20 rounded-md">
+                      <div className="flex-1">
+                        <div className="font-medium">
+                          {t.teams.projects.view("iteration")}:{" "}
+                          {
+                            iterations.find((i) => i.id === selectedIteration)
+                              ?.name
+                          }
+                        </div>
+                        <div className="text-xs text-muted-foreground mt-1">
+                          {new Date(
+                            iterations.find((i) => i.id === selectedIteration)
+                              ?.startDate || "",
+                          ).toLocaleDateString()}{" "}
+                          -
+                          {new Date(
+                            iterations.find((i) => i.id === selectedIteration)
+                              ?.endDate || "",
+                          ).toLocaleDateString()}
+                        </div>
+                      </div>
+                      <Button
+                        variant="secondary"
+                        size="sm"
+                        className="h-8 gap-1 self-start"
+                        onClick={() => handleEditIteration(selectedIteration)}
+                      >
+                        <Edit className="h-4 w-4" />
+                        {t.teams.projects.view("edit_iteration")}
+                      </Button>
+                    </div>
+                  )}
+
+                  {selectedEpic !== null && (
+                    <div
+                      className="flex flex-col sm:flex-row sm:items-center gap-2 p-2 rounded-md"
+                      style={{
+                        backgroundColor: `${getEpicColor(selectedEpic)}20`,
+                      }}
+                    >
+                      <div className="flex-1">
+                        <div
+                          className="font-medium"
+                          style={{
+                            color: getEpicColor(selectedEpic),
+                          }}
+                        >
+                          {t.teams.projects.view("epic")}:{" "}
+                          {epics.find((e) => e.id === selectedEpic)?.name}
+                        </div>
+                        <div className="text-xs text-muted-foreground mt-1">
+                          {
+                            epics.find((e) => e.id === selectedEpic)
+                              ?.description
+                          }
+                        </div>
+                      </div>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        className="h-8 gap-1 self-start"
                         style={{
+                          borderColor: getEpicColor(selectedEpic),
                           color: getEpicColor(selectedEpic),
                         }}
+                        onClick={() => handleEditEpic(selectedEpic)}
                       >
-                        {t.teams.projects.view("epic")}:{" "}
-                        {epics.find((e) => e.id === selectedEpic)?.name}
-                      </div>
-                      <div className="text-xs text-muted-foreground mt-1">
-                        {epics.find((e) => e.id === selectedEpic)?.description}
-                      </div>
+                        <Edit className="h-4 w-4" />
+                        {t.teams.projects.view("edit_epic")}
+                      </Button>
                     </div>
-                    {/*// Update the Edit Epic button in the Active Filters section*/}
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      className="h-8 gap-1 self-start"
-                      style={{
-                        borderColor: getEpicColor(selectedEpic),
-                        color: getEpicColor(selectedEpic),
-                      }}
-                      onClick={() => handleEditEpic(selectedEpic)}
-                    >
-                      <Edit className="h-4 w-4" />
-                      {t.teams.projects.view("edit_epic")}
-                    </Button>
-                  </div>
-                )}
+                  )}
+                </div>
+              </div>
+            )}
+          </div>
+
+          {/* Kanban Board with fixed height */}
+          <DndContext
+            collisionDetection={closestCorners}
+            onDragStart={handleDragStart}
+            onDragEnd={handleDragEnd}
+          >
+            {/* Set a fixed height for the Kanban board container */}
+            <div
+              className="flex gap-4 pb-2"
+              style={{
+                height:
+                  "calc(100vh - 300px)" /* Fixed height calculation - adjust as needed */,
+                minHeight: "400px" /* Minimum height for smaller screens */,
+                overflowX: "auto",
+                overflowY: "hidden",
+                scrollbarWidth: "thin",
+                WebkitOverflowScrolling: "touch",
+                msOverflowStyle: "-ms-autohiding-scrollbar",
+              }}
+            >
+              {workflow?.states
+                .sort((a, b) => {
+                  if (a.isInitial && !b.isInitial) return -1;
+                  if (!a.isInitial && b.isInitial) return 1;
+                  if (a.isFinal && !b.isFinal) return 1;
+                  if (!a.isFinal && b.isFinal) return -1;
+                  return 0;
+                })
+                .map((state) => (
+                  <StateColumn
+                    key={state.id}
+                    workflowState={state}
+                    tasks={filteredTasks[state.id!.toString()] || []}
+                    setIsSheetOpen={setIsSheetOpen}
+                    setSelectedWorkflowState={() =>
+                      setSelectedWorkflowState(state)
+                    }
+                    columnColor={getColumnColor(state.id!)}
+                  />
+                ))}
+              {/* Add an extra padding div that matches column width */}
+              <div className="min-w-[28rem] flex-shrink-0 opacity-0 pointer-events-none">
+                {/* This invisible column ensures there's enough space at the end */}
               </div>
             </div>
-          )}
+
+            <DragOverlay>
+              {activeTask ? <TaskBlock task={activeTask} isDragging /> : null}
+            </DragOverlay>
+          </DndContext>
         </>
       ) : (
         <p className="text-red-500">
@@ -854,51 +939,7 @@ export const ProjectView = ({ projectId }: { projectId: number }) => {
         </p>
       )}
 
-      <DndContext
-        collisionDetection={closestCorners}
-        onDragStart={handleDragStart}
-        onDragEnd={handleDragEnd}
-      >
-        {/* Full height scrollable container with an extra div at the end */}
-        <div
-          className="flex flex-grow gap-4 pb-2"
-          style={{
-            overflowX: "scroll",
-            scrollbarWidth: "thin", // For Firefox
-            scrollbarGutter: "stable", // Reserves space for the scrollbar
-            WebkitOverflowScrolling: "touch", // For iOS
-            msOverflowStyle: "-ms-autohiding-scrollbar", // For IE/Edge
-          }}
-        >
-          {workflow?.states
-            .sort((a, b) => {
-              if (a.isInitial && !b.isInitial) return -1;
-              if (!a.isInitial && b.isInitial) return 1;
-              if (a.isFinal && !b.isFinal) return 1;
-              if (!a.isFinal && b.isFinal) return -1;
-              return 0;
-            })
-            .map((state) => (
-              <StateColumn
-                key={state.id}
-                workflowState={state}
-                tasks={filteredTasks[state.id!.toString()] || []}
-                setIsSheetOpen={setIsSheetOpen}
-                setSelectedWorkflowState={() => setSelectedWorkflowState(state)}
-                columnColor={getColumnColor(state.id!)}
-              />
-            ))}
-          {/* Add an extra padding div that matches column width */}
-          <div className="min-w-[28rem] flex-shrink-0 opacity-0 pointer-events-none">
-            {/* This invisible column ensures there's enough space at the end */}
-          </div>
-        </div>
-
-        <DragOverlay>
-          {activeTask ? <TaskBlock task={activeTask} isDragging /> : null}
-        </DragOverlay>
-      </DndContext>
-
+      {/* Dialogs and sheets */}
       <TaskEditorSheet
         isOpen={isSheetOpen}
         setIsOpen={setIsSheetOpen}
@@ -953,6 +994,4 @@ export const ProjectView = ({ projectId }: { projectId: number }) => {
       />
     </div>
   );
-};
-
-export default ProjectView;
+}

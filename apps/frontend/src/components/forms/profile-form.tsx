@@ -58,7 +58,7 @@ type UserTypeWithFile = z.infer<typeof userSchemaWithFile>;
 
 export const ProfileForm = () => {
   const router = useRouter();
-  const { data: session } = useSession();
+  const { data: session, update } = useSession();
   const t = useAppClientTranslations();
   const { toast } = useToast();
   const {
@@ -92,7 +92,8 @@ export const ProfileForm = () => {
     }
 
     await updateUser(formData, setError);
-    toast({ description: "Save profile successfully" });
+    toast({ description: t.users.profile("save_success") });
+    await update(); // reload session
   };
 
   const handleChangePassword = async (data: z.infer<typeof passwordSchema>) => {

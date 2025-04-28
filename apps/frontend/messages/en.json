@@ -450,7 +450,8 @@
       "description": "Manage your account details here. Update your email, profile picture, password, and other personal information to keep your profile accurate and secure.",
       "change_password": "Change Password",
       "current_password": "Current Password",
-      "new_password": "New Password"
+      "new_password": "New Password",
+      "save_success": "Save profile successfully"
     },
     "org_chart_view": {
       "instruction_title": "How to use the org chart",

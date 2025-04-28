@@ -448,7 +448,8 @@
       "description": "Gérez les informations de votre compte ici. Mettez à jour votre email, votre photo de profil, votre mot de passe et d'autres informations personnelles pour garder votre profil à jour et sécurisé.",
       "change_password": "Changer le mot de passe",
       "current_password": "Mot de passe actuel",
-      "new_password": "Nouveau mot de passe"
+      "new_password": "Nouveau mot de passe",
+      "save_success": "Profil enregistré avec succès"
     },
     "org_chart_view": {
       "instruction_title": "Comment utiliser l'organigramme",

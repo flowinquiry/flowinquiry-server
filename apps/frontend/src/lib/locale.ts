@@ -19,7 +19,28 @@ export async function getUserLocale(): Promise<Locale> {
     return cookieLocale;
   }
 
-  // Cookie not set: get from session and also set the cookie for future requests
+  // Don't set cookie here, just get from session
+  const session = await auth();
+  const sessionLocale = session?.user?.langKey;
+
+  if (isValidLocale(sessionLocale)) {
+    return sessionLocale;
+  }
+
+  return defaultLocale;
+}
+
+// Separate function for initializing locale with cookie au
+export async function initializeUserLocale(): Promise<Locale> {
+  "use server";
+
+  const cookieStore = await cookies();
+  const cookieLocale = cookieStore.get(COOKIE_NAME)?.value;
+
+  if (isValidLocale(cookieLocale)) {
+    return cookieLocale;
+  }
+
   const session = await auth();
   const sessionLocale = session?.user?.langKey;
 

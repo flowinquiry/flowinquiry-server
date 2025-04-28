@@ -5,6 +5,7 @@ import GoogleProvider from "next-auth/providers/google";
 import { submitSocialToken } from "@/lib/actions/users.action";
 import apiAuthSignIn from "@/lib/auth";
 import { BASE_URL, DEFAULT_EXPIRATION } from "@/lib/constants";
+import { initializeUserLocale } from "@/lib/locale";
 
 export const { handlers, auth } = NextAuth({
   providers: [
@@ -94,6 +95,7 @@ export const { handlers, auth } = NextAuth({
             ...session.user, // Retain existing attributes in session.user
             ...response.user, // Overwrite or add attributes from response.user
           };
+          await initializeUserLocale();
         } catch (error) {
           console.error(
             `Error to get the jwt token from backend ${JSON.stringify(error)}`,

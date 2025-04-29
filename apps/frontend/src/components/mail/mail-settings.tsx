@@ -2,6 +2,7 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { EyeIcon, EyeOffIcon } from "lucide-react";
+import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -42,6 +43,7 @@ export function MailSettings() {
   const [submitAttempted, setSubmitAttempted] = useState(false);
   const { toast } = useToast();
   const t = useAppClientTranslations();
+  const router = useRouter();
 
   const emailSettingsSchema = z.object({
     "mail.host": z.string().min(1, "SMTP host is required"),
@@ -253,7 +255,8 @@ export function MailSettings() {
       const payload = toAppSettings(formValues);
 
       await updateAppSettings(payload, setError);
-      toast({ description: "Settings saved successfully" });
+      toast({ description: t.mail("save_successfully") });
+      router.push("/portal/settings");
     } else {
       console.log("Form validation failed:", validationResult.error);
 
@@ -301,6 +304,7 @@ export function MailSettings() {
                 key={groupLabel}
                 className="space-y-4 border p-4 rounded-lg h-full"
               >
+                ev
                 <h3 className="text-lg font-semibold mb-2">{groupLabel}</h3>
                 {keys.map((key) => {
                   const meta = FIELD_META[key];

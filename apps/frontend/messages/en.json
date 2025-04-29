@@ -505,7 +505,8 @@
     "smtp_server": "SMTP Server",
     "authentication": "Authentication",
     "sender_info": "Sender Info",
-    "advanced_options": "Advanced Options"
+    "advanced_options": "Advanced Options",
+    "save_successfully": "Mail settings updated successfully"
   },
   "login": {
     "form": {

@@ -498,8 +498,13 @@
     }
   },
   "mail": {
-    "title": "Courriel",
-    "description": "Utilisez ce formulaire pour configurer les identifiants du serveur SMTP et les options d'envoi des e-mails pour FlowInquiry. Ces paramètres contrôlent la manière dont le système envoie les notifications telles que les réinitialisations de mot de passe, les mises à jour de flux de travail et les alertes. Vous pouvez personnaliser les paramètres de connexion (hôte, port, protocole), les identifiants d'authentification, l'identité de l'expéditeur et les options avancées comme le mode SSL/TLS et le mode débogage."
+    "title": "Courrier",
+    "description": "Utilisez ce formulaire pour configurer les identifiants du serveur SMTP et les options de livraison des e-mails pour FlowInquiry. Ces paramètres contrôlent la manière dont le système envoie les notifications telles que les réinitialisations de mot de passe, les mises à jour de workflow et les alertes. Vous pouvez personnaliser les paramètres de connexion (hôte, port, protocole), les identifiants d'authentification, l'identité de l'expéditeur et des options avancées comme SSL/TLS et le mode debug.",
+    "smtp_server": "Serveur SMTP",
+    "authentication": "Authentification",
+    "sender_info": "Informations sur l'expéditeur",
+    "advanced_options": "Options avancées",
+    "save_successfully": "Paramètres de messagerie mis à jour avec succès"
   },
   "login": {
     "form": {

@@ -83,8 +83,8 @@ const TeamWorkflowNew = () => {
                 </TooltipContent>
               </Tooltip>
               <Heading
-                title="Create New Workflow"
-                description="Select how you want to create the workflow"
+                title={t.workflows.add("title")}
+                description={t.workflows.add("description")}
               />
             </div>
           </div>
@@ -92,7 +92,9 @@ const TeamWorkflowNew = () => {
           {/* Render selected component or options */}
           {isLink ? (
             <div>
-              <h3 className="text-md font-semibold mb-4">Choose an Option</h3>
+              <h3 className="text-md font-semibold mb-4">
+                {t.workflows.add("create_option")}
+              </h3>
               <div className="space-y-6">
                 {/* Create from Scratch */}
                 <div className="flex items-start">
@@ -101,10 +103,12 @@ const TeamWorkflowNew = () => {
                     variant="link"
                     className="h-5"
                   >
-                    Create from scratch
+                    {t.workflows.add("create_workflow_from_scratch_title")}
                   </Button>
                   <div className="text-sm text-gray-500">
-                    Start building a new workflow from the ground up.
+                    {t.workflows.add(
+                      "create_workflow_from_scratch_description",
+                    )}
                   </div>
                 </div>
 
@@ -115,10 +119,10 @@ const TeamWorkflowNew = () => {
                     variant="link"
                     className="h-5"
                   >
-                    Clone from Global Workflow
+                    {t.workflows.add("clone_workflow_title")}
                   </Button>
                   <div className="text-sm text-gray-500">
-                    Create a copy of a global workflow and customize it.
+                    {t.workflows.add("clone_workflow_description")}.
                   </div>
                 </div>
               </div>

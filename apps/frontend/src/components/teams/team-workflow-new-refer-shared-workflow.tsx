@@ -24,6 +24,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { useAppClientTranslations } from "@/hooks/use-translations";
 import {
   createWorkflowFromCloning,
   createWorkflowFromReference,
@@ -52,6 +53,7 @@ const NewTeamWorkflowReferFromSharedOne = ({
   teamId: number;
   isRefer: boolean;
 }) => {
+  const t = useAppClientTranslations();
   const router = useRouter();
   const [globalWorkflows, setGlobalWorkflows] = useState<WorkflowDTO[]>([]);
   const { setError } = useError();
@@ -115,8 +117,8 @@ const NewTeamWorkflowReferFromSharedOne = ({
     <div className="p-6 border rounded-lg">
       <h2 className="text-lg font-bold mb-4">
         {isRefer
-          ? "Create Workflow from Reference"
-          : "Create Workflow by cloning"}
+          ? t.workflows.add("create_workflow_from_reference")
+          : t.workflows.add("create_workflow_by_cloning")}
       </h2>
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
@@ -126,7 +128,7 @@ const NewTeamWorkflowReferFromSharedOne = ({
             render={({ field }) => (
               <FormItem>
                 <FormLabel>
-                  Workflow Reference{" "}
+                  {t.workflows.add("workflow_reference")}:{" "}
                   <span className="text-destructive"> *</span>
                 </FormLabel>
                 <FormControl>
@@ -139,7 +141,11 @@ const NewTeamWorkflowReferFromSharedOne = ({
                       value={field.value?.toString()}
                     >
                       <SelectTrigger className="w-[20rem]">
-                        <SelectValue placeholder="Select a workflow" />
+                        <SelectValue
+                          placeholder={t.workflows.add(
+                            "select_workflow_place_holder",
+                          )}
+                        />
                       </SelectTrigger>
                       <SelectContent>
                         {globalWorkflows.map((workflow) => (
@@ -154,7 +160,7 @@ const NewTeamWorkflowReferFromSharedOne = ({
                     </Select>
                   ) : (
                     <div className="text-sm text-muted-foreground">
-                      There are no global workflows available for selection.
+                      {t.workflows.add("no_global_workflow")}
                     </div>
                   )}
                 </FormControl>
@@ -168,15 +174,13 @@ const NewTeamWorkflowReferFromSharedOne = ({
             <ExtInputField
               form={form}
               fieldName="name"
-              label="Workflow Name"
-              placeholder="Enter workflow name"
+              label={t.workflows.add("name")}
               required
             />
             <ExtInputField
               form={form}
               fieldName="requestName"
-              label="Ticket Type"
-              placeholder="Enter ticket type"
+              label={t.workflows.add("ticket_type")}
               required
             />
           </div>
@@ -184,8 +188,7 @@ const NewTeamWorkflowReferFromSharedOne = ({
           <ExtTextAreaField
             form={form}
             fieldName="description"
-            label="Description"
-            placeholder="Enter workflow description (optional)"
+            label={t.workflows.add("field_description")}
           />
 
           {/* Submit Button */}
@@ -195,7 +198,7 @@ const NewTeamWorkflowReferFromSharedOne = ({
               !(Array.isArray(globalWorkflows) && globalWorkflows.length > 0)
             }
           >
-            <Save /> Create Workflow
+            <Save /> {t.workflows.add("create_workflow")}
           </Button>
         </form>
       </Form>

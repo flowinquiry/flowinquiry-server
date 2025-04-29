@@ -50,56 +50,66 @@ export const UserSelectField = ({
   const [searchTerm, setSearchTerm] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const { setError } = useError();
-  const debouncedSearchTerm = useDebounce(searchTerm, 2000);
+  // Reduced debounce time from 2000ms to 300ms for more responsive search
+  const debouncedSearchTerm = useDebounce(searchTerm, 300);
 
-  useEffect(() => {
-    if (!debouncedSearchTerm) {
+  // Keep track of the popover state
+  const [open, setOpen] = useState(false);
+
+  // Function to fetch users - only search when there's a term
+  const fetchUsers = async (term: string) => {
+    if (!term) {
       setUsers([]);
       return;
     }
 
-    const fetchUsers = async () => {
-      setIsLoading(true);
-      try {
-        const query: QueryDTO = {
-          filters: debouncedSearchTerm
-            ? [
-                {
-                  field: "firstName,lastName",
-                  operator: "lk",
-                  value: debouncedSearchTerm,
-                },
-              ]
-            : [],
-        };
-        const data = await findUsers(
-          query,
+    setIsLoading(true);
+    try {
+      const query: QueryDTO = {
+        filters: [
           {
-            page: 1,
-            size: 10,
-            sort: [
-              {
-                field: "firstName,lastName",
-                direction: "desc",
-              },
-            ],
+            field: "firstName,lastName",
+            operator: "lk",
+            value: term,
           },
-          setError,
-        );
-        const filterUsers = data.content.map((user) => ({
-          label: `${user.firstName} ${user.lastName}`,
-          value: String(user.id),
-          email: user.email,
-          avatarUrl: user.imageUrl ?? undefined,
-        }));
-        setUsers(filterUsers);
-      } finally {
-        setIsLoading(false);
-      }
-    };
+        ],
+      };
 
-    fetchUsers();
+      const data = await findUsers(
+        query,
+        {
+          page: 1,
+          size: 10,
+          sort: [
+            {
+              field: "firstName,lastName",
+              direction: "desc",
+            },
+          ],
+        },
+        setError,
+      );
+
+      const filterUsers = data.content.map((user) => ({
+        label: `${user.firstName} ${user.lastName}`,
+        value: String(user.id),
+        email: user.email,
+        avatarUrl: user.imageUrl ?? undefined,
+      }));
+
+      setUsers(filterUsers);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  // Effect to fetch users when debounced search term changes
+  useEffect(() => {
+    fetchUsers(debouncedSearchTerm);
   }, [debouncedSearchTerm]);
+
+  // No longer doing an initial fetch when popover opens
+  // We only want to search when the user types
 
   return (
     <FormField
@@ -110,7 +120,7 @@ export const UserSelectField = ({
           <FormLabel>
             {label} {required && <span className="text-destructive"> *</span>}
           </FormLabel>
-          <Popover>
+          <Popover open={open} onOpenChange={setOpen}>
             <PopoverTrigger asChild>
               <FormControl>
                 <Button
@@ -120,6 +130,7 @@ export const UserSelectField = ({
                     "justify-between",
                     !field.value && "text-muted-foreground",
                   )}
+                  onClick={() => setOpen(true)}
                 >
                   {field.value ? (
                     <div className="flex items-center gap-2">
@@ -146,20 +157,32 @@ export const UserSelectField = ({
             <PopoverContent className="p-0 w-[24rem]">
               <Command>
                 <CommandInput
-                  placeholder="Typing some characters to search user..."
+                  placeholder="Type to search users..."
                   className="h-9"
-                  onValueChange={(value) => setSearchTerm(value)}
+                  value={searchTerm}
+                  onValueChange={(value) => {
+                    setSearchTerm(value);
+                    // Clear results if search box is emptied
+                    if (!value) {
+                      setUsers([]);
+                    }
+                  }}
+                  autoFocus
                 />
                 <CommandList>
                   {isLoading && <CommandEmpty>Loading...</CommandEmpty>}
-                  {!isLoading && users.length === 0 && (
+                  {!isLoading && searchTerm && users.length === 0 && (
                     <CommandEmpty>No users found.</CommandEmpty>
+                  )}
+                  {!isLoading && !searchTerm && (
+                    <CommandEmpty>Type to search for users...</CommandEmpty>
                   )}
                   <CommandGroup>
                     <CommandItem
                       value="none"
                       onSelect={() => {
                         form.setValue(fieldName, null); // Reset the field value to null
+                        setOpen(false);
                       }}
                       className="gap-2 text-gray-500"
                     >
@@ -181,6 +204,7 @@ export const UserSelectField = ({
                               onSelect={() => {
                                 const numericValue = Number(user.value);
                                 form.setValue(fieldName, numericValue);
+                                setOpen(false);
                               }}
                             >
                               <UserAvatar imageUrl={user.avatarUrl} />

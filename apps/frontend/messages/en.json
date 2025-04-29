@@ -541,7 +541,8 @@
     "detail": {
       "cancel_edit": "Cancel edit",
       "customize_workflow": "Customize workflow",
-      "ticket_type_label": "Ticket type: {requestName}"
+      "ticket_type_label": "Ticket type: {requestName}",
+      "error_loading": "Error loading workflow detail"
     },
     "add": {
       "title": "Create new workflow",
@@ -563,7 +564,18 @@
       "name": "Name",
       "ticket_type": "Ticket type",
       "field_description": "Description",
-      "edit_workflow": "Edit workflow"
+      "edit_workflow": "Edit workflow",
+      "no_global_workflow": "There are no global workflows available for selection",
+      "create_workflow_from_reference": "Create workflow from reference",
+      "create_workflow_by_cloning": "Create workflow by cloning",
+      "create_option": "Choose an option",
+      "create_workflow_from_scratch_title": "Create from scratch",
+      "create_workflow_from_scratch_description": "Start building a new workflow from the ground up",
+      "clone_workflow_title": "Clone from global workflow",
+      "clone_workflow_description": "Create a copy of a global workflow and customize it",
+      "select_workflow_place_holder": "Select a workflow",
+      "workflow_reference": "Workflow reference",
+      "create_workflow": "Create workflow"
     }
   },
   "settings": {

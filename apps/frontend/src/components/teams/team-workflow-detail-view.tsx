@@ -68,7 +68,7 @@ const TeamWorkflowDetailView = ({ workflowId }: { workflowId: number }) => {
   };
 
   if (!workflowDetail) {
-    return <div>Error loading workflow detail.</div>;
+    return <div>{t.workflows.detail("error_loading")}</div>;
   }
 
   const breadcrumbItems = [
@@ -119,7 +119,8 @@ const TeamWorkflowDetailView = ({ workflowId }: { workflowId: number }) => {
               teamRole === "manager") && (
               <div>
                 <Button onClick={() => setIsEditing(!isEditing)}>
-                  {isEditing ? "Cancel Edit" : <Edit />} Customize Workflow
+                  {isEditing ? t.workflows.detail("cancel_edit") : <Edit />}{" "}
+                  {t.workflows.detail("customize_workflow")}
                 </Button>
               </div>
             )}
@@ -128,7 +129,7 @@ const TeamWorkflowDetailView = ({ workflowId }: { workflowId: number }) => {
           {loading && (
             <div className="flex items-center justify-center py-4">
               <Spinner>
-                <span>Loading workflow detail...</span>
+                <span>{t.common.misc("loading_data")}</span>
               </Spinner>
             </div>
           )}

@@ -530,7 +530,8 @@
     "detail": {
       "cancel_edit": "Annuler la modification",
       "customize_workflow": "Personnaliser le flux de travail",
-      "ticket_type_label": "Type de ticket : {requestName}"
+      "ticket_type_label": "Type de ticket : {requestName}",
+      "error_loading": "Erreur lors du chargement des détails du workflow"
     },
     "add": {
       "title": "Créer un nouveau flux de travail",
@@ -552,7 +553,18 @@
       "name": "Nom",
       "ticket_type": "Type de ticket",
       "field_description": "Description",
-      "edit_workflow": "Modifier le flux de travail"
+      "edit_workflow": "Modifier le flux de travail",
+      "no_global_workflow": "Aucun workflow global disponible pour la sélection",
+      "create_workflow_from_reference": "Créer un workflow à partir d'une référence",
+      "create_workflow_by_cloning": "Créer un workflow par clonage",
+      "create_option": "Choisir une option",
+      "create_workflow_from_scratch_title": "Créer à partir de zéro",
+      "create_workflow_from_scratch_description": "Commencez à créer un nouveau workflow depuis le début",
+      "clone_workflow_title": "Cloner depuis un workflow global",
+      "clone_workflow_description": "Créer une copie d'un workflow global et le personnaliser",
+      "select_workflow_place_holder": "Sélectionner un workflow",
+      "workflow_reference": "Référence du workflow",
+      "create_workflow": "Créer un workflow"
     },
     "list": {
       "title": "Flux de travail ({totalElements})",

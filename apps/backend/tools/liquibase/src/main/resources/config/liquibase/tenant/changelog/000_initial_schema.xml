@@ -99,7 +99,7 @@
 		<addForeignKeyConstraint
 			baseColumnNames="user_id" baseTableName="fw_user_auth"
 			constraintName="fk_user_auth_user" referencedColumnNames="id"
-			referencedTableName="fw_user" />
+			referencedTableName="fw_user" onDelete="CASCADE" />
 
 		<createTable tableName="fw_authority">
 			<column name="name" type="VARCHAR(50)">

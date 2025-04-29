@@ -1,4 +1,4 @@
-package io.flowinquiry.config.hibernatecache;
+package io.flowinquiry.config.cache;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 

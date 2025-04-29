@@ -1,4 +1,4 @@
-package io.flowinquiry.config.hibernatecache;
+package io.flowinquiry.config.cache;
 
 import java.util.Map;
 import org.hibernate.boot.registry.StandardServiceRegistry;
@@ -16,7 +16,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 
 @Configuration
-@PropertySource("classpath:hibernatecache/hibernate-redis.properties")
+@PropertySource("classpath:cache/hibernate-redis.properties")
 @EnableConfigurationProperties(RedisHibernateProps.class)
 @ConditionalOnProperty(
         prefix = "flowinquiry.hibernate.second_level_cache",

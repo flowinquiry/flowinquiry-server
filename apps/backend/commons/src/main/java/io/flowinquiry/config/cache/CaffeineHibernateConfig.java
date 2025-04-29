@@ -1,4 +1,4 @@
-package io.flowinquiry.config.hibernatecache;
+package io.flowinquiry.config.cache;
 
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Configuration;
@@ -10,5 +10,5 @@ import org.springframework.context.annotation.PropertySource;
         name = "provider",
         havingValue = "caffeine",
         matchIfMissing = true)
-@PropertySource("classpath:hibernatecache/hibernate-caffeine.properties")
+@PropertySource("classpath:cache/hibernate-caffeine.properties")
 public class CaffeineHibernateConfig {}

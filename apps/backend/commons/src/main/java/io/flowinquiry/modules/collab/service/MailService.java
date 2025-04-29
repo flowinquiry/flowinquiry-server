@@ -34,17 +34,18 @@ public class MailService {
     private static final Logger LOG = LoggerFactory.getLogger(MailService.class);
 
     private static final String USER = "user";
+    private static final String BASE_URL = "baseUrl";
 
-    static final String HOST = "mail.host";
-    static final String PORT = "mail.port";
-    static final String USERNAME = "mail.username";
-    static final String PASSWORD = "mail.password";
-    static final String PROTOCOL = "mail.protocol";
-    static final String SMTP_AUTH = "mail.smtp.auth";
-    static final String SMTP_STARTTLS = "mail.smtp.starttls.enable";
-    static final String DEBUG = "mail.debug";
-    static final String FROM = "mail.from";
-    static final String BASE_URL = "mail.base_url";
+    static final String HOST_SETTING = "mail.host";
+    static final String PORT_SETTING = "mail.port";
+    static final String USERNAME_SETTING = "mail.username";
+    static final String PASSWORD_SETTING = "mail.password";
+    static final String PROTOCOL_SETTING = "mail.protocol";
+    static final String SMTP_AUTH_SETTING = "mail.smtp.auth";
+    static final String SMTP_STARTTLS_SETTING = "mail.smtp.starttls.enable";
+    static final String DEBUG_SETTING = "mail.debug";
+    static final String FROM_SETTING = "mail.from";
+    static final String BASE_URL_SETTING = "mail.base_url";
 
     private final AppSettingService appSettingService;
     private final MessageSource messageSource;
@@ -79,8 +80,8 @@ public class MailService {
     }
 
     private void reloadMailSender() {
-        String host = appSettingService.getValue(HOST).orElse(null);
-        String portStr = appSettingService.getValue(PORT).orElse(null);
+        String host = appSettingService.getValue(HOST_SETTING).orElse(null);
+        String portStr = appSettingService.getValue(PORT_SETTING).orElse(null);
 
         if (host == null || portStr == null) {
             mailEnabled = false;
@@ -92,20 +93,22 @@ public class MailService {
             JavaMailSenderImpl sender = new JavaMailSenderImpl();
             sender.setHost(host);
             sender.setPort(Integer.parseInt(portStr));
-            sender.setUsername(appSettingService.getValue(USERNAME).orElse(""));
-            sender.setPassword(appSettingService.getDecryptedValue(PASSWORD).orElse(""));
+            sender.setUsername(appSettingService.getValue(USERNAME_SETTING).orElse(""));
+            sender.setPassword(appSettingService.getDecryptedValue(PASSWORD_SETTING).orElse(""));
 
             Properties props = sender.getJavaMailProperties();
             props.put(
-                    "mail.transport.protocol", appSettingService.getValue(PROTOCOL).orElse("smtp"));
-            props.put("mail.smtp.auth", appSettingService.getValue(SMTP_AUTH).orElse("true"));
+                    "mail.transport.protocol",
+                    appSettingService.getValue(PROTOCOL_SETTING).orElse("smtp"));
+            props.put(
+                    "mail.smtp.auth", appSettingService.getValue(SMTP_AUTH_SETTING).orElse("true"));
             props.put(
                     "mail.smtp.starttls.enable",
-                    appSettingService.getValue(SMTP_STARTTLS).orElse("true"));
-            props.put("mail.debug", appSettingService.getValue(DEBUG).orElse("false"));
+                    appSettingService.getValue(SMTP_STARTTLS_SETTING).orElse("true"));
+            props.put("mail.debug", appSettingService.getValue(DEBUG_SETTING).orElse("false"));
 
-            from = appSettingService.getValue(FROM).orElse("undefined");
-            baseUrl = appSettingService.getValue(BASE_URL).orElse("");
+            from = appSettingService.getValue(FROM_SETTING).orElse("undefined");
+            baseUrl = appSettingService.getValue(BASE_URL_SETTING).orElse("");
 
             this.mailSender = sender;
             this.mailEnabled = true;

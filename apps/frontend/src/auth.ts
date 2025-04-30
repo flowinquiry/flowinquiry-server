@@ -70,9 +70,9 @@ export const { handlers, auth } = NextAuth({
       if (trigger === "update" && session) {
         // If the client is updating the user's imageUrl
         if (session.user?.imageUrl) {
-          // Update the user object in the token with the new imageUrl
+          // Ensure token.user exists before spreading
           token.user = {
-            ...token.user,
+            ...(token.user || {}),
             imageUrl: session.user.imageUrl,
           };
         }

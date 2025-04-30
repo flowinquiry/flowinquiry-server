@@ -95,7 +95,7 @@ export const UserView = ({ userId }: { userId: number }) => {
               {(user.status !== "ACTIVE" || user.isDeleted) && (
                 <div className="absolute inset-0 bg-black bg-opacity-50 rounded-full flex items-center justify-center">
                   <span className="text-white text-xs font-bold">
-                    ${t.users.common("not_activated")}
+                    {t.users.common("not_activated")}
                   </span>
                 </div>
               )}

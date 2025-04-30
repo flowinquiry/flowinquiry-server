@@ -13,6 +13,7 @@ import io.flowinquiry.modules.usermanagement.service.dto.TicketStatisticsDTO;
 import io.flowinquiry.query.QueryDTO;
 import io.flowinquiry.utils.DateUtils;
 import jakarta.validation.Valid;
+import java.time.Duration;
 import java.time.Instant;
 import java.util.List;
 import java.util.Map;
@@ -108,15 +109,9 @@ public class TeamRequestController {
                     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
                     Instant toDate,
             @RequestParam(value = "range", required = false) String range) {
-        if (range != null && fromDate == null && toDate == null) {
-            fromDate = DateUtils.parseDateRange(range);
-            toDate = Instant.now();
-        }
 
-        Instant adjustedFromDate = DateUtils.truncateToMidnight(fromDate);
-        Instant adjustedToDate = DateUtils.truncateToMidnight(toDate);
-
-        return teamRequestService.getTicketDistribution(teamId, adjustedFromDate, adjustedToDate);
+        DateRange dateRange = processDateRange(fromDate, toDate, range);
+        return teamRequestService.getTicketDistribution(teamId, dateRange.from, dateRange.to);
     }
 
     // Endpoint to get unassigned tickets for a specific team
@@ -137,15 +132,9 @@ public class TeamRequestController {
                     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
                     Instant toDate,
             @RequestParam(value = "range", required = false) String range) {
-        if (range != null && fromDate == null && toDate == null) {
-            fromDate = DateUtils.parseDateRange(range);
-            toDate = Instant.now();
-        }
 
-        Instant adjustedFromDate = DateUtils.truncateToMidnight(fromDate);
-        Instant adjustedToDate = DateUtils.truncateToMidnight(toDate);
-
-        return teamRequestService.getPriorityDistribution(teamId, adjustedFromDate, adjustedToDate);
+        DateRange dateRange = processDateRange(fromDate, toDate, range);
+        return teamRequestService.getPriorityDistribution(teamId, dateRange.from, dateRange.to);
     }
 
     /**
@@ -159,7 +148,6 @@ public class TeamRequestController {
             @PathVariable("teamRequestId") Long teamRequestId) {
         TransitionItemCollectionDTO ticketHistory =
                 workflowTransitionHistoryService.getTransitionHistoryByTicketId(teamRequestId);
-
         return ResponseEntity.ok(ticketHistory);
     }
 
@@ -173,16 +161,9 @@ public class TeamRequestController {
                     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
                     Instant toDate,
             @RequestParam(value = "range", required = false) String range) {
-        if (range != null && fromDate == null && toDate == null) {
-            fromDate = DateUtils.parseDateRange(range);
-            toDate = Instant.now();
-        }
 
-        Instant adjustedFromDate = DateUtils.truncateToMidnight(fromDate);
-        Instant adjustedToDate = DateUtils.truncateToMidnight(toDate);
-
-        return teamRequestService.getTicketStatisticsByTeamId(
-                teamId, adjustedFromDate, adjustedToDate);
+        DateRange dateRange = processDateRange(fromDate, toDate, range);
+        return teamRequestService.getTicketStatisticsByTeamId(teamId, dateRange.from, dateRange.to);
     }
 
     @GetMapping("/teams/{teamId}/overdue-tickets")
@@ -202,18 +183,9 @@ public class TeamRequestController {
                     Instant toDate,
             @RequestParam(value = "range", required = false) String range) {
 
-        if (range != null && fromDate == null && toDate == null) {
-            fromDate = DateUtils.parseDateRange(range);
-            toDate = Instant.now();
-        }
-
-        Instant adjustedFromDate = DateUtils.truncateToMidnight(fromDate);
-        Instant adjustedToDate = DateUtils.truncateToMidnight(toDate);
-
-        WorkflowTransitionHistoryStatus completedStatus = WorkflowTransitionHistoryStatus.Completed;
-
+        DateRange dateRange = processDateRange(fromDate, toDate, range);
         return teamRequestService.countOverdueTickets(
-                teamId, completedStatus, adjustedFromDate, adjustedToDate);
+                teamId, WorkflowTransitionHistoryStatus.Completed, dateRange.from, dateRange.to);
     }
 
     @GetMapping("/teams/{teamId}/ticket-creations-day-series")
@@ -236,16 +208,9 @@ public class TeamRequestController {
             @RequestParam(value = "to", required = false) Instant toDate,
             @RequestParam(value = "range", required = false) String range) {
 
-        if (range != null && fromDate == null && toDate == null) {
-            fromDate = DateUtils.parseDateRange(range);
-            toDate = Instant.now();
-        }
-
-        Instant adjustedFromDate = DateUtils.truncateToMidnight(fromDate);
-        Instant adjustedToDate = DateUtils.truncateToMidnight(toDate);
-
+        DateRange dateRange = processDateRange(fromDate, toDate, range);
         return teamRequestService.getPriorityDistributionForUser(
-                userId, adjustedFromDate, adjustedToDate);
+                userId, dateRange.from, dateRange.to);
     }
 
     @PatchMapping("/{requestId}/state")
@@ -258,5 +223,36 @@ public class TeamRequestController {
         }
 
         return teamRequestService.updateTeamRequestState(requestId, newStateId);
+    }
+
+    /** Helper class to represent a date range */
+    private static class DateRange {
+        final Instant from;
+        final Instant to;
+
+        DateRange(Instant from, Instant to) {
+            this.from = from;
+            this.to = to;
+        }
+    }
+
+    /**
+     * Process date range parameters consistently across endpoints
+     *
+     * @param fromDate The start date
+     * @param toDate The end date
+     * @param range The date range string
+     * @return Processed date range with adjusted from and to dates
+     */
+    private DateRange processDateRange(Instant fromDate, Instant toDate, String range) {
+        if (range != null && fromDate == null && toDate == null) {
+            fromDate = DateUtils.parseDateRange(range);
+            toDate = Instant.now().plus(Duration.ofDays(1));
+        }
+
+        Instant adjustedFromDate = DateUtils.truncateToMidnight(fromDate);
+        Instant adjustedToDate = DateUtils.truncateToMidnight(toDate);
+
+        return new DateRange(adjustedFromDate, adjustedToDate);
     }
 }

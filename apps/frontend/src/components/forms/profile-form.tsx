@@ -70,6 +70,11 @@ export const ProfileForm = () => {
     getInputProps,
   } = useImageCropper();
 
+  // State to store the avatar URL with cache busting
+  const [avatarUrl, setAvatarUrl] = useState<string | undefined>(
+    session?.user?.imageUrl,
+  );
+
   const [user, setUser] = useState<UserTypeWithFile | undefined>(undefined);
   const { setError } = useError();
   const [isConfirmationOpen, setConfirmationOpen] = useState(false);
@@ -78,6 +83,14 @@ export const ProfileForm = () => {
     currentPassword: false,
     newPassword: false,
   });
+
+  // For session synchronization
+  useEffect(() => {
+    // Initialize avatarUrl from session when component mounts or session changes
+    if (session?.user?.imageUrl) {
+      setAvatarUrl(session.user.imageUrl);
+    }
+  }, []); // Only run on mount
 
   const onSubmit = async (data: UserTypeWithFile) => {
     const formData = new FormData();
@@ -91,9 +104,49 @@ export const ProfileForm = () => {
       formData.append("file", selectedFile);
     }
 
-    await updateUser(formData, setError);
+    // Update user and get the updated user data
+    const updatedUser = await updateUser(formData, setError);
+
+    // Handle avatar URL update with cache busting
+    if (selectedFile && updatedUser?.imageUrl) {
+      try {
+        // Get the base URL without any query parameters
+        const baseImageUrl = updatedUser.imageUrl.split("?")[0];
+
+        // Create a cache-busting URL
+        const cacheBustedUrl = `${baseImageUrl}?v=${Date.now()}`;
+
+        // Update our local state immediately for the UI
+        setAvatarUrl(cacheBustedUrl);
+
+        // Force next-auth session update
+        // We need to update the session object, but we can't rely on it updating immediately
+        await update({
+          ...session,
+          user: {
+            ...session?.user,
+            imageUrl: cacheBustedUrl,
+          },
+        });
+
+        // This is a backup approach if the update isn't working
+        // Force a page refresh after a short delay to ensure session gets the new imageUrl
+        // Uncomment this if you're still having issues
+        // setTimeout(() => {
+        //   router.refresh();
+        // }, 500);
+      } catch (error) {
+        console.error("Error updating avatar:", error);
+      }
+    } else {
+      // If no new avatar, just update the session normally
+      await update();
+    }
+
+    // Reset file selection state
+    setSelectedFile(null);
+
     toast({ description: t.users.profile("save_success") });
-    await update(); // reload session
   };
 
   const handleChangePassword = async (data: z.infer<typeof passwordSchema>) => {
@@ -157,7 +210,7 @@ export const ProfileForm = () => {
                   {...getRootProps()}
                   size="w-36 h-36"
                   className="cursor-pointer ring-offset-2 ring-2 ring-slate-200"
-                  imageUrl={session?.user?.imageUrl}
+                  imageUrl={avatarUrl}
                 />
               </>
             )}

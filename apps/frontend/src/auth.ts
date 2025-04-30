@@ -50,7 +50,8 @@ export const { handlers, auth } = NextAuth({
       else if (new URL(url).origin === baseUrl) return url;
       return baseUrl;
     },
-    jwt({ token, account, user }) {
+    jwt({ token, account, user, trigger, session }) {
+      // Handle initial sign-in (both credentials and OAuth flows)
       if (user) {
         token.accessToken = user.accessToken as string; // Credentials-based accessToken
         token.id = user.id as string; // User ID from either credentials or OAuth2
@@ -65,6 +66,18 @@ export const { handlers, auth } = NextAuth({
           Math.floor(Date.now() / 1000) + DEFAULT_EXPIRATION;
       }
 
+      // Handle session updates (this is triggered by update() call from client)
+      if (trigger === "update" && session) {
+        // If the client is updating the user's imageUrl
+        if (session.user?.imageUrl) {
+          // Update the user object in the token with the new imageUrl
+          token.user = {
+            ...token.user,
+            imageUrl: session.user.imageUrl,
+          };
+        }
+      }
+
       // Check if the token is expired
       if (token.exp && Date.now() >= token.exp * 1000) {
         // Clear the token to force re-login
@@ -73,9 +86,18 @@ export const { handlers, auth } = NextAuth({
 
       return token;
     },
+
     async session({ session, token }) {
       session.provider = token.provider as string; // Add provider for OAuth2
-      session.user = token.user || session.user; // Include user object if available
+
+      // Ensure token.user properties are copied to session.user
+      // This is important for the imageUrl to be reflected in the session
+      if (token.user) {
+        session.user = {
+          ...session.user,
+          ...token.user,
+        };
+      }
 
       // Check if token.accessToken is not undefined
       if (token.accessToken !== undefined) {
@@ -83,6 +105,7 @@ export const { handlers, auth } = NextAuth({
       } else {
         session.accessToken = session.user.accessToken as string;
       }
+
       // Social login - Exchange the social token for a backend JWT
       if (token.provider === "google") {
         try {
@@ -105,6 +128,7 @@ export const { handlers, auth } = NextAuth({
             "Unknown error";
         }
       }
+
       return session;
     },
   },

@@ -647,7 +647,7 @@ const TaskDetailSheet: React.FC<TaskDetailSheetProps> = ({
             {/* Description Section with Click-to-Edit - REPLACED TEXTAREA WITH RICHTEXTEDITOR */}
             <div>
               <h3 className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                Description
+                {t.teams.tickets.form.base("description")}
               </h3>
 
               {isEditingDescription ? (
@@ -684,6 +684,7 @@ const TaskDetailSheet: React.FC<TaskDetailSheetProps> = ({
                         onClick={canEdit ? handleEditDescription : undefined}
                       >
                         <div
+                          className="prose dark:prose-invert max-w-none text-muted-foreground"
                           dangerouslySetInnerHTML={{
                             __html:
                               task.requestDescription ||

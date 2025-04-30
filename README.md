@@ -33,7 +33,7 @@
 
 FlowInquiry is a free, open-source solution that embraces transparency as an alternative to Jira, ServiceNow, and Zendesk. Designed for managing cases, tickets, and requests, it streamlines communication, ensures timely resolutions, and supports customizable workflows with SLAs. By eliminating vendor lock-in and costly subscriptions, FlowInquiry enhances efficiency, accountability, and collaboration for teams handling internal and external inquiries.
 
-![FlowInquiry](assets/flowinquiry_slide.gif)
+![FlowInquiry](assets/flowinquiry_slide.webp)
 
 ## Stay Up-to-Date
 

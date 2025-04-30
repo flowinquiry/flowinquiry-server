@@ -47,7 +47,11 @@ export function Menu({ isOpen }: MenuProps) {
                         <Ellipsis className="h-5 w-5" />
                       </div>
                     </TooltipTrigger>
-                    <TooltipContent side="right">
+                    <TooltipContent
+                      side="right"
+                      sideOffset={10}
+                      className="z-50"
+                    >
                       <p>{groupLabel}</p>
                     </TooltipContent>
                   </Tooltip>
@@ -70,30 +74,41 @@ export function Menu({ isOpen }: MenuProps) {
                                   ? "secondary"
                                   : "ghost"
                               }
-                              className="w-full justify-start h-10 mb-1"
+                              className={cn(
+                                "h-10 mb-1",
+                                isOpen === false
+                                  ? "justify-center"
+                                  : "w-full justify-start",
+                              )}
                               asChild
                             >
-                              <Link href={href}>
+                              <Link
+                                href={href}
+                                className={cn(
+                                  isOpen === false
+                                    ? "flex justify-center w-auto px-3"
+                                    : "w-full",
+                                )}
+                              >
                                 <span
                                   className={cn(isOpen === false ? "" : "mr-4")}
                                 >
                                   <Icon size={18} />
                                 </span>
-                                <p
-                                  className={cn(
-                                    "max-w-[200px] truncate",
-                                    isOpen === false
-                                      ? "-translate-x-96 opacity-0"
-                                      : "translate-x-0 opacity-100",
-                                  )}
-                                >
-                                  {label}
-                                </p>
+                                {isOpen !== false && (
+                                  <p className="max-w-[200px] truncate">
+                                    {label}
+                                  </p>
+                                )}
                               </Link>
                             </Button>
                           </TooltipTrigger>
                           {isOpen === false && (
-                            <TooltipContent side="right">
+                            <TooltipContent
+                              side="right"
+                              sideOffset={10}
+                              className="z-50"
+                            >
                               {label}
                             </TooltipContent>
                           )}

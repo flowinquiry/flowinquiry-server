@@ -121,6 +121,7 @@ const LoginForm = () => {
                         {...field}
                       />
                     </FormControl>
+                    <FormMessage />
                   </FormItem>
                 )}
               ></FormField>

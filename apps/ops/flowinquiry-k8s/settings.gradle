@@ -1,2 +1,0 @@
-rootProject.name = 'flowinquiry-k8s'
-include('app')

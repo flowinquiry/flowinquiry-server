@@ -1,0 +1,25 @@
+image:
+  backend: flowinquiry/flowinquiry-server:1.2.0
+  frontend: flowinquiry/flowinquiry-frontend:1.2.0
+  postgresql: postgres:16.3
+  caddy: caddy:alpine
+
+resources:
+  limits:
+    memory: 512Mi
+    cpu: 500m
+
+postgresql:
+  user: ""
+  password: ""
+  database: flowinquiry
+
+backend:
+  javaOptions: "-Xmx512m -Xms256m"
+  profile: "prod"
+
+caddy:
+  port: 1234
+
+volumes:
+  storage: /storage

@@ -1,0 +1,25 @@
+image:
+  backend: flowinquiry/flowinquiry-server:1.2.0
+  frontend: flowinquiry/flowinquiry-frontend:1.2.0
+  postgresql: postgres:16.3
+  caddy: caddy:alpine
+
+backend:
+  env:
+    JAVA_OPTIONS: "-Xmx512m -Xms256m"
+    SPRING_PROFILES_ACTIVE: "prod"
+    SPRING_DATASOURCE_URL: "jdbc:postgresql://flowinquiry-postgresql:5432/flowinquiry"
+    SPRING_DATASOURCE_USERNAME: "flowinquiry"
+    SPRING_DATASOURCE_PASSWORD: "${POSTGRES_PASSWORD}"
+
+frontend:
+  env:
+    HOSTNAME: "0.0.0.0"
+    NEXT_PUBLIC_BASE_URL: "http://${HOST_IP:-localhost}:1234"
+    BACK_END_URL: "http://flowinquiry-backend:8080"
+
+postgresql:
+  env:
+    POSTGRES_DB: "flowinquiry"
+    POSTGRES_USER: "flowinquiry"
+    POSTGRES_PASSWORD: "${POSTGRES_PASSWORD}"

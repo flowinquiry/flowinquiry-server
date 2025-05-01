@@ -38,7 +38,7 @@ You can build your own Docker images and deploy them anywhere, or use the pre-bu
         FlowInquiry backend uses Jib to build and deploy Docker images to the Docker repository. To change the Docker image
         version, edit the `projectVersion` attribute in the `gradle.properties` file.
 
-        Open the terminal and navigate to the root folder. Use the command `./gradlew :server:jibDockerBuild -Djib.dockerClient.executable=/path/to/docker` to build the Docker image, or `./gradlew :apps:backend:server:jibDockerBuild -Djib.dockerClient.executable=/usr/local/bin/docker` to build and deploy it.
+        Open the terminal and navigate to the root folder. Use the command `./gradlew :apps:backend:server:jibDockerBuild  -Djib.dockerClient.executable=/path/to/docker` to build the Docker image, or `./gradlew :apps:backend:server:jibDockerBuild -Djib.dockerClient.executable=/usr/local/bin/docker` to build and deploy it.
 
         ```bash
         ➜  flowinquiry-server git:(main) ./gradlew :apps:backend:server:jibDockerBuild -Djib.dockerClient.executable=/usr/local/bin/docker

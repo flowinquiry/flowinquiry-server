@@ -1,0 +1,35 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: backend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: backend
+  template:
+    metadata:
+      labels:
+        app: backend
+    spec:
+      containers:
+        - name: backend
+          image: {{ .Values.image.backend }}
+          env:
+            - name: JAVA_OPTIONS
+              value: {{ .Values.backend.javaOptions }}
+            - name: SPRING_PROFILES_ACTIVE
+              value: {{ .Values.backend.profile }}
+            - name: SPRING_DATASOURCE_URL
+              value: jdbc:postgresql://postgresql:5432/{{ .Values.postgresql.database }}
+            - name: SPRING_DATASOURCE_USERNAME
+              value: {{ .Values.postgresql.user }}
+            - name: SPRING_DATASOURCE_PASSWORD
+              value: {{ .Values.postgresql.password }}
+          volumeMounts:
+            - name: storage
+              mountPath: {{ .Values.volumes.storage }}
+      volumes:
+        - name: storage
+          persistentVolumeClaim:
+            claimName: storage-pvc

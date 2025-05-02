@@ -12,7 +12,8 @@ services:
       - SPRING_DATASOURCE_USERNAME=flowinquiry
       - SPRING_DATASOURCE_PASSWORD=${POSTGRES_PASSWORD}
     depends_on:
-      - postgresql
+      postgresql:
+        condition: service_healthy
     env_file:
       - ./.backend.env
   front-end:

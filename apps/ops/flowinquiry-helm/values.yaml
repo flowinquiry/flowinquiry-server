@@ -1,6 +1,6 @@
 image:
-  backend: flowinquiry/flowinquiry-server:1.2.0
-  frontend: flowinquiry/flowinquiry-frontend:1.2.0
+  backend: flowinquiry/flowinquiry-server:1.2.1
+  frontend: flowinquiry/flowinquiry-frontend:1.2.1
   postgresql: postgres:16.3
   caddy: caddy:alpine
 

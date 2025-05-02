@@ -38,6 +38,8 @@ spring:
     hikari:
       poolName: Hikari
       auto-commit: false
+      connection-timeout: 30000
+      initialization-fail-timeout: 10000
   messages:
     cache-duration: PT1S # 1 second, see the ISO 8601 standard
   thymeleaf:

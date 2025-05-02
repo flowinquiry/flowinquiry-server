@@ -7,15 +7,13 @@
   </a>
 </div>
 
-<div style="display: flex; justify-content: center; gap: 10px; margin-top: 1rem;">
-  <a href="https://flowinquiry.io" rel="dofollow"><strong>Main page</strong></a> 
-  |
-  <a href="https://docs.flowinquiry.io" rel="dofollow"><strong>Explore the docs »</strong></a>
-  |
-  <a href="https://github.com/orgs/flowinquiry/projects/4/views/3" rel="dofollow"><strong>Backlogs</strong></a>
-  |
-  <a href="https://hub.docker.com/r/flowinquiry/flowinquiry-server" rel="dofollow"><strong>Docker</strong></a>
-</div>
+<p align="center">
+  <a href="https://flowinquiry.io"><strong>Main page</strong></a> |
+  <a href="https://docs.flowinquiry.io"><strong>Explore the docs »</strong></a> |
+  <a href="https://github.com/orgs/flowinquiry/projects/4/views/3"><strong>Backlogs</strong></a> |
+  <a href="https://hub.docker.com/u/flowinquiry"><strong>Docker</strong></a>
+</p>
+
 
 > ⭐ **If you find FlowInquiry useful, please consider giving us a star on [GitHub](https://github.com/flowinquiry/flowinquiry)!**. It motivates us a lot and helps the project grow!
 

@@ -17,10 +17,7 @@
   <a href="https://hub.docker.com/r/flowinquiry/flowinquiry-server" rel="dofollow"><strong>Docker</strong></a>
 </div>
 
-<div style="margin-top: 1.5rem; padding: 0.75rem; text-align: center; background-color: rgba(255, 215, 0, 0.1); border: 1px solid #FFD700; border-radius: 6px;">
-  ⭐ <strong>If you find FlowInquiry useful, please consider giving us a star on <a href="https://github.com/flowinquiry/flowinquiry" target="_blank">GitHub</a>!</strong><br/>
-  It motivates us a lot and helps the project grow!
-</div>
+> ⭐ **If you find FlowInquiry useful, please consider giving us a star on [GitHub](https://github.com/flowinquiry/flowinquiry)!**. It motivates us a lot and helps the project grow!
 
 [![Build Status](https://github.com/flowinquiry/flowinquiry/actions/workflows/ci.yml/badge.svg)](https://github.com/flowinquiry/flowinquiry/actions/workflows/ci.yml)
 [![Contributors](https://img.shields.io/github/contributors/flowinquiry/flowinquiry.svg)](https://github.com/flowinquiry/flowinquiry/graphs/contributors)

@@ -1,12 +1,3 @@
-# FlowInquiry
-[![Build Status](https://github.com/flowinquiry/flowinquiry/actions/workflows/ci.yml/badge.svg)](https://github.com/flowinquiry/flowinquiry/actions/workflows/ci.yml)
-[![Contributors](https://img.shields.io/github/contributors/flowinquiry/flowinquiry.svg)](https://github.com/flowinquiry/flowinquiry/graphs/contributors)
-[![Codacy Badge](https://app.codacy.com/project/badge/Grade/69704fb598fa40b5b053916ba4272797)](https://app.codacy.com/gh/flowinquiry/flowinquiry/dashboard?utm_source=gh&utm_medium=referral&utm_content=&utm_campaign=Badge_grade)
-[![Frontend Docker Pulls](https://img.shields.io/docker/pulls/flowinquiry/flowinquiry-frontend?label=frontend%20pulls&logo=docker)](https://hub.docker.com/r/flowinquiry/flowinquiry-frontend)
-[![Backend Docker Pulls](https://img.shields.io/docker/pulls/flowinquiry/flowinquiry-server?label=backend%20pulls&logo=docker)](https://hub.docker.com/r/flowinquiry/flowinquiry-server)
-[![GitHub stars](https://img.shields.io/github/stars/flowinquiry/flowinquiry-server.svg?style=social)](https://github.com/flowinquiry/flowinquiry-server/stargazers)
-![License](https://img.shields.io/badge/License-AGPLv3-blue)
-
 <div style="display: flex; justify-content: center; align-items: center;">
   <a href="https://flowinquiry.io" target="_blank">
     <picture>
@@ -16,28 +7,35 @@
   </a>
 </div>
 
-<div style="display: flex; justify-content: center; gap: 10px;">
-  <br />
+<div style="display: flex; justify-content: center; gap: 10px; margin-top: 1rem;">
   <a href="https://flowinquiry.io" rel="dofollow"><strong>Main page</strong></a> 
-  | 
+  |
   <a href="https://docs.flowinquiry.io" rel="dofollow"><strong>Explore the docs »</strong></a>
   |
   <a href="https://github.com/orgs/flowinquiry/projects/4/views/3" rel="dofollow"><strong>Backlogs</strong></a>
   |
   <a href="https://hub.docker.com/r/flowinquiry/flowinquiry-server" rel="dofollow"><strong>Docker</strong></a>
-  <br />
 </div>
 
+<div style="margin-top: 1.5rem; padding: 0.75rem; text-align: center; background-color: rgba(255, 215, 0, 0.1); border: 1px solid #FFD700; border-radius: 6px;">
+  ⭐ <strong>If you find FlowInquiry useful, please consider giving us a star on <a href="https://github.com/flowinquiry/flowinquiry" target="_blank">GitHub</a>!</strong><br/>
+  It motivates us a lot and helps the project grow!
+</div>
+
+[![Build Status](https://github.com/flowinquiry/flowinquiry/actions/workflows/ci.yml/badge.svg)](https://github.com/flowinquiry/flowinquiry/actions/workflows/ci.yml)
+[![Contributors](https://img.shields.io/github/contributors/flowinquiry/flowinquiry.svg)](https://github.com/flowinquiry/flowinquiry/graphs/contributors)
+[![Codacy Badge](https://app.codacy.com/project/badge/Grade/69704fb598fa40b5b053916ba4272797)](https://app.codacy.com/gh/flowinquiry/flowinquiry/dashboard?utm_source=gh&utm_medium=referral&utm_content=&utm_campaign=Badge_grade)
+[![GitHub release; latest by date](https://img.shields.io/github/v/release/flowinquiry/flowinquiry)](https://github.com/flowinquiry/flowinquiry/releases)
+[![Frontend Docker Pulls](https://img.shields.io/docker/pulls/flowinquiry/flowinquiry-frontend?label=frontend%20pulls&logo=docker)](https://hub.docker.com/r/flowinquiry/flowinquiry-frontend)
+[![Backend Docker Pulls](https://img.shields.io/docker/pulls/flowinquiry/flowinquiry-server?label=backend%20pulls&logo=docker)](https://hub.docker.com/r/flowinquiry/flowinquiry-server)
+[![GitHub stars](https://img.shields.io/github/stars/flowinquiry/flowinquiry-server.svg?style=social)](https://github.com/flowinquiry/flowinquiry-server/stargazers)
+![License](https://img.shields.io/badge/License-AGPLv3-blue)
 
 ## What is FlowInquiry
 
 FlowInquiry is a free, open-source solution that embraces transparency as an alternative to Jira, ServiceNow, and Zendesk. Designed for managing cases, tickets, and requests, it streamlines communication, ensures timely resolutions, and supports customizable workflows with SLAs. By eliminating vendor lock-in and costly subscriptions, FlowInquiry enhances efficiency, accountability, and collaboration for teams handling internal and external inquiries.
 
 ![FlowInquiry](assets/flowinquiry_slide.webp)
-
-## Stay Up-to-Date
-
-![Follow FlowInquiry](assets/github_project_star.gif)
 
 ## ✅ Real-World Use Cases Solved by FlowInquiry
 FlowInquiry helps teams manage requests, projects, and collaboration with clarity and control. Here are common ways organizations use it:
@@ -178,11 +176,11 @@ front-end-1   |
 front-end-1   |  ✓ Starting...
 front-end-1   |  ✓ Ready in 34ms
 
-back-end-1    | 2025-04-28T00:59:44.011Z  INFO 1 --- [  restartedMain] io.flowinquiry.FlowInquiryApp.logApplicationStartup:120 : ----------------------------------------------------------
-back-end-1    | 2025-04-28T00:59:44.011Z  INFO 1 --- [  restartedMain] io.flowinquiry.FlowInquiryApp.logApplicationStartup:121 :        Application 'FlowInquiry' is running! Access URLs:
-back-end-1    | 2025-04-28T00:59:44.011Z  INFO 1 --- [  restartedMain] io.flowinquiry.FlowInquiryApp.logApplicationStartup:122 :        Local:          http://localhost:8080/
-back-end-1    | 2025-04-28T00:59:44.011Z  INFO 1 --- [  restartedMain] io.flowinquiry.FlowInquiryApp.logApplicationStartup:123 :        External:       http://172.18.0.4:8080/
-back-end-1    | 2025-04-28T00:59:44.012Z  INFO 1 --- [  restartedMain] io.flowinquiry.FlowInquiryApp.logApplicationStartup:124 :        Profile(s):     prod
+back-end-1    |   INFO 1 --- [  restartedMain] io.flowinquiry.FlowInquiryApp.logApplicationStartup:120 : ----------------------------------------------------------
+back-end-1    |   INFO 1 --- [  restartedMain] io.flowinquiry.FlowInquiryApp.logApplicationStartup:121 :        Application 'FlowInquiry' is running! Access URLs:
+back-end-1    |   INFO 1 --- [  restartedMain] io.flowinquiry.FlowInquiryApp.logApplicationStartup:122 :        Local:          http://localhost:8080/
+back-end-1    |   INFO 1 --- [  restartedMain] io.flowinquiry.FlowInquiryApp.logApplicationStartup:123 :        External:       http://172.18.0.4:8080/
+back-end-1    |   INFO 1 --- [  restartedMain] io.flowinquiry.FlowInquiryApp.logApplicationStartup:124 :        Profile(s):     prod
 ```
 
 ### 🌐 Accessing FlowInquiry
@@ -201,7 +199,7 @@ Using host IP address: 192.168.0.78
 ➡️ For **production deployments**, it is strongly recommended to select **`y`** and configure SSL for secure access.
 
 ## Deploy FlowInquiry
-To ensure a smooth deployment process, we provide detailed guidelines for deploying FlowInquiry in various environments. These instructions cover setup steps, configuration details, and best practices for deploying the service effectively. You can find the deployment documentation [here](https://docs.flowinquiry.io/developer_guides/deployment)
+To ensure a smooth deployment process, we provide detailed guidelines for deploying FlowInquiry in various environments. These instructions cover setup steps, configuration details, and best practices for deploying the service effectively. You can find the deployment documentation [here](https://docs.flowinquiry.io/developer_guides/deployment/docker)
 
 ## License
 This project is licensed under the [AGPLv3](LICENSE) License.
@@ -216,6 +214,7 @@ You can:
 - Create a tutorial or video 🎥
 - Report bugs or suggest improvements 🐛
 - Submit a pull request 🛠️
+  Help with Localization 🌍 – [Contribute a Translation](https://docs.flowinquiry.io/how_to_contributes/localization)
 
 Read the full guide: [How to Contribute to FlowInquiry](https://docs.flowinquiry.io/how_to_contributes/your_action_is_meaningful_to_us)
 

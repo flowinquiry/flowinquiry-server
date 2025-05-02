@@ -162,16 +162,16 @@ Ensure that Docker is installed on your machine, then run the command `pnpm dock
             :: FlowInquiry 🤓  :: Running Spring Boot 3.4.2 :: Startup profile(s) dev ::
             :: https://www.flowinquiry.io ::
 
-            2025-04-04T13:13:04.218-07:00  INFO 23073 --- [  restartedMain] io.flowinquiry.FlowInquiryApp.logStarting:53 : Starting FlowInquiryApp using Java 21.0.5 with PID 23073
-            2025-04-04T13:13:04.219-07:00 DEBUG 23073 --- [  restartedMain] io.flowinquiry.FlowInquiryApp.logStarting:54 : Running with Spring Boot v3.4.2, Spring v6.2.2
-            2025-04-04T13:13:04.219-07:00  INFO 23073 --- [  restartedMain] io.flowinquiry.FlowInquiryApp.logStartupProfileInfo:658 : The following 1 profile is active: "dev"
-            2025-04-04T13:13:05.318-07:00  WARN 23073 --- [  restartedMain] io.undertow.websockets.jsr.handleDeployment:68 : UT026010: Buffer pool was not set on WebSocketDeploymentInfo, the default pool will be used
-            2025-04-04T13:13:05.400-07:00 DEBUG 23073 --- [  restartedMain] io.flowinquiry.config.WebConfigurer.corsFilter:90 : Registering CORS filter
-            2025-04-04T13:13:05.420-07:00  INFO 23073 --- [  restartedMain] io.flowinquiry.config.WebConfigurer.onStartup:44 : Web application configuration, using profiles: dev
-            2025-04-04T13:13:05.420-07:00  INFO 23073 --- [  restartedMain] io.flowinquiry.config.WebConfigurer.onStartup:49 : Web application fully configured
-            2025-04-04T13:13:05.996-07:00  WARN 23073 --- [  restartedMain] org.hibernate.mapping.RootClass.checkCompositeIdentifier:354 : HHH000038: Composite-id class does not override equals(): io.flowinquiry.modules.usermanagement.domain.UserAuthorityId
-            2025-04-04T13:13:05.997-07:00  WARN 23073 --- [  restartedMain] org.hibernate.mapping.RootClass.checkCompositeIdentifier:357 : HHH000039: Composite-id class does not override hashCode(): io.flowinquiry.modules.usermanagement.domain.UserAuthorityId
-            2025-04-04T13:13:06.449-07:00  INFO 23073 --- [  restartedMain] io.flowinquiry.db.service.LiquibaseService.updateLiquibaseSchema:35 : Going to create a schema flowinquiry
+            INFO 23073 --- [  restartedMain] io.flowinquiry.FlowInquiryApp.logStarting:53 : Starting FlowInquiryApp using Java 21.0.5 with PID 23073
+            DEBUG 23073 --- [  restartedMain] io.flowinquiry.FlowInquiryApp.logStarting:54 : Running with Spring Boot v3.4.2, Spring v6.2.2
+            INFO 23073 --- [  restartedMain] io.flowinquiry.FlowInquiryApp.logStartupProfileInfo:658 : The following 1 profile is active: "dev"
+            WARN 23073 --- [  restartedMain] io.undertow.websockets.jsr.handleDeployment:68 : UT026010: Buffer pool was not set on WebSocketDeploymentInfo, the default pool will be used
+            DEBUG 23073 --- [  restartedMain] io.flowinquiry.config.WebConfigurer.corsFilter:90 : Registering CORS filter
+            INFO 23073 --- [  restartedMain] io.flowinquiry.config.WebConfigurer.onStartup:44 : Web application configuration, using profiles: dev
+            INFO 23073 --- [  restartedMain] io.flowinquiry.config.WebConfigurer.onStartup:49 : Web application fully configured
+            WARN 23073 --- [  restartedMain] org.hibernate.mapping.RootClass.checkCompositeIdentifier:354 : HHH000038: Composite-id class does not override equals(): io.flowinquiry.modules.usermanagement.domain.UserAuthorityId
+            WARN 23073 --- [  restartedMain] org.hibernate.mapping.RootClass.checkCompositeIdentifier:357 : HHH000039: Composite-id class does not override hashCode(): io.flowinquiry.modules.usermanagement.domain.UserAuthorityId
+            INFO 23073 --- [  restartedMain] io.flowinquiry.db.service.LiquibaseService.updateLiquibaseSchema:35 : Going to create a schema flowinquiry
             Database is up to date, no changesets to execute
 
             UPDATE SUMMARY
@@ -185,13 +185,13 @@ Ensure that Docker is installed on your machine, then run the command `pnpm dock
             FILTERED CHANGE SETS SUMMARY
             Context mismatch:            13
 
-            2025-04-04T13:13:10.325-07:00  INFO 23073 --- [  restartedMain] io.flowinquiry.FlowInquiryApp.logStarted:59 : Started FlowInquiryApp in 6.283 seconds (process running for 6.437)
-            2025-04-04T13:13:10.327-07:00  INFO 23073 --- [  restartedMain] io.flowinquiry.health.JWTSetupChecker.run:32 : JWT secret found and ready to use
-            2025-04-04T13:13:10.327-07:00  INFO 23073 --- [  restartedMain] io.flowinquiry.FlowInquiryApp.logApplicationStartup:120 : ----------------------------------------------------------
-            2025-04-04T13:13:10.327-07:00  INFO 23073 --- [  restartedMain] io.flowinquiry.FlowInquiryApp.logApplicationStartup:121 :  Application 'FlowInquiry' is running! Access URLs:
-            2025-04-04T13:13:10.328-07:00  INFO 23073 --- [  restartedMain] io.flowinquiry.FlowInquiryApp.logApplicationStartup:122 :  Local:          http://localhost:8080/
-            2025-04-04T13:13:10.328-07:00  INFO 23073 --- [  restartedMain] io.flowinquiry.FlowInquiryApp.logApplicationStartup:123 :  External:       http://192.168.0.78:8080/
-            2025-04-04T13:13:10.328-07:00  INFO 23073 --- [  restartedMain] io.flowinquiry.FlowInquiryApp.logApplicationStartup:124 :  Profile(s):     dev
+            INFO 23073 --- [  restartedMain] io.flowinquiry.FlowInquiryApp.logStarted:59 : Started FlowInquiryApp in 6.283 seconds (process running for 6.437)
+            INFO 23073 --- [  restartedMain] io.flowinquiry.health.JWTSetupChecker.run:32 : JWT secret found and ready to use
+            INFO 23073 --- [  restartedMain] io.flowinquiry.FlowInquiryApp.logApplicationStartup:120 : ----------------------------------------------------------
+            INFO 23073 --- [  restartedMain] io.flowinquiry.FlowInquiryApp.logApplicationStartup:121 :  Application 'FlowInquiry' is running! Access URLs:
+            INFO 23073 --- [  restartedMain] io.flowinquiry.FlowInquiryApp.logApplicationStartup:122 :  Local:          http://localhost:8080/
+            INFO 23073 --- [  restartedMain] io.flowinquiry.FlowInquiryApp.logApplicationStartup:123 :  External:       http://192.168.0.78:8080/
+            INFO 23073 --- [  restartedMain] io.flowinquiry.FlowInquiryApp.logApplicationStartup:124 :  Profile(s):     dev
 
             ```
 

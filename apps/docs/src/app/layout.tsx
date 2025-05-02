@@ -42,8 +42,16 @@ export const metadata: Metadata = {
 
 const banner = (
   <Banner dismissible={false}>
-    🚀 Want to try FlowInquiry? Navigate to flowinquiry.io{" "}
-    <Link href="https://flowinquiry.io">and sign up now!</Link>.
+    ⭐️ If you like FlowInquiry, consider supporting the project by giving it a
+    star on{" "}
+    <Link
+      href="https://github.com/flowinquiry/flowinquiry"
+      target="_blank"
+      rel="noopener noreferrer"
+    >
+      GitHub
+    </Link>
+    !
   </Banner>
 );
 const navbar = (

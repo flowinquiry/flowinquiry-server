@@ -124,26 +124,26 @@ front-end-1   |  ✓ Starting...
 front-end-1   |  ✓ Ready in 34ms
 
 ...
-back-end-1    | 2025-04-28T00:59:34.292Z  INFO 1 --- [  restartedMain] liquibase.util.log:37 : UPDATE SUMMARY
-back-end-1    | 2025-04-28T00:59:34.292Z  INFO 1 --- [  restartedMain] liquibase.util.log:37 : Run:                          0
-back-end-1    | 2025-04-28T00:59:34.293Z  INFO 1 --- [  restartedMain] liquibase.util.log:37 : Previously run:               9
-back-end-1    | 2025-04-28T00:59:34.293Z  INFO 1 --- [  restartedMain] liquibase.util.log:37 : Filtered out:                17
-back-end-1    | 2025-04-28T00:59:34.293Z  INFO 1 --- [  restartedMain] liquibase.util.log:37 : -------------------------------
-back-end-1    | 2025-04-28T00:59:34.293Z  INFO 1 --- [  restartedMain] liquibase.util.log:37 : Total change sets:           26
-back-end-1    | 2025-04-28T00:59:34.293Z  INFO 1 --- [  restartedMain] liquibase.util.log:37 : FILTERED CHANGE SETS SUMMARY
-back-end-1    | 2025-04-28T00:59:34.294Z  INFO 1 --- [  restartedMain] liquibase.util.log:37 : Context mismatch:            17
-back-end-1    | 2025-04-28T00:59:34.308Z  INFO 1 --- [  restartedMain] liquibase.util.log:37 : Update summary generated
-back-end-1    | 2025-04-28T00:59:34.310Z  INFO 1 --- [  restartedMain] liquibase.command.log:37 : Command execution complete
-back-end-1    | 2025-04-28T00:59:35.184Z  WARN 1 --- [  restartedMain] io.flowinquiry.modules.collab.service.MailService.reloadMailSender:87 : MailService not configured. 'mail.host' or 'mail.port' is missing.
-back-end-1    | 2025-04-28T00:59:35.379Z  INFO 1 --- [  restartedMain] org.springframework.data.jpa.repository.query.QueryEnhancerFactory.<clinit>:49 : Hibernate is in classpath; If applicable, HQL parser will be used.
-back-end-1    | 2025-04-28T00:59:41.405Z  INFO 1 --- [  restartedMain] org.springframework.security.config.annotation.authentication.configuration.InitializeUserDetailsBeanManagerConfigurer$InitializeUserDetailsManagerConfigurer.configure:114 : Global AuthenticationManager configured with UserDetailsService bean with name appUserDetailService
-back-end-1    | 2025-04-28T00:59:42.008Z  INFO 1 --- [  restartedMain] org.springframework.boot.actuate.endpoint.web.EndpointLinksResolver.<init>:60 : Exposing 1 endpoint beneath base path '/actuator'
-back-end-1    | 2025-04-28T00:59:43.879Z  INFO 1 --- [  restartedMain] org.springframework.messaging.simp.broker.SimpleBrokerMessageHandler.info:117 : Starting...
-back-end-1    | 2025-04-28T00:59:43.882Z  INFO 1 --- [  restartedMain] org.springframework.messaging.simp.broker.SimpleBrokerMessageHandler.info:117 : BrokerAvailabilityEvent[available=true, SimpleBrokerMessageHandler [org.springframework.messaging.simp.broker.DefaultSubscriptionRegistry@1db75f70]]
-back-end-1    | 2025-04-28T00:59:43.884Z  INFO 1 --- [  restartedMain] org.springframework.messaging.simp.broker.SimpleBrokerMessageHandler.info:117 : Started.
-back-end-1    | 2025-04-28T00:59:43.895Z  INFO 1 --- [  restartedMain] io.undertow.start:120 : starting server: Undertow - 2.3.18.Final
-back-end-1    | 2025-04-28T00:59:43.902Z  INFO 1 --- [  restartedMain] org.xnio.<clinit>:95 : XNIO version 3.8.16.Final
-back-end-1    | 2025-04-28T00:59:43.907Z  INFO 1 --- [  restartedMain] org.xnio.nio.<clinit>:58 : XNIO NIO Implementation Version 3.8.16.Final
+back-end-1    | INFO 1 --- [  restartedMain] liquibase.util.log:37 : UPDATE SUMMARY
+back-end-1    | INFO 1 --- [  restartedMain] liquibase.util.log:37 : Run:                          0
+back-end-1    | INFO 1 --- [  restartedMain] liquibase.util.log:37 : Previously run:               9
+back-end-1    | INFO 1 --- [  restartedMain] liquibase.util.log:37 : Filtered out:                17
+back-end-1    | INFO 1 --- [  restartedMain] liquibase.util.log:37 : -------------------------------
+back-end-1    | INFO 1 --- [  restartedMain] liquibase.util.log:37 : Total change sets:           26
+back-end-1    | INFO 1 --- [  restartedMain] liquibase.util.log:37 : FILTERED CHANGE SETS SUMMARY
+back-end-1    | INFO 1 --- [  restartedMain] liquibase.util.log:37 : Context mismatch:            17
+back-end-1    | INFO 1 --- [  restartedMain] liquibase.util.log:37 : Update summary generated
+back-end-1    | INFO 1 --- [  restartedMain] liquibase.command.log:37 : Command execution complete
+back-end-1    | WARN 1 --- [  restartedMain] io.flowinquiry.modules.collab.service.MailService.reloadMailSender:87 : MailService not configured. 'mail.host' or 'mail.port' is missing.
+back-end-1    | INFO 1 --- [  restartedMain] org.springframework.data.jpa.repository.query.QueryEnhancerFactory.<clinit>:49 : Hibernate is in classpath; If applicable, HQL parser will be used.
+back-end-1    | INFO 1 --- [  restartedMain] org.springframework.security.config.annotation.authentication.configuration.InitializeUserDetailsBeanManagerConfigurer$InitializeUserDetailsManagerConfigurer.configure:114 : Global AuthenticationManager configured with UserDetailsService bean with name appUserDetailService
+back-end-1    | INFO 1 --- [  restartedMain] org.springframework.boot.actuate.endpoint.web.EndpointLinksResolver.<init>:60 : Exposing 1 endpoint beneath base path '/actuator'
+back-end-1    | INFO 1 --- [  restartedMain] org.springframework.messaging.simp.broker.SimpleBrokerMessageHandler.info:117 : Starting...
+back-end-1    | INFO 1 --- [  restartedMain] org.springframework.messaging.simp.broker.SimpleBrokerMessageHandler.info:117 : BrokerAvailabilityEvent[available=true, SimpleBrokerMessageHandler [org.springframework.messaging.simp.broker.DefaultSubscriptionRegistry@1db75f70]]
+back-end-1    | INFO 1 --- [  restartedMain] org.springframework.messaging.simp.broker.SimpleBrokerMessageHandler.info:117 : Started.
+back-end-1    | INFO 1 --- [  restartedMain] io.undertow.start:120 : starting server: Undertow - 2.3.18.Final
+back-end-1    | INFO 1 --- [  restartedMain] org.xnio.<clinit>:95 : XNIO version 3.8.16.Final
+back-end-1    | INFO 1 --- [  restartedMain] org.xnio.nio.<clinit>:58 : XNIO NIO Implementation Version 3.8.16.Final
 back-end-1    | 2025-04-28T00:59:43.928Z  INFO 1 --- [  restartedMain] org.jboss.threads.<clinit>:55 : JBoss Threads version 3.5.0.Final
 back-end-1    | 2025-04-28T00:59:43.974Z  INFO 1 --- [  restartedMain] org.springframework.boot.web.embedded.undertow.UndertowWebServer.start:121 : Undertow started on port 8080 (http) with context path '/'
 back-end-1    | 2025-04-28T00:59:43.997Z  INFO 1 --- [  restartedMain] io.flowinquiry.FlowInquiryApp.logStarted:59 : Started FlowInquiryApp in 20.225 seconds (process running for 21.35)
@@ -151,9 +151,9 @@ back-end-1    | 2025-04-28T00:59:44.003Z  INFO 1 --- [  restartedMain] io.flowin
 back-end-1    | 2025-04-28T00:59:44.004Z  WARN 1 --- [  restartedMain] io.flowinquiry.health.MailSetupChecker.run:28 : Email provider is not configured yet
 back-end-1    | 2025-04-28T00:59:44.011Z  INFO 1 --- [  restartedMain] io.flowinquiry.FlowInquiryApp.logApplicationStartup:120 : ----------------------------------------------------------
 back-end-1    | 2025-04-28T00:59:44.011Z  INFO 1 --- [  restartedMain] io.flowinquiry.FlowInquiryApp.logApplicationStartup:121 :        Application 'FlowInquiry' is running! Access URLs:
-back-end-1    | 2025-04-28T00:59:44.011Z  INFO 1 --- [  restartedMain] io.flowinquiry.FlowInquiryApp.logApplicationStartup:122 :        Local:          http://localhost:8080/
-back-end-1    | 2025-04-28T00:59:44.011Z  INFO 1 --- [  restartedMain] io.flowinquiry.FlowInquiryApp.logApplicationStartup:123 :        External:       http://172.18.0.4:8080/
-back-end-1    | 2025-04-28T00:59:44.012Z  INFO 1 --- [  restartedMain] io.flowinquiry.FlowInquiryApp.logApplicationStartup:124 :        Profile(s):     prod
+back-end-1    | INFO 1 --- [  restartedMain] io.flowinquiry.FlowInquiryApp.logApplicationStartup:122 :        Local:          http://localhost:8080/
+back-end-1    | INFO 1 --- [  restartedMain] io.flowinquiry.FlowInquiryApp.logApplicationStartup:123 :        External:       http://172.18.0.4:8080/
+back-end-1    | INFO 1 --- [  restartedMain] io.flowinquiry.FlowInquiryApp.logApplicationStartup:124 :        Profile(s):     prod
 ```
 
 **Accessing FlowInquiry**

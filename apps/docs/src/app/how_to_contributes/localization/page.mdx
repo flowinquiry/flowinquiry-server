@@ -1,0 +1,99 @@
+---
+description: Learn how to localize the FlowInquiry frontend using next-intl. This guide covers step-by-step instructions to configure internationalization, manage language files, and build a multilingual UI with dynamic locale switching in FlowInquiry
+---
+
+import { Callout, FileTree } from "nextra/components";
+
+# 🌍 Localization Guide — Translate FlowInquiry
+
+FlowInquiry supports internationalization using [next-intl](https://next-intl.dev/), and you can help make it accessible in more languages.
+
+No coding skills needed — just basic JSON editing and language knowledge.
+
+# 📁 Folder Structure
+
+All translation files live in:
+
+<FileTree>
+  <FileTree.Folder name="apps" defaultOpen>
+    <FileTree.Folder name="frontend" defaultOpen>
+      <FileTree.Folder name="messages">
+        <FileTree.File name="en.json" />
+        <FileTree.File name="fr.json" />
+      </FileTree.Folder>
+    </FileTree.Folder>
+  </FileTree.Folder>
+</FileTree>
+
+Each file contains key-value pairs:
+
+```
+{
+  "locale_switcher": {
+    "fr": "French",
+    "en": "English",
+    "label": "EN"
+  },
+  "common": {
+    "buttons": {
+      "create": "Create",
+      "creating": "Creating ...",
+      "clear": "Clear",
+      "submit": "Submit",
+      "submitting": "Submitting ...",
+      "cancel": "Cancel",
+      "previous": "Previous",
+      ...
+    }
+  }
+}
+```
+
+You only need to update the values — the keys must remain unchanged.
+
+# 🛠️ How to Contribute a Translation
+
+1. Fork and Clone the Repository
+
+```bash
+git clone https://github.com/flowinquiry/flowinquiry.git
+cd flowinquiry
+```
+
+2. Add or Update a Language File
+   To improve an existing language (e.g., fr.json):
+   Open the file in `apps/frontend/messages/` and update any missing or incorrect translations.
+
+To add a new language:
+Copy the English file and rename it with your language code:
+
+```bash
+cp apps/web/messages/en.json apps/web/messages/es.json
+```
+
+Then update the values in es.json (Spanish in this example).
+
+3. Submit a Pull Request
+   Once you're done:
+
+- Commit your .json file and any locale additions
+
+- Push your branch
+
+- Open a pull request on GitHub
+
+Please include:
+
+- Your locale code (e.g., es)
+
+- What you translated or reviewed
+
+- Any context you'd like to share
+
+# 🙏 Tips
+
+- Focus on quality, natural phrasing over literal translations.
+
+- You can leave values in English if you're unsure — others can improve them later.
+
+- Don’t worry about perfection — every contribution helps!

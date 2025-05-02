@@ -30,7 +30,6 @@ export default {
         items: {
           getting_started: "Get started",
           project_structure: "Project Structure",
-          localization: "Localization",
         },
       },
       backend: {
@@ -65,6 +64,7 @@ export default {
     items: {
       your_action_is_meaningful_to_us: "Your Action Is Meaningful to Us",
       your_first_pr: "Your first PR",
+      localization: "Localization",
     },
   },
   about: {

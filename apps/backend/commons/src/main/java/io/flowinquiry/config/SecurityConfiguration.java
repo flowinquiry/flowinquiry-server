@@ -3,6 +3,7 @@ package io.flowinquiry.config;
 import static org.springframework.security.config.Customizer.withDefaults;
 
 import io.flowinquiry.modules.usermanagement.AuthoritiesConstants;
+import io.flowinquiry.modules.usermanagement.service.OAuth2UserService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -34,36 +35,44 @@ public class SecurityConfiguration {
     }
 
     @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http, MvcRequestMatcher.Builder mvc)
+    public SecurityFilterChain filterChain(
+            HttpSecurity http, MvcRequestMatcher.Builder mvc, OAuth2UserService oauth2UserService)
             throws Exception {
         http.cors(withDefaults())
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(
                         authz ->
-                                // prettier-ignore
                                 authz.requestMatchers(
-                                                mvc.pattern("/fiws/**"),
-                                                mvc.pattern(HttpMethod.POST, "/api/login"),
+                                                mvc.pattern(
+                                                        HttpMethod.POST,
+                                                        "/api/login"), // Username/password login
+                                                mvc.pattern(HttpMethod.GET, "/login"),
                                                 mvc.pattern(HttpMethod.POST, "/api/authenticate"),
                                                 mvc.pattern(HttpMethod.GET, "/api/authenticate"),
                                                 mvc.pattern("/api/register"),
                                                 mvc.pattern("/api/files/**"),
                                                 mvc.pattern("/api/activate"),
                                                 mvc.pattern("/api/account/reset-password/init"),
-                                                mvc.pattern("/api/account/reset-password/finish"))
+                                                mvc.pattern("/api/account/reset-password/finish"),
+                                                mvc.pattern("/oauth2/**"),
+                                                mvc.pattern(
+                                                        "/api/auth/**")) // OAuth2 login endpoints
                                         .permitAll()
                                         .requestMatchers(mvc.pattern("/api/admin/**"))
                                         .hasAuthority(AuthoritiesConstants.ADMIN)
                                         .requestMatchers(mvc.pattern("/api/**"))
                                         .authenticated()
-                                        .requestMatchers("/fiws/**")
-                                        .authenticated() // ✅ Require authentication for WebSockets
-                                        .requestMatchers(mvc.pattern("/management/**"))
-                                        .hasAuthority(
-                                                AuthoritiesConstants.ADMIN)) // Enforces ROLE_ADMIN
-                //                .httpBasic(withDefaults()) // Enable Basic Authentication
-                .oauth2ResourceServer(
-                        oauth2 -> oauth2.jwt(withDefaults())) // Enable OAuth2 Resource Server
+                                        .requestMatchers("/management/**")
+                                        .hasAuthority(AuthoritiesConstants.ADMIN))
+                .oauth2Login(
+                        oauth2 ->
+                                oauth2.defaultSuccessUrl("/home", true)
+                                        .userInfoEndpoint(
+                                                userInfo ->
+                                                        userInfo.userService(
+                                                                oauth2UserService))) // Custom
+                // OAuth2UserService for mapping users
+                .oauth2ResourceServer(oauth2 -> oauth2.jwt(withDefaults()))
                 .sessionManagement(
                         session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .exceptionHandling(

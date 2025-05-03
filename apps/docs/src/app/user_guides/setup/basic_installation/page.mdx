@@ -1,5 +1,5 @@
 ---
-description: Deploy FlowInquiry with Docker using our step-by-step guide. Learn how to set up containers, configure environments, and run the application seamlessly.
+description: Set up FlowInquiry quickly using Docker Compose or a one-line bash script. Ideal for self-hosted environments, local testing, or small team deployments.
 ---
 
 import { Callout, Tabs } from "nextra/components";
@@ -59,11 +59,21 @@ You can change the domain name to any name you prefer.
 
 **Installing FlowInquiry**
 
-1. Navigate to the `flowinquiry-docker` folder.
+Run one of the following scripts
 
-2. Run the `install-flowinquiry.sh` script located in the scripts directory.
+```
+# Using wget
+wget -O install-flowinquiry.sh https://raw.githubusercontent.com/flowinquiry/flowinquiry/refs/heads/main/apps/ops/flowinquiry-docker/scripts/install-flowinquiry.sh && chmod +x install-flowinquiry.sh && ./install-flowinquiry.sh
 
-3. Follow the prompts and provide responses when requested. During the installation, you will be asked whether you want to set up SSL:
+# Or using curl
+curl -sSL https://raw.githubusercontent.com/flowinquiry/flowinquiry/refs/heads/main/apps/ops/flowinquiry-docker/scripts/install-flowinquiry.sh -o install-flowinquiry.sh && chmod +x install-flowinquiry.sh && ./install-flowinquiry.sh
+```
+
+These scripts will guide you through the installation process with a few interactive prompts. You'll be asked to provide basic configuration details such as:
+
+- Whether to enable SSL
+
+- Your domain or IP address
 
 ```
 Do you want to set up FlowInquiry with SSL? (y/n):
@@ -156,6 +166,10 @@ back-end-1    | INFO 1 --- [  restartedMain] io.flowinquiry.FlowInquiryApp.logAp
 back-end-1    | INFO 1 --- [  restartedMain] io.flowinquiry.FlowInquiryApp.logApplicationStartup:124 :        Profile(s):     prod
 ```
 
+<Callout type="info" emoji="💡">
+  You can rerun the script any time to reconfigure or restart the services.
+</Callout>
+
 **Accessing FlowInquiry**
 
 - Open your browser and go to `http://<LAN_IP>:1234`
@@ -173,9 +187,9 @@ http://192.168.0.78:1234
 
 - Login using the default administrator credentials:
 
-  - Username: admin@flowinquiry.io
+- Username: admin@flowinquiry.io
 
-  - Password: admin
+- Password: admin
 
 #### Local HTTPS
 

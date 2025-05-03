@@ -9,6 +9,12 @@ export default {
     title: "User Guides",
     items: {
       introduction: "Introduction",
+      setup: {
+        title: "Settup Overview",
+        items: {
+          basic_installation: "Basic Installation",
+        },
+      },
       getting_started: "Get started",
       workflow_management: "Workflow management",
       working_with_requests: "Working with requests",
@@ -51,8 +57,6 @@ export default {
         title: "Deployment",
         items: {
           build_docker_image: "Build FlowInquiry Docker Images (Optional)",
-          docker: "Docker",
-          kubernetes: "Kubernetes",
         },
       },
       documentation: "Documentation",

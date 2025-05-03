@@ -192,9 +192,6 @@ Using host IP address: 192.168.0.78
 ➡️ For **testing purposes**, it is safe to select **`n`** (no SSL) and run FlowInquiry over plain HTTP within your local network.  
 ➡️ For **production deployments**, it is strongly recommended to select **`y`** and configure SSL for secure access.
 
-## Deploy FlowInquiry
-To ensure a smooth deployment process, we provide detailed guidelines for deploying FlowInquiry in various environments. These instructions cover setup steps, configuration details, and best practices for deploying the service effectively. You can find the deployment documentation [here](https://docs.flowinquiry.io/developer_guides/deployment/docker)
-
 ## License
 This project is licensed under the [AGPLv3](LICENSE) License.
 

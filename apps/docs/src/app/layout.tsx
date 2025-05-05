@@ -9,11 +9,12 @@ import type { FC, ReactNode } from "react";
 
 export const metadata: Metadata = {
   description:
-    "FlowInquiry transforms ticket management with AI-powered insights, enhances team collaboration, and delivers customizable workflows to maximize productivity effortlessly",
-  metadataBase: new URL("https://https://flowinquiry.io"),
+    "FlowInquiry is an open-source platform that simplifies ticketing, project management, and team collaboration with AI-powered insights, customizable workflows, and agile tools designed to boost productivity",
+  metadataBase: new URL("https://flowinquiry.io"),
   keywords: [
     "FlowInquiry",
     "Ticket management",
+    "Project management",
     "Workflow",
     "Collaboration",
     "Helpdesk",
@@ -26,7 +27,7 @@ export const metadata: Metadata = {
   },
   title: {
     default:
-      "FlowInquiry – AI-Driven Insights for Smarter Ticket Management and Collaboration",
+      "FlowInquiry – Intelligent Ticketing, Agile Project Management & Team Collaboration",
     template: "%s | FlowInquiry",
   },
   openGraph: {
@@ -51,7 +52,11 @@ const banner = (
     >
       GitHub
     </Link>
-    !
+    <img
+      src="https://img.shields.io/github/stars/flowinquiry/flowinquiry?style=social"
+      alt="GitHub stars"
+      style={{ display: "inline", verticalAlign: "middle", height: "20px" }}
+    />
   </Banner>
 );
 const navbar = (

@@ -1,22 +1,55 @@
-# This configuration is intended for development purpose, it's **your** responsibility to harden it for production
+version: '3.8'
+
 name: flowinquiry
+
 services:
   postgresql:
     image: postgres:16.3
+    container_name: flowinquiry-db
     volumes:
-      - ./volumes/postgresql/:/var/lib/postgresql/data/
+      - ./volumes/postgresql:/var/lib/postgresql/data
     environment:
       - POSTGRES_DB=flowinquiry
       - POSTGRES_USER=flowinquiry
+      - POSTGRES_PASSWORD=flowinquiry
       - POSTGRES_HOST_AUTH_METHOD=trust
     env_file:
-      - ../apps/backend/.env.local  # Pass the extra environment variables
+      - ../apps/backend/.env.local
     healthcheck:
-      test: [ 'CMD-SHELL', 'pg_isready -U $${POSTGRES_USER}' ]
+      test: ['CMD-SHELL', 'pg_isready -U $${POSTGRES_USER}']
       interval: 5s
       timeout: 5s
       retries: 10
-    # If you want to expose these ports outside your dev PC,
-    # remove the "127.0.0.1:" prefix
     ports:
       - 127.0.0.1:5432:5432
+
+  backend:
+    image: flowinquiry-backend-dev
+    container_name: flowinquiry-backend
+    environment:
+      - SPRING_PROFILES_ACTIVE=dev
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgresql:5432/flowinquiry
+      - SPRING_DATASOURCE_USERNAME=flowinquiry
+      - SPRING_DATASOURCE_PASSWORD=flowinquiry
+    depends_on:
+      postgresql:
+        condition: service_healthy
+    ports:
+      - 127.0.0.1:8080:8080
+
+  frontend:
+    image: node:20
+    container_name: flowinquiry-frontend
+    working_dir: /repo/apps/frontend
+    command: sh -c "corepack enable && pnpm install && pnpm dev"
+    volumes:
+      - ../:/repo
+    environment:
+      - NEXT_PUBLIC_BASE_URL=http://localhost:1234
+      - BACK_END_URL=http://localhost:8080
+      - HOSTNAME=0.0.0.0
+    ports:
+      - 127.0.0.1:3000:3000
+    depends_on:
+      - backend
+

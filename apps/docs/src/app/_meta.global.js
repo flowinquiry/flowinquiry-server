@@ -50,7 +50,7 @@ export default {
             },
           },
           database_migration: "Database migration",
-          integration_testing: "Integration Testing", //added the integrating section
+          integration_testing: "Integration Testing",
         },
       },
       deployment: {

@@ -36,13 +36,11 @@ public class Authority implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @EqualsAndHashCode.Include
-    @NotNull @Size(max = 50)
-    @Id
+    @NotNull @Size(max = 50) @Id
     @Column(name = "name", length = 50, nullable = false)
     private String name;
 
-    @NotNull @Size(max = 50)
-    @Column(name = "descriptive_name", length = 50, nullable = false, unique = true)
+    @NotNull @Size(max = 50) @Column(name = "descriptive_name", length = 50, nullable = false, unique = true)
     private String descriptiveName;
 
     @Column(name = "system_role")

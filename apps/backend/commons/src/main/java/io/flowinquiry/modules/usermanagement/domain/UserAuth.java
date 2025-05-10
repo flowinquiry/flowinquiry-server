@@ -50,8 +50,7 @@ public class UserAuth {
     private String providerUserId;
 
     @JsonIgnore
-    @NotNull @Size(min = 60, max = 60)
-    @Column(name = "password_hash", length = 60, nullable = false)
+    @NotNull @Size(min = 60, max = 60) @Column(name = "password_hash", length = 60, nullable = false)
     @ToString.Exclude
     private String passwordHash;
 }

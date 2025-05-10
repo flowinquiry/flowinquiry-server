@@ -56,17 +56,13 @@ public class User extends AbstractAuditingEntity<Long> implements Serializable {
     @EqualsAndHashCode.Include
     private Long id;
 
-    @Size(max = 50)
-    @Column(name = "first_name", length = 50)
+    @Size(max = 50) @Column(name = "first_name", length = 50)
     private String firstName;
 
-    @Size(max = 50)
-    @Column(name = "last_name", length = 50)
+    @Size(max = 50) @Column(name = "last_name", length = 50)
     private String lastName;
 
-    @Email
-    @Size(min = 5, max = 254)
-    @Column(length = 254, unique = true)
+    @Email @Size(min = 5, max = 254) @Column(length = 254, unique = true)
     private String email;
 
     @NotNull @Column(nullable = false)
@@ -76,33 +72,27 @@ public class User extends AbstractAuditingEntity<Long> implements Serializable {
     @Column(name = "is_deleted", nullable = false)
     private Boolean isDeleted = false;
 
-    @Size(min = 2, max = 10)
-    @Column(name = "lang_key", length = 10)
+    @Size(min = 2, max = 10) @Column(name = "lang_key", length = 10)
     private String langKey;
 
-    @Size(max = 256)
-    @Column(name = "image_url", length = 256)
+    @Size(max = 256) @Column(name = "image_url", length = 256)
     private String imageUrl;
 
-    @Size(max = 50)
-    @Column(name = "role", length = 50)
+    @Size(max = 50) @Column(name = "role", length = 50)
     private String role;
 
-    @Size(max = 100)
-    @Column(name = "title", length = 100)
+    @Size(max = 100) @Column(name = "title", length = 100)
     private String title;
 
     @ManyToOne
     @JoinColumn(name = "manager_id")
     private User manager;
 
-    @Size(max = 20)
-    @Column(name = "activation_key", length = 20)
+    @Size(max = 20) @Column(name = "activation_key", length = 20)
     @JsonIgnore
     private String activationKey;
 
-    @Size(max = 20)
-    @Column(name = "reset_key", length = 20)
+    @Size(max = 20) @Column(name = "reset_key", length = 20)
     @JsonIgnore
     private String resetKey;
 

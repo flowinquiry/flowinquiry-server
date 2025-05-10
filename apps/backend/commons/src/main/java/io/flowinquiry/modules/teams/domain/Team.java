@@ -40,16 +40,13 @@ public class Team {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Size(max = 255)
-    @Column(name = "name")
+    @Size(max = 255) @Column(name = "name")
     private String name;
 
-    @Size(max = 500)
-    @Column(name = "logo_url")
+    @Size(max = 500) @Column(name = "logo_url")
     private String logoUrl;
 
-    @Size(max = 255)
-    @Column(name = "slogan")
+    @Size(max = 255) @Column(name = "slogan")
     private String slogan;
 
     @Column(name = "description", columnDefinition = "TEXT")

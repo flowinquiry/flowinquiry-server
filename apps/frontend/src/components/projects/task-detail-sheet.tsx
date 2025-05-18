@@ -818,12 +818,12 @@ const TaskDetailSheet: React.FC<TaskDetailSheetProps> = ({
               <span className="pt-1">
                 {t.teams.tickets.detail("attachments")}
               </span>
-              <AttachmentView entityType="Team_Request" entityId={task.id!} />
+              <AttachmentView entityType="Ticket" entityId={task.id!} />
             </div>
 
             <div className="col-span-1 sm:col-span-2 text-sm font-medium flex items-start gap-4">
               <span className="pt-1">{t.teams.tickets.detail("watchers")}</span>
-              <EntityWatchers entityType="Team_Request" entityId={task.id!} />
+              <EntityWatchers entityType="Ticket" entityId={task.id!} />
             </div>
 
             <Separator />

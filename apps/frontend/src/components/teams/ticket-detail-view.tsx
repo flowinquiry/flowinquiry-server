@@ -594,10 +594,7 @@ const TicketDetailView = ({ ticketId }: { ticketId: number }) => {
                       <FileText className="mr-2 h-4 w-4" />{" "}
                       {t.teams.tickets.detail("attachments")}
                     </h3>
-                    <AttachmentView
-                      entityType="Team_Request"
-                      entityId={ticket.id!}
-                    />
+                    <AttachmentView entityType="Ticket" entityId={ticket.id!} />
                   </div>
 
                   <div>
@@ -605,10 +602,7 @@ const TicketDetailView = ({ ticketId }: { ticketId: number }) => {
                       <Users className="mr-2 h-4 w-4" />{" "}
                       {t.teams.tickets.detail("watchers")}
                     </h3>
-                    <EntityWatchers
-                      entityType="Team_Request"
-                      entityId={ticket.id!}
-                    />
+                    <EntityWatchers entityType="Ticket" entityId={ticket.id!} />
                   </div>
                 </div>
               </div>
@@ -651,7 +645,7 @@ const TicketDetailView = ({ ticketId }: { ticketId: number }) => {
                       {selectedTab === "comments" && (
                         <div ref={commentsViewRef}>
                           <CommentsView
-                            entityType="Team_Request"
+                            entityType="Ticket"
                             entityId={ticket.id!}
                           />
                         </div>
@@ -660,7 +654,7 @@ const TicketDetailView = ({ ticketId }: { ticketId: number }) => {
                     <TabsContent value="changes-history">
                       {selectedTab === "changes-history" && (
                         <AuditLogView
-                          entityType="Team_Request"
+                          entityType="Ticket"
                           entityId={ticket.id!}
                         />
                       )}

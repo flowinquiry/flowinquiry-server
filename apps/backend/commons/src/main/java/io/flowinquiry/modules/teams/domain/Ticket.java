@@ -84,11 +84,11 @@ public class Ticket extends AbstractAuditingEntity<Long> {
     private Boolean isCompleted = false;
 
     @Formula(
-            "(SELECT COUNT(a.id) FROM fw_entity_attachment a WHERE a.entity_type = 'Team_Request' AND a.entity_id = id)")
+            "(SELECT COUNT(a.id) FROM fw_entity_attachment a WHERE a.entity_type = 'Ticket' AND a.entity_id = id)")
     private int numberAttachments;
 
     @Formula(
-            "(SELECT COUNT(a.id) FROM fw_entity_watchers a WHERE a.entity_type = 'Team_Request' AND a.entity_id = id)")
+            "(SELECT COUNT(a.id) FROM fw_entity_watchers a WHERE a.entity_type = 'Ticket' AND a.entity_id = id)")
     private int numberWatchers;
 
     @OneToOne(

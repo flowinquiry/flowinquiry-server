@@ -39,7 +39,7 @@ const AuditLogView: React.FC<AuditLogViewProps> = ({
   useEffect(() => {
     const fetchAuditLogs = async () => {
       setLoading(true);
-      getActivityLogs("Team_Request", entityId, currentPage, 10, setError)
+      getActivityLogs("Ticket", entityId, currentPage, 10, setError)
         .then((data) => {
           setTotalPages(data.totalPages);
           setActivityLogs(data.content);

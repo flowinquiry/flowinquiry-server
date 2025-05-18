@@ -989,7 +989,7 @@ const TaskDetailSheet: React.FC<TaskDetailSheetProps> = ({
               </TabsContent>
               <TabsContent value="changes-history">
                 {selectedTab === "changes-history" && (
-                  <AuditLogView entityType="Team_Request" entityId={task.id!} />
+                  <AuditLogView entityType="Ticket" entityId={task.id!} />
                 )}
               </TabsContent>
               <TabsContent value="timeline-history">

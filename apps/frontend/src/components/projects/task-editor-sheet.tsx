@@ -139,7 +139,7 @@ const TaskEditorSheet = ({
 
       // Handle file uploads if needed
       if (newTask.id && files.length > 0) {
-        await uploadAttachmentsForEntity("Team_Request", newTask.id, files);
+        await uploadAttachmentsForEntity("Ticket", newTask.id, files);
       }
 
       // Reset Form & Close Sheet

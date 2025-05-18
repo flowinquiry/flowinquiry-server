@@ -86,5 +86,13 @@
 		</update>
 	</changeSet>
 
+	<changeSet id="002:04-rename-team-request-id-to-ticket-id"
+		author="flowinquiry">
+		<comment>Rename column team_request_id to ticket_id in
+			fw_escalation_tracking</comment>
 
+		<renameColumn tableName="fw_escalation_tracking"
+			oldColumnName="team_request_id" newColumnName="ticket_id"
+			columnDataType="BIGINT" />
+	</changeSet>
 </databaseChangeLog>

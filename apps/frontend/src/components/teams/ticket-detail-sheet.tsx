@@ -553,10 +553,7 @@ const TicketDetailSheet: React.FC<RequestDetailsProps> = ({
                       {t.teams.tickets.detail("attachments")}
                     </h3>
                   </div>
-                  <AttachmentView
-                    entityType="Team_Request"
-                    entityId={ticket.id!}
-                  />
+                  <AttachmentView entityType="Ticket" entityId={ticket.id!} />
                 </div>
               </div>
 
@@ -679,10 +676,7 @@ const TicketDetailSheet: React.FC<RequestDetailsProps> = ({
                       {t.teams.tickets.detail("watchers")}
                     </h3>
                   </div>
-                  <EntityWatchers
-                    entityType="Team_Request"
-                    entityId={ticket.id!}
-                  />
+                  <EntityWatchers entityType="Ticket" entityId={ticket.id!} />
                 </div>
               </div>
               <div className="md:col-span-3 mt-2">
@@ -693,10 +687,7 @@ const TicketDetailSheet: React.FC<RequestDetailsProps> = ({
                       {t.teams.tickets.detail("comments")}
                     </h3>
                   </div>
-                  <CommentsView
-                    entityType="Team_Request"
-                    entityId={ticket.id!}
-                  />
+                  <CommentsView entityType="Ticket" entityId={ticket.id!} />
                 </div>
               </div>
             </div>

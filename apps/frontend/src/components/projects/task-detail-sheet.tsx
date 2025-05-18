@@ -980,10 +980,7 @@ const TaskDetailSheet: React.FC<TaskDetailSheetProps> = ({
               <TabsContent value="comments">
                 {selectedTab === "comments" && (
                   <div ref={commentsViewRef}>
-                    <CommentsView
-                      entityType="Team_Request"
-                      entityId={task.id!}
-                    />
+                    <CommentsView entityType="Ticket" entityId={task.id!} />
                   </div>
                 )}
               </TabsContent>

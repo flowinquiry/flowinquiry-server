@@ -102,7 +102,7 @@ public class SendWarningForUpcomingTicketsViolateSlaJob {
                                                         "/portal/teams/"
                                                                 + Obfuscator.obfuscate(
                                                                         ticket.getTeam().getId())
-                                                                + "/requests/"
+                                                                + "/tickets/"
                                                                 + Obfuscator.obfuscate(
                                                                         ticket.getId())),
                                         text(

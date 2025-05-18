@@ -18,7 +18,7 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { useAppClientTranslations } from "@/hooks/use-translations";
-import { getTeamRequestStateChangesHistory } from "@/lib/actions/teams.action";
+import { getTicketStateChangesHistory } from "@/lib/actions/teams.action";
 import { formatDateTime, formatDateTimeDistanceToNow } from "@/lib/datetime";
 import { useError } from "@/providers/error-provider";
 import { TransitionItemCollectionDTO } from "@/types/teams";
@@ -33,7 +33,7 @@ const TicketTimelineHistory = ({ teamId }: { teamId: number }) => {
   useEffect(() => {
     const fetchStatesHistory = async () => {
       setLoading(true);
-      getTeamRequestStateChangesHistory(teamId, setError)
+      getTicketStateChangesHistory(teamId, setError)
         .then((data) => setTransitionItemCollection(data))
         .finally(() => setLoading(false));
     };

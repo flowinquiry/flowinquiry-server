@@ -43,13 +43,13 @@ public class TicketCommentCreatedMailEventListener {
     @Async("asyncTaskExecutor")
     @Transactional
     @EventListener
-    public void onTeamRequestCommentCreated(TicketCommentCreatedEvent event) {
+    public void onTicketCommentCreated(TicketCommentCreatedEvent event) {
         CommentDTO commentDTO = commentService.getCommentById(event.getCommentDTO().getId());
         List<EntityWatcher> watchers =
                 entityWatcherRepository.findByEntityTypeAndEntityId(
-                        EntityType.Team_Request, commentDTO.getEntityId());
+                        EntityType.Ticket, commentDTO.getEntityId());
 
-        TicketDTO ticketDTO = ticketService.getTeamRequestById(commentDTO.getEntityId());
+        TicketDTO ticketDTO = ticketService.getTicketById(commentDTO.getEntityId());
 
         if (!watchers.isEmpty()) {
             for (EntityWatcher watcher : watchers) {

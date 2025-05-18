@@ -12,11 +12,11 @@ import AddUserToTeamDialog from "@/components/teams/team-add-user-dialog";
 import TeamDashboardTopSection from "@/components/teams/team-dashboard-kpis";
 import RecentTeamActivities from "@/components/teams/team-dashboard-recent-activities";
 import TeamNavLayout from "@/components/teams/team-nav";
-import TicketCreationByDaySeriesChart from "@/components/teams/team-requests-creation-timeseries-chart";
-import TicketDistributionChart from "@/components/teams/team-requests-distribution-chart";
-import TeamOverdueTickets from "@/components/teams/team-requests-overdue";
-import TicketPriorityPieChart from "@/components/teams/team-requests-priority-chart";
-import UnassignedTickets from "@/components/teams/team-requests-unassigned";
+import TicketDistributionChart from "@/components/teams/team-tickets-distribution-chart";
+import TicketPriorityPieChart from "@/components/teams/team-tickets-priority-chart";
+import UnassignedTickets from "@/components/teams/team-tickets-unassigned";
+import TicketCreationByDaySeriesChart from "@/components/teams/tickets-creation-timeseries-chart";
+import TeamOverdueTickets from "@/components/teams/tickets-overdue";
 import { buttonVariants } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import {

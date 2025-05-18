@@ -38,7 +38,7 @@ const TeamNavLayout = ({
       icon: Users,
     },
     {
-      href: `/portal/teams/${obfuscate(teamId)}/requests`,
+      href: `/portal/teams/${obfuscate(teamId)}/tickets`,
       label: t.common.navigation("tickets"),
       icon: ArrowRightCircleIcon,
     },

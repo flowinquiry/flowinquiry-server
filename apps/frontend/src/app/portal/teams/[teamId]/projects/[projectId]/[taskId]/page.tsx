@@ -1,7 +1,7 @@
 import React from "react";
 
 import { ContentLayout } from "@/components/admin-panel/content-layout";
-import TeamRequestDetailView from "@/components/teams/ticket-detail";
+import TicketDetailView from "@/components/teams/ticket-detail-view";
 import { deobfuscateToNumber } from "@/lib/endecode";
 import { getAppTranslations } from "@/lib/translation";
 
@@ -16,7 +16,7 @@ const ProjectTaskDetailPage = async (props: ProjectTaskDetailProps) => {
 
   return (
     <ContentLayout title={t.common.navigation("teams")}>
-      <TeamRequestDetailView teamRequestId={taskId} />
+      <TicketDetailView ticketId={taskId} />
     </ContentLayout>
   );
 };

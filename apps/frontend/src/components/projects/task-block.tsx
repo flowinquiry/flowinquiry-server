@@ -10,10 +10,10 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import { TeamRequestDTO } from "@/types/team-requests";
+import { TicketDTO } from "@/types/tickets";
 
 type TaskBlockProps = {
-  task: TeamRequestDTO;
+  task: TicketDTO;
   isDragging?: boolean;
 };
 

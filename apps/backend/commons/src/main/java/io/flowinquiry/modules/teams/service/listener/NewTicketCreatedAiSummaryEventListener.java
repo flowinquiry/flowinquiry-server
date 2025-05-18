@@ -20,8 +20,8 @@ public class NewTicketCreatedAiSummaryEventListener {
 
     @Async("asyncTaskExecutor")
     @EventListener
-    public void onNewTeamRequestCreated(NewTicketCreatedEvent event) {
-        TicketDTO ticketDTO = event.getTeamRequest();
+    public void onNewTicketCreated(NewTicketCreatedEvent event) {
+        TicketDTO ticketDTO = event.getTicket();
         ticketHealthEvalService.evaluateConversationHealth(
                 ticketDTO.getId(),
                 "Title: "

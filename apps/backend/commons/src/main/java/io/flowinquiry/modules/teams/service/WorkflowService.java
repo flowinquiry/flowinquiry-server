@@ -568,7 +568,7 @@ public class WorkflowService {
         boolean hasActiveRequests =
                 ticketRepository.existsByWorkflowIdAndIsDeletedFalse(workflowId);
         if (hasActiveRequests) {
-            throw new ResourceConstraintException("Cannot delete a workflow with active requests.");
+            throw new ResourceConstraintException("Cannot delete a workflow with active tickets.");
         }
 
         workflowStateRepository.deleteByWorkflowId(workflowId);
@@ -612,7 +612,7 @@ public class WorkflowService {
                     ticketRepository.existsByWorkflowIdAndIsDeletedFalse(workflowId);
             if (hasActiveRequests) {
                 throw new ResourceConstraintException(
-                        "Cannot delete a workflow with active requests.");
+                        "Cannot delete a workflow with active tickets.");
             }
             // Delete the workflow
             workflowStateRepository.deleteByWorkflowId(workflowId);

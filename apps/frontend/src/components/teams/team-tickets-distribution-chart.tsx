@@ -18,10 +18,10 @@ import useSWR from "swr";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Spinner } from "@/components/ui/spinner";
 import { useAppClientTranslations } from "@/hooks/use-translations";
-import { getTicketsAssignmentDistributionByTeam } from "@/lib/actions/teams-request.action";
+import { getTicketsAssignmentDistributionByTeam } from "@/lib/actions/tickets.action";
 import { useError } from "@/providers/error-provider";
 import { useTimeRange } from "@/providers/time-range-provider";
-import { TicketDistributionDTO } from "@/types/team-requests";
+import { TicketDistributionDTO } from "@/types/tickets";
 
 interface TicketDistributionChartProps {
   teamId: number;

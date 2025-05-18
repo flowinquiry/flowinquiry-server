@@ -5,11 +5,11 @@ import { CSS } from "@dnd-kit/utilities";
 import React, { useRef } from "react";
 
 import TaskBlock from "@/components/projects/task-block";
-import { TeamRequestDTO } from "@/types/team-requests";
+import { TicketDTO } from "@/types/tickets";
 
 type DraggableTaskWrapperProps = {
-  task: TeamRequestDTO;
-  onClick: (task: TeamRequestDTO) => void;
+  task: TicketDTO;
+  onClick: (task: TicketDTO) => void;
 };
 
 export const DraggableTaskWrapper: React.FC<DraggableTaskWrapperProps> = ({

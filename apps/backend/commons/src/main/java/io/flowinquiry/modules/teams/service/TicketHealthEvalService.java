@@ -30,7 +30,7 @@ public class TicketHealthEvalService {
         this.ticketConversationHealthRepository = ticketConversationHealthRepository;
     }
 
-    public String summarizeTeamRequest(String description) {
+    public String summarizeTicket(String description) {
         return chatModelService.call("Summarize this text: " + description);
     }
 

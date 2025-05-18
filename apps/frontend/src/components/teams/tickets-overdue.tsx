@@ -8,7 +8,7 @@ import useSWR from "swr";
 import { UserAvatar } from "@/components/shared/avatar-display";
 import PaginationExt from "@/components/shared/pagination-ext";
 import TruncatedHtmlLabel from "@/components/shared/truncate-html-label";
-import { PriorityDisplay } from "@/components/teams/team-requests-priority-display";
+import { TicketPriorityDisplay } from "@/components/teams/ticket-priority-display";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Spinner } from "@/components/ui/spinner";
@@ -18,11 +18,11 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { useAppClientTranslations } from "@/hooks/use-translations";
-import { getOverdueTicketsByTeam } from "@/lib/actions/teams-request.action";
+import { getOverdueTicketsByTeam } from "@/lib/actions/tickets.action";
 import { formatDateTimeDistanceToNow } from "@/lib/datetime";
 import { obfuscate } from "@/lib/endecode";
 import { useError } from "@/providers/error-provider";
-import { TeamRequestPriority } from "@/types/team-requests";
+import { TicketPriority } from "@/types/tickets";
 
 const TeamOverdueTickets = ({ teamId }: { teamId: number }) => {
   const [currentPage, setCurrentPage] = useState(1);
@@ -160,7 +160,7 @@ const TeamOverdueTickets = ({ teamId }: { teamId: number }) => {
                                   href={
                                     ticket.projectId && ticket.projectId > 0
                                       ? `/portal/teams/${obfuscate(ticket.teamId)}/projects/${obfuscate(ticket.projectId)}/${obfuscate(ticket.id)}`
-                                      : `/portal/teams/${obfuscate(ticket.teamId)}/requests/${obfuscate(ticket.id)}`
+                                      : `/portal/teams/${obfuscate(ticket.teamId)}/tickets/${obfuscate(ticket.id)}`
                                   }
                                   className="truncate max-w-xs"
                                 >
@@ -213,8 +213,8 @@ const TeamOverdueTickets = ({ teamId }: { teamId: number }) => {
                       </div>
 
                       <div className="flex flex-col items-end">
-                        <PriorityDisplay
-                          priority={ticket.priority as TeamRequestPriority}
+                        <TicketPriorityDisplay
+                          priority={ticket.priority as TicketPriority}
                         />
                       </div>
                     </div>

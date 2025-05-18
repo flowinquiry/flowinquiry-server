@@ -35,7 +35,7 @@ public class AuditLogUpdateEventListener {
     @Async("asyncTaskExecutor")
     @Transactional
     @EventListener
-    public void onNewTeamRequestCreated(AuditLogUpdateEvent event) {
+    public void onNewTicketCreated(AuditLogUpdateEvent event) {
         try {
             Object previousEntity = event.getPreviousEntity();
             Object updatedEntity = event.getUpdatedEntity();

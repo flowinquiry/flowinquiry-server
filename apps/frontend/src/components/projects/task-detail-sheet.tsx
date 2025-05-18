@@ -46,14 +46,14 @@ import {
   PRIORITIES_ORDERED,
   PRIORITY_CONFIG,
 } from "@/lib/constants/ticket-priorities";
-import { TeamRequestDTO, TeamRequestPriority } from "@/types/team-requests";
 import { UserWithTeamRoleDTO } from "@/types/teams";
+import { TicketDTO, TicketPriority } from "@/types/tickets";
 
 type TaskDetailSheetProps = {
   isOpen: boolean;
   setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
-  task: TeamRequestDTO | null;
-  onTaskUpdate?: (updatedTask: TeamRequestDTO) => Promise<void> | void;
+  task: TicketDTO | null;
+  onTaskUpdate?: (updatedTask: TicketDTO) => Promise<void> | void;
 };
 
 const TaskDetailSheet: React.FC<TaskDetailSheetProps> = ({
@@ -63,7 +63,7 @@ const TaskDetailSheet: React.FC<TaskDetailSheetProps> = ({
   onTaskUpdate,
 }) => {
   // Keep a local copy of the task for UI updates
-  const [task, setTask] = useState<TeamRequestDTO | null>(initialTask);
+  const [task, setTask] = useState<TicketDTO | null>(initialTask);
   const t = useAppClientTranslations();
 
   // Create form for epic and iteration editing
@@ -295,9 +295,7 @@ const TaskDetailSheet: React.FC<TaskDetailSheetProps> = ({
   };
 
   // Handle priority change
-  const handlePriorityChange = async (
-    selectedPriority: TeamRequestPriority,
-  ) => {
+  const handlePriorityChange = async (selectedPriority: TicketPriority) => {
     if (!task) return;
 
     // Create updated task with new priority
@@ -508,7 +506,7 @@ const TaskDetailSheet: React.FC<TaskDetailSheetProps> = ({
                   <div className="flex flex-col gap-2">
                     <Select
                       defaultValue={task.priority as string}
-                      onValueChange={(value: TeamRequestPriority) =>
+                      onValueChange={(value: TicketPriority) =>
                         handlePriorityChange(value)
                       }
                     >
@@ -517,15 +515,13 @@ const TaskDetailSheet: React.FC<TaskDetailSheetProps> = ({
                           <div className="flex items-center gap-2">
                             <span
                               className={
-                                PRIORITY_CONFIG[
-                                  task.priority as TeamRequestPriority
-                                ].iconColor
+                                PRIORITY_CONFIG[task.priority as TicketPriority]
+                                  .iconColor
                               }
                             >
                               {
-                                PRIORITY_CONFIG[
-                                  task.priority as TeamRequestPriority
-                                ].icon
+                                PRIORITY_CONFIG[task.priority as TicketPriority]
+                                  .icon
                               }
                             </span>
                             <span>{task.priority}</span>
@@ -533,22 +529,18 @@ const TaskDetailSheet: React.FC<TaskDetailSheetProps> = ({
                         </SelectValue>
                       </SelectTrigger>
                       <SelectContent>
-                        {PRIORITIES_ORDERED.map(
-                          (priority: TeamRequestPriority) => (
-                            <SelectItem key={priority} value={priority}>
-                              <div className="flex items-center gap-2">
-                                <span
-                                  className={
-                                    PRIORITY_CONFIG[priority].iconColor
-                                  }
-                                >
-                                  {PRIORITY_CONFIG[priority].icon}
-                                </span>
-                                <span>{priority}</span>
-                              </div>
-                            </SelectItem>
-                          ),
-                        )}
+                        {PRIORITIES_ORDERED.map((priority: TicketPriority) => (
+                          <SelectItem key={priority} value={priority}>
+                            <div className="flex items-center gap-2">
+                              <span
+                                className={PRIORITY_CONFIG[priority].iconColor}
+                              >
+                                {PRIORITY_CONFIG[priority].icon}
+                              </span>
+                              <span>{priority}</span>
+                            </div>
+                          </SelectItem>
+                        ))}
                       </SelectContent>
                     </Select>
                   </div>
@@ -567,22 +559,19 @@ const TaskDetailSheet: React.FC<TaskDetailSheetProps> = ({
                           <div className="flex items-center gap-2">
                             <span
                               className={
-                                PRIORITY_CONFIG[
-                                  task.priority as TeamRequestPriority
-                                ].iconColor
+                                PRIORITY_CONFIG[task.priority as TicketPriority]
+                                  .iconColor
                               }
                             >
                               {
-                                PRIORITY_CONFIG[
-                                  task.priority as TeamRequestPriority
-                                ].icon
+                                PRIORITY_CONFIG[task.priority as TicketPriority]
+                                  .icon
                               }
                             </span>
                             <span
                               className={
-                                PRIORITY_CONFIG[
-                                  task.priority as TeamRequestPriority
-                                ].textColor
+                                PRIORITY_CONFIG[task.priority as TicketPriority]
+                                  .textColor
                               }
                             >
                               {task.priority}

@@ -48,12 +48,12 @@ public class TicketServiceIT {
     }
 
     @Test
-    void shouldCreateTeamRequestSuccessfully() {
+    void shouldCreateTicketSuccessfully() {
         TicketDTO ticketDTO = ticketMapper.toDto(ticketRepository.findById(2L).orElseThrow());
         ticketDTO.setId(null);
         ticketDTO.setConversationHealth(null);
-        TicketDTO savedTeamRequest = ticketService.createTeamRequest(ticketDTO);
-        assertThat(savedTeamRequest).isNotNull();
+        TicketDTO savedTicket = ticketService.createTicket(ticketDTO);
+        assertThat(savedTicket).isNotNull();
 
         ArgumentCaptor<NewTicketCreatedEvent> eventCaptor =
                 ArgumentCaptor.forClass(NewTicketCreatedEvent.class);
@@ -68,14 +68,14 @@ public class TicketServiceIT {
         ticketDTO.setSize(TShirtSize.XL);
         ticketDTO.setEstimate(15);
 
-        TicketDTO updatedRequest = ticketService.updateTeamRequest(ticketDTO);
+        TicketDTO updatedRequest = ticketService.updateTicket(ticketDTO);
 
         assertThat(updatedRequest.getRequestTitle()).isEqualTo("Updated Request Title");
         assertThat(updatedRequest.getCurrentStateId()).isEqualTo(2L);
         assertThat(ticketDTO.getSize()).isEqualTo(TShirtSize.XL);
         assertThat(ticketDTO.getEstimate()).isEqualTo(15);
         List<EntityWatcher> watchers =
-                entityWatcherRepository.findByEntityTypeAndEntityId(EntityType.Team_Request, 1L);
+                entityWatcherRepository.findByEntityTypeAndEntityId(EntityType.Ticket, 1L);
         assertThat(watchers).hasSize(3);
         List<String> emails =
                 watchers.stream().map(watcher -> watcher.getWatchUser().getEmail()).toList();
@@ -103,7 +103,7 @@ public class TicketServiceIT {
     }
 
     @Test
-    void shouldFindNextTeamRequestSuccessfully() {
+    void shouldFindNextTicketSuccessfully() {
         TicketDTO nextEntity = ticketService.getNextTicket(11L, null).orElseThrow();
 
         // Then: Validate key properties in a single assertion block

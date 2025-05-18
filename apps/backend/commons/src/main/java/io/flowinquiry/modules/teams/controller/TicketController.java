@@ -49,34 +49,32 @@ public class TicketController {
     }
 
     @PostMapping("/search")
-    public Page<TicketDTO> findTeamRequests(
-            @Valid @RequestBody QueryDTO queryDTO, Pageable pageable) {
-        return ticketService.findTeamRequests(queryDTO, pageable);
+    public Page<TicketDTO> findTickets(@Valid @RequestBody QueryDTO queryDTO, Pageable pageable) {
+        return ticketService.findTickets(queryDTO, pageable);
     }
 
     @GetMapping("/{id}")
-    public TicketDTO getTeamRequestById(@PathVariable("id") Long id) {
-        return ticketService.getTeamRequestById(id);
+    public TicketDTO getTicketById(@PathVariable("id") Long id) {
+        return ticketService.getTicketById(id);
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public TicketDTO createTeamRequest(@Valid @RequestBody TicketDTO ticketDTO) {
-        return ticketService.createTeamRequest(ticketDTO);
+    public TicketDTO createTicket(@Valid @RequestBody TicketDTO ticketDTO) {
+        return ticketService.createTicket(ticketDTO);
     }
 
     @PutMapping("/{id}")
-    public TicketDTO updateTeamRequest(
-            @PathVariable("id") Long id, @RequestBody TicketDTO ticketDTO) {
+    public TicketDTO updateTicket(@PathVariable("id") Long id, @RequestBody TicketDTO ticketDTO) {
         if (!id.equals(ticketDTO.getId())) {
             throw new IllegalArgumentException("Id in URL and payload do not match");
         }
-        return ticketService.updateTeamRequest(ticketDTO);
+        return ticketService.updateTicket(ticketDTO);
     }
 
     @DeleteMapping("/{id}")
-    public void deleteTeamRequest(@PathVariable("id") Long id) {
-        ticketService.deleteTeamRequest(id);
+    public void deleteTicket(@PathVariable("id") Long id) {
+        ticketService.deleteTicket(id);
     }
 
     @GetMapping("/{currentId}/next")
@@ -213,7 +211,7 @@ public class TicketController {
     }
 
     @PatchMapping("/{ticketId}/state")
-    public TicketDTO updateTeamRequestState(
+    public TicketDTO updateTicketState(
             @PathVariable("ticketId") Long ticketId, @RequestBody Map<String, Long> requestBody) {
 
         Long newStateId = requestBody.get("newStateId");

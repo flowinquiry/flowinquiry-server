@@ -83,13 +83,13 @@ public class TicketService {
         this.eventPublisher = eventPublisher;
     }
 
-    public Page<TicketDTO> findTeamRequests(QueryDTO queryDTO, Pageable pageable) {
+    public Page<TicketDTO> findTickets(QueryDTO queryDTO, Pageable pageable) {
         Specification<Ticket> spec = createSpecification(Optional.of(queryDTO));
         return ticketRepository.findAll(spec, pageable).map(ticketMapper::toDto);
     }
 
     @Transactional(readOnly = true)
-    public TicketDTO getTeamRequestById(Long id) {
+    public TicketDTO getTicketById(Long id) {
         Ticket ticket =
                 ticketRepository
                         .findById(id)
@@ -101,7 +101,7 @@ public class TicketService {
     }
 
     @Transactional
-    public TicketDTO createTeamRequest(TicketDTO ticketDTO) {
+    public TicketDTO createTicket(TicketDTO ticketDTO) {
         WorkflowState initialStateByWorkflowId =
                 workflowStateRepository
                         .findById(ticketDTO.getCurrentStateId())
@@ -132,7 +132,7 @@ public class TicketService {
                                 userId -> {
                                     EntityWatcher entityWatcher = new EntityWatcher();
                                     entityWatcher.setEntityId(ticketId);
-                                    entityWatcher.setEntityType(EntityType.Team_Request);
+                                    entityWatcher.setEntityType(EntityType.Ticket);
                                     entityWatcher.setWatchUser(User.builder().id(userId).build());
                                     return entityWatcher;
                                 })
@@ -162,7 +162,7 @@ public class TicketService {
     }
 
     @Transactional
-    public TicketDTO updateTeamRequest(TicketDTO ticketDTO) {
+    public TicketDTO updateTicket(TicketDTO ticketDTO) {
 
         Ticket existingTicket =
                 ticketRepository
@@ -171,8 +171,8 @@ public class TicketService {
                                 () ->
                                         new ResourceNotFoundException(
                                                 "Ticket not found with id: " + ticketDTO.getId()));
-        TicketDTO previousTeamRequest = ticketMapper.toDto(existingTicket);
-        Long previousState = previousTeamRequest.getCurrentStateId();
+        TicketDTO previousTicket = ticketMapper.toDto(existingTicket);
+        Long previousState = previousTicket.getCurrentStateId();
 
         ticketMapper.updateEntity(ticketDTO, existingTicket);
 
@@ -195,10 +195,10 @@ public class TicketService {
             // Check if assigned user is already a watcher
             boolean isWatcherPresent =
                     entityWatcherRepository.existsByEntityTypeAndEntityIdAndWatchUserId(
-                            EntityType.Team_Request, ticketDTO.getId(), assignedUserId);
+                            EntityType.Ticket, ticketDTO.getId(), assignedUserId);
             if (!isWatcherPresent) {
                 EntityWatcher watcher = new EntityWatcher();
-                watcher.setEntityType(EntityType.Team_Request);
+                watcher.setEntityType(EntityType.Ticket);
                 watcher.setEntityId(ticketDTO.getId());
                 watcher.setWatchUser(User.builder().id(assignedUserId).build());
                 entityWatcherRepository.save(watcher);
@@ -208,22 +208,22 @@ public class TicketService {
             }
         }
 
-        TicketDTO savedTeamRequest = ticketMapper.toDto(ticketRepository.save(existingTicket));
+        TicketDTO savedTicket = ticketMapper.toDto(ticketRepository.save(existingTicket));
 
-        eventPublisher.publishEvent(new AuditLogUpdateEvent(this, previousTeamRequest, ticketDTO));
+        eventPublisher.publishEvent(new AuditLogUpdateEvent(this, previousTicket, ticketDTO));
 
-        Long currentState = savedTeamRequest.getCurrentStateId();
+        Long currentState = savedTicket.getCurrentStateId();
         if (!Objects.equals(previousState, currentState)) {
             eventPublisher.publishEvent(
                     new TicketWorkStateTransitionEvent(
                             this, ticketDTO.getId(), previousState, currentState));
         }
 
-        return savedTeamRequest;
+        return savedTicket;
     }
 
     @Transactional
-    public void deleteTeamRequest(Long id) {
+    public void deleteTicket(Long id) {
         if (!ticketRepository.existsById(id)) {
             throw new ResourceNotFoundException("Ticket not found with id: " + id);
         }
@@ -231,13 +231,11 @@ public class TicketService {
     }
 
     public Optional<TicketDTO> getNextTicket(Long ticketId, Long projectId) {
-        return ticketRepository.findNextTeamRequest(ticketId, projectId).map(ticketMapper::toDto);
+        return ticketRepository.findNextTicket(ticketId, projectId).map(ticketMapper::toDto);
     }
 
     public Optional<TicketDTO> getPreviousTicket(Long ticketId, Long projectId) {
-        return ticketRepository
-                .findPreviousTeamRequest(ticketId, projectId)
-                .map(ticketMapper::toDto);
+        return ticketRepository.findPreviousTicket(ticketId, projectId).map(ticketMapper::toDto);
     }
 
     // Fetch ticket distribution by team member
@@ -353,8 +351,8 @@ public class TicketService {
                                 () ->
                                         new ResourceNotFoundException(
                                                 "Not find the ticket id " + ticketId));
-        TicketDTO newTeamRequest = ticketMapper.toDto(ticket);
-        newTeamRequest.setCurrentStateId(newStateId);
-        return updateTeamRequest(newTeamRequest);
+        TicketDTO newTicket = ticketMapper.toDto(ticket);
+        newTicket.setCurrentStateId(newStateId);
+        return updateTicket(newTicket);
     }
 }

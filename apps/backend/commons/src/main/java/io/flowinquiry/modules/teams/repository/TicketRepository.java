@@ -71,7 +71,7 @@ public interface TicketRepository
         ORDER BY tr.id DESC
             LIMIT 1
     """)
-    Optional<Ticket> findPreviousTeamRequest(
+    Optional<Ticket> findPreviousTicket(
             @Param("ticketId") Long ticketId, @Param("projectId") Long projectId);
 
     @EntityGraph(
@@ -103,7 +103,7 @@ public interface TicketRepository
         ORDER BY tr.id ASC
         LIMIT 1
     """)
-    Optional<Ticket> findNextTeamRequest(
+    Optional<Ticket> findNextTicket(
             @Param("ticketId") Long ticketId, @Param("projectId") Long projectId);
 
     // Query to count tickets assigned to each team member for a specific team

@@ -21,7 +21,7 @@ import { useAppClientTranslations } from "@/hooks/use-translations";
 import {
   getCountOverdueTicketsByTeamId,
   getTicketStatisticsByTeamId,
-} from "@/lib/actions/teams-request.action";
+} from "@/lib/actions/tickets.action";
 import { useError } from "@/providers/error-provider";
 import { useTimeRange } from "@/providers/time-range-provider";
 

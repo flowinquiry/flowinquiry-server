@@ -17,7 +17,7 @@ import useSWR from "swr";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Spinner } from "@/components/ui/spinner";
 import { useAppClientTranslations } from "@/hooks/use-translations";
-import { getTicketCreationDaySeries } from "@/lib/actions/teams-request.action";
+import { getTicketCreationDaySeries } from "@/lib/actions/tickets.action";
 import { useError } from "@/providers/error-provider";
 import { useTimeRange } from "@/providers/time-range-provider";
 

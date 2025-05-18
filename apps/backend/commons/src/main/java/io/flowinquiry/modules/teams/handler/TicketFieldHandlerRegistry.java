@@ -72,6 +72,6 @@ public class TicketFieldHandlerRegistry extends AbstractEntityFieldHandlerRegist
 
     @Override
     public EntityType getEntityType() {
-        return EntityType.Team_Request;
+        return EntityType.Ticket;
     }
 }

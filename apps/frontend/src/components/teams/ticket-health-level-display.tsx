@@ -5,7 +5,7 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import { TicketHealthLevel } from "@/types/team-requests";
+import { TicketHealthLevel } from "@/types/tickets";
 
 type HealthLevelProgressProps = {
   currentLevel: TicketHealthLevel;
@@ -52,7 +52,7 @@ const levelMap: Record<TicketHealthLevel, number> = {
   [TicketHealthLevel.Excellent]: 5,
 };
 
-const TeamRequestHealthLevel: React.FC<HealthLevelProgressProps> = ({
+const TicketHealthLevelDisplay: React.FC<HealthLevelProgressProps> = ({
   currentLevel,
 }) => {
   const starsCount = levelMap[currentLevel]; // Number of filled stars
@@ -91,4 +91,4 @@ const TeamRequestHealthLevel: React.FC<HealthLevelProgressProps> = ({
   );
 };
 
-export default TeamRequestHealthLevel;
+export default TicketHealthLevelDisplay;

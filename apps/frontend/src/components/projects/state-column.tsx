@@ -14,7 +14,7 @@ import { usePagePermission } from "@/hooks/use-page-permission";
 import { useAppClientTranslations } from "@/hooks/use-translations";
 import { useUserTeamRole } from "@/providers/user-team-role-provider";
 import { PermissionUtils } from "@/types/resources";
-import { TeamRequestDTO } from "@/types/team-requests";
+import { TicketDTO } from "@/types/tickets";
 import { WorkflowStateDTO } from "@/types/workflows";
 
 const BUTTON_COLOR =
@@ -22,11 +22,11 @@ const BUTTON_COLOR =
 
 type ColumnProps = {
   workflowState: WorkflowStateDTO;
-  tasks: TeamRequestDTO[];
+  tasks: TicketDTO[];
   setIsSheetOpen: (open: boolean) => void;
   setSelectedWorkflowState: (state: WorkflowStateDTO) => void;
   columnColor: string;
-  onTaskClick?: (task: TeamRequestDTO) => void;
+  onTaskClick?: (task: TicketDTO) => void;
 };
 
 const StateColumn: React.FC<ColumnProps> = ({

@@ -57,7 +57,7 @@ public class TicketCommentCreatedNotificationEventListener {
     @Async("asyncTaskExecutor")
     @Transactional
     @EventListener
-    public void onTeamRequestCommentCreated(TicketCommentCreatedEvent event) {
+    public void onTicketCommentCreated(TicketCommentCreatedEvent event) {
         CommentDTO commentDTO = event.getCommentDTO();
 
         User createdUser =
@@ -94,7 +94,7 @@ public class TicketCommentCreatedNotificationEventListener {
                                                 "/portal/teams/"
                                                         + Obfuscator.obfuscate(
                                                                 ticket.getTeam().getId())
-                                                        + "/requests/"
+                                                        + "/tickets/"
                                                         + Obfuscator.obfuscate(ticket.getId())),
                                 text(": " + truncatedContent))
                         .render();

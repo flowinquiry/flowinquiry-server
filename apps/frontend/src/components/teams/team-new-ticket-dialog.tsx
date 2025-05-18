@@ -7,9 +7,9 @@ import { useForm } from "react-hook-form";
 import * as z from "zod";
 
 import RichTextEditor from "@/components/shared/rich-text-editor";
-import { TeamRequestPrioritySelect } from "@/components/teams/team-requests-priority-select";
 import TicketChannelSelectField from "@/components/teams/team-ticket-channel-select";
 import TeamUserSelectField from "@/components/teams/team-users-select-field";
+import { TicketPrioritySelect } from "@/components/teams/ticket-priority-select";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -35,17 +35,13 @@ import {
 import WorkflowStateSelectField from "@/components/workflows/workflow-state-select-field";
 import { useAppClientTranslations } from "@/hooks/use-translations";
 import { uploadAttachmentsForEntity } from "@/lib/actions/entity-attachments.action";
-import { createTeamRequest } from "@/lib/actions/teams-request.action";
+import { createTicket } from "@/lib/actions/tickets.action";
 import { useError } from "@/providers/error-provider";
-import {
-  TeamRequestDTO,
-  TeamRequestDTOSchema,
-  TeamRequestPriority,
-} from "@/types/team-requests";
 import { TeamDTO } from "@/types/teams";
+import { TicketDTO, TicketDTOSchema, TicketPriority } from "@/types/tickets";
 import { WorkflowDTO } from "@/types/workflows";
 
-type NewRequestToTeamDialogProps = {
+type NewTicketToTeamDialogProps = {
   open: boolean;
   setOpen: React.Dispatch<React.SetStateAction<boolean>>;
   teamEntity: TeamDTO;
@@ -53,7 +49,7 @@ type NewRequestToTeamDialogProps = {
   onSaveSuccess: () => void;
 };
 
-const NewRequestToTeamDialog: React.FC<NewRequestToTeamDialogProps> = ({
+const NewTicketToTeamDialog: React.FC<NewTicketToTeamDialogProps> = ({
   open,
   setOpen,
   teamEntity,
@@ -65,8 +61,8 @@ const NewRequestToTeamDialog: React.FC<NewRequestToTeamDialogProps> = ({
   const { setError } = useError();
   const t = useAppClientTranslations();
 
-  const form = useForm<z.infer<typeof TeamRequestDTOSchema>>({
-    resolver: zodResolver(TeamRequestDTOSchema),
+  const form = useForm<z.infer<typeof TicketDTOSchema>>({
+    resolver: zodResolver(TicketDTOSchema),
     defaultValues: {
       teamId: teamEntity.id!,
       priority: "Medium",
@@ -98,10 +94,10 @@ const NewRequestToTeamDialog: React.FC<NewRequestToTeamDialogProps> = ({
     }
   }, [open, workflow, form, teamEntity.id, session]);
 
-  const onSubmit = async (data: TeamRequestDTO) => {
-    const savedTeamRequest = await createTeamRequest(data, setError);
-    if (savedTeamRequest?.id && files.length > 0) {
-      uploadAttachmentsForEntity("Team_Request", savedTeamRequest.id, files);
+  const onSubmit = async (data: TicketDTO) => {
+    const savedTicket = await createTicket(data, setError);
+    if (savedTicket?.id && files.length > 0) {
+      uploadAttachmentsForEntity("Ticket", savedTicket.id, files);
     }
     setOpen(false);
     onSaveSuccess();
@@ -175,9 +171,9 @@ const NewRequestToTeamDialog: React.FC<NewRequestToTeamDialogProps> = ({
                         {t.teams.tickets.form.base("priority")}
                       </FormLabel>
                       <FormControl>
-                        <TeamRequestPrioritySelect
+                        <TicketPrioritySelect
                           value={field.value}
-                          onChange={(value: TeamRequestPriority) =>
+                          onChange={(value: TicketPriority) =>
                             field.onChange(value)
                           }
                         />
@@ -239,4 +235,4 @@ const NewRequestToTeamDialog: React.FC<NewRequestToTeamDialogProps> = ({
   );
 };
 
-export default NewRequestToTeamDialog;
+export default NewTicketToTeamDialog;

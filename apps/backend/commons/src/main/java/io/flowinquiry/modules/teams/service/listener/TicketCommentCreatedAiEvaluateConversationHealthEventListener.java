@@ -27,10 +27,10 @@ public class TicketCommentCreatedAiEvaluateConversationHealthEventListener {
 
     @Async("asyncTaskExecutor")
     @EventListener
-    public void onTeamRequestNewCommentAiEvaluateConversationHealthEvent(
+    public void onTicketNewCommentAiEvaluateConversationHealthEvent(
             TicketCommentCreatedEvent event) {
         CommentDTO comment = event.getCommentDTO();
-        TicketDTO ticketDTO = ticketService.getTeamRequestById(comment.getEntityId());
+        TicketDTO ticketDTO = ticketService.getTicketById(comment.getEntityId());
         ticketHealthEvalService.evaluateConversationHealth(
                 comment.getEntityId(),
                 comment.getContent(),

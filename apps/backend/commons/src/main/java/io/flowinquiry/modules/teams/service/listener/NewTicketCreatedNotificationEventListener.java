@@ -50,8 +50,8 @@ public class NewTicketCreatedNotificationEventListener {
     @Async("asyncTaskExecutor")
     @Transactional
     @EventListener
-    public void onNewTeamRequestCreated(NewTicketCreatedEvent event) {
-        TicketDTO ticketDTO = event.getTeamRequest();
+    public void onNewTicketCreated(NewTicketCreatedEvent event) {
+        TicketDTO ticketDTO = event.getTicket();
         User requestUser =
                 userRepository
                         .findOneById(ticketDTO.getRequestUserId())
@@ -72,7 +72,7 @@ public class NewTicketCreatedNotificationEventListener {
                                                 "/portal/teams/"
                                                         + Obfuscator.obfuscate(
                                                                 ticketDTO.getTeamId())
-                                                        + "/requests/"
+                                                        + "/tickets/"
                                                         + Obfuscator.obfuscate(ticketDTO.getId())))
                         .render();
 

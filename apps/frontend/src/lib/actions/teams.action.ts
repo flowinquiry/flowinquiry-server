@@ -122,12 +122,12 @@ export const getUserRoleInTeam = async (
   );
 };
 
-export const getTeamRequestStateChangesHistory = async (
+export const getTicketStateChangesHistory = async (
   ticketId: number,
   setError?: (error: HttpError | string | null) => void,
 ) => {
   return get<TransitionItemCollectionDTO>(
-    `/api/team-requests/${ticketId}/states-history`,
+    `/api/tickets/${ticketId}/states-history`,
     setError,
   );
 };

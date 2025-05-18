@@ -7,17 +7,17 @@ import useSWR from "swr";
 
 import DynamicQueryBuilder from "@/components/my/ticket-query-component";
 import PaginationExt from "@/components/shared/pagination-ext";
-import TeamRequestsStatusView from "@/components/teams/team-requests-status";
+import TicketList from "@/components/teams/ticket-list";
 import { Skeleton } from "@/components/ui/skeleton";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
-import { searchTeamRequests } from "@/lib/actions/teams-request.action";
+import { searchTickets } from "@/lib/actions/tickets.action";
 import { useError } from "@/providers/error-provider";
 import { Filter, Operator, Pagination, QueryDTO } from "@/types/query";
 
 const validTicketTypes = ["reported", "assigned"] as const;
 type TicketType = (typeof validTicketTypes)[number];
 
-const MyTeamRequestsView = () => {
+const MyTicketsView = () => {
   const { data: session } = useSession();
   const { setError } = useError();
   const router = useRouter();
@@ -68,12 +68,10 @@ const MyTeamRequestsView = () => {
     ],
   };
 
-  // Fetch team requests using SWR
+  // Fetch team tickets using SWR
   const { data, isLoading } = useSWR(
-    session?.user?.id
-      ? [`/api/team-requests`, combinedQuery, pagination]
-      : null,
-    async () => searchTeamRequests(combinedQuery, pagination, setError),
+    session?.user?.id ? [`/api/tickets`, combinedQuery, pagination] : null,
+    async () => searchTickets(combinedQuery, pagination, setError),
     { keepPreviousData: true },
   );
 
@@ -121,10 +119,7 @@ const MyTeamRequestsView = () => {
             </>
           ) : (
             <>
-              <TeamRequestsStatusView
-                requests={data?.content || []}
-                instantView={false}
-              />
+              <TicketList tickets={data?.content || []} instantView={false} />
               <PaginationExt
                 currentPage={pagination.page}
                 totalPages={totalPages}
@@ -140,4 +135,4 @@ const MyTeamRequestsView = () => {
   );
 };
 
-export default MyTeamRequestsView;
+export default MyTicketsView;

@@ -18,11 +18,11 @@ import { UserAvatar } from "@/components/shared/avatar-display";
 import CommentsView from "@/components/shared/comments-view";
 import EntityWatchers from "@/components/shared/entity-watchers";
 import RichTextEditor from "@/components/shared/rich-text-editor";
-import TeamRequestHealthLevel from "@/components/teams/team-requests-health-level";
-import { PriorityDisplay } from "@/components/teams/team-requests-priority-display";
-import { TeamRequestPrioritySelect } from "@/components/teams/team-requests-priority-select";
 import TicketChannelSelectField from "@/components/teams/team-ticket-channel-select";
 import TeamUserSelectField from "@/components/teams/team-users-select-field";
+import TicketHealthLevelDisplay from "@/components/teams/ticket-health-level-display";
+import { TicketPriorityDisplay } from "@/components/teams/ticket-priority-display";
+import { TicketPrioritySelect } from "@/components/teams/ticket-priority-select";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -41,11 +41,11 @@ import {
 } from "@/components/ui/tooltip";
 import WorkflowStateSelectField from "@/components/workflows/workflow-state-select-field";
 import { useAppClientTranslations } from "@/hooks/use-translations";
-import { updateTeamRequest } from "@/lib/actions/teams-request.action";
+import { updateTicket } from "@/lib/actions/tickets.action";
 import { obfuscate } from "@/lib/endecode";
 import { cn, getSpecifiedColor } from "@/lib/utils";
 import { useError } from "@/providers/error-provider";
-import { TeamRequestDTO } from "@/types/team-requests";
+import { TicketDTO } from "@/types/tickets";
 
 const EditableSection = ({
   children,
@@ -94,16 +94,16 @@ const EditableSection = ({
 type RequestDetailsProps = {
   open: boolean;
   onClose: () => void;
-  request: TeamRequestDTO;
+  initialTicket: TicketDTO;
 };
 
-const TeamRequestDetailSheet: React.FC<RequestDetailsProps> = ({
+const TicketDetailSheet: React.FC<RequestDetailsProps> = ({
   open,
   onClose,
-  request,
+  initialTicket,
 }) => {
-  const [teamRequest, setTeamRequest] = useState<TeamRequestDTO>(request);
-  const workflowColor = getSpecifiedColor(request.workflowRequestName!);
+  const [ticket, setTicket] = useState<TicketDTO>(initialTicket);
+  const workflowColor = getSpecifiedColor(initialTicket.workflowRequestName!);
   const [submitting, setSubmitting] = useState<boolean>(false);
   const [isEditingTitle, setIsEditingTitle] = useState(false);
   const [isEditingDescription, setIsEditingDescription] = useState(false);
@@ -115,27 +115,23 @@ const TeamRequestDetailSheet: React.FC<RequestDetailsProps> = ({
   const { setError } = useError();
   const t = useAppClientTranslations();
 
-  const form = useForm<TeamRequestDTOWithStringDates>({
-    defaultValues: teamRequest as unknown as TeamRequestDTOWithStringDates,
+  const form = useForm<TicketDTOWithStringDates>({
+    defaultValues: ticket as unknown as TicketDTOWithStringDates,
   });
 
-  const onSubmit = async (formData: TeamRequestDTOWithStringDates) => {
+  const onSubmit = async (formData: TicketDTOWithStringDates) => {
     setSubmitting(true);
     try {
-      // Convert to TeamRequestDTO for the backend
+      // Convert to TicketDTO for the backend
       const data = {
         ...formData,
         // Handle date conversions if needed
         estimatedCompletionDate: formData.estimatedCompletionDate,
-      } as unknown as TeamRequestDTO;
+      } as unknown as TicketDTO;
 
-      const updatedRequest = await updateTeamRequest(
-        teamRequest.id!,
-        data,
-        setError,
-      );
+      const updatedRequest = await updateTicket(ticket.id!, data, setError);
 
-      setTeamRequest(updatedRequest);
+      setTicket(updatedRequest);
 
       setIsEditingTitle(false);
       setIsEditingDescription(false);
@@ -150,8 +146,8 @@ const TeamRequestDetailSheet: React.FC<RequestDetailsProps> = ({
     }
   };
 
-  interface TeamRequestDTOWithStringDates
-    extends Omit<TeamRequestDTO, "estimatedCompletionDate"> {
+  interface TicketDTOWithStringDates
+    extends Omit<TicketDTO, "estimatedCompletionDate"> {
     estimatedCompletionDate?: string | null;
   }
 
@@ -164,12 +160,12 @@ const TeamRequestDetailSheet: React.FC<RequestDetailsProps> = ({
 
   // Determine request status
   const currentDate = new Date();
-  const estimatedCompletionDate = request.estimatedCompletionDate
-    ? new Date(request.estimatedCompletionDate)
+  const estimatedCompletionDate = initialTicket.estimatedCompletionDate
+    ? new Date(initialTicket.estimatedCompletionDate)
     : null;
 
   const getRequestStatusIcon = () => {
-    if (request.isCompleted) {
+    if (initialTicket.isCompleted) {
       return <CheckCircle className="w-5 h-5 text-green-500" />;
     }
     if (estimatedCompletionDate && estimatedCompletionDate < currentDate) {
@@ -193,7 +189,7 @@ const TeamRequestDetailSheet: React.FC<RequestDetailsProps> = ({
                       color: workflowColor.text,
                     }}
                   >
-                    {request.workflowRequestName}
+                    {initialTicket.workflowRequestName}
                   </span>
 
                   {isEditingTitle ? (
@@ -239,7 +235,7 @@ const TeamRequestDetailSheet: React.FC<RequestDetailsProps> = ({
                     <div className="flex-grow">
                       <Button
                         variant="link"
-                        className={`px-0 text-xl flex-grow text-left ${request.isCompleted ? "line-through" : ""}`}
+                        className={`px-0 text-xl flex-grow text-left ${initialTicket.isCompleted ? "line-through" : ""}`}
                         onClick={(e) => {
                           // Allow the link navigation to proceed (don't call preventDefault)
                         }}
@@ -249,21 +245,21 @@ const TeamRequestDetailSheet: React.FC<RequestDetailsProps> = ({
                         }}
                       >
                         <Link
-                          href={`/portal/teams/${obfuscate(teamRequest.teamId)}/requests/${obfuscate(
-                            teamRequest.id,
+                          href={`/portal/teams/${obfuscate(ticket.teamId)}/tickets/${obfuscate(
+                            ticket.id,
                           )}`}
                           className="break-words whitespace-normal text-left"
                         >
-                          {teamRequest.requestTitle || request.requestTitle}
+                          {ticket.requestTitle || initialTicket.requestTitle}
                         </Link>
                       </Button>
                     </div>
                   )}
                 </div>
 
-                {request.conversationHealth?.healthLevel && (
-                  <TeamRequestHealthLevel
-                    currentLevel={request.conversationHealth.healthLevel}
+                {initialTicket.conversationHealth?.healthLevel && (
+                  <TicketHealthLevelDisplay
+                    currentLevel={initialTicket.conversationHealth.healthLevel}
                   />
                 )}
               </SheetTitle>
@@ -295,7 +291,7 @@ const TeamRequestDetailSheet: React.FC<RequestDetailsProps> = ({
                     >
                       <RichTextEditor
                         key="description-editor"
-                        value={teamRequest.requestDescription}
+                        value={ticket.requestDescription}
                         onChange={(content: string) => {
                           form.setValue("requestDescription", content, {
                             shouldValidate: false,
@@ -315,7 +311,7 @@ const TeamRequestDetailSheet: React.FC<RequestDetailsProps> = ({
                       <div
                         className="prose dark:prose-invert max-w-none"
                         dangerouslySetInnerHTML={{
-                          __html: teamRequest.requestDescription!,
+                          __html: ticket.requestDescription!,
                         }}
                       />
                     </EditableSection>
@@ -350,8 +346,8 @@ const TeamRequestDetailSheet: React.FC<RequestDetailsProps> = ({
                               form={form}
                               name="currentStateId"
                               label=""
-                              workflowId={request.workflowId!}
-                              workflowStateId={request.currentStateId!}
+                              workflowId={initialTicket.workflowId!}
+                              workflowStateId={initialTicket.currentStateId!}
                               includeSelf={true}
                               required={false}
                             />
@@ -383,8 +379,8 @@ const TeamRequestDetailSheet: React.FC<RequestDetailsProps> = ({
                           onEdit={() => setIsEditingStatus(true)}
                         >
                           <Badge variant="outline">
-                            {teamRequest.currentStateName ||
-                              request.currentStateName}
+                            {ticket.currentStateName ||
+                              initialTicket.currentStateName}
                           </Badge>
                         </EditableSection>
                       )}
@@ -403,7 +399,7 @@ const TeamRequestDetailSheet: React.FC<RequestDetailsProps> = ({
                             name="priority"
                             control={form.control}
                             render={({ field }) => (
-                              <TeamRequestPrioritySelect
+                              <TicketPrioritySelect
                                 value={field.value as any}
                                 onChange={(value) => {
                                   field.onChange(value);
@@ -437,8 +433,8 @@ const TeamRequestDetailSheet: React.FC<RequestDetailsProps> = ({
                         <EditableSection
                           onEdit={() => setIsEditingPriority(true)}
                         >
-                          <PriorityDisplay
-                            priority={teamRequest.priority || request.priority}
+                          <TicketPriorityDisplay
+                            priority={ticket.priority || initialTicket.priority}
                           />
                         </EditableSection>
                       )}
@@ -484,12 +480,12 @@ const TeamRequestDetailSheet: React.FC<RequestDetailsProps> = ({
                           onEdit={() => setIsEditingChannel(true)}
                         >
                           <Badge variant="outline">
-                            {teamRequest?.channel
-                              ? t.teams.tickets.form.channels(
-                                  teamRequest.channel,
-                                )
-                              : request?.channel
-                                ? t.teams.tickets.form.channels(request.channel)
+                            {ticket?.channel
+                              ? t.teams.tickets.form.channels(ticket.channel)
+                              : initialTicket?.channel
+                                ? t.teams.tickets.form.channels(
+                                    initialTicket.channel,
+                                  )
                                 : t.teams.tickets.form.channels("internal")}
                           </Badge>
                         </EditableSection>
@@ -532,9 +528,9 @@ const TeamRequestDetailSheet: React.FC<RequestDetailsProps> = ({
                           onEdit={() => setIsEditingCompletionDate(true)}
                         >
                           <p className="text-sm p-1">
-                            {teamRequest.estimatedCompletionDate
+                            {ticket.estimatedCompletionDate
                               ? new Date(
-                                  teamRequest.estimatedCompletionDate,
+                                  ticket.estimatedCompletionDate,
                                 ).toLocaleDateString()
                               : "N/A"}
                           </p>
@@ -559,7 +555,7 @@ const TeamRequestDetailSheet: React.FC<RequestDetailsProps> = ({
                   </div>
                   <AttachmentView
                     entityType="Team_Request"
-                    entityId={teamRequest.id!}
+                    entityId={ticket.id!}
                   />
                 </div>
               </div>
@@ -585,14 +581,14 @@ const TeamRequestDetailSheet: React.FC<RequestDetailsProps> = ({
                       </span>
                       <div className="flex items-center gap-2">
                         <UserAvatar
-                          imageUrl={teamRequest.requestUserImageUrl}
+                          imageUrl={ticket.requestUserImageUrl}
                           size="w-8 h-8"
                         />
                         <Link
-                          href={`/portal/users/${obfuscate(teamRequest.requestUserId)}`}
+                          href={`/portal/users/${obfuscate(ticket.requestUserId)}`}
                           className="text-sm hover:underline"
                         >
-                          {teamRequest.requestUserName}
+                          {ticket.requestUserName}
                         </Link>
                       </div>
                     </div>
@@ -610,7 +606,7 @@ const TeamRequestDetailSheet: React.FC<RequestDetailsProps> = ({
                             form={form}
                             fieldName="assignUserId"
                             label=""
-                            teamId={teamRequest.teamId!}
+                            teamId={ticket.teamId!}
                           />
                           <div className="flex justify-end gap-2 mt-2">
                             <Button
@@ -639,22 +635,22 @@ const TeamRequestDetailSheet: React.FC<RequestDetailsProps> = ({
                           onEdit={() => setIsEditingAssignment(true)}
                         >
                           <div className="flex items-center gap-2">
-                            {teamRequest.assignUserId ||
-                            request.assignUserId ? (
+                            {ticket.assignUserId ||
+                            initialTicket.assignUserId ? (
                               <>
                                 <UserAvatar
                                   imageUrl={
-                                    teamRequest.assignUserImageUrl ||
-                                    request.assignUserImageUrl
+                                    ticket.assignUserImageUrl ||
+                                    initialTicket.assignUserImageUrl
                                   }
                                   size="w-8 h-8"
                                 />
                                 <Link
-                                  href={`/portal/users/${obfuscate(teamRequest.assignUserId || request.assignUserId!)}`}
+                                  href={`/portal/users/${obfuscate(ticket.assignUserId || initialTicket.assignUserId!)}`}
                                   className="text-sm hover:underline"
                                 >
-                                  {teamRequest.assignUserName ||
-                                    request.assignUserName}
+                                  {ticket.assignUserName ||
+                                    initialTicket.assignUserName}
                                 </Link>
                               </>
                             ) : (
@@ -685,7 +681,7 @@ const TeamRequestDetailSheet: React.FC<RequestDetailsProps> = ({
                   </div>
                   <EntityWatchers
                     entityType="Team_Request"
-                    entityId={teamRequest.id!}
+                    entityId={ticket.id!}
                   />
                 </div>
               </div>
@@ -699,7 +695,7 @@ const TeamRequestDetailSheet: React.FC<RequestDetailsProps> = ({
                   </div>
                   <CommentsView
                     entityType="Team_Request"
-                    entityId={teamRequest.id!}
+                    entityId={ticket.id!}
                   />
                 </div>
               </div>
@@ -711,4 +707,4 @@ const TeamRequestDetailSheet: React.FC<RequestDetailsProps> = ({
   );
 };
 
-export default TeamRequestDetailSheet;
+export default TicketDetailSheet;

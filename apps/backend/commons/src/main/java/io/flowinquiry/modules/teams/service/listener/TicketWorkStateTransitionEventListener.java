@@ -90,7 +90,7 @@ public class TicketWorkStateTransitionEventListener {
                                                 "/portal/teams/"
                                                         + Obfuscator.obfuscate(
                                                                 ticket.getTeam().getId())
-                                                        + "/requests/"
+                                                        + "/tickets/"
                                                         + Obfuscator.obfuscate(ticket.getId())),
                                 text(" status from "),
                                 span(sourceState.getStateName()).withClass("status-old"),

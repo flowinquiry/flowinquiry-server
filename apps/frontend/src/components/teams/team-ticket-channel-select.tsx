@@ -17,7 +17,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { useAppClientTranslations } from "@/hooks/use-translations";
-import { TicketChannel } from "@/types/team-requests";
+import { TicketChannel } from "@/types/tickets";
 
 type TicketChannelSelectFieldProps = {
   form: any;

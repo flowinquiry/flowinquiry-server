@@ -7,9 +7,9 @@ import React, { useState } from "react";
 
 import { UserAvatar } from "@/components/shared/avatar-display";
 import TruncatedHtmlLabel from "@/components/shared/truncate-html-label";
-import TeamRequestDetailSheet from "@/components/teams/team-request-detail-sheet";
-import TeamRequestHealthLevel from "@/components/teams/team-requests-health-level";
-import { PriorityDisplay } from "@/components/teams/team-requests-priority-display";
+import TicketDetailSheet from "@/components/teams/ticket-detail-sheet";
+import TicketHealthLevelDisplay from "@/components/teams/ticket-health-level-display";
+import { TicketPriorityDisplay } from "@/components/teams/ticket-priority-display";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -22,30 +22,27 @@ import {
 import { useAppClientTranslations } from "@/hooks/use-translations";
 import { obfuscate } from "@/lib/endecode";
 import { cn, getSpecifiedColor } from "@/lib/utils";
-import { TeamRequestDTO } from "@/types/team-requests";
+import { TicketDTO } from "@/types/tickets";
 
-interface TeamRequestsStatusViewProps {
-  requests: TeamRequestDTO[];
+interface TicketListProps {
+  tickets: TicketDTO[];
   instantView?: boolean;
 }
 
-const TeamRequestsStatusView = ({
-  requests,
-  instantView = true,
-}: TeamRequestsStatusViewProps) => {
+const TicketList = ({ tickets, instantView = true }: TicketListProps) => {
   const t = useAppClientTranslations();
   const router = useRouter();
-  const [selectedRequest, setSelectedRequest] = useState<TeamRequestDTO | null>(
+  const [selectedRequest, setSelectedRequest] = useState<TicketDTO | null>(
     null,
   );
 
-  const handleRequestClick = (request: TeamRequestDTO) => {
+  const handleRequestClick = (request: TicketDTO) => {
     if (instantView) {
       setSelectedRequest(request);
     } else {
       if (!request.projectId) {
         router.push(
-          `/portal/teams/${obfuscate(request.teamId)}/requests/${obfuscate(request.id)}`,
+          `/portal/teams/${obfuscate(request.teamId)}/tickets/${obfuscate(request.id)}`,
         );
       } else {
         router.push(
@@ -59,7 +56,7 @@ const TeamRequestsStatusView = ({
     setSelectedRequest(null);
   };
 
-  const getRequestStatusDetails = (request: TeamRequestDTO) => {
+  const getRequestStatusDetails = (request: TicketDTO) => {
     const currentDate = new Date();
     const estimatedCompletionDate = request.estimatedCompletionDate
       ? new Date(request.estimatedCompletionDate)
@@ -90,7 +87,7 @@ const TeamRequestsStatusView = ({
 
   return (
     <div className="space-y-4">
-      {requests.length === 0 ? (
+      {tickets.length === 0 ? (
         <Alert variant="default">
           <AlertTitle>{t.teams.tickets.list("no_ticket_title")}</AlertTitle>
           <AlertDescription>
@@ -99,7 +96,7 @@ const TeamRequestsStatusView = ({
         </Alert>
       ) : (
         <div className="space-y-4">
-          {requests.map((request) => {
+          {tickets.map((request) => {
             const workflowColor = getSpecifiedColor(
               request.workflowRequestName!,
             );
@@ -187,7 +184,9 @@ const TeamRequestsStatusView = ({
 
                           {/* Priority */}
                           <div className="flex-shrink-0">
-                            <PriorityDisplay priority={request.priority} />
+                            <TicketPriorityDisplay
+                              priority={request.priority}
+                            />
                           </div>
                         </div>
                       </div>
@@ -195,7 +194,7 @@ const TeamRequestsStatusView = ({
                       {/* Health section */}
                       {request.conversationHealth?.healthLevel && (
                         <div className="mb-4">
-                          <TeamRequestHealthLevel
+                          <TicketHealthLevelDisplay
                             currentLevel={
                               request.conversationHealth.healthLevel
                             }
@@ -324,10 +323,10 @@ const TeamRequestsStatusView = ({
 
           {/* Only render the sheet if instantView is true and there's a selected request */}
           {instantView && selectedRequest && (
-            <TeamRequestDetailSheet
+            <TicketDetailSheet
               open={!!selectedRequest}
               onClose={closeSheet}
-              request={selectedRequest}
+              initialTicket={selectedRequest}
             />
           )}
         </div>
@@ -336,4 +335,4 @@ const TeamRequestsStatusView = ({
   );
 };
 
-export default TeamRequestsStatusView;
+export default TicketList;

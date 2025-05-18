@@ -38,10 +38,10 @@ import {
 import { findEpicsByProjectId } from "@/lib/actions/project-epic.action";
 import { findIterationsByProjectId } from "@/lib/actions/project-iteration.action";
 import {
-  searchTeamRequests,
-  updateTeamRequest,
-  updateTeamRequestState,
-} from "@/lib/actions/teams-request.action";
+  searchTickets,
+  updateTicket,
+  updateTicketState,
+} from "@/lib/actions/tickets.action";
 import { calculateDuration } from "@/lib/datetime";
 import { obfuscate } from "@/lib/endecode";
 import { useError } from "@/providers/error-provider";
@@ -54,7 +54,7 @@ import {
 } from "@/types/projects";
 import { Pagination, QueryDTO } from "@/types/query";
 import { PermissionUtils } from "@/types/resources";
-import { TeamRequestDTO } from "@/types/team-requests";
+import { TicketDTO } from "@/types/tickets";
 import { WorkflowDetailDTO, WorkflowStateDTO } from "@/types/workflows";
 
 // Function to generate a constant background color for workflow states.
@@ -91,9 +91,9 @@ export default function ProjectView({ projectId }: { projectId: number }) {
   const [filteredTasks, setFilteredTasks] = useState<TaskBoard>({});
 
   // State for drag and click management.
-  const [activeTask, setActiveTask] = useState<TeamRequestDTO | null>(null);
+  const [activeTask, setActiveTask] = useState<TicketDTO | null>(null);
   // State for tracking the selected task and its detail view.
-  const [selectedTask, setSelectedTask] = useState<TeamRequestDTO | null>(null);
+  const [selectedTask, setSelectedTask] = useState<TicketDTO | null>(null);
   const [isTaskDetailOpen, setIsTaskDetailOpen] = useState(false);
   // Track Add Task Sheet State.
   const [selectedWorkflowState, setSelectedWorkflowState] =
@@ -152,7 +152,7 @@ export default function ProjectView({ projectId }: { projectId: number }) {
       setWorkflow(workflowData);
 
       if (workflowData) {
-        let allTasks: TeamRequestDTO[] = [];
+        let allTasks: TicketDTO[] = [];
         let currentPage = 1;
         const pageSize = 100;
         let totalElements = 0;
@@ -169,11 +169,7 @@ export default function ProjectView({ projectId }: { projectId: number }) {
             sort: [{ field: "id", direction: "desc" }],
           };
 
-          const tasksData = await searchTeamRequests(
-            query,
-            pagination,
-            setError,
-          );
+          const tasksData = await searchTickets(query, pagination, setError);
           allTasks = [...allTasks, ...tasksData.content];
           totalElements = tasksData.totalElements;
           currentPage++;
@@ -288,7 +284,7 @@ export default function ProjectView({ projectId }: { projectId: number }) {
   };
 
   // Handler for updating task details, including state changes
-  const handleTaskUpdate = async (updatedTask: TeamRequestDTO) => {
+  const handleTaskUpdate = async (updatedTask: TicketDTO) => {
     if (!updatedTask.id) return;
 
     try {
@@ -362,7 +358,7 @@ export default function ProjectView({ projectId }: { projectId: number }) {
       };
 
       // Then call the API to update on the server
-      await updateTeamRequest(
+      await updateTicket(
         taskWithModifiedDate.id!,
         taskWithModifiedDate,
         setError,
@@ -384,7 +380,7 @@ export default function ProjectView({ projectId }: { projectId: number }) {
     setDragStartTime(Date.now());
 
     // Find the task being dragged
-    let foundTask: TeamRequestDTO | null = null;
+    let foundTask: TicketDTO | null = null;
     Object.keys(filteredTasks).forEach((columnId) => {
       const task = filteredTasks[columnId].find(
         (task) => task.id?.toString() === activeId,
@@ -459,7 +455,7 @@ export default function ProjectView({ projectId }: { projectId: number }) {
     if (!movedTask) return;
 
     // Update task state on the server
-    await updateTeamRequestState(movedTask.id!, targetColumn.id!, setError);
+    await updateTicketState(movedTask.id!, targetColumn.id!, setError);
 
     // Create updated task with new state information
     const updatedTask = {

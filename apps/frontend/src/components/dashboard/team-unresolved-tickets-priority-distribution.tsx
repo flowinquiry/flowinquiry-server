@@ -17,11 +17,11 @@ import {
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Spinner } from "@/components/ui/spinner";
-import { getTeamTicketPriorityDistributionForUser } from "@/lib/actions/teams-request.action";
+import { getTeamTicketPriorityDistributionForUser } from "@/lib/actions/tickets.action";
 import { useError } from "@/providers/error-provider";
-import { TeamRequestPriority } from "@/types/team-requests";
+import { TicketPriority } from "@/types/tickets";
 
-const PRIORITY_COLORS: Record<TeamRequestPriority, string> = {
+const PRIORITY_COLORS: Record<TicketPriority, string> = {
   Critical: "#dc2626",
   High: "#ea580c",
   Medium: "#facc15",
@@ -34,7 +34,7 @@ const TeamUnresolvedTicketsPriorityDistributionChart = () => {
   const userId = Number(session?.user?.id!);
 
   const [data, setData] = useState<
-    Record<string, Record<TeamRequestPriority, number>>
+    Record<string, Record<TicketPriority, number>>
   >({});
   const [loading, setLoading] = useState(true);
   const [collapsed, setCollapsed] = useState(false); // State for collapsible content
@@ -62,7 +62,7 @@ const TeamUnresolvedTicketsPriorityDistributionChart = () => {
             acc[item.teamName][item.priority] = item.count;
             return acc;
           },
-          {} as Record<string, Record<TeamRequestPriority, number>>,
+          {} as Record<string, Record<TicketPriority, number>>,
         );
         setData(chartData);
       } finally {
@@ -131,7 +131,7 @@ const TeamUnresolvedTicketsPriorityDistributionChart = () => {
                     key={`bar-${priority}`}
                     dataKey={priority}
                     stackId="a"
-                    fill={PRIORITY_COLORS[priority as TeamRequestPriority]}
+                    fill={PRIORITY_COLORS[priority as TicketPriority]}
                   />
                 ))}
               </BarChart>

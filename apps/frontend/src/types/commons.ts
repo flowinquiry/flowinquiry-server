@@ -80,7 +80,7 @@ export const CommentDTOSchema = z.object({
 
 export type CommentDTO = z.infer<typeof CommentDTOSchema>;
 
-export type EntityType = "Team_Request" | "Team" | "Comment";
+export type EntityType = "Ticket" | "Team" | "Comment";
 
 export type EntityWatcherDTO = {
   id: number;

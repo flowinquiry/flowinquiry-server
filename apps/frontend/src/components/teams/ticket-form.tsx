@@ -8,9 +8,9 @@ import { useForm } from "react-hook-form";
 import { Breadcrumbs } from "@/components/breadcrumbs";
 import { Heading } from "@/components/heading";
 import RichTextEditor from "@/components/shared/rich-text-editor";
-import { TeamRequestPrioritySelect } from "@/components/teams/team-requests-priority-select";
 import TicketChannelSelectField from "@/components/teams/team-ticket-channel-select";
 import TeamUserSelectField from "@/components/teams/team-users-select-field";
+import { TicketPrioritySelect } from "@/components/teams/ticket-priority-select";
 import { Button } from "@/components/ui/button";
 import {
   DatePickerField,
@@ -28,67 +28,53 @@ import {
 import { Spinner } from "@/components/ui/spinner";
 import WorkflowStateSelectField from "@/components/workflows/workflow-state-select-field";
 import { useAppClientTranslations } from "@/hooks/use-translations";
-import {
-  findRequestById,
-  updateTeamRequest,
-} from "@/lib/actions/teams-request.action";
+import { findTicketById, updateTicket } from "@/lib/actions/tickets.action";
 import { obfuscate } from "@/lib/endecode";
 import { randomPair } from "@/lib/utils";
 import { validateForm } from "@/lib/validator";
 import { useError } from "@/providers/error-provider";
-import {
-  TeamRequestDTO,
-  TeamRequestDTOSchema,
-  TeamRequestPriority,
-} from "@/types/team-requests";
+import { TicketDTO, TicketDTOSchema, TicketPriority } from "@/types/tickets";
 
-export const TeamRequestForm = ({
-  teamRequestId,
-}: {
-  teamRequestId: number;
-}) => {
+export const TicketForm = ({ ticketId }: { ticketId: number }) => {
   const router = useRouter();
 
-  const [teamRequest, setTeamRequest] = useState<TeamRequestDTO | undefined>(
-    undefined,
-  );
+  const [ticket, setTicket] = useState<TicketDTO | undefined>(undefined);
   const { setError } = useError();
   const [loading, setLoading] = useState(true);
   const t = useAppClientTranslations();
 
-  const form = useForm<TeamRequestDTO>({
-    resolver: zodResolver(TeamRequestDTOSchema),
+  const form = useForm<TicketDTO>({
+    resolver: zodResolver(TicketDTOSchema),
     defaultValues: undefined,
     mode: "onChange",
   });
 
   useEffect(() => {
-    const fetchTeamRequest = async () => {
+    const fetchTicket = async () => {
       setLoading(true);
       try {
-        const data = await findRequestById(teamRequestId, setError);
-        setTeamRequest(data);
-        console.log("Fetch tickets", data);
+        const data = await findTicketById(ticketId, setError);
+        setTicket(data);
       } finally {
         setLoading(false);
       }
     };
-    fetchTeamRequest();
-  }, [teamRequestId]);
+    fetchTicket();
+  }, [ticketId]);
 
   useEffect(() => {
-    if (teamRequest) {
-      form.reset(teamRequest);
+    if (ticket) {
+      form.reset(ticket);
     } else {
       form.reset(undefined);
     }
-  }, [teamRequest]);
+  }, [ticket]);
 
-  async function onSubmit(formValues: TeamRequestDTO) {
-    if (validateForm(formValues, TeamRequestDTOSchema, form)) {
-      await updateTeamRequest(formValues.id!, formValues, setError);
+  async function onSubmit(formValues: TicketDTO) {
+    if (validateForm(formValues, TicketDTOSchema, form)) {
+      await updateTicket(formValues.id!, formValues, setError);
       router.push(
-        `/portal/teams/${obfuscate(formValues.teamId)}/requests/${obfuscate(
+        `/portal/teams/${obfuscate(formValues.teamId)}/tickets/${obfuscate(
           formValues.id,
         )}?${randomPair()}`,
       );
@@ -103,7 +89,7 @@ export const TeamRequestForm = ({
     );
   }
 
-  if (!teamRequest) {
+  if (!ticket) {
     return (
       <div className="py-4">
         <h1 className="text-2xl font-bold">{t.common.misc("error")}</h1>
@@ -121,33 +107,33 @@ export const TeamRequestForm = ({
     { title: t.common.navigation("dashboard"), link: "/portal" },
     { title: t.common.navigation("teams"), link: "/portal/teams" },
     {
-      title: teamRequest.teamName!,
-      link: `/portal/teams/${obfuscate(teamRequest.teamId!)}`,
+      title: ticket.teamName!,
+      link: `/portal/teams/${obfuscate(ticket.teamId!)}`,
     },
-    ...(teamRequest.projectId
+    ...(ticket.projectId
       ? [
           {
             title: t.common.navigation("projects"),
-            link: `/portal/teams/${obfuscate(teamRequest.teamId!)}/projects`,
+            link: `/portal/teams/${obfuscate(ticket.teamId!)}/projects`,
           },
           {
-            title: teamRequest.projectName!,
-            link: `/portal/teams/${obfuscate(teamRequest.teamId!)}/projects/${obfuscate(teamRequest.projectId!)}`,
+            title: ticket.projectName!,
+            link: `/portal/teams/${obfuscate(ticket.teamId!)}/projects/${obfuscate(ticket.projectId!)}`,
           },
           {
-            title: teamRequest.requestTitle!,
-            link: `/portal/teams/${obfuscate(teamRequest.teamId!)}/projects/${obfuscate(teamRequest.projectId!)}/${obfuscate(teamRequest.id!)}`,
+            title: ticket.requestTitle!,
+            link: `/portal/teams/${obfuscate(ticket.teamId!)}/projects/${obfuscate(ticket.projectId!)}/${obfuscate(ticket.id!)}`,
           },
           { title: t.common.buttons("edit"), link: "#" },
         ]
       : [
           {
             title: t.common.navigation("tickets"),
-            link: `/portal/teams/${obfuscate(teamRequest.teamId!)}/requests`,
+            link: `/portal/teams/${obfuscate(ticket.teamId!)}/tickets`,
           },
           {
-            title: teamRequest.requestTitle!,
-            link: `/portal/teams/${obfuscate(teamRequest.teamId!)}/requests/${obfuscate(teamRequest.id!)}`,
+            title: ticket.requestTitle!,
+            link: `/portal/teams/${obfuscate(ticket.teamId!)}/tickets/${obfuscate(ticket.id!)}`,
           },
           { title: t.common.buttons("edit"), link: "#" },
         ]),
@@ -158,7 +144,7 @@ export const TeamRequestForm = ({
       <Breadcrumbs items={breadcrumbItems} />
       <div className="flex items-center justify-between mb-4 mt-4">
         <Heading
-          title={`${teamRequest?.workflowRequestName}: ${t.teams.tickets.form.base("edit_ticket_title")}`}
+          title={`${ticket?.workflowRequestName}: ${t.teams.tickets.form.base("edit_ticket_title")}`}
           description={t.teams.tickets.form.base("edit_ticket_description")}
         />
       </div>
@@ -203,7 +189,7 @@ export const TeamRequestForm = ({
             form={form}
             fieldName="assignUserId"
             label={t.teams.tickets.form.base("assignee")}
-            teamId={teamRequest.teamId!}
+            teamId={ticket.teamId!}
           />
 
           <FormField
@@ -213,11 +199,9 @@ export const TeamRequestForm = ({
               <FormItem>
                 <FormLabel>{t.teams.tickets.form.base("priority")}</FormLabel>
                 <FormControl>
-                  <TeamRequestPrioritySelect
-                    value={field.value || ("Medium" as TeamRequestPriority)}
-                    onChange={(value: TeamRequestPriority) =>
-                      field.onChange(value)
-                    }
+                  <TicketPrioritySelect
+                    value={field.value || ("Medium" as TicketPriority)}
+                    onChange={(value: TicketPriority) => field.onChange(value)}
                   />
                 </FormControl>
                 <FormMessage />
@@ -245,8 +229,8 @@ export const TeamRequestForm = ({
             name="currentStateId"
             label={t.teams.tickets.form.base("state")}
             required
-            workflowId={teamRequest.workflowId!}
-            workflowStateId={teamRequest.currentStateId!}
+            workflowId={ticket.workflowId!}
+            workflowStateId={ticket.currentStateId!}
             includeSelf
           />
 

@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-import { TeamRequestPriority } from "@/types/team-requests";
+import { TicketPriority } from "@/types/tickets";
 
 export const TeamDTOSchema = z.object({
   id: z.number().nullish(),
@@ -41,7 +41,7 @@ export interface TicketActionCountByDateDTO {
 export interface TeamTicketPriorityDistributionDTO {
   teamId: number;
   teamName: string;
-  priority: TeamRequestPriority;
+  priority: TicketPriority;
   count: number;
 }
 

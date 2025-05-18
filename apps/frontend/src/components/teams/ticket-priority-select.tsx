@@ -13,19 +13,19 @@ import {
   PRIORITIES_ORDERED,
   PRIORITY_CONFIG,
 } from "@/lib/constants/ticket-priorities";
-import { TeamRequestPriority } from "@/types/team-requests";
+import { TicketPriority } from "@/types/tickets";
 
-export const TeamRequestPrioritySelect = ({
+export const TicketPrioritySelect = ({
   value,
   onChange,
 }: {
-  value: TeamRequestPriority;
-  onChange: (value: TeamRequestPriority) => void;
+  value: TicketPriority;
+  onChange: (value: TicketPriority) => void;
 }) => {
-  const priorityKey = value as TeamRequestPriority;
+  const priorityKey = value as TicketPriority;
 
   // Create a PriorityItem component for consistent rendering
-  const PriorityItem = ({ priority }: { priority: TeamRequestPriority }) => {
+  const PriorityItem = ({ priority }: { priority: TicketPriority }) => {
     const itemConfig = PRIORITY_CONFIG[priority];
     return (
       <div className="flex items-center gap-2">
@@ -40,7 +40,7 @@ export const TeamRequestPrioritySelect = ({
   return (
     <Select
       value={value}
-      onValueChange={(value: TeamRequestPriority) => onChange(value)}
+      onValueChange={(value: TicketPriority) => onChange(value)}
     >
       <SelectTrigger className="w-[16rem]">
         <SelectValue>

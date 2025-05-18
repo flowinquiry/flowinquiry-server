@@ -6,10 +6,10 @@ import org.springframework.context.ApplicationEvent;
 
 @Getter
 public class NewTicketCreatedEvent extends ApplicationEvent {
-    private final TicketDTO teamRequest;
+    private final TicketDTO ticket;
 
-    public NewTicketCreatedEvent(Object source, TicketDTO teamRequest) {
+    public NewTicketCreatedEvent(Object source, TicketDTO ticket) {
         super(source);
-        this.teamRequest = teamRequest;
+        this.ticket = ticket;
     }
 }

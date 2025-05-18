@@ -153,7 +153,7 @@
     },
     "dashboard": {
       "title": "Dashboard",
-      "description": "Overview of your team's performance and activities. Monitor team requests, progress, and key metrics at a glance",
+      "description": "Overview of your team's performance and activities. Monitor team tickets, progress, and key metrics at a glance",
       "edit_team": "Edit Team",
       "last_7_days": "Last 7 Days",
       "last_30_days": "Last 30 Days",
@@ -515,7 +515,7 @@
       "required_password": "Password is required",
       "login_failed_message": "Login failed. Please try again.",
       "google_login_failed_message": "Google login failed. Please try again.",
-      "title": "Your Partner in Keeping Customers Happy and Requests On Track",
+      "title": "Your Partner in Keeping Customers Happy and Tickets On Track",
       "password": "Password",
       "forgot_password_cta": "Forgot password",
       "signin": "Sign in",

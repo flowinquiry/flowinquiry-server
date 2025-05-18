@@ -38,11 +38,11 @@ public class NewTicketCreatedMailEventListener {
     @Async("asyncTaskExecutor")
     @Transactional
     @EventListener
-    public void onNewTeamRequestCreated(NewTicketCreatedEvent event) {
-        TicketDTO ticketDTO = ticketService.getTeamRequestById(event.getTeamRequest().getId());
+    public void onNewTicketCreated(NewTicketCreatedEvent event) {
+        TicketDTO ticketDTO = ticketService.getTicketById(event.getTicket().getId());
         List<EntityWatcher> watchers =
                 entityWatcherRepository.findByEntityTypeAndEntityId(
-                        EntityType.Team_Request, ticketDTO.getId());
+                        EntityType.Ticket, ticketDTO.getId());
 
         if (!watchers.isEmpty()) {
             watchers.forEach(

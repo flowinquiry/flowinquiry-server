@@ -9,9 +9,9 @@ import { TeamAvatar } from "@/components/shared/avatar-display";
 import LoadingPlaceHolder from "@/components/shared/loading-place-holder";
 import PaginationExt from "@/components/shared/pagination-ext";
 import TeamNavLayout from "@/components/teams/team-nav";
-import NewRequestToTeamDialog from "@/components/teams/team-new-request-dialog";
-import TeamRequestsStatusView from "@/components/teams/team-requests-status";
+import NewTicketToTeamDialog from "@/components/teams/team-new-ticket-dialog";
 import TicketAdvancedSearch from "@/components/teams/ticket-advanced-search";
+import TicketList from "@/components/teams/ticket-list";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -26,7 +26,7 @@ import {
 } from "@/components/ui/tooltip";
 import { usePagePermission } from "@/hooks/use-page-permission";
 import { useAppClientTranslations } from "@/hooks/use-translations";
-import { searchTeamRequests } from "@/lib/actions/teams-request.action";
+import { searchTickets } from "@/lib/actions/tickets.action";
 import { getWorkflowsByTeam } from "@/lib/actions/workflows.action";
 import { obfuscate } from "@/lib/endecode";
 import { BreadcrumbProvider } from "@/providers/breadcrumb-provider";
@@ -35,7 +35,7 @@ import { useTeam } from "@/providers/team-provider";
 import { useUserTeamRole } from "@/providers/user-team-role-provider";
 import { QueryDTO } from "@/types/query";
 import { PermissionUtils } from "@/types/resources";
-import { TeamRequestDTO } from "@/types/team-requests";
+import { TicketDTO } from "@/types/tickets";
 import { WorkflowDTO } from "@/types/workflows";
 
 export type Pagination = {
@@ -66,7 +66,7 @@ const TicketListView = () => {
   const [selectedWorkflow, setSelectedWorkflow] = useState<WorkflowDTO | null>(
     null,
   );
-  const [requests, setRequests] = useState<TeamRequestDTO[]>([]);
+  const [requests, setRequests] = useState<TicketDTO[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(0);
   const [totalElements, setTotalElements] = useState(0);
@@ -144,7 +144,7 @@ const TicketListView = () => {
         ],
       };
 
-      const pageResult = await searchTeamRequests(
+      const pageResult = await searchTickets(
         combinedQuery,
         {
           page: currentPage,
@@ -168,7 +168,7 @@ const TicketListView = () => {
   }, [fullQuery, currentPage, pagination.sort]);
 
   // Handle successful ticket creation
-  const onCreatedTeamRequestSuccess = () => {
+  const onCreatedTicketSuccess = () => {
     fetchTickets();
   };
 
@@ -267,12 +267,12 @@ const TicketListView = () => {
                     )}
                   </DropdownMenu>
                 </div>
-                <NewRequestToTeamDialog
+                <NewTicketToTeamDialog
                   open={open}
                   setOpen={setOpen}
                   teamEntity={team}
                   workflow={selectedWorkflow!}
-                  onSaveSuccess={onCreatedTeamRequestSuccess}
+                  onSaveSuccess={onCreatedTicketSuccess}
                 />
               </div>
             )}
@@ -294,7 +294,7 @@ const TicketListView = () => {
             </div>
           ) : (
             <>
-              <TeamRequestsStatusView requests={requests} />
+              <TicketList tickets={requests} />
               <PaginationExt
                 currentPage={currentPage}
                 totalPages={totalPages}

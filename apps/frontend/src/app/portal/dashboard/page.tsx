@@ -2,7 +2,7 @@ import { ContentLayout } from "@/components/admin-panel/content-layout";
 import RecentUserTeamActivities from "@/components/dashboard/global-dashboard-recent-activities";
 import UserNotifications from "@/components/dashboard/notifications-user";
 import TeamUnresolvedTicketsPriorityDistributionChart from "@/components/dashboard/team-unresolved-tickets-priority-distribution";
-import UserTeamsOverdueTickets from "@/components/dashboard/user-requests-overdue";
+import UserTeamsOverdueTickets from "@/components/dashboard/user-tickets-overdue";
 import { getAppTranslations } from "@/lib/translation";
 
 const Page = async () => {

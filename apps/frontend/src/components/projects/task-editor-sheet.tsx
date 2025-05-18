@@ -8,9 +8,9 @@ import { useForm } from "react-hook-form";
 import { EpicFormField } from "@/components/projects/epic-form-field";
 import { IterationFormField } from "@/components/projects/iteration-form-field";
 import RichTextEditor from "@/components/shared/rich-text-editor";
-import { TeamRequestPrioritySelect } from "@/components/teams/team-requests-priority-select";
 import TicketChannelSelectField from "@/components/teams/team-ticket-channel-select";
 import TeamUserSelectField from "@/components/teams/team-users-select-field";
+import { TicketPrioritySelect } from "@/components/teams/ticket-priority-select";
 import {
   DatePickerField,
   ExtInputField,
@@ -34,16 +34,12 @@ import {
 import WorkflowStateSelect from "@/components/workflows/workflow-state-select";
 import { useAppClientTranslations } from "@/hooks/use-translations";
 import { uploadAttachmentsForEntity } from "@/lib/actions/entity-attachments.action";
-import { createTeamRequest } from "@/lib/actions/teams-request.action";
+import { createTicket } from "@/lib/actions/tickets.action";
 import { useError } from "@/providers/error-provider";
-import {
-  TeamRequestDTO,
-  TeamRequestDTOSchema,
-  TeamRequestPriority,
-} from "@/types/team-requests";
+import { TicketDTO, TicketDTOSchema, TicketPriority } from "@/types/tickets";
 import { WorkflowStateDTO } from "@/types/workflows";
 
-export type TaskBoard = Record<string, TeamRequestDTO[]>;
+export type TaskBoard = Record<string, TicketDTO[]>;
 
 interface TaskEditorSheetProps {
   isOpen: boolean;
@@ -78,11 +74,11 @@ const TaskEditorSheet = ({
 
   // ✅ Initialize Form
   const form = useForm({
-    resolver: zodResolver(TeamRequestDTOSchema),
+    resolver: zodResolver(TicketDTOSchema),
     defaultValues: {
       requestTitle: "",
       requestDescription: "",
-      priority: "Medium" as TeamRequestPriority,
+      priority: "Medium" as TicketPriority,
       assignUserId: null,
       teamId: teamId,
       projectId: projectId,
@@ -103,7 +99,7 @@ const TaskEditorSheet = ({
       form.reset({
         requestTitle: "",
         requestDescription: "",
-        priority: "Medium" as TeamRequestPriority,
+        priority: "Medium" as TicketPriority,
         assignUserId: null,
         teamId: teamId,
         projectId: projectId,
@@ -126,7 +122,7 @@ const TaskEditorSheet = ({
   };
 
   // ✅ Handle Form Submission
-  const onSubmit = async (data: TeamRequestDTO) => {
+  const onSubmit = async (data: TicketDTO) => {
     try {
       // Create the task with the state name included
       const taskWithStateName = {
@@ -135,7 +131,7 @@ const TaskEditorSheet = ({
       };
 
       // Create the new task on the server
-      const newTask = await createTeamRequest(taskWithStateName, setError);
+      const newTask = await createTicket(taskWithStateName, setError);
 
       if (!newTask) {
         throw new Error("Failed to create task");
@@ -257,9 +253,9 @@ const TaskEditorSheet = ({
                             {t.teams.tickets.form.base("priority")}
                           </FormLabel>
                           <FormControl>
-                            <TeamRequestPrioritySelect
-                              value={field.value as TeamRequestPriority}
-                              onChange={(value: TeamRequestPriority) =>
+                            <TicketPrioritySelect
+                              value={field.value as TicketPriority}
+                              onChange={(value: TicketPriority) =>
                                 field.onChange(value)
                               }
                             />

@@ -22,8 +22,8 @@ import { UserAvatar } from "@/components/shared/avatar-display";
 import CommentsView from "@/components/shared/comments-view";
 import EntityWatchers from "@/components/shared/entity-watchers";
 import TeamNavLayout from "@/components/teams/team-nav";
-import TeamRequestHealthLevel from "@/components/teams/team-requests-health-level";
-import { PriorityDisplay } from "@/components/teams/team-requests-priority-display";
+import TicketHealthLevelDisplay from "@/components/teams/ticket-health-level-display";
+import { TicketPriorityDisplay } from "@/components/teams/ticket-priority-display";
 import TicketTimelineHistory from "@/components/teams/ticket-timeline-history";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -47,11 +47,11 @@ import {
 import { usePagePermission } from "@/hooks/use-page-permission";
 import { useAppClientTranslations } from "@/hooks/use-translations";
 import {
-  findNextTeamRequest,
-  findPreviousTeamRequest,
-  findRequestById,
-  updateTeamRequest,
-} from "@/lib/actions/teams-request.action";
+  findNextTicket,
+  findPreviousTicket,
+  findTicketById,
+  updateTicket,
+} from "@/lib/actions/tickets.action";
 import { getValidTargetStates } from "@/lib/actions/workflows.action";
 import { formatDateTimeDistanceToNow } from "@/lib/datetime";
 import { obfuscate } from "@/lib/endecode";
@@ -60,24 +60,18 @@ import { BreadcrumbProvider } from "@/providers/breadcrumb-provider";
 import { useError } from "@/providers/error-provider";
 import { useUserTeamRole } from "@/providers/user-team-role-provider";
 import { PermissionUtils } from "@/types/resources";
-import { TeamRequestDTO } from "@/types/team-requests";
+import { TicketDTO } from "@/types/tickets";
 import { WorkflowStateDTO } from "@/types/workflows";
 
 import WorkflowReviewDialog from "../workflows/workflow-review-dialog";
 
-const TeamRequestDetailView = ({
-  teamRequestId,
-}: {
-  teamRequestId: number;
-}) => {
+const TicketDetailView = ({ ticketId }: { ticketId: number }) => {
   const permissionLevel = usePagePermission();
   const teamRole = useUserTeamRole().role;
   const router = useRouter();
 
   const [selectedTab, setSelectedTab] = useState("comments");
-  const [teamRequest, setTeamRequest] = useState<TeamRequestDTO>(
-    {} as TeamRequestDTO,
-  );
+  const [ticket, setTicket] = useState<TicketDTO>({} as TicketDTO);
   const [loading, setLoading] = useState(true);
   const { setError } = useError();
   const [workflowStates, setWorkflowStates] = useState<WorkflowStateDTO[]>([]);
@@ -97,25 +91,25 @@ const TeamRequestDetailView = ({
     const fetchRequest = async () => {
       setLoading(true);
       try {
-        const data = await findRequestById(teamRequestId, setError);
+        const data = await findTicketById(ticketId, setError);
         if (!data) {
           throw new Error("Could not find the specified team request.");
         }
-        setTeamRequest(data);
+        setTicket(data);
         setCurrentRequestState(data.currentStateName!);
       } finally {
         setLoading(false);
       }
     };
     fetchRequest();
-  }, [teamRequestId, setError]);
+  }, [ticketId, setError]);
 
   useEffect(() => {
     const loadWorkflowStates = async () => {
-      if (teamRequest?.workflowId && teamRequest?.currentStateId) {
+      if (ticket?.workflowId && ticket?.currentStateId) {
         const data = await getValidTargetStates(
-          teamRequest.workflowId,
-          teamRequest.currentStateId,
+          ticket.workflowId,
+          ticket.currentStateId,
           true,
           setError,
         );
@@ -124,7 +118,7 @@ const TeamRequestDetailView = ({
     };
 
     loadWorkflowStates();
-  }, [teamRequest?.workflowId, teamRequest?.currentStateId, setError]);
+  }, [ticket?.workflowId, ticket?.currentStateId, setError]);
 
   const handleViewWorkflow = () => {
     setWorkflowDialogOpen(true);
@@ -135,23 +129,23 @@ const TeamRequestDetailView = ({
   };
 
   const navigateToPreviousRecord = async () => {
-    if (!teamRequest) return;
-    const previousTeamRequest = await findPreviousTeamRequest(
-      teamRequest.id!,
-      teamRequest.projectId,
+    if (!ticket) return;
+    const previousTicket = await findPreviousTicket(
+      ticket.id!,
+      ticket.projectId,
       setError,
     );
-    setTeamRequest(previousTeamRequest);
+    setTicket(previousTicket);
   };
 
   const navigateToNextRecord = async () => {
-    if (!teamRequest) return;
-    const nextTeamRequest = await findNextTeamRequest(
-      teamRequest.id!,
-      teamRequest.projectId,
+    if (!ticket) return;
+    const nextTicket = await findNextTicket(
+      ticket.id!,
+      ticket.projectId,
       setError,
     );
-    setTeamRequest(nextTeamRequest);
+    setTicket(nextTicket);
   };
 
   const handleFocusComments = () => {
@@ -168,12 +162,12 @@ const TeamRequestDetailView = ({
 
   const handleStateChangeRequest = async (state: WorkflowStateDTO) => {
     const updatedRequest = {
-      ...teamRequest,
+      ...ticket,
       currentStateId: state.id,
       currentStateName: state.stateName,
     };
-    await updateTeamRequest(updatedRequest.id!, updatedRequest, setError);
-    setTeamRequest(updatedRequest);
+    await updateTicket(updatedRequest.id!, updatedRequest, setError);
+    setTicket(updatedRequest);
     setCurrentRequestState(state.stateName);
   };
 
@@ -188,7 +182,7 @@ const TeamRequestDetailView = ({
     );
   }
 
-  if (!teamRequest) {
+  if (!ticket) {
     return (
       <Card className="my-4">
         <CardHeader>
@@ -212,38 +206,38 @@ const TeamRequestDetailView = ({
     { title: t.common.navigation("dashboard"), link: "/portal" },
     { title: t.common.navigation("teams"), link: "/portal/teams" },
     {
-      title: teamRequest.teamName!,
-      link: `/portal/teams/${obfuscate(teamRequest.teamId)}`,
+      title: ticket.teamName!,
+      link: `/portal/teams/${obfuscate(ticket.teamId)}`,
     },
-    ...(teamRequest.projectId
+    ...(ticket.projectId
       ? [
           {
             title: t.common.navigation("projects"),
-            link: `/portal/teams/${obfuscate(teamRequest.teamId)}/projects`,
+            link: `/portal/teams/${obfuscate(ticket.teamId)}/projects`,
           },
           {
-            title: teamRequest.projectName!,
-            link: `/portal/teams/${obfuscate(teamRequest.teamId)}/projects/${obfuscate(teamRequest.projectId)}`,
+            title: ticket.projectName!,
+            link: `/portal/teams/${obfuscate(ticket.teamId)}/projects/${obfuscate(ticket.projectId)}`,
           },
           {
-            title: teamRequest.requestTitle!,
+            title: ticket.requestTitle!,
             link: "#",
           },
         ]
       : [
           {
             title: t.common.navigation("tickets"),
-            link: `/portal/teams/${obfuscate(teamRequest.teamId)}/requests`,
+            link: `/portal/teams/${obfuscate(ticket.teamId)}/tickets`,
           },
-          { title: teamRequest.requestTitle!, link: "#" },
+          { title: ticket.requestTitle!, link: "#" },
         ]),
   ];
 
-  const workflowColor = getSpecifiedColor(teamRequest.workflowRequestName!);
+  const workflowColor = getSpecifiedColor(ticket.workflowRequestName!);
 
   return (
     <BreadcrumbProvider items={breadcrumbItems}>
-      <TeamNavLayout teamId={teamRequest.teamId!}>
+      <TeamNavLayout teamId={ticket.teamId!}>
         <div className="space-y-4">
           {/* Header with Title and Navigation */}
           <div className="flex items-start justify-between gap-4">
@@ -275,27 +269,27 @@ const TeamRequestDetailView = ({
                       color: workflowColor.text,
                     }}
                   >
-                    {teamRequest.workflowRequestName}
+                    {ticket.workflowRequestName}
                   </span>
 
                   <Badge
-                    variant={teamRequest.isCompleted ? "secondary" : "outline"}
+                    variant={ticket.isCompleted ? "secondary" : "outline"}
                     className="font-normal"
                   >
                     {currentRequestState}
                   </Badge>
 
-                  <PriorityDisplay priority={teamRequest.priority} />
+                  <TicketPriorityDisplay priority={ticket.priority} />
                 </div>
 
                 <h1
                   className={`mt-1 text-2xl font-semibold ${
-                    teamRequest.isCompleted
+                    ticket.isCompleted
                       ? "line-through text-muted-foreground"
                       : ""
                   }`}
                 >
-                  {teamRequest.requestTitle}
+                  {ticket.requestTitle}
                 </h1>
               </div>
             </div>
@@ -327,7 +321,7 @@ const TeamRequestDetailView = ({
                 variant="outline"
                 onClick={() =>
                   router.push(
-                    `/portal/teams/${obfuscate(teamRequest.teamId)}/requests/${obfuscate(teamRequest.id)}/edit?${randomPair()}`,
+                    `/portal/teams/${obfuscate(ticket.teamId)}/tickets/${obfuscate(ticket.id)}/edit?${randomPair()}`,
                   )
                 }
               >
@@ -354,9 +348,7 @@ const TeamRequestDetailView = ({
                 <DropdownMenuContent className="w-56">
                   <DropdownMenuGroup>
                     {workflowStates
-                      .filter(
-                        (state) => state.id !== teamRequest.currentStateId,
-                      )
+                      .filter((state) => state.id !== ticket.currentStateId)
                       .map((state) => (
                         <DropdownMenuItem
                           key={state.id}
@@ -368,7 +360,7 @@ const TeamRequestDetailView = ({
                       ))}
 
                     {workflowStates.filter(
-                      (state) => state.id !== teamRequest.currentStateId,
+                      (state) => state.id !== ticket.currentStateId,
                     ).length === 0 && (
                       <DropdownMenuItem disabled>
                         {t.teams.tickets.detail("no_available_states")}
@@ -397,9 +389,9 @@ const TeamRequestDetailView = ({
           </div>
 
           {/* Health Level Indicator */}
-          {teamRequest.conversationHealth?.healthLevel && (
-            <TeamRequestHealthLevel
-              currentLevel={teamRequest.conversationHealth.healthLevel}
+          {ticket.conversationHealth?.healthLevel && (
+            <TicketHealthLevelDisplay
+              currentLevel={ticket.conversationHealth.healthLevel}
             />
           )}
 
@@ -414,7 +406,7 @@ const TeamRequestDetailView = ({
                   <div
                     className="prose dark:prose-invert max-w-none text-muted-foreground"
                     dangerouslySetInnerHTML={{
-                      __html: teamRequest.requestDescription!,
+                      __html: ticket.requestDescription!,
                     }}
                   />
                 </div>
@@ -435,14 +427,14 @@ const TeamRequestDetailView = ({
                         </p>
                         <div className="flex items-center gap-2">
                           <UserAvatar
-                            imageUrl={teamRequest.requestUserImageUrl}
+                            imageUrl={ticket.requestUserImageUrl}
                             size="w-6 h-6"
                           />
                           <Link
-                            href={`/portal/users/${obfuscate(teamRequest.requestUserId)}`}
+                            href={`/portal/users/${obfuscate(ticket.requestUserId)}`}
                             className="text-sm hover:underline"
                           >
-                            {teamRequest.requestUserName}
+                            {ticket.requestUserName}
                           </Link>
                         </div>
                       </div>
@@ -451,17 +443,17 @@ const TeamRequestDetailView = ({
                         <p className="text-xs text-muted-foreground mb-1">
                           {t.teams.tickets.form.base("assignee")}
                         </p>
-                        {teamRequest.assignUserId ? (
+                        {ticket.assignUserId ? (
                           <div className="flex items-center gap-2">
                             <UserAvatar
-                              imageUrl={teamRequest.assignUserImageUrl}
+                              imageUrl={ticket.assignUserImageUrl}
                               size="w-6 h-6"
                             />
                             <Link
-                              href={`/portal/users/${obfuscate(teamRequest.assignUserId)}`}
+                              href={`/portal/users/${obfuscate(ticket.assignUserId)}`}
                               className="text-sm hover:underline"
                             >
-                              {teamRequest.assignUserName}
+                              {ticket.assignUserName}
                             </Link>
                           </div>
                         ) : (
@@ -485,7 +477,7 @@ const TeamRequestDetailView = ({
                           {t.teams.tickets.form.base("type")}
                         </p>
                         <Badge variant="outline" className="font-normal">
-                          {teamRequest.workflowRequestName}
+                          {ticket.workflowRequestName}
                         </Badge>
                       </div>
 
@@ -494,7 +486,7 @@ const TeamRequestDetailView = ({
                           {t.teams.tickets.form.base("state")}
                         </p>
                         <Badge variant="outline" className="font-normal">
-                          {teamRequest.currentStateName}
+                          {ticket.currentStateName}
                         </Badge>
                       </div>
 
@@ -502,16 +494,16 @@ const TeamRequestDetailView = ({
                         <p className="text-xs text-muted-foreground mb-1">
                           {t.teams.tickets.form.base("priority")}
                         </p>
-                        <PriorityDisplay priority={teamRequest.priority} />
+                        <TicketPriorityDisplay priority={ticket.priority} />
                       </div>
 
-                      {teamRequest.channel && (
+                      {ticket.channel && (
                         <div>
                           <p className="text-xs text-muted-foreground mb-1">
                             {t.teams.tickets.form.base("channel")}
                           </p>
                           <Badge variant="outline" className="font-normal">
-                            {t.teams.tickets.form.channels(teamRequest.channel)}
+                            {t.teams.tickets.form.channels(ticket.channel)}
                           </Badge>
                         </div>
                       )}
@@ -535,12 +527,12 @@ const TeamRequestDetailView = ({
                           <TooltipTrigger asChild>
                             <p className="text-sm">
                               {formatDateTimeDistanceToNow(
-                                new Date(teamRequest.createdAt!),
+                                new Date(ticket.createdAt!),
                               )}
                             </p>
                           </TooltipTrigger>
                           <TooltipContent>
-                            {new Date(teamRequest.createdAt!).toLocaleString()}
+                            {new Date(ticket.createdAt!).toLocaleString()}
                           </TooltipContent>
                         </Tooltip>
                       </TooltipProvider>
@@ -555,12 +547,12 @@ const TeamRequestDetailView = ({
                           <TooltipTrigger asChild>
                             <p className="text-sm">
                               {formatDateTimeDistanceToNow(
-                                new Date(teamRequest.modifiedAt!),
+                                new Date(ticket.modifiedAt!),
                               )}
                             </p>
                           </TooltipTrigger>
                           <TooltipContent>
-                            {new Date(teamRequest.modifiedAt!).toLocaleString()}
+                            {new Date(ticket.modifiedAt!).toLocaleString()}
                           </TooltipContent>
                         </Tooltip>
                       </TooltipProvider>
@@ -571,9 +563,9 @@ const TeamRequestDetailView = ({
                         {t.teams.tickets.form.base("target_completion_date")}
                       </p>
                       <p className="text-sm">
-                        {teamRequest.estimatedCompletionDate
+                        {ticket.estimatedCompletionDate
                           ? new Date(
-                              teamRequest.estimatedCompletionDate,
+                              ticket.estimatedCompletionDate,
                             ).toLocaleDateString()
                           : t.teams.tickets.detail("not_set")}
                       </p>
@@ -584,9 +576,9 @@ const TeamRequestDetailView = ({
                         {t.teams.tickets.form.base("actual_completion_date")}
                       </p>
                       <p className="text-sm">
-                        {teamRequest.actualCompletionDate
+                        {ticket.actualCompletionDate
                           ? new Date(
-                              teamRequest.actualCompletionDate,
+                              ticket.actualCompletionDate,
                             ).toLocaleDateString()
                           : t.teams.tickets.detail("not_completed")}
                       </p>
@@ -604,7 +596,7 @@ const TeamRequestDetailView = ({
                     </h3>
                     <AttachmentView
                       entityType="Team_Request"
-                      entityId={teamRequest.id!}
+                      entityId={ticket.id!}
                     />
                   </div>
 
@@ -615,7 +607,7 @@ const TeamRequestDetailView = ({
                     </h3>
                     <EntityWatchers
                       entityType="Team_Request"
-                      entityId={teamRequest.id!}
+                      entityId={ticket.id!}
                     />
                   </div>
                 </div>
@@ -660,7 +652,7 @@ const TeamRequestDetailView = ({
                         <div ref={commentsViewRef}>
                           <CommentsView
                             entityType="Team_Request"
-                            entityId={teamRequest.id!}
+                            entityId={ticket.id!}
                           />
                         </div>
                       )}
@@ -669,13 +661,13 @@ const TeamRequestDetailView = ({
                       {selectedTab === "changes-history" && (
                         <AuditLogView
                           entityType="Team_Request"
-                          entityId={teamRequest.id!}
+                          entityId={ticket.id!}
                         />
                       )}
                     </TabsContent>
                     <TabsContent value="timeline-history">
                       {selectedTab === "timeline-history" && (
-                        <TicketTimelineHistory teamId={teamRequest.id!} />
+                        <TicketTimelineHistory teamId={ticket.id!} />
                       )}
                     </TabsContent>
                   </div>
@@ -686,7 +678,7 @@ const TeamRequestDetailView = ({
         </div>
 
         <WorkflowReviewDialog
-          workflowId={teamRequest.workflowId!}
+          workflowId={ticket.workflowId!}
           open={isWorkflowDialogOpen}
           onClose={() => setWorkflowDialogOpen(false)}
         />
@@ -695,4 +687,4 @@ const TeamRequestDetailView = ({
   );
 };
 
-export default TeamRequestDetailView;
+export default TicketDetailView;

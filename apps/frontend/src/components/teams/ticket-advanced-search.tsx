@@ -44,7 +44,7 @@ import {
   PRIORITY_CONFIG,
 } from "@/lib/constants/ticket-priorities";
 import { Filter, GroupFilter, QueryDTO } from "@/types/query";
-import { TeamRequestPriority } from "@/types/team-requests";
+import { TicketPriority } from "@/types/tickets";
 
 interface DateRange {
   from: Date | undefined;
@@ -255,7 +255,7 @@ const TicketAdvancedSearch: React.FC<TicketAdvancedSearchProps> = ({
 
     // Priority filter
     if (priority !== "") {
-      const priorityKey = priority as TeamRequestPriority;
+      const priorityKey = priority as TicketPriority;
       if (priorityKey in PRIORITY_CODES) {
         groups.push({
           filters: [
@@ -552,15 +552,15 @@ const TicketAdvancedSearch: React.FC<TicketAdvancedSearchProps> = ({
               variant="secondary"
               className={classNames(
                 "flex items-center gap-1",
-                getPriorityClassNames(priority as TeamRequestPriority),
+                getPriorityClassNames(priority as TicketPriority),
               )}
             >
               <span
                 className={
-                  PRIORITY_CONFIG[priority as TeamRequestPriority].iconColor
+                  PRIORITY_CONFIG[priority as TicketPriority].iconColor
                 }
               >
-                {PRIORITY_CONFIG[priority as TeamRequestPriority].icon}
+                {PRIORITY_CONFIG[priority as TicketPriority].icon}
               </span>
               {priority}
               <button onClick={() => setPriority("")} className="ml-1">

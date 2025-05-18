@@ -32,7 +32,7 @@ public class CommentService {
     public CommentDTO saveComment(CommentDTO comment) {
         CommentDTO savedComment =
                 commentMapper.toDTO(commentRepository.save(commentMapper.toEntity(comment)));
-        if (savedComment.getEntityType() == EntityType.Team_Request) {
+        if (savedComment.getEntityType() == EntityType.Ticket) {
             eventPublisher.publishEvent(new TicketCommentCreatedEvent(this, savedComment));
         }
         return savedComment;

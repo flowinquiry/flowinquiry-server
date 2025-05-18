@@ -15,10 +15,10 @@ import useSWR from "swr";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Spinner } from "@/components/ui/spinner";
 import { useAppClientTranslations } from "@/hooks/use-translations";
-import { getTicketsPriorityDistributionByTeam } from "@/lib/actions/teams-request.action";
+import { getTicketsPriorityDistributionByTeam } from "@/lib/actions/tickets.action";
 import { useError } from "@/providers/error-provider";
 import { useTimeRange } from "@/providers/time-range-provider";
-import { TeamRequestPriority } from "@/types/team-requests";
+import { TicketPriority } from "@/types/tickets";
 
 const TicketPriorityPieChart = ({ teamId }: { teamId: number }) => {
   const [collapsed, setCollapsed] = useState(false);
@@ -38,7 +38,7 @@ const TicketPriorityPieChart = ({ teamId }: { teamId: number }) => {
   );
 
   // Define colors for the pie chart
-  const COLORS: Record<TeamRequestPriority, string> = {
+  const COLORS: Record<TicketPriority, string> = {
     Critical: "#DC2626", // text-red-600
     High: "#F97316", // text-orange-500
     Medium: "#F59E0B", // text-yellow-500
@@ -95,8 +95,7 @@ const TicketPriorityPieChart = ({ teamId }: { teamId: number }) => {
                       <Cell
                         key={`cell-${entry.priority}`}
                         fill={
-                          COLORS[entry.priority as TeamRequestPriority] ||
-                          "#D3D3D3"
+                          COLORS[entry.priority as TicketPriority] || "#D3D3D3"
                         }
                       />
                     ))}

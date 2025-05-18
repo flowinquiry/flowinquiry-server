@@ -61,4 +61,30 @@
 			columnDataType="BIGINT" />
 	</changeSet>
 
+	<changeSet id="002:03-update-entity-type-to-ticket"
+		author="flowinquiry">
+		<comment>Update entity_type from 'Team_Request' to 'Ticket'</comment>
+
+		<update tableName="fw_activity_log">
+			<column name="entity_type" value="Ticket" />
+			<where>entity_type = 'Team_Request'</where>
+		</update>
+
+		<update tableName="fw_comment">
+			<column name="entity_type" value="Ticket" />
+			<where>entity_type = 'Team_Request'</where>
+		</update>
+
+		<update tableName="fw_entity_attachment">
+			<column name="entity_type" value="Ticket" />
+			<where>entity_type = 'Team_Request'</where>
+		</update>
+
+		<update tableName="fw_entity_watchers">
+			<column name="entity_type" value="Ticket" />
+			<where>entity_type = 'Team_Request'</where>
+		</update>
+	</changeSet>
+
+
 </databaseChangeLog>

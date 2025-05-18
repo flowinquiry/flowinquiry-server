@@ -15,7 +15,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Filter, Operator, QueryDTO } from "@/types/query";
-import { ticketChannels } from "@/types/team-requests";
+import { ticketChannels } from "@/types/tickets";
 
 const fieldDefinitions = [
   { name: "requestTitle", label: "Title", type: "text" },

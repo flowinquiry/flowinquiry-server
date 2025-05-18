@@ -1,11 +1,6 @@
 import { z } from "zod";
 
-export type TeamRequestPriority =
-  | "Critical"
-  | "High"
-  | "Medium"
-  | "Low"
-  | "Trivial";
+export type TicketPriority = "Critical" | "High" | "Medium" | "Low" | "Trivial";
 
 // Define the TicketHealthLevel enum
 export enum TicketHealthLevel {
@@ -16,9 +11,9 @@ export enum TicketHealthLevel {
   Critical = "Critical",
 }
 
-export const TeamRequestConversationHealthDTOSchema = z.object({
+export const TicketConversationHealthDTOSchema = z.object({
   id: z.number().optional(),
-  teamRequestId: z.number().optional(),
+  ticketId: z.number().optional(),
   conversationHealth: z.number().optional(),
   cumulativeSentiment: z.number().optional(),
   totalMessages: z.number().optional(),
@@ -27,7 +22,7 @@ export const TeamRequestConversationHealthDTOSchema = z.object({
   healthLevel: z.nativeEnum(TicketHealthLevel).optional(),
 });
 
-export const TeamRequestDTOSchema = z.object({
+export const TicketDTOSchema = z.object({
   id: z.number().optional(),
   teamId: z.number().optional(),
   teamName: z.string().optional(),
@@ -60,13 +55,13 @@ export const TeamRequestDTOSchema = z.object({
   channel: z.string().nullish(),
   numberAttachments: z.number().optional(),
   numberWatchers: z.number().optional(),
-  conversationHealth: TeamRequestConversationHealthDTOSchema.nullish(),
+  conversationHealth: TicketConversationHealthDTOSchema.nullish(),
 });
 
-export type TeamRequestDTO = z.infer<typeof TeamRequestDTOSchema>;
+export type TicketDTO = z.infer<typeof TicketDTOSchema>;
 
-export type TeamRequestConversationHealthDTO = z.infer<
-  typeof TeamRequestConversationHealthDTOSchema
+export type TicketConversationHealthDTO = z.infer<
+  typeof TicketConversationHealthDTOSchema
 >;
 
 export type TicketChannel =
@@ -101,7 +96,7 @@ export type TicketDistributionDTO = {
 };
 
 export type PriorityDistributionDTO = {
-  priority: TeamRequestPriority;
+  priority: TicketPriority;
   ticketCount: number;
 };
 

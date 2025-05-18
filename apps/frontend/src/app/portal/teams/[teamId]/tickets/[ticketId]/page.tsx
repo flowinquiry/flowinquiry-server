@@ -1,24 +1,24 @@
 import React from "react";
 
 import { ContentLayout } from "@/components/admin-panel/content-layout";
-import TeamRequestDetailView from "@/components/teams/ticket-detail";
+import TicketDetailView from "@/components/teams/ticket-detail-view";
 import { deobfuscateToNumber } from "@/lib/endecode";
 import { getAppTranslations } from "@/lib/translation";
 
-interface RequestDetailsProps {
-  params: Promise<{ teamId: string; requestId: string }>;
+interface PageProps {
+  params: Promise<{ teamId: string; ticketId: string }>;
 }
 
-const RequestDetailsPage = async (props: RequestDetailsProps) => {
+const Page = async (props: PageProps) => {
   const params = await props.params;
-  const teamRequestId = deobfuscateToNumber(params.requestId);
+  const ticketId = deobfuscateToNumber(params.ticketId);
   const t = await getAppTranslations();
 
   return (
     <ContentLayout title={t.common.navigation("teams")}>
-      <TeamRequestDetailView teamRequestId={teamRequestId} />
+      <TicketDetailView ticketId={ticketId} />
     </ContentLayout>
   );
 };
 
-export default RequestDetailsPage;
+export default Page;

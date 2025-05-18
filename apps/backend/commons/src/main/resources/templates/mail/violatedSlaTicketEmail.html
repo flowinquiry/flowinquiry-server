@@ -25,7 +25,7 @@
         </p>
 
         <!-- View Ticket Button -->
-        <a th:with="url=(@{|${baseUrl}/portal/teams/${obfuscatedTeamId}/requests/${obfuscatedTicketId}|})"
+        <a th:with="url=(@{|${baseUrl}/portal/teams/${obfuscatedTeamId}/tickets/${obfuscatedTicketId}|})"
            th:href="${url}"
            style="display: inline-block; padding: 12px 20px; font-size: 16px; font-weight: bold; color: #ffffff; background-color: #d9534f; text-decoration: none; border-radius: 4px; margin-top: 10px;"
            th:text="#{email.ticket.sla.violation.action}">
@@ -38,7 +38,7 @@
 
         <!-- Full Ticket Link -->
         <p>
-            <a th:with="url=(@{|${baseUrl}/portal/teams/${obfuscatedTeamId}/requests/${obfuscatedTicketId}|})"
+            <a th:with="url=(@{|${baseUrl}/portal/teams/${obfuscatedTeamId}/tickets/${obfuscatedTicketId}|})"
                th:href="${url}"
                th:text="${url}">
                 Full Ticket Link

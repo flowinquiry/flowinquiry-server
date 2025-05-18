@@ -20,7 +20,7 @@ public class AiChatController {
     }
 
     @PostMapping
-    public String createRequestSummary(@RequestBody String requestDescription) {
-        return ticketHealthEvalService.summarizeTeamRequest(requestDescription);
+    public String createTicketSummary(@RequestBody String ticketDescription) {
+        return ticketHealthEvalService.summarizeTicket(ticketDescription);
     }
 }

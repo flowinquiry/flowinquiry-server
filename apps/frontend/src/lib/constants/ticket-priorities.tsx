@@ -7,10 +7,10 @@ import {
 } from "lucide-react";
 import React from "react";
 
-import { TeamRequestPriority } from "@/types/team-requests";
+import { TicketPriority } from "@/types/tickets";
 
 // Mapping to backend enum codes
-export const PRIORITY_CODES: Record<TeamRequestPriority, number> = {
+export const PRIORITY_CODES: Record<TicketPriority, number> = {
   Critical: 0,
   High: 1,
   Medium: 2,
@@ -19,7 +19,7 @@ export const PRIORITY_CODES: Record<TeamRequestPriority, number> = {
 };
 
 export const PRIORITY_CONFIG: Record<
-  TeamRequestPriority,
+  TicketPriority,
   {
     icon: React.ReactNode;
     iconColor: string; // For icon color
@@ -85,7 +85,7 @@ export const PRIORITY_CONFIG: Record<
 
 // Helper function to get a combined class string for a priority
 export const getPriorityClassNames = (
-  priority: TeamRequestPriority,
+  priority: TicketPriority,
   variant: "badge" | "row" | "cell" = "badge",
 ): string => {
   const config = PRIORITY_CONFIG[priority];
@@ -106,7 +106,7 @@ export const getPriorityClassNames = (
 };
 
 // Helper component for priority display
-export const PriorityBadge: React.FC<{ priority: TeamRequestPriority }> = ({
+export const PriorityBadge: React.FC<{ priority: TicketPriority }> = ({
   priority,
 }) => {
   const config = PRIORITY_CONFIG[priority];
@@ -121,17 +121,17 @@ export const PriorityBadge: React.FC<{ priority: TeamRequestPriority }> = ({
   );
 };
 
-export const getPriorityFromCode = (code: number): TeamRequestPriority => {
+export const getPriorityFromCode = (code: number): TicketPriority => {
   const entry = Object.entries(PRIORITY_CODES).find(
     ([_, value]) => value === code,
   );
   if (!entry) {
     return "Medium"; // Default fallback
   }
-  return entry[0] as TeamRequestPriority;
+  return entry[0] as TicketPriority;
 };
 
-export const PRIORITIES_ORDERED: TeamRequestPriority[] = [
+export const PRIORITIES_ORDERED: TicketPriority[] = [
   "Critical",
   "High",
   "Medium",

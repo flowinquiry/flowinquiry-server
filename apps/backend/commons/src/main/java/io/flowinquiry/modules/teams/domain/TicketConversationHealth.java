@@ -18,13 +18,13 @@ import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 @Entity
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-@Table(name = "fw_team_request_conversation_health")
+@Table(name = "fw_ticket_conversation_health")
 @Getter
 @Setter
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class TeamRequestConversationHealth {
+public class TicketConversationHealth {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -49,6 +49,6 @@ public class TeamRequestConversationHealth {
     private Integer resolvedQuestions = 0;
 
     @OneToOne
-    @JoinColumn(name = "team_request_id", nullable = false)
-    private TeamRequest teamRequest;
+    @JoinColumn(name = "ticket_id", nullable = false)
+    private Ticket ticket;
 }

@@ -1,6 +1,6 @@
 package io.flowinquiry.modules.teams.service.dto;
 
-import io.flowinquiry.modules.teams.domain.TeamRequestPriority;
+import io.flowinquiry.modules.teams.domain.TicketPriority;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -11,6 +11,6 @@ import lombok.NoArgsConstructor;
 public class TeamTicketPriorityDistributionDTO {
     private Long teamId;
     private String teamName;
-    private TeamRequestPriority priority;
+    private TicketPriority priority;
     private Long count;
 }

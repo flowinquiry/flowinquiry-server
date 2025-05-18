@@ -41,6 +41,6 @@ public class ProjectIteration extends AbstractAuditingEntity<Long> {
     @Column(nullable = false)
     private Instant endDate;
 
-    @Formula("(SELECT COUNT(r.id) FROM fw_team_request r WHERE r.iteration_id = id)")
+    @Formula("(SELECT COUNT(r.id) FROM fw_ticket r WHERE r.iteration_id = id)")
     private Long totalTickets;
 }

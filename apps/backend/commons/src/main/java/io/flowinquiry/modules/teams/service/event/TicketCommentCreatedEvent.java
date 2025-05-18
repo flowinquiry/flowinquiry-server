@@ -5,10 +5,10 @@ import lombok.Getter;
 import org.springframework.context.ApplicationEvent;
 
 @Getter
-public class TeamRequestCommentCreatedEvent extends ApplicationEvent {
+public class TicketCommentCreatedEvent extends ApplicationEvent {
     private final CommentDTO commentDTO;
 
-    public TeamRequestCommentCreatedEvent(Object source, CommentDTO commentDTO) {
+    public TicketCommentCreatedEvent(Object source, CommentDTO commentDTO) {
         super(source);
         this.commentDTO = commentDTO;
     }

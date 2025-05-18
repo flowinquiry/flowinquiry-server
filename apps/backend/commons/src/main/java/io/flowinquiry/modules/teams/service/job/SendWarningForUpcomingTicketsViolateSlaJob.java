@@ -9,7 +9,7 @@ import static j2html.TagCreator.text;
 import io.flowinquiry.modules.collab.domain.Notification;
 import io.flowinquiry.modules.collab.domain.NotificationType;
 import io.flowinquiry.modules.shared.service.cache.DeduplicationCacheService;
-import io.flowinquiry.modules.teams.domain.TeamRequest;
+import io.flowinquiry.modules.teams.domain.Ticket;
 import io.flowinquiry.modules.teams.domain.WorkflowTransitionHistory;
 import io.flowinquiry.modules.teams.service.TeamService;
 import io.flowinquiry.modules.teams.service.WorkflowTransitionHistoryService;
@@ -66,26 +66,26 @@ public class SendWarningForUpcomingTicketsViolateSlaJob {
                         PRIOR_SLA_WARNING_THRESHOLD_IN_SECONDS);
 
         for (WorkflowTransitionHistory violatingTicket : violatingTickets) {
-            TeamRequest teamRequest = violatingTicket.getTeamRequest();
+            Ticket ticket = violatingTicket.getTicket();
             Instant slaDueDate = violatingTicket.getSlaDueDate();
             String formattedSlaDueDate = slaDueDate.atZone(ZoneId.of("UTC")).format(formatter);
 
-            User assignUser = teamRequest.getAssignUser();
+            User assignUser = ticket.getAssignUser();
             List<User> recipients = new ArrayList<>();
 
             if (assignUser != null) {
                 recipients.add(assignUser);
             } else {
                 // ✅ If no assigned user, notify all team managers
-                recipients = teamService.getTeamManagers(teamRequest.getTeam().getId());
+                recipients = teamService.getTeamManagers(ticket.getTeam().getId());
             }
 
             for (User recipient : recipients) {
                 String cacheKey =
                         buildSlaWarningKey(
                                 recipient.getId(),
-                                teamRequest.getId(),
-                                violatingTicket.getTeamRequest().getWorkflow().getId(),
+                                ticket.getId(),
+                                violatingTicket.getTicket().getWorkflow().getId(),
                                 violatingTicket.getEventName(),
                                 violatingTicket.getToState().getId(),
                                 "SendWarningForUpcomingTicketsViolateSlaJob");
@@ -97,16 +97,14 @@ public class SendWarningForUpcomingTicketsViolateSlaJob {
                 String html =
                         p(
                                         text("The ticket "),
-                                        a(teamRequest.getRequestTitle())
+                                        a(ticket.getRequestTitle())
                                                 .withHref(
                                                         "/portal/teams/"
                                                                 + Obfuscator.obfuscate(
-                                                                        teamRequest
-                                                                                .getTeam()
-                                                                                .getId())
+                                                                        ticket.getTeam().getId())
                                                                 + "/requests/"
                                                                 + Obfuscator.obfuscate(
-                                                                        teamRequest.getId())),
+                                                                        ticket.getId())),
                                         text(
                                                 " assigned to your team is approaching its SLA deadline. The SLA is due on "),
                                         strong(text(formattedSlaDueDate)),

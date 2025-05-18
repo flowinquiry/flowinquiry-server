@@ -29,7 +29,7 @@ public class EntityAttachmentController {
     /**
      * Upload multiple attachments and associate them with a specific entity.
      *
-     * @param entityType The type of entity (e.g., "team_request", "comment").
+     * @param entityType The type of entity (e.g., "ticket", "comment").
      * @param entityId The ID of the entity.
      * @param files The list of files to upload.
      * @return A list of saved attachment entities.
@@ -48,7 +48,7 @@ public class EntityAttachmentController {
     /**
      * Retrieve all attachments for a specific entity.
      *
-     * @param entityType The type of entity (e.g., "team_request", "comment").
+     * @param entityType The type of entity (e.g., "ticket", "comment").
      * @param entityId The ID of the entity.
      * @return A list of attachments for the specified entity.
      */

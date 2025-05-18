@@ -37,8 +37,8 @@ public class WorkflowTransitionHistory {
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "team_request_id", nullable = false)
-    private TeamRequest teamRequest;
+    @JoinColumn(name = "ticket_id", nullable = false)
+    private Ticket ticket;
 
     @ManyToOne
     @JoinColumn(name = "from_state_id", nullable = false)

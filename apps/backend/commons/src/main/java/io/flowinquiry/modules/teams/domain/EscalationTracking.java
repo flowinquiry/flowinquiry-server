@@ -25,7 +25,7 @@ public class EscalationTracking {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "team_request_id", nullable = false)
-    private TeamRequest teamRequest;
+    private Ticket ticket;
 
     @Column(name = "escalation_level", nullable = false)
     private Integer escalationLevel;

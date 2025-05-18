@@ -8,23 +8,23 @@ import io.flowinquiry.modules.audit.AuditLogUpdateEvent;
 import io.flowinquiry.modules.collab.domain.EntityType;
 import io.flowinquiry.modules.collab.domain.EntityWatcher;
 import io.flowinquiry.modules.collab.repository.EntityWatcherRepository;
-import io.flowinquiry.modules.teams.domain.TeamRequest;
+import io.flowinquiry.modules.teams.domain.Ticket;
 import io.flowinquiry.modules.teams.domain.WorkflowState;
 import io.flowinquiry.modules.teams.domain.WorkflowTransition;
 import io.flowinquiry.modules.teams.domain.WorkflowTransitionHistory;
 import io.flowinquiry.modules.teams.domain.WorkflowTransitionHistoryStatus;
-import io.flowinquiry.modules.teams.repository.TeamRequestRepository;
+import io.flowinquiry.modules.teams.repository.TicketRepository;
 import io.flowinquiry.modules.teams.repository.WorkflowStateRepository;
 import io.flowinquiry.modules.teams.repository.WorkflowTransitionHistoryRepository;
 import io.flowinquiry.modules.teams.repository.WorkflowTransitionRepository;
 import io.flowinquiry.modules.teams.service.dto.PriorityDistributionDTO;
-import io.flowinquiry.modules.teams.service.dto.TeamRequestDTO;
 import io.flowinquiry.modules.teams.service.dto.TeamTicketPriorityDistributionDTO;
 import io.flowinquiry.modules.teams.service.dto.TicketActionCountByDateDTO;
+import io.flowinquiry.modules.teams.service.dto.TicketDTO;
 import io.flowinquiry.modules.teams.service.dto.TicketDistributionDTO;
-import io.flowinquiry.modules.teams.service.event.NewTeamRequestCreatedEvent;
-import io.flowinquiry.modules.teams.service.event.TeamRequestWorkStateTransitionEvent;
-import io.flowinquiry.modules.teams.service.mapper.TeamRequestMapper;
+import io.flowinquiry.modules.teams.service.event.NewTicketCreatedEvent;
+import io.flowinquiry.modules.teams.service.event.TicketWorkStateTransitionEvent;
+import io.flowinquiry.modules.teams.service.mapper.TicketMapper;
 import io.flowinquiry.modules.usermanagement.domain.User;
 import io.flowinquiry.modules.usermanagement.service.dto.TicketStatisticsDTO;
 import io.flowinquiry.query.QueryDTO;
@@ -54,76 +54,76 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @Transactional
-public class TeamRequestService {
+public class TicketService {
     @PersistenceContext private EntityManager entityManager;
 
-    private final TeamRequestRepository teamRequestRepository;
+    private final TicketRepository ticketRepository;
     private final EntityWatcherRepository entityWatcherRepository;
-    private final TeamRequestMapper teamRequestMapper;
+    private final TicketMapper ticketMapper;
     private final WorkflowStateRepository workflowStateRepository;
     private final WorkflowTransitionRepository workflowTransitionRepository;
     private final WorkflowTransitionHistoryRepository workflowTransitionHistoryRepository;
     private final ApplicationEventPublisher eventPublisher;
 
     @Autowired
-    public TeamRequestService(
-            TeamRequestRepository teamRequestRepository,
+    public TicketService(
+            TicketRepository ticketRepository,
             EntityWatcherRepository entityWatcherRepository,
-            TeamRequestMapper teamRequestMapper,
+            TicketMapper ticketMapper,
             WorkflowTransitionRepository workflowTransitionRepository,
             WorkflowStateRepository workflowStateRepository,
             WorkflowTransitionHistoryRepository workflowTransitionHistoryRepository,
             ApplicationEventPublisher eventPublisher) {
-        this.teamRequestRepository = teamRequestRepository;
+        this.ticketRepository = ticketRepository;
         this.entityWatcherRepository = entityWatcherRepository;
-        this.teamRequestMapper = teamRequestMapper;
+        this.ticketMapper = ticketMapper;
         this.workflowTransitionRepository = workflowTransitionRepository;
         this.workflowStateRepository = workflowStateRepository;
         this.workflowTransitionHistoryRepository = workflowTransitionHistoryRepository;
         this.eventPublisher = eventPublisher;
     }
 
-    public Page<TeamRequestDTO> findTeamRequests(QueryDTO queryDTO, Pageable pageable) {
-        Specification<TeamRequest> spec = createSpecification(Optional.of(queryDTO));
-        return teamRequestRepository.findAll(spec, pageable).map(teamRequestMapper::toDto);
+    public Page<TicketDTO> findTeamRequests(QueryDTO queryDTO, Pageable pageable) {
+        Specification<Ticket> spec = createSpecification(Optional.of(queryDTO));
+        return ticketRepository.findAll(spec, pageable).map(ticketMapper::toDto);
     }
 
     @Transactional(readOnly = true)
-    public TeamRequestDTO getTeamRequestById(Long id) {
-        TeamRequest teamRequest =
-                teamRequestRepository
+    public TicketDTO getTeamRequestById(Long id) {
+        Ticket ticket =
+                ticketRepository
                         .findById(id)
                         .orElseThrow(
                                 () ->
                                         new ResourceNotFoundException(
-                                                "TeamRequest not found with id: " + id));
-        return teamRequestMapper.toDto(teamRequest);
+                                                "Ticket not found with id: " + id));
+        return ticketMapper.toDto(ticket);
     }
 
     @Transactional
-    public TeamRequestDTO createTeamRequest(TeamRequestDTO teamRequestDTO) {
+    public TicketDTO createTeamRequest(TicketDTO ticketDTO) {
         WorkflowState initialStateByWorkflowId =
                 workflowStateRepository
-                        .findById(teamRequestDTO.getCurrentStateId())
+                        .findById(ticketDTO.getCurrentStateId())
                         .orElseThrow(
                                 () ->
                                         new ResourceNotFoundException(
                                                 "Can not find workflow state "
-                                                        + teamRequestDTO.getWorkflowId()));
+                                                        + ticketDTO.getWorkflowId()));
 
-        teamRequestDTO.setIsNew(true);
-        teamRequestDTO.setIsCompleted(false);
+        ticketDTO.setIsNew(true);
+        ticketDTO.setIsCompleted(false);
 
-        TeamRequest teamRequest = teamRequestMapper.toEntity(teamRequestDTO);
-        teamRequest = teamRequestRepository.save(teamRequest);
+        Ticket ticket = ticketMapper.toEntity(ticketDTO);
+        ticket = ticketRepository.save(ticket);
 
-        Long teamRequestId = teamRequest.getId();
+        Long ticketId = ticket.getId();
 
         Set<Long> uniqueWatcherIds = new HashSet<>();
-        uniqueWatcherIds.add(teamRequestDTO.getRequestUserId());
+        uniqueWatcherIds.add(ticketDTO.getRequestUserId());
 
-        if (teamRequestDTO.getAssignUserId() != null) {
-            uniqueWatcherIds.add(teamRequestDTO.getAssignUserId());
+        if (ticketDTO.getAssignUserId() != null) {
+            uniqueWatcherIds.add(ticketDTO.getAssignUserId());
         }
 
         List<EntityWatcher> entityWatchers =
@@ -131,7 +131,7 @@ public class TeamRequestService {
                         .map(
                                 userId -> {
                                     EntityWatcher entityWatcher = new EntityWatcher();
-                                    entityWatcher.setEntityId(teamRequestId);
+                                    entityWatcher.setEntityId(ticketId);
                                     entityWatcher.setEntityType(EntityType.Team_Request);
                                     entityWatcher.setWatchUser(User.builder().id(userId).build());
                                     return entityWatcher;
@@ -144,10 +144,10 @@ public class TeamRequestService {
 
         Instant slaDueDate =
                 calculateEarliestSlaDueDate(
-                        teamRequest.getWorkflow().getId(), initialStateByWorkflowId.getId());
+                        ticket.getWorkflow().getId(), initialStateByWorkflowId.getId());
 
         WorkflowTransitionHistory history = new WorkflowTransitionHistory();
-        history.setTeamRequest(teamRequest);
+        history.setTicket(ticket);
         history.setFromState(null);
         history.setToState(initialStateByWorkflowId);
         history.setEventName("Created");
@@ -156,52 +156,50 @@ public class TeamRequestService {
         history.setStatus(WorkflowTransitionHistoryStatus.In_Progress);
         workflowTransitionHistoryRepository.save(history);
 
-        TeamRequestDTO savedTeamRequestDTO = teamRequestMapper.toDto(teamRequest);
-        eventPublisher.publishEvent(new NewTeamRequestCreatedEvent(this, savedTeamRequestDTO));
-        return savedTeamRequestDTO;
+        TicketDTO savedTicketDTO = ticketMapper.toDto(ticket);
+        eventPublisher.publishEvent(new NewTicketCreatedEvent(this, savedTicketDTO));
+        return savedTicketDTO;
     }
 
     @Transactional
-    public TeamRequestDTO updateTeamRequest(TeamRequestDTO teamRequestDTO) {
+    public TicketDTO updateTeamRequest(TicketDTO ticketDTO) {
 
-        TeamRequest existingTeamRequest =
-                teamRequestRepository
-                        .findById(teamRequestDTO.getId())
+        Ticket existingTicket =
+                ticketRepository
+                        .findById(ticketDTO.getId())
                         .orElseThrow(
                                 () ->
                                         new ResourceNotFoundException(
-                                                "TeamRequest not found with id: "
-                                                        + teamRequestDTO.getId()));
-        TeamRequestDTO previousTeamRequest = teamRequestMapper.toDto(existingTeamRequest);
+                                                "Ticket not found with id: " + ticketDTO.getId()));
+        TicketDTO previousTeamRequest = ticketMapper.toDto(existingTicket);
         Long previousState = previousTeamRequest.getCurrentStateId();
 
-        teamRequestMapper.updateEntity(teamRequestDTO, existingTeamRequest);
+        ticketMapper.updateEntity(ticketDTO, existingTicket);
 
-        boolean isStateChanged =
-                (!Objects.equals(previousState, teamRequestDTO.getCurrentStateId()));
-        existingTeamRequest.setIsNew(!isStateChanged);
+        boolean isStateChanged = (!Objects.equals(previousState, ticketDTO.getCurrentStateId()));
+        existingTicket.setIsNew(!isStateChanged);
 
         if (isStateChanged) {
             boolean finalState =
                     workflowStateRepository.isFinalState(
-                            teamRequestDTO.getWorkflowId(), teamRequestDTO.getCurrentStateId());
-            existingTeamRequest.setIsCompleted(finalState);
-            if (teamRequestDTO.getActualCompletionDate() == null) {
-                existingTeamRequest.setActualCompletionDate(LocalDate.now());
+                            ticketDTO.getWorkflowId(), ticketDTO.getCurrentStateId());
+            existingTicket.setIsCompleted(finalState);
+            if (ticketDTO.getActualCompletionDate() == null) {
+                existingTicket.setActualCompletionDate(LocalDate.now());
             }
         }
 
-        if (teamRequestDTO.getAssignUserId() != null) {
-            Long assignedUserId = teamRequestDTO.getAssignUserId();
+        if (ticketDTO.getAssignUserId() != null) {
+            Long assignedUserId = ticketDTO.getAssignUserId();
 
             // Check if assigned user is already a watcher
             boolean isWatcherPresent =
                     entityWatcherRepository.existsByEntityTypeAndEntityIdAndWatchUserId(
-                            EntityType.Team_Request, teamRequestDTO.getId(), assignedUserId);
+                            EntityType.Team_Request, ticketDTO.getId(), assignedUserId);
             if (!isWatcherPresent) {
                 EntityWatcher watcher = new EntityWatcher();
                 watcher.setEntityType(EntityType.Team_Request);
-                watcher.setEntityId(teamRequestDTO.getId());
+                watcher.setEntityId(ticketDTO.getId());
                 watcher.setWatchUser(User.builder().id(assignedUserId).build());
                 entityWatcherRepository.save(watcher);
                 // Flush & Clear the persistence context to ensure fresh retrieval
@@ -210,17 +208,15 @@ public class TeamRequestService {
             }
         }
 
-        TeamRequestDTO savedTeamRequest =
-                teamRequestMapper.toDto(teamRequestRepository.save(existingTeamRequest));
+        TicketDTO savedTeamRequest = ticketMapper.toDto(ticketRepository.save(existingTicket));
 
-        eventPublisher.publishEvent(
-                new AuditLogUpdateEvent(this, previousTeamRequest, teamRequestDTO));
+        eventPublisher.publishEvent(new AuditLogUpdateEvent(this, previousTeamRequest, ticketDTO));
 
         Long currentState = savedTeamRequest.getCurrentStateId();
         if (!Objects.equals(previousState, currentState)) {
             eventPublisher.publishEvent(
-                    new TeamRequestWorkStateTransitionEvent(
-                            this, teamRequestDTO.getId(), previousState, currentState));
+                    new TicketWorkStateTransitionEvent(
+                            this, ticketDTO.getId(), previousState, currentState));
         }
 
         return savedTeamRequest;
@@ -228,47 +224,44 @@ public class TeamRequestService {
 
     @Transactional
     public void deleteTeamRequest(Long id) {
-        if (!teamRequestRepository.existsById(id)) {
-            throw new ResourceNotFoundException("TeamRequest not found with id: " + id);
+        if (!ticketRepository.existsById(id)) {
+            throw new ResourceNotFoundException("Ticket not found with id: " + id);
         }
-        teamRequestRepository.deleteById(id);
+        ticketRepository.deleteById(id);
     }
 
-    public Optional<TeamRequestDTO> getNextTeamRequest(Long requestId, Long projectId) {
-        return teamRequestRepository
-                .findNextTeamRequest(requestId, projectId)
-                .map(teamRequestMapper::toDto);
+    public Optional<TicketDTO> getNextTicket(Long ticketId, Long projectId) {
+        return ticketRepository.findNextTeamRequest(ticketId, projectId).map(ticketMapper::toDto);
     }
 
-    public Optional<TeamRequestDTO> getPreviousTeamRequest(Long requestId, Long projectId) {
-        return teamRequestRepository
-                .findPreviousTeamRequest(requestId, projectId)
-                .map(teamRequestMapper::toDto);
+    public Optional<TicketDTO> getPreviousTicket(Long ticketId, Long projectId) {
+        return ticketRepository
+                .findPreviousTeamRequest(ticketId, projectId)
+                .map(ticketMapper::toDto);
     }
 
     // Fetch ticket distribution by team member
     public List<TicketDistributionDTO> getTicketDistribution(
             Long teamId, Instant fromDate, Instant toDate) {
-        return teamRequestRepository.findTicketDistributionByTeamId(teamId, fromDate, toDate);
+        return ticketRepository.findTicketDistributionByTeamId(teamId, fromDate, toDate);
     }
 
     // Fetch unassigned tickets
-    public Page<TeamRequestDTO> getUnassignedTickets(Long teamId, Pageable pageable) {
-        return teamRequestRepository
+    public Page<TicketDTO> getUnassignedTickets(Long teamId, Pageable pageable) {
+        return ticketRepository
                 .findUnassignedTicketsByTeamId(teamId, pageable)
-                .map(teamRequestMapper::toDto);
+                .map(ticketMapper::toDto);
     }
 
     // Fetch ticket priority distribution
     public List<PriorityDistributionDTO> getPriorityDistribution(
             Long teamId, Instant fromDate, Instant toDate) {
-        return teamRequestRepository.findTicketPriorityDistributionByTeamId(
-                teamId, fromDate, toDate);
+        return ticketRepository.findTicketPriorityDistributionByTeamId(teamId, fromDate, toDate);
     }
 
     public TicketStatisticsDTO getTicketStatisticsByTeamId(
             Long teamId, Instant fromDate, Instant toDate) {
-        return teamRequestRepository.getTicketStatisticsByTeamId(teamId, fromDate, toDate);
+        return ticketRepository.getTicketStatisticsByTeamId(teamId, fromDate, toDate);
     }
 
     private Instant calculateEarliestSlaDueDate(Long workflowId, Long sourceStateId) {
@@ -302,21 +295,21 @@ public class TeamRequestService {
         return Instant.now().plus(earliestTransition.getSlaDuration(), ChronoUnit.HOURS);
     }
 
-    public Page<TeamRequestDTO> getOverdueTicketsByTeam(Long teamId, Pageable pageable) {
-        return teamRequestRepository
+    public Page<TicketDTO> getOverdueTicketsByTeam(Long teamId, Pageable pageable) {
+        return ticketRepository
                 .findOverdueTicketsByTeamId(teamId, Completed, pageable)
-                .map(teamRequestMapper::toDto);
+                .map(ticketMapper::toDto);
     }
 
-    public Page<TeamRequestDTO> getOverdueTicketsByUser(Long userId, Pageable pageable) {
-        return teamRequestRepository
+    public Page<TicketDTO> getOverdueTicketsByUser(Long userId, Pageable pageable) {
+        return ticketRepository
                 .findOverdueTicketsByUserId(userId, Completed, pageable)
-                .map(teamRequestMapper::toDto);
+                .map(ticketMapper::toDto);
     }
 
     public Long countOverdueTickets(
             Long teamId, WorkflowTransitionHistoryStatus status, Instant fromDate, Instant toDate) {
-        return teamRequestRepository.countOverdueTicketsByTeamId(teamId, status, fromDate, toDate);
+        return ticketRepository.countOverdueTicketsByTeamId(teamId, status, fromDate, toDate);
     }
 
     public List<TicketActionCountByDateDTO> getTicketCreationTimeSeries(Long teamId, int days) {
@@ -326,7 +319,7 @@ public class TeamRequestService {
 
         LocalDate startDate = LocalDate.now().minusDays(days - 1);
         List<TicketActionCountByDateDTO> trends =
-                teamRequestRepository.findTicketActionByDaySeries(
+                ticketRepository.findTicketActionByDaySeries(
                         teamId, startDate.atStartOfDay().toInstant(ZoneOffset.UTC));
 
         // Fill missing dates with zero counts
@@ -348,19 +341,19 @@ public class TeamRequestService {
 
     public List<TeamTicketPriorityDistributionDTO> getPriorityDistributionForUser(
             Long userId, Instant fromDate, Instant toDate) {
-        return teamRequestRepository.findPriorityDistributionByUserId(userId, fromDate, toDate);
+        return ticketRepository.findPriorityDistributionByUserId(userId, fromDate, toDate);
     }
 
     @Transactional
-    public TeamRequestDTO updateTeamRequestState(Long requestId, Long newStateId) {
-        TeamRequest teamRequest =
-                teamRequestRepository
-                        .findById(requestId)
+    public TicketDTO updateTicketState(Long ticketId, Long newStateId) {
+        Ticket ticket =
+                ticketRepository
+                        .findById(ticketId)
                         .orElseThrow(
                                 () ->
                                         new ResourceNotFoundException(
-                                                "Not find the request id " + requestId));
-        TeamRequestDTO newTeamRequest = teamRequestMapper.toDto(teamRequest);
+                                                "Not find the ticket id " + ticketId));
+        TicketDTO newTeamRequest = ticketMapper.toDto(ticket);
         newTeamRequest.setCurrentStateId(newStateId);
         return updateTeamRequest(newTeamRequest);
     }

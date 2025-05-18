@@ -12,8 +12,8 @@ import io.flowinquiry.modules.collab.domain.NotificationType;
 import io.flowinquiry.modules.collab.repository.ActivityLogRepository;
 import io.flowinquiry.modules.collab.repository.NotificationRepository;
 import io.flowinquiry.modules.teams.repository.TeamRepository;
-import io.flowinquiry.modules.teams.service.dto.TeamRequestDTO;
-import io.flowinquiry.modules.teams.service.event.NewTeamRequestCreatedEvent;
+import io.flowinquiry.modules.teams.service.dto.TicketDTO;
+import io.flowinquiry.modules.teams.service.event.NewTicketCreatedEvent;
 import io.flowinquiry.modules.usermanagement.domain.User;
 import io.flowinquiry.modules.usermanagement.repository.UserRepository;
 import io.flowinquiry.modules.usermanagement.service.dto.UserWithTeamRoleDTO;
@@ -27,14 +27,14 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 @Component
-public class NewTeamRequestCreatedNotificationEventListener {
+public class NewTicketCreatedNotificationEventListener {
     private final SimpMessagingTemplate messageTemplate;
     private final NotificationRepository notificationRepository;
     private final TeamRepository teamRepository;
     private final ActivityLogRepository activityLogRepository;
     private final UserRepository userRepository;
 
-    public NewTeamRequestCreatedNotificationEventListener(
+    public NewTicketCreatedNotificationEventListener(
             SimpMessagingTemplate messageTemplate,
             NotificationRepository notificationRepository,
             TeamRepository teamRepository,
@@ -50,41 +50,39 @@ public class NewTeamRequestCreatedNotificationEventListener {
     @Async("asyncTaskExecutor")
     @Transactional
     @EventListener
-    public void onNewTeamRequestCreated(NewTeamRequestCreatedEvent event) {
-        TeamRequestDTO teamRequestDTO = event.getTeamRequest();
+    public void onNewTeamRequestCreated(NewTicketCreatedEvent event) {
+        TicketDTO ticketDTO = event.getTeamRequest();
         User requestUser =
                 userRepository
-                        .findOneById(teamRequestDTO.getRequestUserId())
+                        .findOneById(ticketDTO.getRequestUserId())
                         .orElseThrow(
                                 () ->
                                         new ResourceNotFoundException(
-                                                "User not found: "
-                                                        + teamRequestDTO.getRequestUserId()));
+                                                "User not found: " + ticketDTO.getRequestUserId()));
         String html =
                 p(
                                 a(requestUser.getFirstName() + " " + requestUser.getLastName())
                                         .withHref(
                                                 "/portal/users/"
                                                         + Obfuscator.obfuscate(
-                                                                teamRequestDTO.getRequestUserId())),
+                                                                ticketDTO.getRequestUserId())),
                                 text(" has created a new ticket "),
-                                a(teamRequestDTO.getRequestTitle())
+                                a(ticketDTO.getRequestTitle())
                                         .withHref(
                                                 "/portal/teams/"
                                                         + Obfuscator.obfuscate(
-                                                                teamRequestDTO.getTeamId())
+                                                                ticketDTO.getTeamId())
                                                         + "/requests/"
-                                                        + Obfuscator.obfuscate(
-                                                                teamRequestDTO.getId())))
+                                                        + Obfuscator.obfuscate(ticketDTO.getId())))
                         .render();
 
         List<UserWithTeamRoleDTO> usersInTeam =
-                teamRepository.findUsersByTeamId(teamRequestDTO.getTeamId());
+                teamRepository.findUsersByTeamId(ticketDTO.getTeamId());
 
         List<Notification> notifications = new ArrayList<>();
 
         for (UserWithTeamRoleDTO user : usersInTeam) {
-            if (!user.getId().equals(teamRequestDTO.getRequestUserId())) {
+            if (!user.getId().equals(ticketDTO.getRequestUserId())) {
                 Notification notification =
                         Notification.builder()
                                 .content(html)
@@ -108,7 +106,7 @@ public class NewTeamRequestCreatedNotificationEventListener {
 
         ActivityLog activityLog =
                 ActivityLog.builder()
-                        .entityId(teamRequestDTO.getTeamId())
+                        .entityId(ticketDTO.getTeamId())
                         .entityType(EntityType.Team)
                         .content(html)
                         .build();

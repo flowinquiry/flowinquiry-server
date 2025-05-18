@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+	xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+	<changeSet id="002:00-rename-fw_team_request-to-fw_ticket"
+		author="flowinquiry">
+		<!-- Rename table -->
+		<renameTable oldTableName="fw_team_request"
+			newTableName="fw_ticket" />
+
+		<!-- Update all related foreign keys pointing to fw_team_request -->
+		<dropForeignKeyConstraint
+			baseTableName="fw_team_request_conversation_health"
+			constraintName="fk_team_request_conversation_health_team_request" />
+		<addForeignKeyConstraint
+			baseTableName="fw_team_request_conversation_health"
+			baseColumnNames="team_request_id" referencedTableName="fw_ticket"
+			referencedColumnNames="id"
+			constraintName="fk_ticket_conversation_health_ticket"
+			onDelete="CASCADE" />
+
+		<dropForeignKeyConstraint
+			baseTableName="fw_workflow_transition_history"
+			constraintName="fk_transition_history_team_request" />
+		<addForeignKeyConstraint
+			baseTableName="fw_workflow_transition_history"
+			baseColumnNames="team_request_id" referencedTableName="fw_ticket"
+			referencedColumnNames="id"
+			constraintName="fk_transition_history_ticket" onDelete="CASCADE" />
+
+		<dropForeignKeyConstraint
+			baseTableName="fw_escalation_tracking"
+			constraintName="fw_escalation_tracking_request" />
+		<addForeignKeyConstraint
+			baseTableName="fw_escalation_tracking"
+			baseColumnNames="team_request_id" referencedTableName="fw_ticket"
+			referencedColumnNames="id"
+			constraintName="fw_escalation_tracking_ticket" onDelete="CASCADE" />
+	</changeSet>
+
+	<changeSet id="002:01-rename-ticket-conversation-health"
+		author="flowinquiry">
+		<!-- Rename table -->
+		<renameTable
+			oldTableName="fw_team_request_conversation_health"
+			newTableName="fw_ticket_conversation_health" />
+
+		<!-- Rename column -->
+		<renameColumn tableName="fw_ticket_conversation_health"
+			oldColumnName="team_request_id" newColumnName="ticket_id"
+			columnDataType="BIGINT" />
+	</changeSet>
+
+	<changeSet
+		id="002:02-rename-request_field_in_fw_workflow_transition_history_table"
+		author="flowinquiry">
+		<renameColumn tableName="fw_workflow_transition_history"
+			oldColumnName="team_request_id" newColumnName="ticket_id"
+			columnDataType="BIGINT" />
+	</changeSet>
+
+</databaseChangeLog>

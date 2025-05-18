@@ -17,13 +17,13 @@ import org.hibernate.annotations.Formula;
 @EqualsAndHashCode(callSuper = false)
 @Entity
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-@Table(name = "fw_team_request")
+@Table(name = "fw_ticket")
 @Getter
 @Setter
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class TeamRequest extends AbstractAuditingEntity<Long> {
+public class Ticket extends AbstractAuditingEntity<Long> {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -54,8 +54,8 @@ public class TeamRequest extends AbstractAuditingEntity<Long> {
     private String requestDescription;
 
     @Column(nullable = false)
-    @Convert(converter = TeamRequestPriorityConverter.class)
-    private TeamRequestPriority priority;
+    @Convert(converter = TicketPriorityConverter.class)
+    private TicketPriority priority;
 
     @Column(name = "is_deleted", nullable = false)
     private boolean isDeleted = false;
@@ -92,11 +92,11 @@ public class TeamRequest extends AbstractAuditingEntity<Long> {
     private int numberWatchers;
 
     @OneToOne(
-            mappedBy = "teamRequest",
+            mappedBy = "ticket",
             cascade = CascadeType.ALL,
             fetch = FetchType.LAZY,
             orphanRemoval = true)
-    private TeamRequestConversationHealth conversationHealth;
+    private TicketConversationHealth conversationHealth;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "iteration_id", foreignKey = @ForeignKey(name = "fk_team_request_iteration"))

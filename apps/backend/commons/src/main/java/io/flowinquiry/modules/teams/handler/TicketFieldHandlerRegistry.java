@@ -5,19 +5,19 @@ import io.flowinquiry.modules.audit.EntityFieldHandler;
 import io.flowinquiry.modules.collab.domain.EntityType;
 import io.flowinquiry.modules.teams.domain.TicketChannel;
 import io.flowinquiry.modules.teams.repository.WorkflowStateRepository;
-import io.flowinquiry.modules.teams.service.dto.TeamRequestDTO;
+import io.flowinquiry.modules.teams.service.dto.TicketDTO;
 import io.flowinquiry.modules.usermanagement.repository.UserRepository;
 import java.util.Optional;
 import org.springframework.stereotype.Component;
 
 @Component
-public class TeamRequestFieldHandlerRegistry extends AbstractEntityFieldHandlerRegistry {
+public class TicketFieldHandlerRegistry extends AbstractEntityFieldHandlerRegistry {
 
     private final UserRepository userRepository;
 
     private final WorkflowStateRepository workflowStateRepository;
 
-    public TeamRequestFieldHandlerRegistry(
+    public TicketFieldHandlerRegistry(
             UserRepository userRepository, WorkflowStateRepository workflowStateRepository) {
         this.userRepository = userRepository;
         this.workflowStateRepository = workflowStateRepository;
@@ -25,13 +25,12 @@ public class TeamRequestFieldHandlerRegistry extends AbstractEntityFieldHandlerR
 
     @Override
     protected void initializeFieldHandlers() {
-        addFieldHandler("requestTitle", new EntityFieldHandler<TeamRequestDTO>("Title"));
-        addFieldHandler(
-                "requestDescription", new EntityFieldHandler<TeamRequestDTO>("Description"));
-        addFieldHandler("priority", new EntityFieldHandler<TeamRequestDTO>("Priority"));
+        addFieldHandler("requestTitle", new EntityFieldHandler<TicketDTO>("Title"));
+        addFieldHandler("requestDescription", new EntityFieldHandler<TicketDTO>("Description"));
+        addFieldHandler("priority", new EntityFieldHandler<TicketDTO>("Priority"));
         addFieldHandler(
                 "channel",
-                new EntityFieldHandler<TeamRequestDTO>(
+                new EntityFieldHandler<TicketDTO>(
                         "Channel",
                         (objectVal, channel) ->
                                 Optional.ofNullable((TicketChannel) channel)
@@ -39,13 +38,13 @@ public class TeamRequestFieldHandlerRegistry extends AbstractEntityFieldHandlerR
                                         .orElse("")));
         addFieldHandler(
                 "estimatedCompletionDate",
-                new EntityFieldHandler<TeamRequestDTO>("Target Completion Date"));
+                new EntityFieldHandler<TicketDTO>("Target Completion Date"));
         addFieldHandler(
                 "actualCompletionDate",
-                new EntityFieldHandler<TeamRequestDTO>("Actual Completion Date"));
+                new EntityFieldHandler<TicketDTO>("Actual Completion Date"));
         addFieldHandler(
                 "currentStateId",
-                new EntityFieldHandler<TeamRequestDTO>(
+                new EntityFieldHandler<TicketDTO>(
                         "State",
                         (objectVal, fieldVal) ->
                                 Optional.ofNullable(fieldVal)
@@ -68,7 +67,7 @@ public class TeamRequestFieldHandlerRegistry extends AbstractEntityFieldHandlerR
 
     @Override
     public Class<?> getEntityClass() {
-        return TeamRequestDTO.class;
+        return TicketDTO.class;
     }
 
     @Override

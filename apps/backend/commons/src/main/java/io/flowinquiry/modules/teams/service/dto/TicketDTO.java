@@ -14,7 +14,7 @@ import lombok.experimental.SuperBuilder;
 @NoArgsConstructor
 @AllArgsConstructor
 @SuperBuilder
-public class TeamRequestDTO {
+public class TicketDTO {
     private Long id;
 
     @NotNull(message = "Team ID cannot be null") private Long teamId;
@@ -60,5 +60,5 @@ public class TeamRequestDTO {
     private int numberWatchers;
     private TShirtSize size;
     private int estimate;
-    private TeamRequestConversationHealthDTO conversationHealth;
+    private TicketConversationHealthDTO conversationHealth;
 }

@@ -3,9 +3,9 @@ package io.flowinquiry.modules.teams.service;
 import static io.flowinquiry.utils.StringUtils.polishedHtmlTagsMessage;
 
 import io.flowinquiry.modules.ai.service.ChatModelService;
-import io.flowinquiry.modules.teams.domain.TeamRequest;
-import io.flowinquiry.modules.teams.domain.TeamRequestConversationHealth;
-import io.flowinquiry.modules.teams.repository.TeamRequestConversationHealthRepository;
+import io.flowinquiry.modules.teams.domain.Ticket;
+import io.flowinquiry.modules.teams.domain.TicketConversationHealth;
+import io.flowinquiry.modules.teams.repository.TicketConversationHealthRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.ai.chat.prompt.Prompt;
@@ -16,18 +16,18 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @ConditionalOnBean(ChatModelService.class)
-public class TeamRequestHealthEvalService {
+public class TicketHealthEvalService {
 
-    private static final Logger LOG = LoggerFactory.getLogger(TeamRequestHealthEvalService.class);
+    private static final Logger LOG = LoggerFactory.getLogger(TicketHealthEvalService.class);
 
-    private final TeamRequestConversationHealthRepository teamRequestConversationHealthRepository;
+    private final TicketConversationHealthRepository ticketConversationHealthRepository;
     private final ChatModelService chatModelService;
 
-    public TeamRequestHealthEvalService(
+    public TicketHealthEvalService(
             ChatModelService chatModelService,
-            TeamRequestConversationHealthRepository teamRequestConversationHealthRepository) {
+            TicketConversationHealthRepository ticketConversationHealthRepository) {
         this.chatModelService = chatModelService;
-        this.teamRequestConversationHealthRepository = teamRequestConversationHealthRepository;
+        this.ticketConversationHealthRepository = ticketConversationHealthRepository;
     }
 
     public String summarizeTeamRequest(String description) {
@@ -37,21 +37,20 @@ public class TeamRequestHealthEvalService {
     /**
      * Evaluates the conversation health incrementally by updating metrics.
      *
-     * @param teamRequestId The ID of the team request.
+     * @param ticketId The ID of the ticket.
      * @param newMessage The new message in the conversation.
      */
     @Transactional
     public void evaluateConversationHealth(
-            Long teamRequestId, String newMessage, boolean isCustomerResponse) {
+            Long ticketId, String newMessage, boolean isCustomerResponse) {
 
         String polishedMessage = polishedHtmlTagsMessage(newMessage);
 
         // Retrieve existing health record or create a new one
-        TeamRequestConversationHealth health =
-                teamRequestConversationHealthRepository
-                        .findByTeamRequestId(teamRequestId)
-                        .orElseGet(
-                                () -> createNewConversationHealth(teamRequestId, polishedMessage));
+        TicketConversationHealth health =
+                ticketConversationHealthRepository
+                        .findByTicketId(ticketId)
+                        .orElseGet(() -> createNewConversationHealth(ticketId, polishedMessage));
 
         // Step 1: Evaluate sentiment of the new message
         float sentimentScore = evaluateSentiment(polishedMessage);
@@ -107,7 +106,7 @@ public class TeamRequestHealthEvalService {
                 );
 
         // Step 9: Save the updated conversation health record
-        teamRequestConversationHealthRepository.save(health);
+        ticketConversationHealthRepository.save(health);
     }
 
     /** Determines if the message contains a question using AI. */
@@ -157,9 +156,9 @@ public class TeamRequestHealthEvalService {
     }
 
     /**
-     * Generates a summary for the team request content using OpenAI.
+     * Generates a summary for the ticket content using OpenAI.
      *
-     * @param description The initial description of the team request.
+     * @param description The initial description of the ticket.
      * @return The generated summary.
      */
     private String generateSummary(String description) {
@@ -168,21 +167,21 @@ public class TeamRequestHealthEvalService {
     }
 
     /**
-     * Creates a new conversation health record for a team request.
+     * Creates a new conversation health record for a ticket.
      *
-     * @param teamRequestId The ID of the team request.
+     * @param ticketId The ID of the ticket.
      * @return The newly created conversation health entity.
      */
-    private TeamRequestConversationHealth createNewConversationHealth(
-            Long teamRequestId, String firstMessage) {
-        TeamRequestConversationHealth health = new TeamRequestConversationHealth();
-        health.setTeamRequest(TeamRequest.builder().id(teamRequestId).build());
+    private TicketConversationHealth createNewConversationHealth(
+            Long ticketId, String firstMessage) {
+        TicketConversationHealth health = new TicketConversationHealth();
+        health.setTicket(Ticket.builder().id(ticketId).build());
         health.setCumulativeSentiment(0.0f);
         health.setTotalMessages(0);
         health.setTotalQuestions(0);
         health.setResolvedQuestions(0);
         health.setConversationHealth(0.0f);
         health.setSummary(generateSummary(firstMessage));
-        return teamRequestConversationHealthRepository.save(health);
+        return ticketConversationHealthRepository.save(health);
     }
 }

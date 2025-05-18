@@ -8,12 +8,12 @@ import static j2html.TagCreator.text;
 import io.flowinquiry.modules.collab.domain.ActivityLog;
 import io.flowinquiry.modules.collab.domain.EntityType;
 import io.flowinquiry.modules.collab.repository.ActivityLogRepository;
-import io.flowinquiry.modules.teams.domain.TeamRequest;
+import io.flowinquiry.modules.teams.domain.Ticket;
 import io.flowinquiry.modules.teams.domain.WorkflowState;
-import io.flowinquiry.modules.teams.repository.TeamRequestRepository;
+import io.flowinquiry.modules.teams.repository.TicketRepository;
 import io.flowinquiry.modules.teams.repository.WorkflowStateRepository;
 import io.flowinquiry.modules.teams.service.WorkflowTransitionHistoryService;
-import io.flowinquiry.modules.teams.service.event.TeamRequestWorkStateTransitionEvent;
+import io.flowinquiry.modules.teams.service.event.TicketWorkStateTransitionEvent;
 import io.flowinquiry.utils.Obfuscator;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.context.event.EventListener;
@@ -22,20 +22,20 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 @Component
-public class TeamRequestWorkStateTransitionEventListener {
+public class TicketWorkStateTransitionEventListener {
 
     private final ActivityLogRepository activityLogRepository;
-    private final TeamRequestRepository teamRequestRepository;
+    private final TicketRepository ticketRepository;
     private final WorkflowStateRepository workflowStateRepository;
     private final WorkflowTransitionHistoryService workflowTransitionHistoryService;
 
-    public TeamRequestWorkStateTransitionEventListener(
+    public TicketWorkStateTransitionEventListener(
             ActivityLogRepository activityLogRepository,
-            TeamRequestRepository teamRequestRepository,
+            TicketRepository ticketRepository,
             WorkflowStateRepository workflowStateRepository,
             WorkflowTransitionHistoryService workflowTransitionHistoryService) {
         this.activityLogRepository = activityLogRepository;
-        this.teamRequestRepository = teamRequestRepository;
+        this.ticketRepository = ticketRepository;
         this.workflowStateRepository = workflowStateRepository;
         this.workflowTransitionHistoryService = workflowTransitionHistoryService;
     }
@@ -43,13 +43,13 @@ public class TeamRequestWorkStateTransitionEventListener {
     @Async("asyncTaskExecutor")
     @EventListener
     @Transactional
-    public void onWorkflowStateTransition(TeamRequestWorkStateTransitionEvent event) {
-        Long teamRequestId = event.getTeamRequestId();
+    public void onWorkflowStateTransition(TicketWorkStateTransitionEvent event) {
+        Long ticketId = event.getTicketId();
         Long sourceStateId = event.getSourceStateId();
         Long targetStateId = event.getTargetStateId();
 
         workflowTransitionHistoryService.recordWorkflowTransitionHistory(
-                teamRequestId, sourceStateId, targetStateId);
+                ticketId, sourceStateId, targetStateId);
 
         WorkflowState sourceState =
                 workflowStateRepository
@@ -68,32 +68,30 @@ public class TeamRequestWorkStateTransitionEventListener {
                                                 "Can not find workflow state with id "
                                                         + targetStateId));
 
-        TeamRequest teamRequest =
-                teamRequestRepository
-                        .findById(teamRequestId)
+        Ticket ticket =
+                ticketRepository
+                        .findById(ticketId)
                         .orElseThrow(
                                 () ->
                                         new EntityNotFoundException(
-                                                "Can not find team request with id "
-                                                        + teamRequestId));
+                                                "Can not find ticket with id " + ticketId));
         String html =
                 p().with(
-                                a(teamRequest.getModifiedByUser().getFirstName()
+                                a(ticket.getModifiedByUser().getFirstName()
                                                 + " "
-                                                + teamRequest.getModifiedByUser().getLastName())
+                                                + ticket.getModifiedByUser().getLastName())
                                         .withHref(
                                                 "/portal/users/"
                                                         + Obfuscator.obfuscate(
-                                                                teamRequest.getModifiedBy())),
+                                                                ticket.getModifiedBy())),
                                 text(" updated the ticket "),
-                                a(teamRequest.getRequestTitle())
+                                a(ticket.getRequestTitle())
                                         .withHref(
                                                 "/portal/teams/"
                                                         + Obfuscator.obfuscate(
-                                                                teamRequest.getTeam().getId())
+                                                                ticket.getTeam().getId())
                                                         + "/requests/"
-                                                        + Obfuscator.obfuscate(
-                                                                teamRequest.getId())),
+                                                        + Obfuscator.obfuscate(ticket.getId())),
                                 text(" status from "),
                                 span(sourceState.getStateName()).withClass("status-old"),
                                 text(" to "),
@@ -101,7 +99,7 @@ public class TeamRequestWorkStateTransitionEventListener {
                         .render();
         ActivityLog activityLog =
                 ActivityLog.builder()
-                        .entityId(teamRequest.getTeam().getId())
+                        .entityId(ticket.getTeam().getId())
                         .entityType(EntityType.Team)
                         .content(html)
                         .build();

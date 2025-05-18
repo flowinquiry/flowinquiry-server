@@ -13,11 +13,11 @@ import io.flowinquiry.modules.collab.domain.EntityWatcher;
 import io.flowinquiry.modules.collab.repository.EntityWatcherRepository;
 import io.flowinquiry.modules.teams.domain.TShirtSize;
 import io.flowinquiry.modules.teams.domain.TicketChannel;
-import io.flowinquiry.modules.teams.repository.TeamRequestRepository;
-import io.flowinquiry.modules.teams.service.dto.TeamRequestDTO;
-import io.flowinquiry.modules.teams.service.event.NewTeamRequestCreatedEvent;
-import io.flowinquiry.modules.teams.service.event.TeamRequestWorkStateTransitionEvent;
-import io.flowinquiry.modules.teams.service.mapper.TeamRequestMapper;
+import io.flowinquiry.modules.teams.repository.TicketRepository;
+import io.flowinquiry.modules.teams.service.dto.TicketDTO;
+import io.flowinquiry.modules.teams.service.event.NewTicketCreatedEvent;
+import io.flowinquiry.modules.teams.service.event.TicketWorkStateTransitionEvent;
+import io.flowinquiry.modules.teams.service.mapper.TicketMapper;
 import java.time.LocalDate;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
@@ -31,11 +31,11 @@ import org.springframework.transaction.annotation.Transactional;
 
 @IntegrationTest
 @Transactional
-public class TeamRequestServiceIT {
+public class TicketServiceIT {
 
-    @Autowired private TeamRequestService teamRequestService;
-    @Autowired private TeamRequestRepository teamRequestRepository;
-    @Autowired private TeamRequestMapper teamRequestMapper;
+    @Autowired private TicketService ticketService;
+    @Autowired private TicketRepository ticketRepository;
+    @Autowired private TicketMapper ticketMapper;
     @Autowired private EntityWatcherRepository entityWatcherRepository;
     @Autowired private ApplicationEventPublisher realEventPublisher;
     private ApplicationEventPublisher spyEventPublisher;
@@ -43,39 +43,37 @@ public class TeamRequestServiceIT {
     @BeforeEach
     void setUp() {
         spyEventPublisher = Mockito.spy(realEventPublisher);
-        ReflectionTestUtils.setField(teamRequestService, "eventPublisher", spyEventPublisher);
+        ReflectionTestUtils.setField(ticketService, "eventPublisher", spyEventPublisher);
         doNothing().when(spyEventPublisher).publishEvent(any());
     }
 
     @Test
     void shouldCreateTeamRequestSuccessfully() {
-        TeamRequestDTO teamRequestDTO =
-                teamRequestMapper.toDto(teamRequestRepository.findById(2L).orElseThrow());
-        teamRequestDTO.setId(null);
-        teamRequestDTO.setConversationHealth(null);
-        TeamRequestDTO savedTeamRequest = teamRequestService.createTeamRequest(teamRequestDTO);
+        TicketDTO ticketDTO = ticketMapper.toDto(ticketRepository.findById(2L).orElseThrow());
+        ticketDTO.setId(null);
+        ticketDTO.setConversationHealth(null);
+        TicketDTO savedTeamRequest = ticketService.createTeamRequest(ticketDTO);
         assertThat(savedTeamRequest).isNotNull();
 
-        ArgumentCaptor<NewTeamRequestCreatedEvent> eventCaptor =
-                ArgumentCaptor.forClass(NewTeamRequestCreatedEvent.class);
+        ArgumentCaptor<NewTicketCreatedEvent> eventCaptor =
+                ArgumentCaptor.forClass(NewTicketCreatedEvent.class);
         verify(spyEventPublisher, times(1)).publishEvent(eventCaptor.capture());
     }
 
     @Test
-    void shouldUpdateTeamRequestSuccessfully() {
-        TeamRequestDTO teamRequestDTO =
-                teamRequestMapper.toDto(teamRequestRepository.findById(1L).orElseThrow());
-        teamRequestDTO.setRequestTitle("Updated Request Title");
-        teamRequestDTO.setCurrentStateId(2L);
-        teamRequestDTO.setSize(TShirtSize.XL);
-        teamRequestDTO.setEstimate(15);
+    void shouldUpdateTicketSuccessfully() {
+        TicketDTO ticketDTO = ticketMapper.toDto(ticketRepository.findById(1L).orElseThrow());
+        ticketDTO.setRequestTitle("Updated Request Title");
+        ticketDTO.setCurrentStateId(2L);
+        ticketDTO.setSize(TShirtSize.XL);
+        ticketDTO.setEstimate(15);
 
-        TeamRequestDTO updatedRequest = teamRequestService.updateTeamRequest(teamRequestDTO);
+        TicketDTO updatedRequest = ticketService.updateTeamRequest(ticketDTO);
 
         assertThat(updatedRequest.getRequestTitle()).isEqualTo("Updated Request Title");
         assertThat(updatedRequest.getCurrentStateId()).isEqualTo(2L);
-        assertThat(teamRequestDTO.getSize()).isEqualTo(TShirtSize.XL);
-        assertThat(teamRequestDTO.getEstimate()).isEqualTo(15);
+        assertThat(ticketDTO.getSize()).isEqualTo(TShirtSize.XL);
+        assertThat(ticketDTO.getEstimate()).isEqualTo(15);
         List<EntityWatcher> watchers =
                 entityWatcherRepository.findByEntityTypeAndEntityId(EntityType.Team_Request, 1L);
         assertThat(watchers).hasSize(3);
@@ -92,12 +90,12 @@ public class TeamRequestServiceIT {
         verify(spyEventPublisher, times(1))
                 .publishEvent(auditLogUpdateEventArgumentCaptor.capture());
 
-        ArgumentCaptor<TeamRequestWorkStateTransitionEvent> workflowStateTransitionEventCaptor =
-                ArgumentCaptor.forClass(TeamRequestWorkStateTransitionEvent.class);
+        ArgumentCaptor<TicketWorkStateTransitionEvent> workflowStateTransitionEventCaptor =
+                ArgumentCaptor.forClass(TicketWorkStateTransitionEvent.class);
         verify(spyEventPublisher, times(1))
                 .publishEvent(workflowStateTransitionEventCaptor.capture());
 
-        TeamRequestWorkStateTransitionEvent capturedEvent =
+        TicketWorkStateTransitionEvent capturedEvent =
                 workflowStateTransitionEventCaptor.getValue();
 
         assertThat(capturedEvent.getSourceStateId()).isEqualTo(1L);
@@ -106,23 +104,23 @@ public class TeamRequestServiceIT {
 
     @Test
     void shouldFindNextTeamRequestSuccessfully() {
-        TeamRequestDTO nextEntity = teamRequestService.getNextTeamRequest(11L, null).orElseThrow();
+        TicketDTO nextEntity = ticketService.getNextTicket(11L, null).orElseThrow();
 
         // Then: Validate key properties in a single assertion block
         assertThat(nextEntity)
                 .isNotNull()
                 .extracting(
-                        TeamRequestDTO::getId,
-                        TeamRequestDTO::getTeamId,
-                        TeamRequestDTO::getWorkflowId,
-                        TeamRequestDTO::getRequestTitle,
-                        TeamRequestDTO::getRequestDescription,
-                        TeamRequestDTO::getChannel,
-                        TeamRequestDTO::getIsNew,
-                        TeamRequestDTO::getIsCompleted,
-                        TeamRequestDTO::getEstimatedCompletionDate,
-                        TeamRequestDTO::getSize,
-                        TeamRequestDTO::getEstimate)
+                        TicketDTO::getId,
+                        TicketDTO::getTeamId,
+                        TicketDTO::getWorkflowId,
+                        TicketDTO::getRequestTitle,
+                        TicketDTO::getRequestDescription,
+                        TicketDTO::getChannel,
+                        TicketDTO::getIsNew,
+                        TicketDTO::getIsCompleted,
+                        TicketDTO::getEstimatedCompletionDate,
+                        TicketDTO::getSize,
+                        TicketDTO::getEstimate)
                 .containsExactly(
                         12L,
                         1L,
@@ -142,23 +140,22 @@ public class TeamRequestServiceIT {
     }
 
     @Test
-    void shouldFindPreviousTeamRequestSuccessfully() {
-        TeamRequestDTO previousEntity =
-                teamRequestService.getPreviousTeamRequest(11L, null).orElseThrow();
+    void shouldFindPreviousTicketSuccessfully() {
+        TicketDTO previousEntity = ticketService.getPreviousTicket(11L, null).orElseThrow();
 
         // Then: Validate key properties in a single assertion block
         assertThat(previousEntity)
                 .isNotNull()
                 .extracting(
-                        TeamRequestDTO::getId,
-                        TeamRequestDTO::getTeamId,
-                        TeamRequestDTO::getWorkflowId,
-                        TeamRequestDTO::getRequestTitle,
-                        TeamRequestDTO::getRequestDescription,
-                        TeamRequestDTO::getChannel,
-                        TeamRequestDTO::getIsNew,
-                        TeamRequestDTO::getIsCompleted,
-                        TeamRequestDTO::getEstimatedCompletionDate)
+                        TicketDTO::getId,
+                        TicketDTO::getTeamId,
+                        TicketDTO::getWorkflowId,
+                        TicketDTO::getRequestTitle,
+                        TicketDTO::getRequestDescription,
+                        TicketDTO::getChannel,
+                        TicketDTO::getIsNew,
+                        TicketDTO::getIsCompleted,
+                        TicketDTO::getEstimatedCompletionDate)
                 .containsExactly(
                         1L,
                         1L,

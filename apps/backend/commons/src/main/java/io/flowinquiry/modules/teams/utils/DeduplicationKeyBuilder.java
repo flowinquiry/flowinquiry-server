@@ -16,7 +16,7 @@ public class DeduplicationKeyBuilder {
      * Builds a deduplication cache key for SLA warning notifications.
      *
      * @param userId The ID of the recipient user.
-     * @param teamRequestId The ID of the team request.
+     * @param ticketId The ID of the ticket.
      * @param workflowId The ID of the workflow.
      * @param eventName The event name triggering the transition.
      * @param toStateId The ID of the target state.
@@ -25,7 +25,7 @@ public class DeduplicationKeyBuilder {
      */
     public static String buildSlaWarningKey(
             Long userId,
-            Long teamRequestId,
+            Long ticketId,
             Long workflowId,
             String eventName,
             Long toStateId,
@@ -34,7 +34,7 @@ public class DeduplicationKeyBuilder {
         return String.join(
                 DELIMITER,
                 String.valueOf(userId),
-                String.valueOf(teamRequestId),
+                String.valueOf(ticketId),
                 String.valueOf(workflowId),
                 eventName,
                 String.valueOf(toStateId),

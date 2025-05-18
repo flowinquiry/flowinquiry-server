@@ -5,9 +5,9 @@ import io.flowinquiry.modules.collab.domain.EntityType;
 import io.flowinquiry.modules.collab.domain.EntityWatcher;
 import io.flowinquiry.modules.collab.repository.EntityWatcherRepository;
 import io.flowinquiry.modules.collab.service.MailService;
-import io.flowinquiry.modules.teams.service.TeamRequestService;
-import io.flowinquiry.modules.teams.service.dto.TeamRequestDTO;
-import io.flowinquiry.modules.teams.service.event.NewTeamRequestCreatedEvent;
+import io.flowinquiry.modules.teams.service.TicketService;
+import io.flowinquiry.modules.teams.service.dto.TicketDTO;
+import io.flowinquiry.modules.teams.service.event.NewTicketCreatedEvent;
 import io.flowinquiry.modules.usermanagement.service.mapper.UserMapper;
 import java.util.List;
 import java.util.Locale;
@@ -17,20 +17,20 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 @Component
-public class NewTeamRequestCreatedMailEventListener {
+public class NewTicketCreatedMailEventListener {
 
     private final UserMapper userMapper;
     private final EntityWatcherRepository entityWatcherRepository;
-    private final TeamRequestService teamRequestService;
+    private final TicketService ticketService;
     private final MailService mailService;
 
-    public NewTeamRequestCreatedMailEventListener(
+    public NewTicketCreatedMailEventListener(
             EntityWatcherRepository entityWatcherRepository,
-            TeamRequestService teamRequestService,
+            TicketService ticketService,
             MailService mailService,
             UserMapper userMapper) {
         this.entityWatcherRepository = entityWatcherRepository;
-        this.teamRequestService = teamRequestService;
+        this.ticketService = ticketService;
         this.mailService = mailService;
         this.userMapper = userMapper;
     }
@@ -38,12 +38,11 @@ public class NewTeamRequestCreatedMailEventListener {
     @Async("asyncTaskExecutor")
     @Transactional
     @EventListener
-    public void onNewTeamRequestCreated(NewTeamRequestCreatedEvent event) {
-        TeamRequestDTO teamRequestDTO =
-                teamRequestService.getTeamRequestById(event.getTeamRequest().getId());
+    public void onNewTeamRequestCreated(NewTicketCreatedEvent event) {
+        TicketDTO ticketDTO = ticketService.getTeamRequestById(event.getTeamRequest().getId());
         List<EntityWatcher> watchers =
                 entityWatcherRepository.findByEntityTypeAndEntityId(
-                        EntityType.Team_Request, teamRequestDTO.getId());
+                        EntityType.Team_Request, ticketDTO.getId());
 
         if (!watchers.isEmpty()) {
             watchers.forEach(
@@ -53,8 +52,8 @@ public class NewTeamRequestCreatedMailEventListener {
                                         .setToUser(userMapper.toDto(watcher.getWatchUser()))
                                         .setSubject(
                                                 "email.new.ticket.subject",
-                                                teamRequestDTO.getRequestTitle())
-                                        .addVariable("ticket", teamRequestDTO)
+                                                ticketDTO.getRequestTitle())
+                                        .addVariable("ticket", ticketDTO)
                                         .setTemplate("mail/newTicketEmail");
                         mailService.sendEmail(emailContext);
                     });

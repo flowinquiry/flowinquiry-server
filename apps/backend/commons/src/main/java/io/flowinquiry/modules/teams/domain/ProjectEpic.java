@@ -41,6 +41,6 @@ public class ProjectEpic extends AbstractAuditingEntity<Long> {
 
     @Column private Instant endDate;
 
-    @Formula("(SELECT COUNT(r.id) FROM fw_team_request r WHERE r.epic_id = id)")
+    @Formula("(SELECT COUNT(r.id) FROM fw_ticket r WHERE r.epic_id = id)")
     private Long totalTickets;
 }

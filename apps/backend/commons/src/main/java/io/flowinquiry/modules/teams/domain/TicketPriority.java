@@ -1,6 +1,6 @@
 package io.flowinquiry.modules.teams.domain;
 
-public enum TeamRequestPriority {
+public enum TicketPriority {
     Critical(0),
     High(1),
     Medium(2),
@@ -9,7 +9,7 @@ public enum TeamRequestPriority {
 
     private final int code;
 
-    TeamRequestPriority(int code) {
+    TicketPriority(int code) {
         this.code = code;
     }
 
@@ -17,12 +17,12 @@ public enum TeamRequestPriority {
         return code;
     }
 
-    public static TeamRequestPriority fromCode(int code) {
-        for (TeamRequestPriority priority : TeamRequestPriority.values()) {
+    public static TicketPriority fromCode(int code) {
+        for (TicketPriority priority : TicketPriority.values()) {
             if (priority.code == code) {
                 return priority;
             }
         }
-        throw new IllegalArgumentException("Invalid code for TeamRequestPriority: " + code);
+        throw new IllegalArgumentException("Invalid code for TicketPriority: " + code);
     }
 }

@@ -1,8 +1,8 @@
 package io.flowinquiry.modules.teams.service.mapper;
 
 import io.flowinquiry.modules.teams.domain.Team;
-import io.flowinquiry.modules.teams.domain.TeamRequest;
-import io.flowinquiry.modules.teams.service.dto.TeamRequestDTO;
+import io.flowinquiry.modules.teams.domain.Ticket;
+import io.flowinquiry.modules.teams.service.dto.TicketDTO;
 import io.flowinquiry.modules.usermanagement.domain.User;
 import io.flowinquiry.utils.BaseMapper;
 import org.mapstruct.Mapper;
@@ -12,8 +12,8 @@ import org.mapstruct.Named;
 
 @Mapper(
         componentModel = "spring",
-        uses = {TeamRequestConversationHealthMapper.class})
-public interface TeamRequestMapper extends BaseMapper {
+        uses = {TicketConversationHealthMapper.class})
+public interface TicketMapper extends BaseMapper {
 
     @Mapping(target = "teamId", source = "team.id")
     @Mapping(target = "requestUserId", source = "requestUser.id")
@@ -38,32 +38,30 @@ public interface TeamRequestMapper extends BaseMapper {
     @Mapping(target = "epicId", source = "epic.id")
     @Mapping(target = "epicName", source = "epic.name")
     @Mapping(target = "conversationHealth", source = "conversationHealth")
-    TeamRequestDTO toDto(TeamRequest teamRequest);
+    TicketDTO toDto(Ticket ticket);
 
     @Mapping(target = "team", source = "teamId", qualifiedByName = "toTeam")
     @Mapping(
             target = "workflow",
-            expression = "java(toStub(teamRequestDTO.getWorkflowId(), Workflow.class))")
+            expression = "java(toStub(ticketDTO.getWorkflowId(), Workflow.class))")
     @Mapping(
             target = "project",
-            expression = "java(toStub(teamRequestDTO.getProjectId(), Project.class))")
+            expression = "java(toStub(ticketDTO.getProjectId(), Project.class))")
     @Mapping(
             target = "requestUser",
-            expression = "java(toStub(teamRequestDTO.getRequestUserId(), User.class))")
+            expression = "java(toStub(ticketDTO.getRequestUserId(), User.class))")
     @Mapping(
             target = "assignUser",
-            expression = "java(toStub(teamRequestDTO.getAssignUserId(), User.class))")
+            expression = "java(toStub(ticketDTO.getAssignUserId(), User.class))")
     @Mapping(
             target = "iteration",
-            expression = "java(toStub(teamRequestDTO.getIterationId(), ProjectIteration.class))")
-    @Mapping(
-            target = "epic",
-            expression = "java(toStub(teamRequestDTO.getEpicId(), ProjectEpic.class))")
+            expression = "java(toStub(ticketDTO.getIterationId(), ProjectIteration.class))")
+    @Mapping(target = "epic", expression = "java(toStub(ticketDTO.getEpicId(), ProjectEpic.class))")
     @Mapping(
             target = "currentState",
-            expression = "java(toStub(teamRequestDTO.getCurrentStateId(), WorkflowState.class))")
+            expression = "java(toStub(ticketDTO.getCurrentStateId(), WorkflowState.class))")
     @Mapping(target = "conversationHealth", source = "conversationHealth")
-    TeamRequest toEntity(TeamRequestDTO teamRequestDTO);
+    Ticket toEntity(TicketDTO ticketDTO);
 
     @Mapping(target = "team", source = "teamId", qualifiedByName = "toTeam")
     @Mapping(target = "workflow", expression = "java(toStub(dto.getWorkflowId(), Workflow.class))")
@@ -82,7 +80,7 @@ public interface TeamRequestMapper extends BaseMapper {
     @Mapping(
             target = "conversationHealth",
             ignore = true) // ✅ Ignore to avoid detached entity issue
-    void updateEntity(TeamRequestDTO dto, @MappingTarget TeamRequest entity);
+    void updateEntity(TicketDTO dto, @MappingTarget Ticket entity);
 
     @Named("toTeam")
     default Team toTeam(Long teamId) {

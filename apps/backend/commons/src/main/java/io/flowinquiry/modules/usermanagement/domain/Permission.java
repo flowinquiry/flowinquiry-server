@@ -22,6 +22,6 @@ public enum Permission {
                 return permission;
             }
         }
-        throw new IllegalArgumentException("Invalid code for TeamRequestPriority: " + code);
+        throw new IllegalArgumentException("Invalid code for TicketPriority: " + code);
     }
 }

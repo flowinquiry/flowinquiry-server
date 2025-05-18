@@ -11,8 +11,8 @@ import io.flowinquiry.modules.teams.domain.WorkflowState;
 import io.flowinquiry.modules.teams.domain.WorkflowTransition;
 import io.flowinquiry.modules.teams.domain.WorkflowVisibility;
 import io.flowinquiry.modules.teams.repository.TeamRepository;
-import io.flowinquiry.modules.teams.repository.TeamRequestRepository;
 import io.flowinquiry.modules.teams.repository.TeamWorkflowSelectionRepository;
+import io.flowinquiry.modules.teams.repository.TicketRepository;
 import io.flowinquiry.modules.teams.repository.WorkflowRepository;
 import io.flowinquiry.modules.teams.repository.WorkflowStateRepository;
 import io.flowinquiry.modules.teams.repository.WorkflowTransitionRepository;
@@ -55,7 +55,7 @@ public class WorkflowService {
 
     private final TeamRepository teamRepository;
 
-    private final TeamRequestRepository teamRequestRepository;
+    private final TicketRepository ticketRepository;
 
     private final WorkflowMapper workflowMapper;
 
@@ -69,7 +69,7 @@ public class WorkflowService {
             WorkflowTransitionRepository workflowTransitionRepository,
             TeamWorkflowSelectionRepository teamWorkflowSelectionRepository,
             TeamRepository teamRepository,
-            TeamRequestRepository teamRequestRepository,
+            TicketRepository ticketRepository,
             WorkflowMapper workflowMapper,
             WorkflowStateMapper workflowStateMapper,
             WorkflowTransitionMapper workflowTransitionMapper) {
@@ -78,7 +78,7 @@ public class WorkflowService {
         this.workflowTransitionRepository = workflowTransitionRepository;
         this.teamWorkflowSelectionRepository = teamWorkflowSelectionRepository;
         this.teamRepository = teamRepository;
-        this.teamRequestRepository = teamRequestRepository;
+        this.ticketRepository = ticketRepository;
         this.workflowMapper = workflowMapper;
         this.workflowStateMapper = workflowStateMapper;
         this.workflowTransitionMapper = workflowTransitionMapper;
@@ -564,9 +564,9 @@ public class WorkflowService {
             throw new IllegalArgumentException("Cannot delete workflow is used for project");
         }
 
-        // Check if there are any active team requests associated with this workflow
+        // Check if there are any active ticket associated with this workflow
         boolean hasActiveRequests =
-                teamRequestRepository.existsByWorkflowIdAndIsDeletedFalse(workflowId);
+                ticketRepository.existsByWorkflowIdAndIsDeletedFalse(workflowId);
         if (hasActiveRequests) {
             throw new ResourceConstraintException("Cannot delete a workflow with active requests.");
         }
@@ -609,7 +609,7 @@ public class WorkflowService {
         // Check if the ownerId matches the teamId
         if (workflow.getOwner() != null && workflow.getOwner().getId().equals(teamId)) {
             boolean hasActiveRequests =
-                    teamRequestRepository.existsByWorkflowIdAndIsDeletedFalse(workflowId);
+                    ticketRepository.existsByWorkflowIdAndIsDeletedFalse(workflowId);
             if (hasActiveRequests) {
                 throw new ResourceConstraintException(
                         "Cannot delete a workflow with active requests.");

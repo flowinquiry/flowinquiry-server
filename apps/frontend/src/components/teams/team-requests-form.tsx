@@ -68,7 +68,7 @@ export const TeamRequestForm = ({
       try {
         const data = await findRequestById(teamRequestId, setError);
         setTeamRequest(data);
-        console.log("fetchTeamRequest", data);
+        console.log("Fetch tickets", data);
       } finally {
         setLoading(false);
       }

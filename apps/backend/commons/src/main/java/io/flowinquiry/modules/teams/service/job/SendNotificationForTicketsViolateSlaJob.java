@@ -11,7 +11,7 @@ import io.flowinquiry.modules.collab.domain.Notification;
 import io.flowinquiry.modules.collab.domain.NotificationType;
 import io.flowinquiry.modules.collab.service.MailService;
 import io.flowinquiry.modules.shared.service.cache.DeduplicationCacheService;
-import io.flowinquiry.modules.teams.domain.TeamRequest;
+import io.flowinquiry.modules.teams.domain.Ticket;
 import io.flowinquiry.modules.teams.domain.WorkflowTransitionHistory;
 import io.flowinquiry.modules.teams.service.TeamService;
 import io.flowinquiry.modules.teams.service.WorkflowTransitionHistoryService;
@@ -76,7 +76,7 @@ public class SendNotificationForTicketsViolateSlaJob {
                 workflowTransitionHistoryService.getViolatedTransitions();
 
         for (WorkflowTransitionHistory violatingTicket : violatingTickets) {
-            TeamRequest teamRequest = violatingTicket.getTeamRequest();
+            Ticket ticket = violatingTicket.getTicket();
             Instant slaDueDate = violatingTicket.getSlaDueDate();
             String formattedSlaDueDate = slaDueDate.atZone(ZoneId.of("UTC")).format(formatter);
 
@@ -84,10 +84,10 @@ public class SendNotificationForTicketsViolateSlaJob {
             workflowTransitionHistoryService.escalateTransition(violatingTicket.getId());
 
             // ✅ Fetch assign user (if exists)
-            User assignUser = teamRequest.getAssignUser();
+            User assignUser = ticket.getAssignUser();
 
             // ✅ Fetch all team managers
-            List<User> teamManagers = teamService.getTeamManagers(teamRequest.getTeam().getId());
+            List<User> teamManagers = teamService.getTeamManagers(ticket.getTeam().getId());
 
             // ✅ Collect all recipients (Assign User + Team Managers)
             Set<User> recipients = new HashSet<>();
@@ -101,8 +101,8 @@ public class SendNotificationForTicketsViolateSlaJob {
                 String cacheKey =
                         buildSlaWarningKey(
                                 recipient.getId(),
-                                teamRequest.getId(),
-                                violatingTicket.getTeamRequest().getWorkflow().getId(),
+                                ticket.getId(),
+                                violatingTicket.getTicket().getWorkflow().getId(),
                                 violatingTicket.getEventName(),
                                 violatingTicket.getToState().getId(),
                                 "SendNotificationForTicketsViolateSlaJob");
@@ -115,16 +115,14 @@ public class SendNotificationForTicketsViolateSlaJob {
                 String html =
                         p(
                                         text("The ticket "),
-                                        a(teamRequest.getRequestTitle())
+                                        a(ticket.getRequestTitle())
                                                 .withHref(
                                                         "/portal/teams/"
                                                                 + Obfuscator.obfuscate(
-                                                                        teamRequest
-                                                                                .getTeam()
-                                                                                .getId())
+                                                                        ticket.getTeam().getId())
                                                                 + "/requests/"
                                                                 + Obfuscator.obfuscate(
-                                                                        teamRequest.getId())),
+                                                                        ticket.getId())),
                                         text(
                                                 " assigned to you or your team has violated its SLA. The SLA was due on "),
                                         strong(text(formattedSlaDueDate)),
@@ -149,15 +147,14 @@ public class SendNotificationForTicketsViolateSlaJob {
                                 .setToUser(userMapper.toDto(recipient))
                                 .setSubject(
                                         "email.ticket.sla.violation.subject",
-                                        teamRequest.getRequestTitle(),
-                                        teamRequest.getTeam().getName())
-                                .addVariable("requestTitle", teamRequest.getRequestTitle())
+                                        ticket.getRequestTitle(),
+                                        ticket.getTeam().getName())
+                                .addVariable("requestTitle", ticket.getRequestTitle())
                                 .addVariable(
                                         "obfuscatedTeamId",
-                                        Obfuscator.obfuscate(teamRequest.getTeam().getId()))
+                                        Obfuscator.obfuscate(ticket.getTeam().getId()))
                                 .addVariable(
-                                        "obfuscatedTicketId",
-                                        Obfuscator.obfuscate(teamRequest.getId()))
+                                        "obfuscatedTicketId", Obfuscator.obfuscate(ticket.getId()))
                                 .addVariable("slaDueDate", formattedSlaDueDate)
                                 .setTemplate("mail/violatedSlaTicketEmail");
 

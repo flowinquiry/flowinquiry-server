@@ -10,9 +10,9 @@ import lombok.experimental.SuperBuilder;
 @NoArgsConstructor
 @AllArgsConstructor
 @SuperBuilder
-public class TeamRequestConversationHealthDTO {
+public class TicketConversationHealthDTO {
     private Long id;
-    private Long teamRequestId;
+    private Long ticketId;
     private Float conversationHealth;
     private Float cumulativeSentiment;
     private Integer totalMessages;

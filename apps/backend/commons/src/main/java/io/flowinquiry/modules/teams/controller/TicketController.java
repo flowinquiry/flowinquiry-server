@@ -1,12 +1,12 @@
 package io.flowinquiry.modules.teams.controller;
 
 import io.flowinquiry.modules.teams.domain.WorkflowTransitionHistoryStatus;
-import io.flowinquiry.modules.teams.service.TeamRequestService;
+import io.flowinquiry.modules.teams.service.TicketService;
 import io.flowinquiry.modules.teams.service.WorkflowTransitionHistoryService;
 import io.flowinquiry.modules.teams.service.dto.PriorityDistributionDTO;
-import io.flowinquiry.modules.teams.service.dto.TeamRequestDTO;
 import io.flowinquiry.modules.teams.service.dto.TeamTicketPriorityDistributionDTO;
 import io.flowinquiry.modules.teams.service.dto.TicketActionCountByDateDTO;
+import io.flowinquiry.modules.teams.service.dto.TicketDTO;
 import io.flowinquiry.modules.teams.service.dto.TicketDistributionDTO;
 import io.flowinquiry.modules.teams.service.dto.TransitionItemCollectionDTO;
 import io.flowinquiry.modules.usermanagement.service.dto.TicketStatisticsDTO;
@@ -35,66 +35,66 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/api/team-requests")
-public class TeamRequestController {
+@RequestMapping("/api/tickets")
+public class TicketController {
 
-    private final TeamRequestService teamRequestService;
+    private final TicketService ticketService;
     private final WorkflowTransitionHistoryService workflowTransitionHistoryService;
 
-    public TeamRequestController(
-            TeamRequestService teamRequestService,
+    public TicketController(
+            TicketService ticketService,
             WorkflowTransitionHistoryService workflowTransitionHistoryService) {
-        this.teamRequestService = teamRequestService;
+        this.ticketService = ticketService;
         this.workflowTransitionHistoryService = workflowTransitionHistoryService;
     }
 
     @PostMapping("/search")
-    public Page<TeamRequestDTO> findTeamRequests(
+    public Page<TicketDTO> findTeamRequests(
             @Valid @RequestBody QueryDTO queryDTO, Pageable pageable) {
-        return teamRequestService.findTeamRequests(queryDTO, pageable);
+        return ticketService.findTeamRequests(queryDTO, pageable);
     }
 
     @GetMapping("/{id}")
-    public TeamRequestDTO getTeamRequestById(@PathVariable("id") Long id) {
-        return teamRequestService.getTeamRequestById(id);
+    public TicketDTO getTeamRequestById(@PathVariable("id") Long id) {
+        return ticketService.getTeamRequestById(id);
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public TeamRequestDTO createTeamRequest(@Valid @RequestBody TeamRequestDTO teamRequestDTO) {
-        return teamRequestService.createTeamRequest(teamRequestDTO);
+    public TicketDTO createTeamRequest(@Valid @RequestBody TicketDTO ticketDTO) {
+        return ticketService.createTeamRequest(ticketDTO);
     }
 
     @PutMapping("/{id}")
-    public TeamRequestDTO updateTeamRequest(
-            @PathVariable("id") Long id, @RequestBody TeamRequestDTO teamRequestDTO) {
-        if (!id.equals(teamRequestDTO.getId())) {
+    public TicketDTO updateTeamRequest(
+            @PathVariable("id") Long id, @RequestBody TicketDTO ticketDTO) {
+        if (!id.equals(ticketDTO.getId())) {
             throw new IllegalArgumentException("Id in URL and payload do not match");
         }
-        return teamRequestService.updateTeamRequest(teamRequestDTO);
+        return ticketService.updateTeamRequest(ticketDTO);
     }
 
     @DeleteMapping("/{id}")
     public void deleteTeamRequest(@PathVariable("id") Long id) {
-        teamRequestService.deleteTeamRequest(id);
+        ticketService.deleteTeamRequest(id);
     }
 
     @GetMapping("/{currentId}/next")
-    public ResponseEntity<TeamRequestDTO> getNextEntity(
+    public ResponseEntity<TicketDTO> getNextEntity(
             @PathVariable("currentId") Long currentId,
             @RequestParam(value = "projectId", required = false) Long projectId) {
-        return teamRequestService
-                .getNextTeamRequest(currentId, projectId)
+        return ticketService
+                .getNextTicket(currentId, projectId)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
 
     @GetMapping("/{currentId}/previous")
-    public ResponseEntity<TeamRequestDTO> getPreviousEntity(
+    public ResponseEntity<TicketDTO> getPreviousEntity(
             @PathVariable("currentId") Long currentId,
             @RequestParam(value = "projectId", required = false) Long projectId) {
-        return teamRequestService
-                .getPreviousTeamRequest(currentId, projectId)
+        return ticketService
+                .getPreviousTicket(currentId, projectId)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
@@ -111,14 +111,14 @@ public class TeamRequestController {
             @RequestParam(value = "range", required = false) String range) {
 
         DateRange dateRange = processDateRange(fromDate, toDate, range);
-        return teamRequestService.getTicketDistribution(teamId, dateRange.from, dateRange.to);
+        return ticketService.getTicketDistribution(teamId, dateRange.from, dateRange.to);
     }
 
     // Endpoint to get unassigned tickets for a specific team
     @GetMapping("/teams/{teamId}/unassigned-tickets")
-    public Page<TeamRequestDTO> getUnassignedTickets(
+    public Page<TicketDTO> getUnassignedTickets(
             @PathVariable("teamId") Long teamId, Pageable pageable) {
-        return teamRequestService.getUnassignedTickets(teamId, pageable);
+        return ticketService.getUnassignedTickets(teamId, pageable);
     }
 
     // Endpoint to get priority distribution for a specific team
@@ -134,20 +134,20 @@ public class TeamRequestController {
             @RequestParam(value = "range", required = false) String range) {
 
         DateRange dateRange = processDateRange(fromDate, toDate, range);
-        return teamRequestService.getPriorityDistribution(teamId, dateRange.from, dateRange.to);
+        return ticketService.getPriorityDistribution(teamId, dateRange.from, dateRange.to);
     }
 
     /**
      * Fetch the workflow transition history for a specific ticket/request.
      *
-     * @param teamRequestId the ID of the ticket
+     * @param ticketId the ID of the ticket
      * @return a TicketHistoryDto containing workflow details and transitions
      */
-    @GetMapping("/{teamRequestId}/states-history")
+    @GetMapping("/{ticketId}/states-history")
     public ResponseEntity<TransitionItemCollectionDTO> getTicketStateChangesHistory(
-            @PathVariable("teamRequestId") Long teamRequestId) {
+            @PathVariable("ticketId") Long ticketId) {
         TransitionItemCollectionDTO ticketHistory =
-                workflowTransitionHistoryService.getTransitionHistoryByTicketId(teamRequestId);
+                workflowTransitionHistoryService.getTransitionHistoryByTicketId(ticketId);
         return ResponseEntity.ok(ticketHistory);
     }
 
@@ -163,13 +163,13 @@ public class TeamRequestController {
             @RequestParam(value = "range", required = false) String range) {
 
         DateRange dateRange = processDateRange(fromDate, toDate, range);
-        return teamRequestService.getTicketStatisticsByTeamId(teamId, dateRange.from, dateRange.to);
+        return ticketService.getTicketStatisticsByTeamId(teamId, dateRange.from, dateRange.to);
     }
 
     @GetMapping("/teams/{teamId}/overdue-tickets")
-    public Page<TeamRequestDTO> getOverdueTicketsByTeam(
+    public Page<TicketDTO> getOverdueTicketsByTeam(
             @PathVariable("teamId") Long teamId, Pageable pageable) {
-        return teamRequestService.getOverdueTicketsByTeam(teamId, pageable);
+        return ticketService.getOverdueTicketsByTeam(teamId, pageable);
     }
 
     @GetMapping("/teams/{teamId}/overdue-tickets/count")
@@ -184,7 +184,7 @@ public class TeamRequestController {
             @RequestParam(value = "range", required = false) String range) {
 
         DateRange dateRange = processDateRange(fromDate, toDate, range);
-        return teamRequestService.countOverdueTickets(
+        return ticketService.countOverdueTickets(
                 teamId, WorkflowTransitionHistoryStatus.Completed, dateRange.from, dateRange.to);
     }
 
@@ -192,13 +192,13 @@ public class TeamRequestController {
     public List<TicketActionCountByDateDTO> getTicketCreationDaySeries(
             @PathVariable("teamId") Long teamId,
             @RequestParam(value = "days", required = false, defaultValue = "7") int days) {
-        return teamRequestService.getTicketCreationTimeSeries(teamId, days);
+        return ticketService.getTicketCreationTimeSeries(teamId, days);
     }
 
     @GetMapping("/users/{userId}/overdue-tickets")
-    public Page<TeamRequestDTO> getOverdueTicketsByUser(
+    public Page<TicketDTO> getOverdueTicketsByUser(
             @PathVariable("userId") Long userId, Pageable pageable) {
-        return teamRequestService.getOverdueTicketsByUser(userId, pageable);
+        return ticketService.getOverdueTicketsByUser(userId, pageable);
     }
 
     @GetMapping("/users/{userId}/team-tickets-priority-distribution")
@@ -209,32 +209,23 @@ public class TeamRequestController {
             @RequestParam(value = "range", required = false) String range) {
 
         DateRange dateRange = processDateRange(fromDate, toDate, range);
-        return teamRequestService.getPriorityDistributionForUser(
-                userId, dateRange.from, dateRange.to);
+        return ticketService.getPriorityDistributionForUser(userId, dateRange.from, dateRange.to);
     }
 
-    @PatchMapping("/{requestId}/state")
-    public TeamRequestDTO updateTeamRequestState(
-            @PathVariable Long requestId, @RequestBody Map<String, Long> requestBody) {
+    @PatchMapping("/{ticketId}/state")
+    public TicketDTO updateTeamRequestState(
+            @PathVariable("ticketId") Long ticketId, @RequestBody Map<String, Long> requestBody) {
 
         Long newStateId = requestBody.get("newStateId");
         if (newStateId == null) {
             throw new IllegalArgumentException("newStateId is required");
         }
 
-        return teamRequestService.updateTeamRequestState(requestId, newStateId);
+        return ticketService.updateTicketState(ticketId, newStateId);
     }
 
     /** Helper class to represent a date range */
-    private static class DateRange {
-        final Instant from;
-        final Instant to;
-
-        DateRange(Instant from, Instant to) {
-            this.from = from;
-            this.to = to;
-        }
-    }
+    private record DateRange(Instant from, Instant to) {}
 
     /**
      * Process date range parameters consistently across endpoints

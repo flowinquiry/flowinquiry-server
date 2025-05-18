@@ -5,10 +5,10 @@ import static io.flowinquiry.modules.teams.domain.WorkflowTransitionHistoryStatu
 import static io.flowinquiry.modules.teams.domain.WorkflowTransitionHistoryStatus.In_Progress;
 
 import io.flowinquiry.exceptions.ResourceNotFoundException;
-import io.flowinquiry.modules.teams.domain.TeamRequest;
+import io.flowinquiry.modules.teams.domain.Ticket;
 import io.flowinquiry.modules.teams.domain.WorkflowTransition;
 import io.flowinquiry.modules.teams.domain.WorkflowTransitionHistory;
-import io.flowinquiry.modules.teams.repository.TeamRequestRepository;
+import io.flowinquiry.modules.teams.repository.TicketRepository;
 import io.flowinquiry.modules.teams.repository.WorkflowTransitionHistoryRepository;
 import io.flowinquiry.modules.teams.repository.WorkflowTransitionRepository;
 import io.flowinquiry.modules.teams.service.dto.TransitionItemCollectionDTO;
@@ -25,17 +25,17 @@ import org.springframework.transaction.annotation.Transactional;
 public class WorkflowTransitionHistoryService {
 
     private final WorkflowTransitionHistoryRepository workflowTransitionHistoryRepository;
-    private final TeamRequestRepository teamRequestRepository;
+    private final TicketRepository ticketRepository;
     private final WorkflowTransitionRepository workflowTransitionRepository;
     private final WorkflowTransitionHistoryMapper workflowTransitionHistoryMapper;
 
     public WorkflowTransitionHistoryService(
             WorkflowTransitionHistoryRepository workflowTransitionHistoryRepository,
-            TeamRequestRepository teamRequestRepository,
+            TicketRepository ticketRepository,
             WorkflowTransitionRepository workflowTransitionRepository,
             WorkflowTransitionHistoryMapper workflowTransitionHistoryMapper) {
         this.workflowTransitionHistoryRepository = workflowTransitionHistoryRepository;
-        this.teamRequestRepository = teamRequestRepository;
+        this.ticketRepository = ticketRepository;
         this.workflowTransitionRepository = workflowTransitionRepository;
         this.workflowTransitionHistoryMapper = workflowTransitionHistoryMapper;
     }
@@ -43,26 +43,25 @@ public class WorkflowTransitionHistoryService {
     /**
      * Records a state change in the workflow and persists it to WorkflowTransitionHistory.
      *
-     * @param teamRequestId The ID of the team request
+     * @param ticketId The ID of the ticket
      * @param fromStateId The ID of the source state
      * @param toStateId The ID of the target state
      */
     @Transactional
-    public void recordWorkflowTransitionHistory(
-            Long teamRequestId, Long fromStateId, Long toStateId) {
+    public void recordWorkflowTransitionHistory(Long ticketId, Long fromStateId, Long toStateId) {
         // Fetch the associated entities
-        TeamRequest teamRequest =
-                teamRequestRepository
-                        .findById(teamRequestId)
+        Ticket ticket =
+                ticketRepository
+                        .findById(ticketId)
                         .orElseThrow(
                                 () ->
                                         new ResourceNotFoundException(
-                                                "Team request not found: " + teamRequestId));
+                                                "Ticket not found: " + ticketId));
 
         WorkflowTransition transition =
                 workflowTransitionRepository
                         .findByWorkflowIdAndSourceStateIdAndTargetStateId(
-                                teamRequest.getWorkflow().getId(), fromStateId, toStateId)
+                                ticket.getWorkflow().getId(), fromStateId, toStateId)
                         .orElseThrow(
                                 () ->
                                         new ResourceNotFoundException(
@@ -76,7 +75,7 @@ public class WorkflowTransitionHistoryService {
 
         // Create and save the WorkflowTransitionHistory entry
         WorkflowTransitionHistory history = new WorkflowTransitionHistory();
-        history.setTeamRequest(teamRequest);
+        history.setTicket(ticket);
         history.setFromState(transition.getSourceState());
         history.setToState(transition.getTargetState());
         history.setEventName(transition.getEventName());
@@ -93,7 +92,7 @@ public class WorkflowTransitionHistoryService {
 
     public TransitionItemCollectionDTO getTransitionHistoryByTicketId(Long ticketId) {
         List<WorkflowTransitionHistory> histories =
-                workflowTransitionHistoryRepository.findByTeamRequestId(ticketId);
+                workflowTransitionHistoryRepository.findByTicketId(ticketId);
 
         if (histories.isEmpty()) {
             return new TransitionItemCollectionDTO(ticketId, Collections.emptyList());

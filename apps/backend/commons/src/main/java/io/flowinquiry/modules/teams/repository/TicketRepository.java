@@ -1,6 +1,6 @@
 package io.flowinquiry.modules.teams.repository;
 
-import io.flowinquiry.modules.teams.domain.TeamRequest;
+import io.flowinquiry.modules.teams.domain.Ticket;
 import io.flowinquiry.modules.teams.domain.WorkflowTransitionHistoryStatus;
 import io.flowinquiry.modules.teams.service.dto.PriorityDistributionDTO;
 import io.flowinquiry.modules.teams.service.dto.TeamTicketPriorityDistributionDTO;
@@ -23,11 +23,11 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface TeamRequestRepository
-        extends JpaRepository<TeamRequest, Long>, JpaSpecificationExecutor<TeamRequest> {
+public interface TicketRepository
+        extends JpaRepository<Ticket, Long>, JpaSpecificationExecutor<Ticket> {
 
     @EntityGraph(attributePaths = {"team", "requestUser", "assignUser", "workflow", "currentState"})
-    Page<TeamRequest> findAll(Specification<TeamRequest> spec, Pageable pageable);
+    Page<Ticket> findAll(Specification<Ticket> spec, Pageable pageable);
 
     @EntityGraph(
             attributePaths = {
@@ -42,7 +42,7 @@ public interface TeamRequestRepository
                 "epic",
                 "conversationHealth"
             })
-    Optional<TeamRequest> findById(@Param("id") Long id);
+    Optional<Ticket> findById(@Param("id") Long id);
 
     @EntityGraph(
             attributePaths = {
@@ -54,25 +54,25 @@ public interface TeamRequestRepository
             })
     @QueryHints({
         @QueryHint(name = "org.hibernate.cacheable", value = "true"),
-        @QueryHint(name = "org.hibernate.cacheRegion", value = "queryTeamRequests")
+        @QueryHint(name = "org.hibernate.cacheRegion", value = "queryTickets")
     })
     @Query(
             value =
                     """
         SELECT tr
-        FROM TeamRequest tr
+        FROM Ticket tr
         WHERE tr.team.id = (
             SELECT r.team.id
-            FROM TeamRequest r
-            WHERE r.id = :requestId
+            FROM Ticket r
+            WHERE r.id = :ticketId
         )
-        AND tr.id < :requestId
+        AND tr.id < :ticketId
         AND (:projectId IS NOT NULL AND tr.project.id = :projectId OR :projectId IS NULL AND tr.project IS NULL)
         ORDER BY tr.id DESC
             LIMIT 1
     """)
-    Optional<TeamRequest> findPreviousTeamRequest(
-            @Param("requestId") Long requestId, @Param("projectId") Long projectId);
+    Optional<Ticket> findPreviousTeamRequest(
+            @Param("ticketId") Long ticketId, @Param("projectId") Long projectId);
 
     @EntityGraph(
             attributePaths = {
@@ -86,31 +86,31 @@ public interface TeamRequestRepository
             })
     @QueryHints({
         @QueryHint(name = "org.hibernate.cacheable", value = "true"),
-        @QueryHint(name = "org.hibernate.cacheRegion", value = "queryTeamRequests")
+        @QueryHint(name = "org.hibernate.cacheRegion", value = "queryTickets")
     })
     @Query(
             value =
                     """
         SELECT tr
-        FROM TeamRequest tr
+        FROM Ticket tr
         WHERE tr.team.id = (
             SELECT r.team.id
-            FROM TeamRequest r
-            WHERE r.id = :requestId
+            FROM Ticket r
+            WHERE r.id = :ticketId
         )
-        AND tr.id > :requestId
+        AND tr.id > :ticketId
         AND (:projectId IS NOT NULL AND tr.project.id = :projectId OR :projectId IS NULL AND tr.project IS NULL)
         ORDER BY tr.id ASC
         LIMIT 1
     """)
-    Optional<TeamRequest> findNextTeamRequest(
-            @Param("requestId") Long requestId, @Param("projectId") Long projectId);
+    Optional<Ticket> findNextTeamRequest(
+            @Param("ticketId") Long ticketId, @Param("projectId") Long projectId);
 
     // Query to count tickets assigned to each team member for a specific team
     @Query(
             "SELECT new io.flowinquiry.modules.teams.service.dto.TicketDistributionDTO("
                     + "u.id, CONCAT(u.firstName, ' ', u.lastName), COUNT(r.id)) "
-                    + "FROM TeamRequest r "
+                    + "FROM Ticket r "
                     + "LEFT JOIN User u ON r.assignUser.id = u.id "
                     + "WHERE r.team.id = :teamId "
                     + "AND r.isCompleted = false "
@@ -125,20 +125,19 @@ public interface TeamRequestRepository
 
     @QueryHints({
         @QueryHint(name = "org.hibernate.cacheable", value = "true"),
-        @QueryHint(name = "org.hibernate.cacheRegion", value = "queryTeamRequests")
+        @QueryHint(name = "org.hibernate.cacheRegion", value = "queryTickets")
     })
     @Query(
-            "SELECT r FROM TeamRequest r "
+            "SELECT r FROM Ticket r "
                     + "WHERE r.team.id = :teamId AND r.isCompleted = false AND r.isDeleted = false "
                     + "AND r.assignUser IS NULL")
-    Page<TeamRequest> findUnassignedTicketsByTeamId(
-            @Param("teamId") Long teamId, Pageable pageable);
+    Page<Ticket> findUnassignedTicketsByTeamId(@Param("teamId") Long teamId, Pageable pageable);
 
     // Query to count tickets by priority for a specific team
     @Query(
             "SELECT new io.flowinquiry.modules.teams.service.dto.PriorityDistributionDTO("
                     + "r.priority, COUNT(r.id)) "
-                    + "FROM TeamRequest r "
+                    + "FROM Ticket r "
                     + "WHERE r.team.id = :teamId "
                     + "AND r.isCompleted = false "
                     + "AND r.isDeleted = false "
@@ -155,7 +154,7 @@ public interface TeamRequestRepository
                     + "COUNT(tr), "
                     + "SUM(CASE WHEN tr.isCompleted = false THEN 1 ELSE 0 END), "
                     + "SUM(CASE WHEN tr.isCompleted = true THEN 1 ELSE 0 END)) "
-                    + "FROM TeamRequest tr "
+                    + "FROM Ticket tr "
                     + "WHERE tr.isDeleted = false "
                     + "AND tr.team.id = :teamId "
                     + "AND tr.createdAt >= COALESCE(:fromDate, tr.createdAt) "
@@ -167,23 +166,23 @@ public interface TeamRequestRepository
 
     @Query(
             "SELECT r "
-                    + "FROM TeamRequest r "
-                    + "JOIN WorkflowTransitionHistory h ON h.teamRequest.id = r.id "
+                    + "FROM Ticket r "
+                    + "JOIN WorkflowTransitionHistory h ON h.ticket.id = r.id "
                     + "WHERE r.isDeleted = false "
                     + "AND r.isCompleted = false "
                     + "AND h.slaDueDate IS NOT NULL "
                     + "AND h.slaDueDate < CURRENT_TIMESTAMP "
                     + "AND h.status <> :status "
                     + "AND r.team.id = :teamId")
-    Page<TeamRequest> findOverdueTicketsByTeamId(
+    Page<Ticket> findOverdueTicketsByTeamId(
             @Param("teamId") Long teamId,
             @Param("status") WorkflowTransitionHistoryStatus completedStatus,
             Pageable pageable);
 
     @Query(
             "SELECT r "
-                    + "FROM TeamRequest r "
-                    + "JOIN WorkflowTransitionHistory h ON h.teamRequest.id = r.id "
+                    + "FROM Ticket r "
+                    + "JOIN WorkflowTransitionHistory h ON h.ticket.id = r.id "
                     + "JOIN UserTeam ut ON ut.team.id = r.team.id "
                     + "WHERE r.isDeleted = false "
                     + "AND r.isCompleted = false "
@@ -191,7 +190,7 @@ public interface TeamRequestRepository
                     + "AND h.slaDueDate < CURRENT_TIMESTAMP "
                     + "AND h.status <> :status "
                     + "AND ut.user.id = :userId")
-    Page<TeamRequest> findOverdueTicketsByUserId(
+    Page<Ticket> findOverdueTicketsByUserId(
             @Param("userId") Long userId,
             @Param("status") WorkflowTransitionHistoryStatus completedStatus,
             Pageable pageable);
@@ -199,14 +198,14 @@ public interface TeamRequestRepository
     @Query(
             """
             SELECT COUNT(r.id)
-            FROM TeamRequest r
-            JOIN WorkflowTransitionHistory h ON h.teamRequest.id = r.id
+            FROM Ticket r
+            JOIN WorkflowTransitionHistory h ON h.ticket.id = r.id
             WHERE r.isDeleted = false
             AND r.isCompleted = false
             AND h.id = (
                 SELECT h2.id
                 FROM WorkflowTransitionHistory h2
-                WHERE h2.teamRequest.id = r.id
+                WHERE h2.ticket.id = r.id
                 ORDER BY h2.transitionDate DESC
                 LIMIT 1
             )
@@ -228,10 +227,10 @@ public interface TeamRequestRepository
                     + "CAST(r.createdAt AS date), "
                     + "COUNT(r.id), "
                     + "COALESCE(closedTicketCounts.closedCount, 0)) "
-                    + "FROM TeamRequest r "
+                    + "FROM Ticket r "
                     + "LEFT JOIN ("
                     + "    SELECT CAST(c.actualCompletionDate AS date) AS completionDate, COUNT(c.id) AS closedCount "
-                    + "    FROM TeamRequest c "
+                    + "    FROM Ticket c "
                     + "    WHERE c.isDeleted = false "
                     + "    AND c.team.id = :teamId "
                     + "    AND c.isCompleted = true "
@@ -254,7 +253,7 @@ public interface TeamRequestRepository
                 r.priority,
                 COUNT(r.id)
             )
-            FROM TeamRequest r
+            FROM Ticket r
             JOIN UserTeam ut ON ut.team.id = r.team.id
             WHERE ut.user.id = :userId
             AND r.isDeleted = false

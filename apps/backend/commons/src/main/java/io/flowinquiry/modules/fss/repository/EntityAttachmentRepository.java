@@ -13,7 +13,7 @@ public interface EntityAttachmentRepository extends JpaRepository<EntityAttachme
     /**
      * Finds all attachments for a specific entity type and entity ID.
      *
-     * @param entityType The type of entity (e.g., "team_request", "comment").
+     * @param entityType The type of entity (e.g., "ticket", "comment").
      * @param entityId The ID of the entity.
      * @return A list of attachments for the specified entity.
      */
@@ -26,7 +26,7 @@ public interface EntityAttachmentRepository extends JpaRepository<EntityAttachme
     /**
      * Deletes all attachments for a specific entity type and entity ID.
      *
-     * @param entityType The type of entity (e.g., "team_request", "comment").
+     * @param entityType The type of entity (e.g., "ticket", "comment").
      * @param entityId The ID of the entity.
      */
     void deleteByEntityTypeAndEntityId(String entityType, Long entityId);

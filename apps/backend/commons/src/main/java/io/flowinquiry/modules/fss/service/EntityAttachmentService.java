@@ -34,7 +34,7 @@ public class EntityAttachmentService {
     /**
      * Uploads a single attachment and returns an unsaved EntityAttachment object.
      *
-     * @param entityType The type of entity (e.g., "team_request", "comment").
+     * @param entityType The type of entity (e.g., "ticket", "comment").
      * @param entityId The ID of the entity.
      * @param file The file to upload.
      * @return An unsaved EntityAttachment object.
@@ -69,7 +69,7 @@ public class EntityAttachmentService {
     /**
      * Uploads multiple attachments and associates them with a specific entity using batch insert.
      *
-     * @param entityType The type of entity (e.g., "team_request", "comment").
+     * @param entityType The type of entity (e.g., "ticket", "comment").
      * @param entityId The ID of the entity.
      * @param files The list of files to upload.
      * @return A list of saved EntityAttachment objects.
@@ -94,7 +94,7 @@ public class EntityAttachmentService {
     /**
      * Retrieves all attachments associated with a specific entity.
      *
-     * @param entityType The type of entity (e.g., "team_request", "comment").
+     * @param entityType The type of entity (e.g., "ticket", "comment").
      * @param entityId The ID of the entity.
      * @return A list of attachments for the entity.
      */
@@ -106,7 +106,7 @@ public class EntityAttachmentService {
     /**
      * Deletes all attachments associated with a specific entity.
      *
-     * @param entityType The type of entity (e.g., "team_request", "comment").
+     * @param entityType The type of entity (e.g., "ticket", "comment").
      * @param entityId The ID of the entity.
      */
     public void deleteAttachments(String entityType, Long entityId) throws Exception {

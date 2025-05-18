@@ -13,16 +13,16 @@ public interface WorkflowTransitionHistoryRepository
         extends JpaRepository<WorkflowTransitionHistory, Long> {
 
     /**
-     * Finds and sorts the workflow transition history for a specific team request.
+     * Finds and sorts the workflow transition history for a specific ticket.
      *
-     * @param teamRequestId the ID of the team request
+     * @param ticketId the ID of the ticket
      * @return a list of WorkflowTransitionHistory sorted by transitionDate
      */
     @Query(
             "SELECT wth FROM WorkflowTransitionHistory wth "
-                    + "WHERE wth.teamRequest.id = :teamRequestId "
+                    + "WHERE wth.ticket.id = :ticketId "
                     + "ORDER BY wth.transitionDate ASC")
-    List<WorkflowTransitionHistory> findByTeamRequestId(@Param("teamRequestId") Long teamRequestId);
+    List<WorkflowTransitionHistory> findByTicketId(@Param("ticketId") Long ticketId);
 
     @Query(
             """

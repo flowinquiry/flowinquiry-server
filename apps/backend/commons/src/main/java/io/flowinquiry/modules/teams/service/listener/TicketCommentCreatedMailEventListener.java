@@ -7,9 +7,9 @@ import io.flowinquiry.modules.collab.repository.EntityWatcherRepository;
 import io.flowinquiry.modules.collab.service.CommentService;
 import io.flowinquiry.modules.collab.service.MailService;
 import io.flowinquiry.modules.collab.service.dto.CommentDTO;
-import io.flowinquiry.modules.teams.service.TeamRequestService;
-import io.flowinquiry.modules.teams.service.dto.TeamRequestDTO;
-import io.flowinquiry.modules.teams.service.event.TeamRequestCommentCreatedEvent;
+import io.flowinquiry.modules.teams.service.TicketService;
+import io.flowinquiry.modules.teams.service.dto.TicketDTO;
+import io.flowinquiry.modules.teams.service.event.TicketCommentCreatedEvent;
 import io.flowinquiry.modules.usermanagement.service.mapper.UserMapper;
 import io.flowinquiry.utils.Obfuscator;
 import java.util.List;
@@ -20,37 +20,36 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 @Component
-public class TeamRequestCommentCreatedMailEventListener {
+public class TicketCommentCreatedMailEventListener {
     private final CommentService commentService;
     private final UserMapper userMapper;
     private final EntityWatcherRepository entityWatcherRepository;
-    private final TeamRequestService teamRequestService;
+    private final TicketService ticketService;
     private final MailService mailService;
 
-    public TeamRequestCommentCreatedMailEventListener(
+    public TicketCommentCreatedMailEventListener(
             CommentService commentService,
             UserMapper userMapper,
             EntityWatcherRepository entityWatcherRepository,
-            TeamRequestService teamRequestService,
+            TicketService ticketService,
             MailService mailService) {
         this.commentService = commentService;
         this.userMapper = userMapper;
         this.entityWatcherRepository = entityWatcherRepository;
-        this.teamRequestService = teamRequestService;
+        this.ticketService = ticketService;
         this.mailService = mailService;
     }
 
     @Async("asyncTaskExecutor")
     @Transactional
     @EventListener
-    public void onTeamRequestCommentCreated(TeamRequestCommentCreatedEvent event) {
+    public void onTeamRequestCommentCreated(TicketCommentCreatedEvent event) {
         CommentDTO commentDTO = commentService.getCommentById(event.getCommentDTO().getId());
         List<EntityWatcher> watchers =
                 entityWatcherRepository.findByEntityTypeAndEntityId(
                         EntityType.Team_Request, commentDTO.getEntityId());
 
-        TeamRequestDTO teamRequestDTO =
-                teamRequestService.getTeamRequestById(commentDTO.getEntityId());
+        TicketDTO ticketDTO = ticketService.getTeamRequestById(commentDTO.getEntityId());
 
         if (!watchers.isEmpty()) {
             for (EntityWatcher watcher : watchers) {
@@ -64,15 +63,15 @@ public class TeamRequestCommentCreatedMailEventListener {
                                 .setToUser(userMapper.toDto(watcher.getWatchUser()))
                                 .setSubject(
                                         "email.new.ticket.comment.subject",
-                                        teamRequestDTO.getRequestTitle())
-                                .addVariable("ticket", teamRequestDTO)
+                                        ticketDTO.getRequestTitle())
+                                .addVariable("ticket", ticketDTO)
                                 .addVariable("comment", commentDTO)
                                 .addVariable(
                                         "obfuscatedTeamId",
-                                        Obfuscator.obfuscate(teamRequestDTO.getTeamId()))
+                                        Obfuscator.obfuscate(ticketDTO.getTeamId()))
                                 .addVariable(
                                         "obfuscatedTicketId",
-                                        Obfuscator.obfuscate(teamRequestDTO.getId()))
+                                        Obfuscator.obfuscate(ticketDTO.getId()))
                                 .setTemplate("mail/newTicketCommentEmail");
 
                 mailService.sendEmail(emailContext);

@@ -1,6 +1,6 @@
 package io.flowinquiry.modules.teams.controller;
 
-import io.flowinquiry.modules.teams.service.TeamRequestHealthEvalService;
+import io.flowinquiry.modules.teams.service.TicketHealthEvalService;
 import org.springframework.ai.openai.OpenAiChatModel;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -13,14 +13,14 @@ import org.springframework.web.bind.annotation.RestController;
 @ConditionalOnBean(OpenAiChatModel.class)
 public class AiChatController {
 
-    private final TeamRequestHealthEvalService teamRequestHealthEvalService;
+    private final TicketHealthEvalService ticketHealthEvalService;
 
-    public AiChatController(TeamRequestHealthEvalService teamRequestHealthEvalService) {
-        this.teamRequestHealthEvalService = teamRequestHealthEvalService;
+    public AiChatController(TicketHealthEvalService ticketHealthEvalService) {
+        this.ticketHealthEvalService = ticketHealthEvalService;
     }
 
     @PostMapping
     public String createRequestSummary(@RequestBody String requestDescription) {
-        return teamRequestHealthEvalService.summarizeTeamRequest(requestDescription);
+        return ticketHealthEvalService.summarizeTeamRequest(requestDescription);
     }
 }

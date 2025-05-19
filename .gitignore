@@ -165,3 +165,5 @@ apps/frontend/.next
 apps/docs/.next
 .turbo
 apps/backend/tools/liquibase/build
+frontend.env.local
+backend.env.local

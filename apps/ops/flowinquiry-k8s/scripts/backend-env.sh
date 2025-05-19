@@ -2,14 +2,9 @@
 
 set -e
 
-# Get absolute path to the repo root
-REPO_ROOT="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")/../.." &> /dev/null && pwd)"
+echo "🔐 Creating backend.env.local..."
 
-echo "🔐 Creating .env.local for backend..."
-BACKEND_ENV_FILE="$REPO_ROOT/apps/backend/.env.local"
-BACKEND_ENV_DIR="$(dirname "$BACKEND_ENV_FILE")"
-
-mkdir -p "$BACKEND_ENV_DIR"
+BACKEND_ENV_FILE="./backend.env.local"
 
 read -sp "Enter your database password: " db_password
 echo
@@ -32,7 +27,6 @@ update_or_add() {
     echo "$key='$value'" >> "$file"
   fi
 }
-
 
 if [ ! -f "$BACKEND_ENV_FILE" ]; then
   echo "# Backend environment" > "$BACKEND_ENV_FILE"

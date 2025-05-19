@@ -1,25 +1,37 @@
 #!/bin/bash
-
 set -e
 
-# Determine repo root (same logic as generate-env.sh)
-REPO_ROOT="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")/../.." &> /dev/null && pwd)"
-GEN_SCRIPT="$REPO_ROOT/scripts/generate-env.sh"
-BACKEND_ENV_FILE="$REPO_ROOT/apps/backend/.env.local"
+# Run backend-env.sh and frontend-env.sh in current directory
+echo "🛠️ Running backend-env.sh"
+./backend-env.sh
 
-# Run generate-env.sh to create .env.local
-if [ ! -f "$GEN_SCRIPT" ]; then
-  echo "❌ generate-env.sh not found at $GEN_SCRIPT"
+echo "🛠️ Running frontend-env.sh"
+./frontend-env.sh
+
+# Define expected env files (must be in same directory)
+BACKEND_ENV_FILE="./backend.env.local"
+FRONTEND_ENV_FILE="./frontend.env.local"
+
+# Create Kubernetes secret for backend
+if [ -f "$BACKEND_ENV_FILE" ]; then
+  echo "🔐 Creating Kubernetes Secret: flowinquiry-backend-secret"
+  kubectl create secret generic flowinquiry-backend-secret \
+    --from-env-file="$BACKEND_ENV_FILE" \
+    --dry-run=client -o yaml | kubectl apply -f -
+else
+  echo "❌ Missing backend env file: $BACKEND_ENV_FILE"
   exit 1
 fi
 
-echo "🛠️ Running generate-env.sh to regenerate .env.local"
-bash "$GEN_SCRIPT"
+# Create Kubernetes secret for frontend
+if [ -f "$FRONTEND_ENV_FILE" ]; then
+  echo "🔐 Creating Kubernetes Secret: flowinquiry-frontend-secret"
+  kubectl create secret generic flowinquiry-frontend-secret \
+    --from-env-file="$FRONTEND_ENV_FILE" \
+    --dry-run=client -o yaml | kubectl apply -f -
+else
+  echo "❌ Missing frontend env file: $FRONTEND_ENV_FILE"
+  exit 1
+fi
 
-# Create the Kubernetes Secret from the generated .env.local file
-echo "🔐 Creating Kubernetes Secret from $BACKEND_ENV_FILE"
-kubectl create secret generic flowinquiry-secret \
-  --from-env-file="$BACKEND_ENV_FILE" \
-  --dry-run=client -o yaml | kubectl apply -f -
-
-echo "✅ Secret 'flowinquiry-secret' created in Kubernetes."
+echo "✅ All secrets created successfully."

@@ -25,7 +25,15 @@ spec:
             - name: SPRING_DATASOURCE_USERNAME
               value: {{ .Values.postgresql.user }}
             - name: SPRING_DATASOURCE_PASSWORD
-              value: {{ .Values.postgresql.password }}
+              valueFrom:
+                secretKeyRef:
+                  name: flowinquiry-backend-secret
+                  key: POSTGRES_PASSWORD
+            - name: JWT_BASE64_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: flowinquiry-backend-secret
+                  key: JWT_BASE64_SECRET
           volumeMounts:
             - name: storage
               mountPath: {{ .Values.volumes.storage }}

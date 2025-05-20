@@ -2,8 +2,118 @@
 description: Deploy FlowInquiry to production using Helm, Terraform, and Kubernetes. This guide covers infrastructure setup, configuration, scaling, and SSL support.
 ---
 
+import { Callout, FileTree } from "nextra/components";
+
 # Advanced Deployment
 
 ## Helm chart
+
+### 🧰 Prerequisites
+
+Make sure you have:
+
+- A running Kubernetes cluster (e.g. Minikube, K3s, GKE, EKS)
+
+- `kubectl` and helm installed
+
+- Your working directory contains:
+
+<FileTree>
+  <FileTree.Folder name="flowinquiry-k8s/scripts" defaultOpen>
+    <FileTree.File name="backend-env.sh" />
+    <FileTree.File name="frontend-env.sh" />
+    <FileTree.File name="deploy-k8s-secret.sh" />
+  </FileTree.Folder>
+</FileTree>
+
+#### 🔧 Step 1: Generate Secrets and Create Kubernetes Secrets
+
+Run the `deploy-k8s-secrets.sh` script:
+
+```bash
+./deploy-k8s-secret.sh
+
+➜  scripts ✗ ./deploy-k8s-secret.sh
+🛠️ Running backend-env.sh
+🔐 Creating backend.env.local...
+Enter your database password:
+✅ Sensitive data has been written to ./backend.env.local with restricted permissions.
+🌱 Environment check passed.
+🛠️ Running frontend-env.sh
+Creating ./frontend.env.local...
+Enter the FlowInquiry back-end server URL address (e.g., http://localhost or http://localhost:8080): http://localhost:8080
+✅ Appended AUTH_SECRET to ./frontend.env.local.
+✅ Frontend environment initialization complete.
+🔐 Creating Kubernetes Secret: flowinquiry-backend-secret
+secret/flowinquiry-backend-secret configured
+🔐 Creating Kubernetes Secret: flowinquiry-frontend-secret
+secret/flowinquiry-frontend-secret configured
+✅ All secrets created successfully.
+
+```
+
+This will:
+
+- Prompt you to enter values (e.g., database password, backend URL)
+
+- Generate backend.env.local and frontend.env.local
+
+- Create two Kubernetes secrets:
+
+  - flowinquiry-backend-secret
+
+  - flowinquiry-frontend-secret
+
+#### 🚀 Step 2: Install the Helm Chart
+
+From the directory containing `flowinquiry-helm`, run:
+
+```bash
+helm upgrade --install flowinquiry ./flowinquiry-helm
+
+➜  flowinquiry-k8s ✗ helm upgrade --install flowinquiry ./flowinquiry-helm
+Release "flowinquiry" has been upgraded. Happy Helming!
+NAME: flowinquiry
+LAST DEPLOYED: Mon May 19 17:13:12 2025
+NAMESPACE: default
+STATUS: deployed
+REVISION: 2
+TEST SUITE: None
+```
+
+#### 🧪 Step 3: Check Deployment
+
+```
+kubectl get pods
+kubectl get svc
+```
+
+Ensure all pods (backend, frontend, postgresql, caddy) are running and services are created.
+
+#### 🌐 Step 4: Access the Application
+
+If you're using Minikube:
+
+```bash
+minikube service caddy --url
+```
+
+This will give you a URL like:
+
+```
+http://127.0.0.1:1234
+```
+
+Open it in your browser to access FlowInquiry.
+
+#### 🧹 Step 5 (Optional): Uninstall
+
+To remove the deployment:
+
+```
+helm uninstall flowinquiry
+kubectl delete secret flowinquiry-backend-secret flowinquiry-frontend-secret
+kubectl delete pvc --all
+```
 
 ## Terraform

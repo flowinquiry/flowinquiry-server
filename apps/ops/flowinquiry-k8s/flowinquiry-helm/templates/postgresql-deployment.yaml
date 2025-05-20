@@ -19,7 +19,10 @@ spec:
             - name: POSTGRES_USER
               value: {{ .Values.postgresql.user }}
             - name: POSTGRES_PASSWORD
-              value: {{ .Values.postgresql.password }}
+              valueFrom:
+                secretKeyRef:
+                  name: flowinquiry-backend-secret
+                  key: POSTGRES_PASSWORD
             - name: POSTGRES_DB
               value: {{ .Values.postgresql.database }}
           volumeMounts:

@@ -1,16 +1,19 @@
 #!/bin/bash
 set -e
 
-# Run backend-env.sh and frontend-env.sh in current directory
-echo "🛠️ Running backend-env.sh"
-./backend-env.sh
+# Get the directory where this script resides
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" &> /dev/null && pwd)"
 
-echo "🛠️ Running frontend-env.sh"
-./frontend-env.sh
-
-# Define expected env files (must be in same directory)
+# Define the env file paths in the current working directory
 BACKEND_ENV_FILE="./backend.env.local"
 FRONTEND_ENV_FILE="./frontend.env.local"
+
+# Run env generator scripts from script directory
+echo "🛠️ Running backend-env.sh"
+"$SCRIPT_DIR/backend-env.sh"
+
+echo "🛠️ Running frontend-env.sh"
+"$SCRIPT_DIR/frontend-env.sh"
 
 # Create Kubernetes secret for backend
 if [ -f "$BACKEND_ENV_FILE" ]; then
@@ -18,6 +21,8 @@ if [ -f "$BACKEND_ENV_FILE" ]; then
   kubectl create secret generic flowinquiry-backend-secret \
     --from-env-file="$BACKEND_ENV_FILE" \
     --dry-run=client -o yaml | kubectl apply -f -
+  echo "🧹 Deleting $BACKEND_ENV_FILE"
+  rm -f "$BACKEND_ENV_FILE"
 else
   echo "❌ Missing backend env file: $BACKEND_ENV_FILE"
   exit 1
@@ -29,9 +34,11 @@ if [ -f "$FRONTEND_ENV_FILE" ]; then
   kubectl create secret generic flowinquiry-frontend-secret \
     --from-env-file="$FRONTEND_ENV_FILE" \
     --dry-run=client -o yaml | kubectl apply -f -
+  echo "🧹 Deleting $FRONTEND_ENV_FILE"
+  rm -f "$FRONTEND_ENV_FILE"
 else
   echo "❌ Missing frontend env file: $FRONTEND_ENV_FILE"
   exit 1
 fi
 
-echo "✅ All secrets created successfully."
+echo "✅ Kubernetes secrets created and env files cleaned up."

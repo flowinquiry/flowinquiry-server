@@ -10,7 +10,7 @@ resources:
     cpu: 500m
 
 postgresql:
-  user: ""
+  user: "flowinquiry"
   password: ""
   database: flowinquiry
 

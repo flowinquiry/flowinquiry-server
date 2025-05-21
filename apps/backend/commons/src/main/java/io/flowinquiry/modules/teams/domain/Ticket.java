@@ -51,6 +51,9 @@ public class Ticket extends AbstractAuditingEntity<Long> {
     @JoinColumn(name = "project_id", foreignKey = @ForeignKey(name = "fk_team_request_project"))
     private Project project;
 
+    @Column(name = "project_ticket_number", nullable = false)
+    private Long projectTicketNumber;
+
     private String requestTitle;
 
     private String requestDescription;

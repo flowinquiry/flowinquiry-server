@@ -109,4 +109,117 @@
 			constraintName="fk_ticket_parent" referencedTableName="fw_ticket"
 			referencedColumnNames="id" onDelete="CASCADE" />
 	</changeSet>
+
+	<changeSet id="002:06-create-new-project-setting-table"
+		author="flowinquiry">
+		<createTable tableName="fw_project_setting">
+			<column name="id" type="BIGSERIAL" autoIncrement="true">
+				<constraints primaryKey="true" nullable="false" />
+			</column>
+
+			<column name="project_id" type="BIGINT">
+				<constraints nullable="false" unique="true" />
+			</column>
+
+			<column name="sprint_length_days" type="INTEGER">
+				<constraints nullable="false" />
+			</column>
+
+			<column name="default_priority" type="INTEGER">
+				<constraints nullable="false" />
+			</column>
+
+			<column name="estimation_unit" type="VARCHAR(50)">
+				<constraints nullable="true" />
+			</column>
+
+			<column name="enable_estimation" type="BOOLEAN"
+				defaultValue="true">
+				<constraints nullable="false" />
+			</column>
+
+			<!-- JSONB for integration metadata (e.g., GitHub, GitLab, etc.) -->
+			<column name="integration_settings" type="JSONB">
+				<constraints nullable="true" />
+			</column>
+
+			<column name="created_by" type="BIGINT" />
+			<column name="created_at" type="timestamptz"
+				defaultValueComputed="CURRENT_TIMESTAMP">
+				<constraints nullable="false" />
+			</column>
+			<column name="modified_by" type="BIGINT" />
+			<column name="modified_at" type="timestamptz"
+				defaultValueComputed="CURRENT_TIMESTAMP">
+				<constraints nullable="false" />
+			</column>
+		</createTable>
+
+		<addForeignKeyConstraint
+			baseTableName="fw_project_setting" baseColumnNames="project_id"
+			referencedTableName="fw_project" referencedColumnNames="id"
+			onDelete="CASCADE" constraintName="fk_project_setting_project" />
+
+		<addForeignKeyConstraint
+			baseTableName="fw_project_setting" baseColumnNames="created_by"
+			referencedTableName="fw_user" referencedColumnNames="id"
+			constraintName="fk_project_setting_created_by" />
+
+		<addForeignKeyConstraint
+			baseTableName="fw_project_setting" baseColumnNames="modified_by"
+			referencedTableName="fw_user" referencedColumnNames="id"
+			constraintName="fk_project_setting_modified_by" />
+	</changeSet>
+
+	<changeSet id="002:07-add-project-short-name"
+		author="flowinquiry">
+		<addColumn tableName="fw_project">
+			<column name="short_name" type="VARCHAR(10)">
+				<constraints nullable="true" />
+			</column>
+		</addColumn>
+
+		<sql>
+			UPDATE fw_project SET short_name = 'P' || id;
+		</sql>
+
+		<addNotNullConstraint tableName="fw_project"
+			columnName="short_name" columnDataType="VARCHAR(10)" />
+
+		<addUniqueConstraint tableName="fw_project"
+			columnNames="short_name" constraintName="uk_project_short_name" />
+	</changeSet>
+	<changeSet id="002:08-add-project-ticket-number"
+		author="flowinquiry">
+		<addColumn tableName="fw_ticket">
+			<column name="project_ticket_number" type="BIGINT">
+				<constraints nullable="true" />
+			</column>
+		</addColumn>
+
+		<!-- Assign sequential numbers per project -->
+		<sql>
+			WITH numbered_tickets AS (
+			SELECT id, ROW_NUMBER() OVER (PARTITION
+			BY project_id ORDER BY id) AS
+			ticket_num
+			FROM fw_ticket
+			WHERE project_id
+			IS NOT NULL
+			)
+			UPDATE fw_ticket t
+			SET project_ticket_number =
+			nt.ticket_num
+			FROM numbered_tickets nt
+			WHERE t.id = nt.id;
+		</sql>
+		<!-- Enforce uniqueness with partial index -->
+		<sql>
+			CREATE UNIQUE INDEX idx_uniq_project_ticket_number
+			ON fw_ticket
+			(project_id, project_ticket_number)
+			WHERE project_id IS NOT NULL AND
+			project_ticket_number IS NOT NULL;
+		</sql>
+	</changeSet>
 </databaseChangeLog>

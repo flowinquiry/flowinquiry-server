@@ -15,6 +15,7 @@ public class ProjectDTO {
     private Long id;
     private String name;
     private String description;
+    private String shortName;
     private Long teamId;
     private ProjectStatus status;
     private Instant startDate;

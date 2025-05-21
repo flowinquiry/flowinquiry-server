@@ -28,6 +28,9 @@ public class Project extends AbstractAuditingEntity<Long> {
     @Column(columnDefinition = "TEXT")
     private String description;
 
+    @Column(name = "short_name", nullable = false, unique = true)
+    private String shortName;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(
             name = "team_id",

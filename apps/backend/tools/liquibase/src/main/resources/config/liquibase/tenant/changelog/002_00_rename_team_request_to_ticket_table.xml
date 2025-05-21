@@ -95,4 +95,18 @@
 			oldColumnName="team_request_id" newColumnName="ticket_id"
 			columnDataType="BIGINT" />
 	</changeSet>
+
+	<changeSet id="002:05-add-parent-ticket-id"
+		author="flowinquiry">
+		<addColumn tableName="fw_ticket">
+			<column name="parent_ticket_id" type="BIGINT">
+				<constraints nullable="true" />
+			</column>
+		</addColumn>
+
+		<addForeignKeyConstraint
+			baseTableName="fw_ticket" baseColumnNames="parent_ticket_id"
+			constraintName="fk_ticket_parent" referencedTableName="fw_ticket"
+			referencedColumnNames="id" onDelete="CASCADE" />
+	</changeSet>
 </databaseChangeLog>

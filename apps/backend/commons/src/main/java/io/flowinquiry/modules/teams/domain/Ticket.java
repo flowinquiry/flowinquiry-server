@@ -4,6 +4,8 @@ import io.flowinquiry.modules.audit.AbstractAuditingEntity;
 import io.flowinquiry.modules.usermanagement.domain.User;
 import jakarta.persistence.*;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
@@ -111,4 +113,11 @@ public class Ticket extends AbstractAuditingEntity<Long> {
     private TShirtSize size;
 
     @Column private Integer estimate;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "parent_ticket_id", foreignKey = @ForeignKey(name = "fk_ticket_parent"))
+    private Ticket parentTicket;
+
+    @OneToMany(mappedBy = "parentTicket", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Ticket> childTickets = new ArrayList<>();
 }

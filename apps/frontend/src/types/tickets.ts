@@ -56,6 +56,8 @@ export const TicketDTOSchema = z.object({
   numberAttachments: z.number().optional(),
   numberWatchers: z.number().optional(),
   conversationHealth: TicketConversationHealthDTOSchema.nullish(),
+  parentTicketId: z.number().nullish(),
+  childTicketIds: z.array(z.number()).optional(),
 });
 
 export type TicketDTO = z.infer<typeof TicketDTOSchema>;

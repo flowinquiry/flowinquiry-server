@@ -5,6 +5,7 @@ import io.flowinquiry.modules.teams.domain.TicketChannel;
 import jakarta.validation.constraints.NotNull;
 import java.time.Instant;
 import java.time.LocalDate;
+import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -61,4 +62,7 @@ public class TicketDTO {
     private TShirtSize size;
     private int estimate;
     private TicketConversationHealthDTO conversationHealth;
+
+    private Long parentTicketId;
+    private List<Long> childTicketIds;
 }

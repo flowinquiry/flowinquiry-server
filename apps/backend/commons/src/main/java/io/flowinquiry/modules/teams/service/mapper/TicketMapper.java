@@ -38,6 +38,11 @@ public interface TicketMapper extends BaseMapper {
     @Mapping(target = "epicId", source = "epic.id")
     @Mapping(target = "epicName", source = "epic.name")
     @Mapping(target = "conversationHealth", source = "conversationHealth")
+    @Mapping(target = "parentTicketId", source = "parentTicket.id")
+    @Mapping(
+            target = "childTicketIds",
+            expression =
+                    "java(ticket.getChildTickets() == null ? null : ticket.getChildTickets().stream().map(Ticket::getId).toList())")
     TicketDTO toDto(Ticket ticket);
 
     @Mapping(target = "team", source = "teamId", qualifiedByName = "toTeam")
@@ -61,6 +66,10 @@ public interface TicketMapper extends BaseMapper {
             target = "currentState",
             expression = "java(toStub(ticketDTO.getCurrentStateId(), WorkflowState.class))")
     @Mapping(target = "conversationHealth", source = "conversationHealth")
+    @Mapping(
+            target = "parentTicket",
+            expression = "java(toStub(ticketDTO.getParentTicketId(), Ticket.class))")
+    @Mapping(target = "childTickets", ignore = true)
     Ticket toEntity(TicketDTO ticketDTO);
 
     @Mapping(target = "team", source = "teamId", qualifiedByName = "toTeam")
@@ -80,6 +89,10 @@ public interface TicketMapper extends BaseMapper {
     @Mapping(
             target = "conversationHealth",
             ignore = true) // ✅ Ignore to avoid detached entity issue
+    @Mapping(
+            target = "parentTicket",
+            expression = "java(toStub(dto.getParentTicketId(), Ticket.class))")
+    @Mapping(target = "childTickets", ignore = true)
     void updateEntity(TicketDTO dto, @MappingTarget Ticket entity);
 
     @Named("toTeam")

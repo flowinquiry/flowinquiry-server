@@ -32,6 +32,7 @@ export const TicketDTOSchema = z.object({
   projectId: z.number().nullish(),
   projectName: z.string().nullish(),
   priority: z.enum(["Critical", "High", "Medium", "Low", "Trivial"]),
+  projectTicketNumber: z.number().optional(),
   requestUserId: z.number().optional(),
   requestUserName: z.string().nullish(),
   requestUserImageUrl: z.string().nullish(),

@@ -2,7 +2,7 @@ package io.flowinquiry.modules.teams.domain;
 
 import io.flowinquiry.utils.JsonbConverter;
 import jakarta.persistence.*;
-import java.time.OffsetDateTime;
+import java.time.Instant;
 import java.util.Map;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -52,11 +52,11 @@ public class ProjectSetting {
     private Long createdBy;
 
     @Column(name = "created_at", nullable = false)
-    private OffsetDateTime createdAt;
+    private Instant createdAt;
 
     @Column(name = "modified_by")
     private Long modifiedBy;
 
     @Column(name = "modified_at", nullable = false)
-    private OffsetDateTime modifiedAt;
+    private Instant modifiedAt;
 }

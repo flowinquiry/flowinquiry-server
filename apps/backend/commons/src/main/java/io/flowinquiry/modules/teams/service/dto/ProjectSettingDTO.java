@@ -1,7 +1,7 @@
 package io.flowinquiry.modules.teams.service.dto;
 
 import io.flowinquiry.modules.teams.domain.EstimationUnit;
-import java.time.OffsetDateTime;
+import java.time.Instant;
 import java.util.Map;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -30,9 +30,9 @@ public class ProjectSettingDTO {
 
     private Long createdBy;
 
-    private OffsetDateTime createdAt;
+    private Instant createdAt;
 
     private Long modifiedBy;
 
-    private OffsetDateTime modifiedAt;
+    private Instant modifiedAt;
 }

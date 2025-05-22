@@ -342,6 +342,9 @@
         "name": "Name",
         "description": "Description",
         "status": "Status",
+        "short_name": "Short name",
+        "short_name_placeholder": "Enter short name",
+        "short_name_tooltip": "Short name used for project URLs and ticket references. Must be unique, short (1–10 characters), and easy to remember.\nExample: /projects/crm/tickets/42",
         "start_date": "Start date",
         "end_date": "End date",
         "created_at": "Created at"

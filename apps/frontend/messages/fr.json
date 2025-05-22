@@ -329,6 +329,9 @@
         "name": "Nom",
         "description": "Description",
         "status": "Statut",
+        "short_name": "Nom court",
+        "short_name_placeholder": "Saisir le nom court",
+        "short_name_tooltip": "Nom court utilisé pour les URL du projet et les références de tickets. Doit être unique, court (1 à 10 caractères) et facile à retenir.\nExemple : /projects/crm/tickets/42",
         "start_date": "Date de début",
         "end_date": "Date de fin",
         "created_at": "Créé le"

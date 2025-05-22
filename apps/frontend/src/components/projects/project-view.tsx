@@ -949,7 +949,7 @@ export default function ProjectView({
         selectedWorkflowState={selectedWorkflowState}
         setTasks={setTasks}
         teamId={project?.teamId!}
-        projectId={projectId}
+        projectId={projectId!}
         projectWorkflowId={workflow?.id!}
         onTaskCreated={fetchProjectData} // Pass the fetchProjectData function as a callback
       />
@@ -980,7 +980,7 @@ export default function ProjectView({
           setIsIterationDialogOpen(false);
           setSelectedIterationForEdit(null);
         }}
-        projectId={projectId}
+        projectId={projectId!}
         iteration={selectedIterationForEdit}
       />
 
@@ -993,7 +993,7 @@ export default function ProjectView({
           setIsEpicDialogOpen(false);
           setSelectedEpicForEdit(null);
         }}
-        projectId={projectId}
+        projectId={projectId!}
         epic={selectedEpicForEdit}
       />
     </div>

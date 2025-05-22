@@ -123,8 +123,6 @@ const ProjectListView = () => {
       setProjects(pageResult.content);
       setTotalElements(pageResult.totalElements);
       setTotalPages(pageResult.totalPages);
-    } catch (error) {
-      console.error("Error fetching projects:", error);
     } finally {
       setLoading(false);
     }
@@ -261,7 +259,7 @@ const ProjectListView = () => {
                       <TableRow key={project.id}>
                         <TableCell>
                           <Link
-                            href={`/portal/teams/${obfuscate(team.id)}/projects/${obfuscate(project.id)}`}
+                            href={`/portal/teams/${obfuscate(team.id)}/projects/${project.shortName}`}
                             className="text-blue-500 hover:underline"
                           >
                             {project.name}

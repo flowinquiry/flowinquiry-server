@@ -75,4 +75,9 @@ public class ProjectController {
     public List<ProjectEpicDTO> getProjectEpics(@PathVariable Long projectId) {
         return projectEpicService.findByProjectId(projectId);
     }
+
+    @GetMapping("/short-name/{shortName}")
+    public ProjectDTO getByShortName(@PathVariable String shortName) {
+        return projectService.getByShortName(shortName);
+    }
 }

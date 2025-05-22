@@ -70,6 +70,16 @@ public class ProjectService {
         return projectRepository.findAll(spec, pageable).map(projectMapper::toDto);
     }
 
+    public ProjectDTO getByShortName(String shortName) {
+        return projectRepository
+                .findByShortName(shortName)
+                .map(projectMapper::toDto)
+                .orElseThrow(
+                        () ->
+                                new ResourceNotFoundException(
+                                        "Cannot find project with short name '" + shortName + "'"));
+    }
+
     public ProjectDTO updateProject(Long id, ProjectDTO updatedProject) {
         return projectRepository
                 .findById(id)

@@ -32,7 +32,7 @@ import {
 import { usePagePermission } from "@/hooks/use-page-permission";
 import { useAppClientTranslations } from "@/hooks/use-translations";
 import {
-  findProjectById,
+  findByShortName,
   findProjectWorkflowByTeam,
 } from "@/lib/actions/project.action";
 import { findEpicsByProjectId } from "@/lib/actions/project-epic.action";
@@ -60,10 +60,15 @@ import { WorkflowDetailDTO, WorkflowStateDTO } from "@/types/workflows";
 // Function to generate a constant background color for workflow states.
 const getColumnColor = (_: number): string => "bg-[hsl(var(--card))]";
 
-export default function ProjectView({ projectId }: { projectId: number }) {
+export default function ProjectView({
+  projectShortName,
+}: {
+  projectShortName: string;
+}) {
   const team = useTeam();
   const permissionLevel = usePagePermission();
   const teamRole = useUserTeamRole().role;
+  const [projectId, setProjectId] = useState<number | null>(null);
   const [project, setProject] = useState<ProjectDTO | null>(null);
   const [workflow, setWorkflow] = useState<WorkflowDetailDTO | null>(null);
   const [tasks, setTasks] = useState<TaskBoard>({});
@@ -144,14 +149,16 @@ export default function ProjectView({ projectId }: { projectId: number }) {
   const fetchProjectData = useCallback(async () => {
     setLoading(true);
     try {
-      const projectData = await findProjectById(projectId, setError);
+      const projectData = await findByShortName(projectShortName, setError);
       setProject(projectData);
+      setProjectId(projectData.id!);
 
       // Fetch Workflow.
       const workflowData = await findProjectWorkflowByTeam(team.id!, setError);
       setWorkflow(workflowData);
 
-      if (workflowData) {
+      if (workflowData && projectData.id) {
+        console.log("Fetching tasks for project ID:", projectData.id);
         let allTasks: TicketDTO[] = [];
         let currentPage = 1;
         const pageSize = 100;
@@ -160,7 +167,7 @@ export default function ProjectView({ projectId }: { projectId: number }) {
         do {
           const query: QueryDTO = {
             filters: [
-              { field: "project.id", value: projectId, operator: "eq" },
+              { field: "project.id", value: projectData.id, operator: "eq" }, // Use projectData.id instead of projectId
             ],
           };
           const pagination: Pagination = {
@@ -189,7 +196,7 @@ export default function ProjectView({ projectId }: { projectId: number }) {
     } finally {
       setLoading(false);
     }
-  }, [projectId, team.id, setError]);
+  }, [projectShortName, team.id, setError]);
 
   // Initial data fetch
   useEffect(() => {
@@ -200,7 +207,7 @@ export default function ProjectView({ projectId }: { projectId: number }) {
     };
 
     fetchAllData();
-  }, [fetchProjectData, fetchIterations, fetchEpics]);
+  }, [projectShortName, fetchProjectData, fetchIterations, fetchEpics]);
 
   // Filter tasks based on selected iteration and epic
   useEffect(() => {

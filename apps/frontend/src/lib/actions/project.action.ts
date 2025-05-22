@@ -59,6 +59,13 @@ export const findProjectWorkflowByTeam = async (
   );
 };
 
+export const findByShortName = async (
+  shortName: string,
+  setError?: (error: HttpError | string | null) => void,
+) => {
+  return get<ProjectDTO>(`/api/projects/short-name/${shortName}`, setError);
+};
+
 export async function deleteProject(
   projectId: number,
   setError?: (error: HttpError | string | null) => void,

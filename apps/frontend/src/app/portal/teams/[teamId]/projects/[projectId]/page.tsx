@@ -10,8 +10,6 @@ interface ProjectDetailPageProps {
 
 const ProjectDetailPage = async (props: ProjectDetailPageProps) => {
   const params = await props.params;
-  const projectId = params.projectId;
-  console.log("Project id ", projectId);
   const t = await getAppTranslations();
 
   return (
@@ -20,7 +18,7 @@ const ProjectDetailPage = async (props: ProjectDetailPageProps) => {
       useDefaultStyles={false}
       className="h-full pt-8 pb-8 px-4 sm:px-8 bg-card"
     >
-      <ProjectView projectId={projectId} />
+      <ProjectView projectShortName={params.projectId} />
     </ContentLayout>
   );
 };

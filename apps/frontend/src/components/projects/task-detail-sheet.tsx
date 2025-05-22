@@ -107,7 +107,6 @@ const TaskDetailSheet: React.FC<TaskDetailSheetProps> = ({
 
   // Update local task when prop changes
   useEffect(() => {
-    console.log(`Task ${JSON.stringify(task)}`);
     setTask(initialTask);
   }, [initialTask]);
 
@@ -235,8 +234,6 @@ const TaskDetailSheet: React.FC<TaskDetailSheetProps> = ({
     // Exit edit mode
     setIsEditingEpic(false);
 
-    console.log("Saving epic with epicId:", epicId); // Debug log
-
     // Then call API if handler exists
     if (onTaskUpdate) {
       setIsSaving(true);
@@ -273,8 +270,6 @@ const TaskDetailSheet: React.FC<TaskDetailSheetProps> = ({
 
     // Exit edit mode
     setIsEditingIteration(false);
-
-    console.log("Saving iteration with iterationId:", iterationId); // Debug log
 
     // Then call API if handler exists
     if (onTaskUpdate) {

@@ -258,8 +258,6 @@ export function MailSettings() {
       toast({ description: t.mail("save_successfully") });
       router.push("/portal/settings");
     } else {
-      console.log("Form validation failed:", validationResult.error);
-
       // Clear all existing errors first
       form.clearErrors();
 

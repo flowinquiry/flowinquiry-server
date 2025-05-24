@@ -20,7 +20,7 @@
 		file="config/liquibase/tenant/changelog/002_00_rename_team_request_to_ticket_table.xml" />
 
 	<include
-		file="config/liquibase/tenant/changelog/test-data-changelog.xml"
+		file="config/liquibase/tenant/changelog/dev-data-changelog.xml"
 		context="dev" />
 	<include
 		file="config/liquibase/tenant/changelog/test-data-changelog.xml"

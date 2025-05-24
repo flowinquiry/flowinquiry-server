@@ -6,14 +6,6 @@
         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
 
 	<changeSet author="flowinquiry"
-		id="000:03-insert-default-authority-data">
-		<loadData
-			file="config/liquibase/tenant/data/shared/fw_authority.csv"
-			separator=";" tableName="fw_authority" usePreparedStatements="true">
-			<column name="name" type="string" />
-		</loadData>
-	</changeSet>
-	<changeSet author="flowinquiry"
 		id="000:04-insert-default-user-data" runOnChange="true">
 		<loadData
 			file="config/liquibase/tenant/data/dev/fw_user_dev.csv" separator=";"

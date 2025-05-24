@@ -8,11 +8,13 @@ import io.flowinquiry.modules.audit.AuditLogUpdateEvent;
 import io.flowinquiry.modules.collab.domain.EntityType;
 import io.flowinquiry.modules.collab.domain.EntityWatcher;
 import io.flowinquiry.modules.collab.repository.EntityWatcherRepository;
+import io.flowinquiry.modules.teams.domain.ProjectTicketSequence;
 import io.flowinquiry.modules.teams.domain.Ticket;
 import io.flowinquiry.modules.teams.domain.WorkflowState;
 import io.flowinquiry.modules.teams.domain.WorkflowTransition;
 import io.flowinquiry.modules.teams.domain.WorkflowTransitionHistory;
 import io.flowinquiry.modules.teams.domain.WorkflowTransitionHistoryStatus;
+import io.flowinquiry.modules.teams.repository.ProjectTicketSequenceRepository;
 import io.flowinquiry.modules.teams.repository.TicketRepository;
 import io.flowinquiry.modules.teams.repository.WorkflowStateRepository;
 import io.flowinquiry.modules.teams.repository.WorkflowTransitionHistoryRepository;
@@ -36,6 +38,7 @@ import java.time.ZoneOffset;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.ConcurrentModificationException;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -49,6 +52,7 @@ import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.orm.ObjectOptimisticLockingFailureException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -64,6 +68,7 @@ public class TicketService {
     private final WorkflowTransitionRepository workflowTransitionRepository;
     private final WorkflowTransitionHistoryRepository workflowTransitionHistoryRepository;
     private final ApplicationEventPublisher eventPublisher;
+    private final ProjectTicketSequenceRepository projectTicketSequenceRepository;
 
     @Autowired
     public TicketService(
@@ -73,6 +78,7 @@ public class TicketService {
             WorkflowTransitionRepository workflowTransitionRepository,
             WorkflowStateRepository workflowStateRepository,
             WorkflowTransitionHistoryRepository workflowTransitionHistoryRepository,
+            ProjectTicketSequenceRepository projectTicketSequenceRepository,
             ApplicationEventPublisher eventPublisher) {
         this.ticketRepository = ticketRepository;
         this.entityWatcherRepository = entityWatcherRepository;
@@ -80,6 +86,7 @@ public class TicketService {
         this.workflowTransitionRepository = workflowTransitionRepository;
         this.workflowStateRepository = workflowStateRepository;
         this.workflowTransitionHistoryRepository = workflowTransitionHistoryRepository;
+        this.projectTicketSequenceRepository = projectTicketSequenceRepository;
         this.eventPublisher = eventPublisher;
     }
 
@@ -113,6 +120,11 @@ public class TicketService {
 
         ticketDTO.setIsNew(true);
         ticketDTO.setIsCompleted(false);
+
+        if (ticketDTO.getProjectId() != null) {
+            Long nextNumber = getNextProjectTicketNumber(ticketDTO.getProjectId());
+            ticketDTO.setProjectTicketNumber(nextNumber);
+        }
 
         Ticket ticket = ticketMapper.toEntity(ticketDTO);
         ticket = ticketRepository.save(ticket);
@@ -354,5 +366,28 @@ public class TicketService {
         TicketDTO newTicket = ticketMapper.toDto(ticket);
         newTicket.setCurrentStateId(newStateId);
         return updateTicket(newTicket);
+    }
+
+    private Long getNextProjectTicketNumber(Long projectId) {
+        try {
+            ProjectTicketSequence sequence =
+                    projectTicketSequenceRepository
+                            .findById(projectId)
+                            .orElseGet(
+                                    () -> {
+                                        ProjectTicketSequence newSeq = new ProjectTicketSequence();
+                                        newSeq.setProjectId(projectId);
+                                        newSeq.setLastTicketNumber(0L);
+                                        return newSeq;
+                                    });
+
+            sequence.setLastTicketNumber(sequence.getLastTicketNumber() + 1);
+            projectTicketSequenceRepository.saveAndFlush(sequence);
+            return sequence.getLastTicketNumber();
+
+        } catch (ObjectOptimisticLockingFailureException e) {
+            throw new ConcurrentModificationException(
+                    "Concurrent project ticket creation detected. Please retry.", e);
+        }
     }
 }

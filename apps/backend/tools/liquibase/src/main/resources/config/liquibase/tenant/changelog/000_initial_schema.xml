@@ -342,14 +342,16 @@
 	<changeSet author="flowinquiry"
 		id="000:03-insert-default-authority-data">
 		<loadData
-			file="config/liquibase/tenant/data/fw_authority.csv" separator=";"
-			tableName="fw_authority" usePreparedStatements="true">
+			file="config/liquibase/tenant/data/shared/fw_authority.csv"
+			separator=";" tableName="fw_authority" usePreparedStatements="true">
 			<column name="name" type="string" />
 		</loadData>
 	</changeSet>
+
 	<changeSet author="flowinquiry"
-		id="000:04-insert-default-user-data" context="dev,test">
-		<loadData file="config/liquibase/tenant/data/fw_user_dev.csv"
+		id="000:04-insert-default-user-data-prod" context="prod">
+		<loadData
+			file="config/liquibase/tenant/data/prod/fw_user_prod.csv"
 			separator=";" tableName="fw_user" usePreparedStatements="true">
 			<column name="id" type="NUMERIC" />
 			<column name="first_name" type="STRING" />
@@ -378,50 +380,7 @@
 		</loadData>
 		<sql>SELECT setval('fw_user_id_seq', (SELECT MAX(id) FROM fw_user));</sql>
 		<loadData
-			file="config/liquibase/tenant/data/fw_user_auth_dev.csv"
-			separator=";" tableName="fw_user_auth" usePreparedStatements="true">
-			<column name="id" type="NUMERIC" />
-			<column name="user_id" type="NUMERIC" />
-			<column name="auth_provider" type="STRING" />
-			<column name="provider_user_id" type="STRING" />
-			<column name="password_hash" type="STRING" />
-		</loadData>
-		<sql>SELECT setval('fw_user_auth_id_seq', (SELECT MAX(id) FROM
-			fw_user_auth));</sql>
-	</changeSet>
-	<changeSet author="flowinquiry"
-		id="000:04-insert-default-user-data-prod" context="prod">
-		<loadData
-			file="config/liquibase/tenant/data/fw_user_prod.csv" separator=";"
-			tableName="fw_user" usePreparedStatements="true">
-			<column name="id" type="NUMERIC" />
-			<column name="first_name" type="STRING" />
-			<column name="last_name" type="STRING" />
-			<column name="email" type="STRING" />
-			<column name="timezone" type="STRING" />
-			<column name="last_login_time" type="TIMESTAMP" />
-			<column name="image_url" type="STRING" />
-			<column name="role" type="STRING" />
-			<column name="title" type="STRING" />
-			<column name="manager_id" type="NUMERIC" />
-			<column name="status" type="STRING" />
-			<column name="is_deleted" type="BOOLEAN" />
-			<column name="lang_key" type="STRING" />
-			<column name="activation_key" type="STRING" />
-			<column name="reset_key" type="STRING" />
-			<column name="created_by" type="NUMBER" />
-			<column name="created_date" type="TIMESTAMP" />
-			<column name="reset_date" type="TIMESTAMP" />
-			<column name="modified_by" type="NUMBER" />
-			<column name="modified_at" type="TIMESTAMP" />
-			<column name="about" type="STRING" />
-			<column name="address" type="STRING" />
-			<column name="city" type="STRING" />
-			<column name="state" type="STRING" />
-		</loadData>
-		<sql>SELECT setval('fw_user_id_seq', (SELECT MAX(id) FROM fw_user));</sql>
-		<loadData
-			file="config/liquibase/tenant/data/fw_user_auth_prod.csv"
+			file="config/liquibase/tenant/data/prod/fw_user_auth_prod.csv"
 			separator=";" tableName="fw_user_auth" usePreparedStatements="true">
 			<column name="id" type="NUMERIC" />
 			<column name="user_id" type="NUMERIC" />
@@ -434,94 +393,41 @@
 	</changeSet>
 
 	<changeSet author="flowinquiry"
-		id="000:05-insert-default-user-authority-data" context="dev,test">
-		<loadData
-			file="config/liquibase/tenant/data/fw_user_authority_dev.csv"
-			separator=";" tableName="fw_user_authority"
-			usePreparedStatements="true">
-			<column name="user_id" type="numeric" />
-		</loadData>
-		<loadData
-			file="config/liquibase/tenant/data/fw_organization_dev.csv"
-			tableName="fw_organization" usePreparedStatements="true"
-			separator=";">
-			<column name="id" type="NUMERIC" />
-			<column name="name" type="STRING" />
-			<column name="logo_url" type="STRING" />
-			<column name="slogan" type="STRING" />
-			<column name="description" type="STRING" />
-		</loadData>
-		<sql>SELECT setval('fw_organization_id_seq', (SELECT MAX(id) FROM
-			fw_organization));</sql>
-	</changeSet>
-	<changeSet author="flowinquiry"
 		id="000:05-insert-default-user-authority-data-prod" context="prod">
 		<loadData
-			file="config/liquibase/tenant/data/fw_user_authority_prod.csv"
+			file="config/liquibase/tenant/data/prod/fw_user_authority_prod.csv"
 			separator=";" tableName="fw_user_authority"
 			usePreparedStatements="true">
 			<column name="user_id" type="numeric" />
 		</loadData>
 	</changeSet>
-	<changeSet author="flowinquiry"
-		id="000:06-insert-default-fw-team-data" context="dev,test">
-		<loadData file="config/liquibase/tenant/data/fw_team_dev.csv"
-			tableName="fw_team" separator=";">
-			<column name="id" type="NUMERIC" />
-			<column name="name" type="STRING" />
-			<column name="logo_url" type="STRING" />
-			<column name="slogan" type="STRING" />
-			<column name="description" type="STRING" />
-			<column name="organization_id" type="NUMERIC" />
-		</loadData>
-		<sql>SELECT setval('fw_team_id_seq', (SELECT MAX(id) FROM fw_team));</sql>
-	</changeSet>
+
 	<changeSet author="flowinquiry"
 		id="000:07-insert-default-fw-team-role">
 		<loadData
-			file="config/liquibase/tenant/data/fw_team_role.csv"
+			file="config/liquibase/tenant/data/shared/fw_team_role.csv"
 			tableName="fw_team_role" separator=";">
 			<column name="name" type="STRING" />
 			<column name="description" type="STRING" />
 		</loadData>
 	</changeSet>
-	<changeSet author="flowinquiry"
-		id="000:08-insert-default-fw-user-team-data" context="dev,test">
-		<loadData
-			file="config/liquibase/tenant/data/fw_user_team_dev.csv"
-			tableName="fw_user_team" separator=";">
-			<column name="user_id" type="NUMERIC" />
-			<column name="team_id" type="NUMERIC" />
-			<column name="role_name" type="STRING" />
-		</loadData>
-	</changeSet>
+
 	<changeSet author="flowinquiry"
 		id="000:09-insert-default-fw-resource">
-		<loadData file="config/liquibase/tenant/data/fw_resource.csv"
+		<loadData
+			file="config/liquibase/tenant/data/shared/fw_resource.csv"
 			separator=";" tableName="fw_resource" usePreparedStatements="true">
 			<column name="name" type="STRING" />
 			<column name="description" type="STRING" />
 		</loadData>
 	</changeSet>
+
 	<changeSet author="flowinquiry"
 		id="000:10-insert-default-fw-authority-resource-permission">
 		<loadData
-			file="config/liquibase/tenant/data/fw_authority_resource_permission.csv"
+			file="config/liquibase/tenant/data/shared/fw_authority_resource_permission.csv"
 			separator=";" tableName="fw_authority_resource_permission"
 			usePreparedStatements="true" />
 	</changeSet>
-	<changeSet author="flowinquiry"
-		id="000:11-insert-default-fw-app-setting" context="test">
-		<loadData
-			file="config/liquibase/tenant/data/fw_app_settings_test.csv"
-			separator=";" tableName="fw_app_settings"
-			usePreparedStatements="true">
-			<column name="setting_key" type="STRING" />
-			<column name="setting_value" type="STRING" />
-			<column name="setting_type" type="STRING" />
-			<column name="setting_group" type="STRING" />
-			<column name="description" type="STRING" />
-			<column name="updated_at" type="TIMESTAMP" />
-		</loadData>
-	</changeSet>
+
 </databaseChangeLog>

@@ -12,5 +12,17 @@
 	<property name="datetimeType" value="datetime"
 		dbms="postgresql" />
 
-	<includeAll path="changelog" relativeToChangelogFile="true" />
+	<include
+		file="config/liquibase/tenant/changelog/000_initial_schema.xml" />
+	<include
+		file="config/liquibase/tenant/changelog/001_request_workflow_tables.xml" />
+	<include
+		file="config/liquibase/tenant/changelog/002_00_rename_team_request_to_ticket_table.xml" />
+
+	<include
+		file="config/liquibase/tenant/changelog/test-data-changelog.xml"
+		context="dev" />
+	<include
+		file="config/liquibase/tenant/changelog/test-data-changelog.xml"
+		context="test" />
 </databaseChangeLog>

@@ -222,4 +222,24 @@
 			project_ticket_number IS NOT NULL;
 		</sql>
 	</changeSet>
+	<changeSet id="002:09-create-fw-project-ticket-seq"
+		author="flowinquiry">
+		<createTable tableName="fw_project_ticket_seq">
+			<column name="project_id" type="BIGINT">
+				<constraints primaryKey="true" nullable="false" />
+			</column>
+			<column name="last_ticket_number" type="BIGINT"
+				defaultValueNumeric="0">
+				<constraints nullable="false" />
+			</column>
+			<column name="version" type="BIGINT" defaultValueNumeric="0">
+				<constraints nullable="false" />
+			</column>
+		</createTable>
+
+		<addForeignKeyConstraint
+			baseTableName="fw_project_ticket_seq" baseColumnNames="project_id"
+			referencedTableName="fw_project" referencedColumnNames="id"
+			onDelete="CASCADE" constraintName="fk_ticket_seq_project" />
+	</changeSet>
 </databaseChangeLog>

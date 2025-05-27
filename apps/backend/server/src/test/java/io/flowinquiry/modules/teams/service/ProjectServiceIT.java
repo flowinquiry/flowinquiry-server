@@ -23,6 +23,7 @@ public class ProjectServiceIT {
                 ProjectDTO.builder()
                         .name("Sample project")
                         .description("Project description")
+                        .shortName("SP")
                         .status(ProjectStatus.Active)
                         .teamId(1L)
                         .createdBy(1L)
@@ -57,6 +58,7 @@ public class ProjectServiceIT {
                 ProjectDTO.builder()
                         .name("Sample project")
                         .description("Project description")
+                        .shortName("SP")
                         .status(ProjectStatus.Active)
                         .createdBy(1L)
                         .teamId(1L)
@@ -73,6 +75,7 @@ public class ProjectServiceIT {
         ProjectDTO projectDTO =
                 ProjectDTO.builder()
                         .name("Sample project")
+                        .shortName("SP")
                         .description("Project description")
                         .status(ProjectStatus.Active)
                         .createdBy(1L)

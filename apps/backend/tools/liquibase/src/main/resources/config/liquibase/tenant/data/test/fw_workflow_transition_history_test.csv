@@ -1,4 +1,4 @@
-id;team_request_id;from_state_id;to_state_id;event_name;transition_date;sla_due_date;status
+id;ticket_id;from_state_id;to_state_id;event_name;transition_date;sla_due_date;status
 1;1;;6;REQUEST_SUBMITTED;2025-01-29T10:05:00+00:00;2025-02-05T10:00:00+00:00;IN_PROGRESS
 2;1;6;7;EVIDENCE_REQUESTED;2025-01-30T12:00:00+00:00;2025-02-06T12:00:00+00:00;IN_PROGRESS
 3;1;7;8;EVIDENCE_PROVIDED;2025-01-31T14:00:00+00:00;2025-02-07T14:00:00+00:00;IN_PROGRESS

@@ -38,6 +38,10 @@
 			baseColumnNames="team_request_id" referencedTableName="fw_ticket"
 			referencedColumnNames="id"
 			constraintName="fw_escalation_tracking_ticket" onDelete="CASCADE" />
+
+		<sql>
+			ALTER SEQUENCE fw_team_request_id_seq RENAME TO fw_ticket_id_seq;
+		</sql>
 	</changeSet>
 
 	<changeSet id="002:01-rename-ticket-conversation-health"
@@ -51,6 +55,11 @@
 		<renameColumn tableName="fw_ticket_conversation_health"
 			oldColumnName="team_request_id" newColumnName="ticket_id"
 			columnDataType="BIGINT" />
+
+		<sql>
+			ALTER SEQUENCE fw_team_request_conversation_health_id_seq RENAME
+			TO fw_ticket_conversation_health_id_seq;
+		</sql>
 	</changeSet>
 
 	<changeSet

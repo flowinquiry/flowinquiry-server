@@ -1,4 +1,4 @@
-id;team_request_id;escalation_level;escalated_to_user_id;escalation_time
+id;ticket_id;escalation_level;escalated_to_user_id;escalation_time
 1;1;1;4;2025-01-30T10:30:00+00:00
 2;2;2;5;2025-01-31T11:45:00+00:00
 3;3;3;6;2025-02-01T12:15:00+00:00

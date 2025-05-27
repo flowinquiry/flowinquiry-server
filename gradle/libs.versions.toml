@@ -1,7 +1,7 @@
 [versions]
 mapstructVersion = "1.6.3"
 lombokVersion = "1.18.38"
-liquibaseVersion = "4.30.1"
+liquibaseVersion = "4.32.0"
 assertJVersion = "3.27.3"
 dotEnvVersion = "3.2.0"
 logbackVersion = "1.5.9"

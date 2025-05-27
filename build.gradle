@@ -13,6 +13,7 @@ allprojects {
     group = 'io.flowinquiry'
     version = project.findProperty('version')
     repositories {
+        mavenLocal()
         mavenCentral()
         maven { url 'https://repo.spring.io/milestone' }
     }

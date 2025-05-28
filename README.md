@@ -192,6 +192,9 @@ Using host IP address: 192.168.0.78
 ➡️ For **testing purposes**, it is safe to select **`n`** (no SSL) and run FlowInquiry over plain HTTP within your local network.  
 ➡️ For **production deployments**, it is strongly recommended to select **`y`** and configure SSL for secure access.
 
+
+> FlowInquiry also supports a manual installation process, allowing you to run each step individually if you prefer to understand what happens at each stage. [Learn more in the step-by-step guide](https://docs.flowinquiry.io/user_guides/setup/basic_installation#2-manual-step-by-step-installation)
+
 ## License
 This project is licensed under the [AGPLv3](LICENSE) License.
 

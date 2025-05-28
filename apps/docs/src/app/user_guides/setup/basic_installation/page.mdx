@@ -57,11 +57,11 @@ You can change the domain name to any name you prefer.
   the file `/etc/hosts`
 </Callout>
 
-**Installing FlowInquiry**
+## Installing FlowInquiry
 
-<Tabs items={["Quick Install (One Step)", "Manual Install (Step-by-Step)"]}>
-    <Tabs.Tab>
-Run one of the following scripts
+### 1. Quick Install (One Step)
+
+FlowInquiry provides a convenient way to install the entire application with a single command. This method is ideal if you want the fastest setup without worrying about individual steps. Run one of the following scripts
 
 ```
 # Using wget
@@ -171,9 +171,10 @@ back-end-1    | INFO 1 --- [  restartedMain] io.flowinquiry.FlowInquiryApp.logAp
 <Callout type="info" emoji="💡">
   You can rerun the script any time to reconfigure or restart the services.
 </Callout>
-    </Tabs.Tab>
-    <Tabs.Tab>
-        If you prefer to install FlowInquiry step by step and see what happens at each stage, follow the instructions below.
+
+### 2. Manual Step-by-Step Installation
+
+If you prefer to install FlowInquiry step by step and see what happens at each stage, follow the instructions below.
 
         Clone the entire Flowinquiry repository
         ```
@@ -286,11 +287,8 @@ back-end-1    | INFO 1 --- [  restartedMain] io.flowinquiry.FlowInquiryApp.logAp
         back-end-1    | 2025-05-28T01:13:51.415Z  INFO 1 --- [  restartedMain] io.flowinquiry.FlowInquiryApp.logApplicationStartup:124 :        Profile(s):     prod
 
                                 ```
-    </Tabs.Tab>
 
-</Tabs>
-
-**Accessing FlowInquiry**
+### Accessing FlowInquiry
 
 - Open your browser and go to `http://<LAN_IP>:1234`
 
@@ -319,6 +317,6 @@ To resolve this, you may need to install Caddy's root CA certificate in your hos
 The Caddy root CA certificate can be found at flowinquiry-docker/caddy/certificate-authority/root.crt. This file is only generated when you run the FlowInquiry stack
 with Caddy included. For detailed steps, refer to the Caddy documentation: [Local HTTPS with Docker](https://caddyserver.com/docs/running#local-https-with-docker)
 
-#### Upgrade FlowInquiry
+## Upgrade FlowInquiry
 
 TBD

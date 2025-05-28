@@ -59,6 +59,8 @@ You can change the domain name to any name you prefer.
 
 **Installing FlowInquiry**
 
+<Tabs items={["Quick Install (One Step)", "Manual Install (Step-by-Step)"]}>
+    <Tabs.Tab>
 Run one of the following scripts
 
 ```
@@ -169,6 +171,124 @@ back-end-1    | INFO 1 --- [  restartedMain] io.flowinquiry.FlowInquiryApp.logAp
 <Callout type="info" emoji="💡">
   You can rerun the script any time to reconfigure or restart the services.
 </Callout>
+    </Tabs.Tab>
+    <Tabs.Tab>
+        If you prefer to install FlowInquiry step by step and see what happens at each stage, follow the instructions below.
+
+        Clone the entire Flowinquiry repository
+        ```
+        git clone git@github.com:flowinquiry/flowinquiry.git
+        ```
+        Go to the folder `apps/ops/flowinquiry-docker`, and open the terminal
+
+        1. Generate the frontend environment variables file `.frontend.env`
+
+        Run bash script `scripts/frontend-env.sh`
+
+        ```bash
+        ➜  flowinquiry-docker ✗ scripts/frontend-env.sh
+        Environment variables have been written to ../.frontend.env
+        ```
+        2. Generate the backend environment variables file `.backend.env`
+        ```bash
+        ➜  flowinquiry-docker ✗ scripts/backend-env.sh
+        Enter your database password:
+        Sensitive data has been written to ../.backend.env with restricted permissions.
+        ```
+
+        3. Run the docker compose by command `scripts/run-docker-compose`, This script will:
+
+            * Ask whether you want to enable SSL (HTTPS)
+
+            * Choose the appropriate Docker Compose file (services_http.yml or services_https.yml)
+
+            * Detect your local network IP address
+
+            * Print the URL to access FlowInquiry in your browser
+
+        ```bash
+        ➜  flowinquiry-docker git:(feature/update-document-to-instruct-user-install-flowinquiry-with-script) ✗ scripts/run-docker-compose.sh
+        🔒 SSL Configuration
+        SSL is recommended when installing FlowInquiry for production use or when accessing from anywhere.
+        For local testing purposes, you may not need SSL.
+        Do you want to set up FlowInquiry with SSL? (y/n): n
+        ⚠️ Setting up without SSL (HTTP only)
+        Using host IP address: 192.168.0.59
+        Your service will be available at: http://192.168.0.59:1234
+        WARN[0000] The "POSTGRES_PASSWORD" variable is not set. Defaulting to a blank string.
+        WARN[0000] The "POSTGRES_PASSWORD" variable is not set. Defaulting to a blank string.
+        [+] Running 4/4
+        ✔ Container flowinquiry-front-end-1   Created                                                                                                                                                                                                                                                                                                                         0.0s
+        ✔ Container caddy                     Created                                                                                                                                                                                                                                                                                                                         0.0s
+        ✔ Container flowinquiry-postgresql-1  Created                                                                                                                                                                                                                                                                                                                         0.0s
+        ✔ Container flowinquiry-back-end-1    Created                                                                                                                                                                                                                                                                                                                         0.0s
+        Attaching to caddy, back-end-1, front-end-1, postgresql-1
+        caddy         | {"level":"info","ts":1748394805.406715,"msg":"maxprocs: Leaving GOMAXPROCS=12: CPU quota undefined"}
+        caddy         | {"level":"info","ts":1748394805.4068072,"msg":"GOMEMLIMIT is updated","package":"github.com/KimMachineGun/automemlimit/memlimit","GOMEMLIMIT":7395976396,"previous":9223372036854775807}
+        caddy         | {"level":"info","ts":1748394805.407427,"msg":"using config from file","file":"/etc/caddy/Caddyfile"}
+        caddy         | {"level":"info","ts":1748394805.4081306,"msg":"adapted config to JSON","adapter":"caddyfile"}
+        caddy         | {"level":"warn","ts":1748394805.4081411,"msg":"Caddyfile input is not formatted; run 'caddy fmt --overwrite' to fix inconsistencies","adapter":"caddyfile","file":"/etc/caddy/Caddyfile","line":2}
+        caddy         | {"level":"warn","ts":1748394805.4083261,"logger":"admin","msg":"admin endpoint disabled"}
+        caddy         | {"level":"info","ts":1748394805.4083807,"logger":"http.auto_https","msg":"automatic HTTPS is completely disabled for server","server_name":"srv0"}
+        caddy         | {"level":"info","ts":1748394805.4088972,"logger":"tls.cache.maintenance","msg":"started background certificate maintenance","cache":"0x4000248880"}
+        caddy         | {"level":"warn","ts":1748394805.4105315,"logger":"http","msg":"HTTP/2 skipped because it requires TLS","network":"tcp","addr":":80"}
+        caddy         | {"level":"warn","ts":1748394805.4105425,"logger":"http","msg":"HTTP/3 skipped because it requires TLS","network":"tcp","addr":":80"}
+        caddy         | {"level":"info","ts":1748394805.4105442,"logger":"http.log","msg":"server running","name":"srv0","protocols":["h1","h2","h3"]}
+        caddy         | {"level":"info","ts":1748394805.4106731,"msg":"autosaved config (load with --resume flag)","file":"/config/caddy/autosave.json"}
+        caddy         | {"level":"info","ts":1748394805.4106853,"msg":"serving initial configuration"}
+        caddy         | {"level":"info","ts":1748394805.4120755,"logger":"tls","msg":"storage cleaning happened too recently; skipping for now","storage":"FileStorage:/data/caddy","instance":"f00df008-563b-489d-9281-4fdc1d3e3b11","try_again":1748481205.4120746,"try_again_in":86399.999999708}
+        caddy         | {"level":"info","ts":1748394805.4121249,"logger":"tls","msg":"finished cleaning storage units"}
+        front-end-1   |    ▲ Next.js 15.3.1
+        front-end-1   |    - Local:        http://localhost:3000
+        front-end-1   |    - Network:      http://0.0.0.0:3000
+        front-end-1   |
+        front-end-1   |  ✓ Starting...
+        postgresql-1  |
+        postgresql-1  | PostgreSQL Database directory appears to contain a database; Skipping initialization
+        postgresql-1  |
+        front-end-1   |  ✓ Ready in 45ms
+        postgresql-1  | 2025-05-28 01:13:25.883 UTC [30] LOG:  invalid record length at 0/1A891B8: expected at least 24, got 0
+        postgresql-1  | 2025-05-28 01:13:25.883 UTC [30] LOG:  redo done at 0/1A89180 system usage: CPU: user: 0.00 s, system: 0.00 s, elapsed: 0.00 s
+        postgresql-1  | 2025-05-28 01:13:25.887 UTC [28] LOG:  checkpoint starting: end-of-recovery immediate wait
+        postgresql-1  | 2025-05-28 01:13:25.889 UTC [28] LOG:  checkpoint complete: wrote 3 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.001 s, sync=0.001 s, total=0.003 s; sync files=2, longest=0.001 s, average=0.001 s; distance=0 kB, estimate=0 kB; lsn=0/1A891B8, redo lsn=0/1A891B8
+        postgresql-1  | 2025-05-28 01:13:25.891 UTC [1] LOG:  database system is ready to accept connections
+        back-end-1    | The application will start in 0s...
+        back-end-1    | 2025-05-28T01:13:41.707Z  INFO 1 --- [  restartedMain] liquibase.changelog.log:37 : Reading from flowinquiry.databasechangelog
+        back-end-1    |
+        back-end-1    | UPDATE SUMMARY
+        back-end-1    | Run:                          0
+        back-end-1    | Previously run:               9
+        back-end-1    | Filtered out:                17
+        back-end-1    | -------------------------------
+        back-end-1    | Total change sets:           26
+        back-end-1    |
+        back-end-1    |
+        back-end-1    | FILTERED CHANGE SETS SUMMARY
+        back-end-1    | Context mismatch:            17
+        back-end-1    |
+        back-end-1    | 2025-05-28T01:13:41.720Z  INFO 1 --- [  restartedMain] liquibase.util.log:37 : UPDATE SUMMARY
+        back-end-1    | 2025-05-28T01:13:41.721Z  INFO 1 --- [  restartedMain] liquibase.util.log:37 : Run:                          0
+        back-end-1    | 2025-05-28T01:13:41.721Z  INFO 1 --- [  restartedMain] liquibase.util.log:37 : Previously run:               9
+        back-end-1    | 2025-05-28T01:13:41.721Z  INFO 1 --- [  restartedMain] liquibase.util.log:37 : Filtered out:                17
+        back-end-1    | 2025-05-28T01:13:41.722Z  INFO 1 --- [  restartedMain] liquibase.util.log:37 : -------------------------------
+        back-end-1    | 2025-05-28T01:13:41.723Z  INFO 1 --- [  restartedMain] liquibase.util.log:37 : Total change sets:           26
+        back-end-1    | 2025-05-28T01:13:41.723Z  INFO 1 --- [  restartedMain] liquibase.util.log:37 : FILTERED CHANGE SETS SUMMARY
+        back-end-1    | 2025-05-28T01:13:41.723Z  INFO 1 --- [  restartedMain] liquibase.util.log:37 : Context mismatch:            17
+        back-end-1    | 2025-05-28T01:13:41.727Z  INFO 1 --- [  restartedMain] liquibase.util.log:37 : Update summary generated
+        back-end-1    | 2025-05-28T01:13:51.378Z  INFO 1 --- [  restartedMain] org.springframework.boot.web.embedded.undertow.UndertowWebServer.start:121 : Undertow started on port 8080 (http) with context path '/'
+        back-end-1    | 2025-05-28T01:13:51.400Z  INFO 1 --- [  restartedMain] io.flowinquiry.FlowInquiryApp.logStarted:59 : Started FlowInquiryApp in 19.385 seconds (process running for 20.341)
+        back-end-1    | 2025-05-28T01:13:51.406Z  WARN 1 --- [  restartedMain] io.flowinquiry.health.MailSetupChecker.run:28 : Email provider is not configured yet
+        back-end-1    | 2025-05-28T01:13:51.406Z  INFO 1 --- [  restartedMain] io.flowinquiry.health.JWTSetupChecker.run:32 : JWT secret found and ready to use
+        back-end-1    | 2025-05-28T01:13:51.415Z  INFO 1 --- [  restartedMain] io.flowinquiry.FlowInquiryApp.logApplicationStartup:120 : ----------------------------------------------------------
+        back-end-1    | 2025-05-28T01:13:51.415Z  INFO 1 --- [  restartedMain] io.flowinquiry.FlowInquiryApp.logApplicationStartup:121 :        Application 'FlowInquiry' is running! Access URLs:
+        back-end-1    | 2025-05-28T01:13:51.415Z  INFO 1 --- [  restartedMain] io.flowinquiry.FlowInquiryApp.logApplicationStartup:122 :        Local:          http://localhost:8080/
+        back-end-1    | 2025-05-28T01:13:51.415Z  INFO 1 --- [  restartedMain] io.flowinquiry.FlowInquiryApp.logApplicationStartup:123 :        External:       http://172.18.0.5:8080/
+        back-end-1    | 2025-05-28T01:13:51.415Z  INFO 1 --- [  restartedMain] io.flowinquiry.FlowInquiryApp.logApplicationStartup:124 :        Profile(s):     prod
+
+                                ```
+    </Tabs.Tab>
+
+</Tabs>
 
 **Accessing FlowInquiry**
 

@@ -81,6 +81,11 @@ flowinquiry:
   mail:
     from: <Should be set externally>
     base-url: <Should be set externally>
+  slack:
+    token: <Should be set externally>
+    team-channel-map:
+      team=chanOne # Should be changed with team name and channel ID from slack
+      teamTwo=chanTwo # Should be changed with team name and channel ID from slack
   security:
     authentication:
       jwt:

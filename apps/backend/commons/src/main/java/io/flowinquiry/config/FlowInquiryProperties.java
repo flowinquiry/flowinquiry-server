@@ -2,6 +2,7 @@ package io.flowinquiry.config;
 
 import io.flowinquiry.modules.shared.service.dto.EditionType;
 import jakarta.validation.constraints.NotNull;
+import java.util.Map;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -16,6 +17,8 @@ public class FlowInquiryProperties {
     @Setter @NotNull private String version;
 
     @Setter @NotNull private EditionType edition;
+
+    private final Slack slack = new Slack();
 
     private final Http http = new Http();
 
@@ -50,5 +53,12 @@ public class FlowInquiryProperties {
                 private long tokenValidityInSecondsForRememberMe;
             }
         }
+    }
+
+    @Getter
+    @Setter
+    public static class Slack {
+        private String token = "";
+        private Map<String, String> teamChannelMap;
     }
 }

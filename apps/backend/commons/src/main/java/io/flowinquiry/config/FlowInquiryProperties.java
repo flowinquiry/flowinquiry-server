@@ -23,6 +23,8 @@ public class FlowInquiryProperties {
 
     private final CorsConfiguration cors = new CorsConfiguration();
 
+    private final Slack slack = new Slack();
+
     @Getter
     public static class Http {
         private final Cache cache = new Cache();
@@ -50,5 +52,11 @@ public class FlowInquiryProperties {
                 private long tokenValidityInSecondsForRememberMe;
             }
         }
+    }
+
+    @Getter
+    @Setter
+    public static class Slack {
+        private String token = "";
     }
 }

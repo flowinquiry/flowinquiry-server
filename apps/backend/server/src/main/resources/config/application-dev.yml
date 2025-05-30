@@ -50,6 +50,8 @@ server:
 
 
 flowinquiry:
+  slack:
+    token: <Should be set externally>
   # CORS is only enabled by default with the "dev" profile
   cors:
     allowed-origins: 'http://localhost:3000,http://localhost:8080'

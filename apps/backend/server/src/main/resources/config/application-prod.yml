@@ -81,6 +81,8 @@ flowinquiry:
   mail:
     from: <Should be set externally>
     base-url: <Should be set externally>
+  slack:
+    token: <Should be set externally>
   security:
     authentication:
       jwt:

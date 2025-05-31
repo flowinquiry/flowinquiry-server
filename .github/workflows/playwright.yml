@@ -136,8 +136,9 @@ jobs:
       - name: Summarize Playwright Results
         if: always()
         run: |
-          echo "### Playwright Report" >> $GITHUB_STEP_SUMMARY
-          echo "- ✅ [Download Report](./apps/frontend/playwright-report/index.html)" >> $GITHUB_STEP_SUMMARY
+          echo "### ✅ Playwright Test Report" >> $GITHUB_STEP_SUMMARY
+          echo "The HTML report is available as an artifact:" >> $GITHUB_STEP_SUMMARY
+          echo "- 📦 [Download Playwright Report Artifact](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }})" >> $GITHUB_STEP_SUMMARY
 
       # Graceful shutdown of all services
       - name: Shutdown services

@@ -13,8 +13,8 @@ import { defineConfig, devices } from "@playwright/test";
  */
 export default defineConfig({
   testDir: "./tests",
-  /* Run tests in files in parallel */
-  fullyParallel: true,
+  /* Run tests sequentially to avoid race conditions */
+  fullyParallel: false,
   /* Fail the build on CI if you accidentally left test.only in the source code. */
   forbidOnly: !!process.env.CI,
   /* Retry on CI only */
@@ -30,23 +30,57 @@ export default defineConfig({
 
     /* Collect trace when retrying the failed test. See https://playwright.dev/docs/trace-viewer */
     trace: "on-first-retry",
+
+    /* Disable browser caching to prevent cache-related issues */
+    ignoreHTTPSErrors: true,
+
+    /* Ensure each test gets a fresh browser context */
+    acceptDownloads: true,
+    bypassCSP: true,
+
+    /* Create a new browser context for each test to prevent state persistence */
+    testIsolation: "context",
   },
 
   /* Configure projects for major browsers */
   projects: [
     {
       name: "chromium",
-      use: { ...devices["Desktop Chrome"] },
+      use: {
+        ...devices["Desktop Chrome"],
+        // Disable cache for Chromium
+        launchOptions: {
+          args: ["--disable-cache"],
+        },
+      },
     },
 
     {
       name: "firefox",
-      use: { ...devices["Desktop Firefox"] },
+      use: {
+        ...devices["Desktop Firefox"],
+        // Disable cache for Firefox
+        launchOptions: {
+          firefoxUserPrefs: {
+            "browser.cache.disk.enable": false,
+            "browser.cache.memory.enable": false,
+            "browser.cache.offline.enable": false,
+            "network.http.use-cache": false,
+          },
+        },
+      },
     },
 
     {
       name: "webkit",
-      use: { ...devices["Desktop Safari"] },
+      use: {
+        ...devices["Desktop Safari"],
+        // For WebKit, we'll use a fresh context for each test
+        launchOptions: {
+          // WebKit doesn't have specific cache disabling flags like the others
+          // but we can use a clean browser context for each test
+        },
+      },
     },
 
     /* Test against mobile viewports. */

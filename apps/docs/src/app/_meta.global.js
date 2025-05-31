@@ -36,6 +36,7 @@ export default {
         items: {
           getting_started: "Get started",
           project_structure: "Project Structure",
+          playwright_testing: "Playwright Testing Guide",
         },
       },
       backend: {

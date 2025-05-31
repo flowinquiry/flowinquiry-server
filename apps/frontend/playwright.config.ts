@@ -24,6 +24,9 @@ export default defineConfig({
   /* Reporter to use. See https://playwright.dev/docs/test-reporters */
   reporter: "html",
   /* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
+  /* Create a new browser context for each test to prevent state persistence */
+  testIsolation: "context",
+
   use: {
     /* Base URL to use in actions like `await page.goto('/')`. */
     baseURL: "http://localhost:3000",
@@ -37,9 +40,6 @@ export default defineConfig({
     /* Ensure each test gets a fresh browser context */
     acceptDownloads: true,
     bypassCSP: true,
-
-    /* Create a new browser context for each test to prevent state persistence */
-    testIsolation: "context",
   },
 
   /* Configure projects for major browsers */

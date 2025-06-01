@@ -29,7 +29,7 @@ public class TicketDTO {
 
     private Long projectId;
     private String projectName;
-
+    private String projectShortName;
     private Long projectTicketNumber;
 
     @NotNull(message = "Request User ID cannot be null") private Long requestUserId;

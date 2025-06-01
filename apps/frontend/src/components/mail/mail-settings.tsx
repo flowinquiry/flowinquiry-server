@@ -302,7 +302,6 @@ export function MailSettings() {
                 key={groupLabel}
                 className="space-y-4 border p-4 rounded-lg h-full"
               >
-                ev
                 <h3 className="text-lg font-semibold mb-2">{groupLabel}</h3>
                 {keys.map((key) => {
                   const meta = FIELD_META[key];

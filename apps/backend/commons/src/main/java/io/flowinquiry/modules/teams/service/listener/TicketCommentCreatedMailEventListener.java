@@ -58,6 +58,12 @@ public class TicketCommentCreatedMailEventListener {
                     continue;
                 }
 
+                String ticketPath =
+                        "/portal/teams/"
+                                + Obfuscator.obfuscate(ticketDTO.getTeamId())
+                                + "/tickets/"
+                                + Obfuscator.obfuscate(ticketDTO.getId());
+
                 EmailContext emailContext =
                         new EmailContext(Locale.forLanguageTag("en"))
                                 .setToUser(userMapper.toDto(watcher.getWatchUser()))
@@ -66,12 +72,7 @@ public class TicketCommentCreatedMailEventListener {
                                         ticketDTO.getRequestTitle())
                                 .addVariable("ticket", ticketDTO)
                                 .addVariable("comment", commentDTO)
-                                .addVariable(
-                                        "obfuscatedTeamId",
-                                        Obfuscator.obfuscate(ticketDTO.getTeamId()))
-                                .addVariable(
-                                        "obfuscatedTicketId",
-                                        Obfuscator.obfuscate(ticketDTO.getId()))
+                                .addVariable("ticketPath", ticketPath)
                                 .setTemplate("mail/newTicketCommentEmail");
 
                 mailService.sendEmail(emailContext);

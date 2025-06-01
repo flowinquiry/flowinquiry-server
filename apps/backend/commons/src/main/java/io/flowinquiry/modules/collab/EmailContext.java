@@ -42,10 +42,6 @@ public class EmailContext {
         return this;
     }
 
-    public EmailContext setSubject(String title) {
-        return setSubject(title, (Object) null);
-    }
-
     public EmailContext setSubject(String title, Object... args) {
         this.subject = messageSource.getMessage(title, args, locale);
         return this;

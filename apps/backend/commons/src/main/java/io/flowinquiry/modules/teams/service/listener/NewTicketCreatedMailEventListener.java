@@ -9,6 +9,7 @@ import io.flowinquiry.modules.teams.service.TicketService;
 import io.flowinquiry.modules.teams.service.dto.TicketDTO;
 import io.flowinquiry.modules.teams.service.event.NewTicketCreatedEvent;
 import io.flowinquiry.modules.usermanagement.service.mapper.UserMapper;
+import io.flowinquiry.utils.Obfuscator;
 import java.util.List;
 import java.util.Locale;
 import org.springframework.context.event.EventListener;
@@ -47,6 +48,11 @@ public class NewTicketCreatedMailEventListener {
         if (!watchers.isEmpty()) {
             watchers.forEach(
                     watcher -> {
+                        String ticketPath =
+                                "/portal/teams/"
+                                        + Obfuscator.obfuscate(ticketDTO.getTeamId())
+                                        + "/tickets/"
+                                        + Obfuscator.obfuscate(ticketDTO.getId());
                         EmailContext emailContext =
                                 new EmailContext(Locale.forLanguageTag("en"))
                                         .setToUser(userMapper.toDto(watcher.getWatchUser()))
@@ -54,6 +60,7 @@ public class NewTicketCreatedMailEventListener {
                                                 "email.new.ticket.subject",
                                                 ticketDTO.getRequestTitle())
                                         .addVariable("ticket", ticketDTO)
+                                        .addVariable("ticketPath", ticketPath)
                                         .setTemplate("mail/newTicketEmail");
                         mailService.sendEmail(emailContext);
                     });

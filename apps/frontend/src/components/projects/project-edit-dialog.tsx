@@ -224,6 +224,7 @@ const ProjectEditDialog: React.FC<ProjectDialogProps> = ({
                           <FormItem>
                             <FormLabel className="flex items-center gap-2 pt-2">
                               {t.teams.projects.form("short_name")}
+                              <span className="text-destructive">*</span>
                               <Tooltip>
                                 <TooltipTrigger asChild>
                                   <InfoIcon className="h-4 w-4 text-muted-foreground cursor-help" />

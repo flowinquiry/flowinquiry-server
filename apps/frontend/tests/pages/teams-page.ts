@@ -38,6 +38,8 @@ export class TeamsPage {
    */
   async goto() {
     await this.page.goto("/portal/teams");
+    // Wait for the page to be fully loaded
+    await this.page.waitForLoadState("networkidle");
   }
 
   /**

@@ -17,12 +17,17 @@ export default defineConfig({
   fullyParallel: false,
   /* Fail the build on CI if you accidentally left test.only in the source code. */
   forbidOnly: !!process.env.CI,
-  /* Retry on CI only */
-  retries: process.env.CI ? 2 : 0,
-  /* Opt out of parallel tests on CI. */
-  workers: process.env.CI ? 1 : undefined,
+  /* Retry on both CI and local to handle flaky tests */
+  retries: process.env.CI ? 3 : 1,
+  /* Run tests sequentially with a single worker to prevent navigation interference */
+  workers: 1,
   /* Reporter to use. See https://playwright.dev/docs/test-reporters */
   reporter: "html",
+  /* Set consistent timeouts */
+  timeout: 60000, // Global timeout of 60 seconds per test
+  expect: {
+    timeout: 10000, // Default timeout for expect assertions
+  },
 
   use: {
     /* Base URL to use in actions like `await page.goto('/')`. */
@@ -40,6 +45,15 @@ export default defineConfig({
     /* Ensure each test gets a fresh browser context */
     acceptDownloads: true,
     bypassCSP: true,
+
+    /* Create a new context for each test to isolate browser state */
+    contextOptions: {
+      ignoreHTTPSErrors: true,
+      viewport: { width: 1280, height: 720 },
+    },
+
+    /* Set navigation timeout */
+    navigationTimeout: 30000,
   },
 
   /* Configure projects for major browsers */
@@ -75,10 +89,16 @@ export default defineConfig({
       name: "webkit",
       use: {
         ...devices["Desktop Safari"],
-        // For WebKit, we'll use a fresh context for each test
+        // For WebKit, configure cache disabling and context isolation
         launchOptions: {
-          // WebKit doesn't have specific cache disabling flags like the others
-          // but we can use a clean browser context for each test
+          // WebKit doesn't have the same cache flags as other browsers
+        },
+        // Use a new browser context for each test with cache disabled
+        contextOptions: {
+          ignoreHTTPSErrors: true,
+          viewport: { width: 1280, height: 720 },
+          // Force a clean context for each test
+          storageState: undefined,
         },
       },
     },

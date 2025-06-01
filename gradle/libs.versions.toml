@@ -10,16 +10,19 @@ mockitoVersion = "5.2.0"
 mockitoJunitVersion = "5.14.1"
 jsonApiVersion = "2.1.3"
 parssonVersion="1.1.7"
-springbootVersion = "3.5.0"
+springbootVersion = "3.4.6"
 springAiVersion="1.0.0-M6"
 springDependencyManagementVersion="1.1.7"
-jhisterVersion = "8.7.1"
+jhisterVersion = "8.11.0"
 j2HtmlVersion = "1.6.0"
-shedlockVersion="6.6.0"
+shedlockVersion="6.8.0"
 jibVersion="3.4.4"
 caffeineVersion="3.2.0"
 redisHibernateVersion="3.45.0"
 slackClientVersion="1.45.3"
+benManesVersionsVersion="0.52.0"
+greenmailJunit5Version="2.1.3"
+testcontainersVersion="0.9.0"
 
 [libraries]
 caffeine = {module="com.github.ben-manes.caffeine:caffeine", version.ref="caffeineVersion"}
@@ -45,15 +48,19 @@ nohttp-plugin = { module = "io.spring.nohttp:nohttp-gradle", version = "0.0.11" 
 parsson = { module = "org.eclipse.parsson:parsson", version.ref = "parssonVersion" }
 shedlock = {module="net.javacrumbs.shedlock:shedlock-spring", version.ref="shedlockVersion"}
 shedlock-jdbc-provider = {module="net.javacrumbs.shedlock:shedlock-provider-jdbc-template", version.ref="shedlockVersion"}
-spring-boot-dependencies= {module="org.springframework.boot:spring-boot-dependencies", version.ref="springbootVersion"}
 splotless-plugin = { module = "com.diffplug.spotless:spotless-plugin-gradle", version = "7.0.3" }
 spring-ai-openai = {module = "org.springframework.ai:spring-ai-openai-spring-boot-starter", version.ref="springAiVersion"}
 spring-ai-ollama = {module = "org.springframework.ai:spring-ai-ollama-spring-boot-starter", version.ref="springAiVersion"}
 slack = {module="com.slack.api:slack-api-client", version.ref="slackClientVersion"}
+greenmail-junit5 = { module = "com.icegreen:greenmail-junit5", version.ref = "greenmailJunit5Version" }
+testcontainers-spring = { module = "io.flowinquiry.testcontainers:spring-testcontainers", version.ref = "testcontainersVersion" }
+testcontainers-postgresql = { module = "io.flowinquiry.testcontainers:postgresql", version.ref = "testcontainersVersion" }
+junit-bom-platform = { module = "org.junit:junit-bom", version.ref = "junitVersion" }
 
 [plugins]
 spring-boot = { id = "org.springframework.boot", version.ref = "springbootVersion" }
 spring-dependency-management = { id = "io.spring.dependency-management", version.ref="springDependencyManagementVersion" }
+ben = { id = "com.github.ben-manes.versions", version.ref = "benManesVersionsVersion" }
 
 [bundles]
 logback = ["logback-classic"]

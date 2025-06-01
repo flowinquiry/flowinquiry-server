@@ -158,7 +158,6 @@ export default function ProjectView({
       setWorkflow(workflowData);
 
       if (workflowData && projectData.id) {
-        console.log("Fetching tasks for project ID:", projectData.id);
         let allTasks: TicketDTO[] = [];
         let currentPage = 1;
         const pageSize = 100;

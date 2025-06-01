@@ -1,0 +1,152 @@
+name: Playwright Tests
+
+on:
+  workflow_call:
+    inputs:
+      run_frontend:
+        required: true
+        type: boolean
+      run_backend:
+        required: true
+        type: boolean
+
+jobs:
+  test:
+    timeout-minutes: 60
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      # Cache pnpm store
+      - name: Cache pnpm store
+        uses: actions/cache@v3
+        with:
+          path: ~/.pnpm-store
+          key: ${{ runner.os }}-pnpm-store-${{ hashFiles('pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-pnpm-store-
+
+      # Cache Playwright browsers
+      - name: Cache Playwright browsers
+        uses: actions/cache@v3
+        with:
+          path: ~/.cache/ms-playwright
+          key: ${{ runner.os }}-playwright-browsers-v1
+          restore-keys: |
+            ${{ runner.os }}-playwright-browsers-
+
+      # Set up pnpm (must be before install)
+      - name: Set up pnpm
+        uses: pnpm/action-setup@a7487c7e89a18df4991f7f222e4898a00d66ddda
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'pnpm'
+          cache-dependency-path: '**/pnpm-lock.yaml'
+
+      - name: Set up JDK
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'temurin'
+          java-version: '21'
+
+      # Install all dependencies
+      - name: Install dependencies
+        run: pnpm install
+
+      - name: Generate .backend.local
+        run: |
+          cat <<EOF > apps/backend/.env.local
+          POSTGRES_PASSWORD=flowinquiry123
+          # Secret for testing on CI only
+          JWT_BASE64_SECRET=VDk3amx5ZjNjbVZKc256RXoxRGpCTklwS0FGbmltMDNQNGQ0Z2VaOXRwYTlEc0VBVG05bTlJUXRzMWE0VG9CdEJ2Mkk2TzJzZEEwZU5hMWg5WG1mcTU1R0hG
+          EOF
+
+      - name: Generate .env.local for frontend
+        run: |
+          cat <<EOF > apps/frontend/.env.local
+          NEXT_PUBLIC_BASE_URL=http://localhost:8080
+          BACK_END_URL=http://localhost:8080
+          # Secret for testing on CI only
+          AUTH_SECRET=mPigMZXj1qRQKKnv8ILE1iQ+uexLD3oRD1PSsy/NejtCBovKwCpMV8sSFHOfqme2pc/UV9ALqlECSYZGt4gQkw==
+          EOF
+
+      # Start and wait for PostgreSQL
+      - name: Start PostgreSQL
+        run: pnpm docker:up
+
+      - name: Wait for PostgreSQL
+        run: |
+          echo "Waiting for PostgreSQL to be ready..."
+          timeout 60s bash -c '
+            until docker exec $(docker ps -q --filter name=postgresql) pg_isready -U flowinquiry; do
+              echo "Waiting for pg_isready..."
+              sleep 2
+            done
+          '
+
+      # Conditionally start backend
+      - name: Start backend
+        if: inputs.run_backend == true
+        run: |
+          ./gradlew :apps:backend:server:bootRun > backend.log 2>&1 &
+          echo "Waiting for backend..."
+          timeout 120s bash -c '
+            until curl -sf http://localhost:8080/actuator/health; do
+              echo "Waiting for backend..."
+              sleep 2
+            done
+          '
+
+      # Conditionally start frontend
+      - name: Start frontend
+        if: inputs.run_frontend == true
+        run: |
+          pnpm dev:frontend > frontend.log 2>&1 &
+          echo "Waiting for frontend..."
+          timeout 60s bash -c '
+            until curl -sf http://localhost:3000; do
+              echo "Waiting for frontend..."
+              sleep 2
+            done
+          ' || (echo "Frontend failed to start. Dumping logs:" && cat frontend.log && exit 1)
+
+      # Install Playwright and run tests
+      - name: Install Playwright Browsers
+        working-directory: ./apps/frontend
+        run: pnpm playwright:install --with-deps
+
+      - name: Run Playwright tests
+        id: run_tests
+        run: pnpm test:frontend
+
+      # Upload HTML report for PR review
+      - name: Upload Playwright report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-report
+          path: apps/frontend/playwright-report/
+          retention-days: 30
+
+      # Summarize test result in GitHub Actions UI
+      - name: Summarize Playwright Results
+        if: always()
+        run: |
+          echo "### ✅ Playwright Test Report" >> $GITHUB_STEP_SUMMARY
+          echo "The HTML report is available as an artifact:" >> $GITHUB_STEP_SUMMARY
+          echo "- 📦 [Download Playwright Report Artifact](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }})" >> $GITHUB_STEP_SUMMARY
+
+      # Graceful shutdown of all services
+      - name: Shutdown services
+        if: always()
+        run: |
+          echo "Stopping backend..."
+          pkill -f "apps:backend:server:bootRun" || true
+          echo "Stopping frontend..."
+          pkill -f "pnpm dev" || true
+          echo "Stopping Docker services..."
+          pnpm docker:down

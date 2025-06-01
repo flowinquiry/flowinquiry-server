@@ -11,7 +11,11 @@ import globals from "globals";
 export default [
     {
         files: ["**/*.{js,mjs,cjs,ts,jsx,tsx}"],
-        ignores: [".next", ".next/**"],
+        ignores: [
+            "apps/frontend/.next/**",
+            "apps/frontend/playwright-report/**",
+            "apps/frontend/out/**"
+        ],
         plugins: {
             "unused-imports": unusedImports,
             "simple-import-sort": simpleImportSort,

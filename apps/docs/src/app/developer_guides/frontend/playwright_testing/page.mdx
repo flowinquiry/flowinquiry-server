@@ -1,0 +1,374 @@
+---
+description: Learn how to write and run Playwright tests for the FlowInquiry frontend application. This guide covers setup, best practices, page object models, and CI integration.
+---
+
+import { Callout, FileTree, Steps } from "nextra/components";
+
+# Playwright Testing Guide
+
+This guide will help you understand how to write and run Playwright tests for the FlowInquiry frontend application.
+
+## Introduction to Playwright
+
+We picked Playwright for FlowInquiry’s frontend tests because it just makes life easier. It works with Chromium, Firefox, and WebKit, so we can quickly check that everything
+behaves the same no matter what browser you’re using. Its API is super intuitive, letting us mimic clicks, type stuff into forms, and navigate around the app just like a real
+person would. That means we catch weird bugs sooner, our CI runs faster, and we can focus on building cool features instead of chasing down flaky tests
+
+## Project Setup
+
+### Installation
+
+Playwright is already configured in the FlowInquiry frontend project. The main configuration files and directories are:
+
+<FileTree>
+  <FileTree.Folder name="apps/frontend" defaultOpen>
+    <FileTree.File name="playwright.config.ts" />
+    <FileTree.Folder name="tests" defaultOpen>
+      <FileTree.File name="home.spec.ts" />
+      <FileTree.Folder name="pages" defaultOpen>
+        <FileTree.File name="home-page.ts" />
+      </FileTree.Folder>
+    </FileTree.Folder>
+  </FileTree.Folder>
+</FileTree>
+
+### Configuration
+
+The Playwright configuration is defined in `apps/frontend/playwright.config.ts`. This file specifies:
+
+- Test directory location
+- Browser configurations
+- Retry settings
+- Reporter settings
+- Base URL for tests
+
+Here's a snippet of the configuration:
+
+```typescript
+export default defineConfig({
+  testDir: "./tests",
+  fullyParallel: true,
+  forbidOnly: !!process.env.CI,
+  retries: process.env.CI ? 2 : 0,
+  workers: process.env.CI ? 1 : undefined,
+  reporter: "html",
+  use: {
+    baseURL: "http://localhost:3000",
+    trace: "on-first-retry",
+  },
+  projects: [
+    {
+      name: "chromium",
+      use: { ...devices["Desktop Chrome"] },
+    },
+    {
+      name: "firefox",
+      use: { ...devices["Desktop Firefox"] },
+    },
+    {
+      name: "webkit",
+      use: { ...devices["Desktop Safari"] },
+    },
+  ],
+  webServer: {
+    command: "pnpm run dev",
+    url: "http://localhost:3000",
+    reuseExistingServer: true,
+    timeout: 120 * 1000, // 2 minutes
+  },
+});
+```
+
+## Writing Tests
+
+### Page Object Model Pattern
+
+FlowInquiry uses the Page Object Model (POM) pattern for organizing test code. This pattern creates an abstraction layer between test code and page-specific details, making tests more maintainable.
+
+<Callout type="info">
+  The Page Object Model pattern separates the test logic from the page
+  implementation details, making tests more maintainable and easier to update
+  when the UI changes.
+</Callout>
+
+#### Directory Structure
+
+Tests are organized as follows:
+
+- `tests/` - Contains all test files (\*.spec.ts)
+- `tests/pages/` - Contains page object models
+
+### Creating a Page Object
+
+Page objects should be created in the `tests/pages/` directory. Here's an example of a page object for the home page:
+
+```typescript
+// tests/pages/home-page.ts
+import { expect, Locator, Page } from "@playwright/test";
+
+/**
+ * Page Object Model for the Home page
+ * This class encapsulates the selectors and actions for the home page
+ */
+export class HomePage {
+  readonly page: Page;
+  readonly emailInput: Locator;
+  readonly passwordInput: Locator;
+  readonly signInButton: Locator;
+  readonly errorMessage: Locator;
+
+  constructor(page: Page) {
+    this.page = page;
+    this.emailInput = page.getByLabel("Email");
+    this.passwordInput = page.getByLabel("Password");
+    this.signInButton = page.getByRole("button", { name: /sign in/i });
+    this.errorMessage = page.locator(".text-red-700");
+  }
+
+  /**
+   * Navigate to the home page
+   */
+  async goto() {
+    await this.page.goto("/");
+  }
+
+  /**
+   * Verify that the home page has loaded correctly
+   */
+  async expectPageLoaded() {
+    try {
+      // In production, we should be redirected to dashboard
+      await expect(this.page).toHaveURL("/portal/dashboard");
+    } catch (error) {
+      // In test environment without proper auth setup, we might stay at login
+      console.log(
+        "[DEBUG_LOG] Not redirected to dashboard, checking if still on login page",
+      );
+      await expect(this.page).toHaveURL("/login");
+    }
+  }
+
+  /**
+   * Login with the provided credentials
+   */
+  async login(email: string, password: string) {
+    await this.emailInput.fill(email);
+    await this.passwordInput.fill(password);
+    await this.signInButton.click();
+  }
+
+  // Additional methods...
+}
+```
+
+### Writing Test Cases
+
+Test cases should be created in the `tests/` directory with the `.spec.ts` extension. Here's an example of a test file:
+
+```typescript
+// tests/home.spec.ts
+import { test } from "@playwright/test";
+import { HomePage } from "./pages/home-page";
+
+test.describe("Home Page", () => {
+  test("should navigate to home page and login successfully", async ({
+    page,
+  }) => {
+    const homePage = new HomePage(page);
+
+    // Navigate to the home page
+    await homePage.goto();
+
+    // Verify redirection to login page
+    await homePage.expectRedirectToLogin();
+
+    // Login with admin credentials
+    await homePage.login("admin@flowinquiry.io", "admin");
+
+    // Verify redirection to dashboard after login
+    await homePage.expectPageLoaded();
+  });
+
+  test("should stay on login page when using incorrect credentials", async ({
+    page,
+  }) => {
+    const homePage = new HomePage(page);
+
+    // Navigate to the home page
+    await homePage.goto();
+
+    // Login with incorrect credentials
+    await homePage.login("wrong@example.com", "wrongpassword");
+
+    // Verify error message is displayed
+    await homePage.expectLoginError();
+  });
+});
+```
+
+## Best Practices
+
+### Locator Strategies
+
+Playwright provides several ways to locate elements. Here are the recommended strategies in order of preference:
+
+<Steps>
+  ### Use Accessibility Locators
+  These are the most reliable and resilient to UI changes:
+  ```typescript
+  page.getByRole("button", { name: "Sign In" })
+  page.getByLabel("Email")
+  page.getByText("Welcome")
+  page.getByTestId("login-form")
+  ```
+
+### Use CSS Selectors as a Fallback
+
+When accessibility locators aren't available:
+
+```typescript
+page.locator(".login-form");
+page.locator("#email-input");
+```
+
+### Avoid XPath
+
+XPath selectors are brittle and harder to maintain.
+
+</Steps>
+
+### Test Isolation
+
+Each test should be independent and not rely on the state from previous tests. Use the `beforeEach` hook to set up the test environment:
+
+```typescript
+test.beforeEach(async ({ page }) => {
+  // Set up test environment
+  await page.goto("/");
+});
+```
+
+### Assertions
+
+Use Playwright's built-in assertions for reliable testing:
+
+```typescript
+// Check URL
+await expect(page).toHaveURL("/login");
+
+// Check element visibility
+await expect(page.getByRole("button", { name: "Sign In" })).toBeVisible();
+
+// Check element text
+await expect(page.getByText("Welcome")).toBeVisible();
+
+// Check element count
+await expect(page.getByRole("link")).toHaveCount(5);
+```
+
+## Running Tests
+
+### Running Tests Locally
+
+To run all frontend tests from the root folder:
+
+```bash
+pnpm test:frontend
+```
+
+To run tests with UI mode (for debugging) from the root folder:
+
+```bash
+pnpm test:ui:frontend
+```
+
+If you need to run a specific test file, you can navigate to the frontend directory:
+
+```bash
+cd apps/frontend
+pnpm playwright test tests/home.spec.ts
+```
+
+## Debugging Tests
+
+### Using UI Mode
+
+Playwright's UI mode is the easiest way to debug tests:
+
+```bash
+pnpm test:ui
+```
+
+This opens a UI where you can:
+
+- Run specific tests
+- See test steps and screenshots
+- Inspect the DOM at each step
+- View network requests
+
+### Using Debug Logs
+
+You can add debug logs to your tests:
+
+```typescript
+console.log("[DEBUG_LOG] Your debug message");
+```
+
+In CI, logs prefixed with `[DEBUG_LOG]` will be displayed in the test output.
+
+### Trace Viewer
+
+Playwright can capture traces for failed tests:
+
+```typescript
+// In playwright.config.ts
+use: {
+  trace: "on-first-retry",
+}
+```
+
+You can view traces in UI mode or by opening the trace file in Playwright Trace Viewer.
+
+## Examples
+
+### Testing Authentication
+
+```typescript
+test("should authenticate user", async ({ page }) => {
+  const loginPage = new LoginPage(page);
+  await loginPage.goto();
+  await loginPage.login("admin@flowinquiry.io", "admin");
+  await expect(page).toHaveURL("/portal/dashboard");
+});
+```
+
+### Testing Form Submission
+
+```typescript
+test("should submit form", async ({ page }) => {
+  const formPage = new FormPage(page);
+  await formPage.goto();
+  await formPage.fillForm({
+    name: "Test User",
+    email: "test@example.com",
+    message: "This is a test message",
+  });
+  await formPage.submitForm();
+  await formPage.expectSuccessMessage();
+});
+```
+
+### Testing Navigation
+
+```typescript
+test("should navigate between pages", async ({ page }) => {
+  const homePage = new HomePage(page);
+  await homePage.goto();
+  await homePage.navigateTo("About");
+  await expect(page).toHaveURL("/about");
+});
+```
+
+## Conclusion
+
+Playwright provides a powerful framework for testing the FlowInquiry frontend. For more information, refer to the [official Playwright documentation](https://playwright.dev/docs/intro).

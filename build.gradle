@@ -1,8 +1,7 @@
 plugins {
     id "base"
     id "idea"
-    id "com.gorylenko.gradle-git-properties"
-    id "com.github.ben-manes.versions" version "0.52.0"
+    alias(libs.plugins.ben)
 }
 
 description = "The flexible configurable ticket management"
@@ -71,14 +70,5 @@ allprojects {
                 }
             }
         }
-    }
-
-    gitProperties {
-        failOnNoGitDirectory = false
-        keys = ["git.branch", "git.commit.id.abbrev", "git.commit.id.describe"]
-    }
-
-    tasks.withType(com.gorylenko.GenerateGitPropertiesTask).configureEach {
-        outputs.doNotCacheIf("Task is always executed") { true }
     }
 }

@@ -20,6 +20,11 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
+/**
+ * Event listener for ticket comment creation events. This listener is responsible for sending email
+ * notifications to watchers of a ticket when a new comment is added to the ticket. Emails are sent
+ * asynchronously to all watchers except the comment creator.
+ */
 @Component
 public class TicketCommentCreatedMailEventListener {
     private final CommentService commentService;
@@ -41,6 +46,13 @@ public class TicketCommentCreatedMailEventListener {
         this.mailService = mailService;
     }
 
+    /**
+     * Handles the ticket comment created event. This method is triggered when a new comment is
+     * added to a ticket. It retrieves the comment details, finds all watchers of the ticket, and
+     * sends email notifications to each watcher (except the comment creator).
+     *
+     * @param event The event containing information about the created comment
+     */
     @Async("asyncTaskExecutor")
     @Transactional
     @EventListener

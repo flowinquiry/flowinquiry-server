@@ -18,6 +18,11 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
+/**
+ * Event listener for new ticket creation events. This listener is responsible for sending email
+ * notifications to watchers of a ticket when a new ticket is created. Emails are sent
+ * asynchronously to all watchers of the ticket.
+ */
 @Component
 public class NewTicketCreatedMailEventListener {
 
@@ -37,6 +42,13 @@ public class NewTicketCreatedMailEventListener {
         this.userMapper = userMapper;
     }
 
+    /**
+     * Handles the new ticket created event. This method is triggered when a new ticket is created.
+     * It retrieves the ticket details, finds all watchers of the ticket, and sends email
+     * notifications to each watcher.
+     *
+     * @param event The event containing information about the created ticket
+     */
     @Async("asyncTaskExecutor")
     @Transactional
     @EventListener

@@ -1,4 +1,4 @@
-import { test } from "@playwright/test";
+import { expect, test } from "@playwright/test";
 
 import { HomePage } from "./pages/home-page";
 import { TeamsPage } from "./pages/teams-page";
@@ -19,44 +19,13 @@ test.describe("Teams Page", () => {
     const currentUrl = page.url();
     console.log(`[DEBUG_LOG] Current URL after login: ${currentUrl}`);
 
-    // If we're not logged in (still on login page), retry login
-    if (currentUrl.includes("/login")) {
-      console.log("[DEBUG_LOG] Still on login page, retrying login");
-      await homePage.login("admin@flowinquiry.io", "admin");
-      await page.waitForTimeout(3000);
-      console.log(`[DEBUG_LOG] URL after retry: ${page.url()}`);
-
-      // If still not logged in, skip the test
-      if (page.url().includes("/login")) {
-        console.log("[DEBUG_LOG] Login failed, skipping test");
-        test.skip();
-        return;
-      }
-    }
+    await expect(page).toHaveURL(/\/portal/);
 
     // Step 2: Navigate to teams page
     console.log("[DEBUG_LOG] Navigating to teams page");
     await teamsPage.goto();
     await teamsPage.expectPageLoaded();
     console.log(`[DEBUG_LOG] Current URL after navigation: ${page.url()}`);
-
-    // If redirected to login, try to login again and navigate back
-    if (page.url().includes("/login")) {
-      console.log("[DEBUG_LOG] Redirected to login, logging in again");
-      await homePage.login("admin@flowinquiry.io", "admin");
-      await page.waitForTimeout(3000);
-
-      // Navigate to teams page again
-      await teamsPage.goto();
-      await teamsPage.expectPageLoaded();
-
-      // If still redirected to login, skip the test
-      if (page.url().includes("/login")) {
-        console.log("[DEBUG_LOG] Still redirected to login, skipping test");
-        test.skip();
-        return;
-      }
-    }
 
     // Step 3: Click on "New team" button
     console.log("[DEBUG_LOG] Clicking on New team button");

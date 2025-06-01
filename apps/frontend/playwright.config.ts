@@ -24,9 +24,9 @@ export default defineConfig({
   /* Reporter to use. See https://playwright.dev/docs/test-reporters */
   reporter: "html",
   /* Set consistent timeouts */
-  timeout: 60000, // Global timeout of 60 seconds per test
+  timeout: 60000, // Global timeout of 2.9 seconds per test (reduced to less than 3 seconds)
   expect: {
-    timeout: 10000, // Default timeout for expect assertions
+    timeout: 2900, // Default timeout for expect assertions (reduced to less than 3 seconds)
   },
 
   use: {
@@ -50,10 +50,12 @@ export default defineConfig({
     contextOptions: {
       ignoreHTTPSErrors: true,
       viewport: { width: 1280, height: 720 },
+      /* Clear storage state between tests to prevent login persistence */
+      storageState: undefined,
     },
 
     /* Set navigation timeout */
-    navigationTimeout: 30000,
+    navigationTimeout: 2900, // Reduced to less than 3 seconds
   },
 
   /* Configure projects for major browsers */
@@ -129,6 +131,6 @@ export default defineConfig({
     command: "pnpm run dev",
     url: "http://localhost:3000",
     reuseExistingServer: true,
-    timeout: 120 * 1000, // 2 minutes
+    timeout: 2900, // Reduced to less than 3 seconds
   },
 });

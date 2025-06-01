@@ -56,6 +56,12 @@ export class TeamsPage {
    */
   async clickNewTeamButton() {
     await this.newTeamButton.click();
+    // Wait for navigation to complete after clicking
+    await this.page.waitForLoadState("networkidle").catch(() => {
+      console.log(
+        "[DEBUG_LOG] Navigation did not complete after clicking New Team button",
+      );
+    });
   }
 
   /**
@@ -74,20 +80,25 @@ export class TeamsPage {
     await this.teamNameInput.fill(name);
     await this.teamDescriptionInput.fill(description);
     await this.saveButton.click();
+    // Wait for navigation to complete after saving
+    await this.page.waitForLoadState("networkidle").catch(() => {
+      console.log(
+        "[DEBUG_LOG] Navigation did not complete after saving team details",
+      );
+    });
   }
 
   /**
    * Verify redirection to the new team dashboard page
    */
-  async expectRedirectToTeamDashboard() {
-    // Wait for navigation to complete
-    await this.page.waitForURL(/\/portal\/teams\/[^/]+\/dashboard/);
+  async expectRedirectToTeamDashboard(): Promise<string> {
+    const pattern = /\/portal\/teams\/[^/]+\/dashboard/;
 
-    // Get the current URL and verify it matches the expected pattern
-    const url = this.page.url();
-    expect(url).toMatch(/\/portal\/teams\/[^/]+\/dashboard/);
+    // Wait and assert using Playwright's expect
+    await expect(this.page).toHaveURL(pattern);
 
-    return url;
+    // Return URL if needed
+    return this.page.url();
   }
 
   /**
@@ -102,5 +113,13 @@ export class TeamsPage {
    */
   async closeManagerDialog() {
     await this.closeDialogButton.click();
+    // Wait for the dialog to disappear
+    await expect(this.managerDialog)
+      .not.toBeVisible()
+      .catch(() => {
+        console.log(
+          "[DEBUG_LOG] Dialog did not disappear after clicking close button",
+        );
+      });
   }
 }

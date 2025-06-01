@@ -24,7 +24,6 @@ export default async function apiAuthSignIn(
       throw new Error("Can not login " + response.status);
     }
   } catch (error) {
-    console.log(`Login error ${error}`);
     throw error;
   }
 }

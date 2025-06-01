@@ -42,6 +42,13 @@ export class UsersPage {
     // Click the first user link
     await this.userLinks.first().click();
 
+    // Wait for navigation to complete after clicking
+    await this.page.waitForLoadState("networkidle").catch(() => {
+      console.log(
+        "[DEBUG_LOG] Navigation did not complete after clicking user link",
+      );
+    });
+
     // Return the href for verification
     return href;
   }

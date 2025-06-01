@@ -75,15 +75,11 @@ export class HomePage {
     await this.passwordInput.fill(password);
 
     // Click and wait for navigation
-    await Promise.all([
-      this.page.waitForNavigation({ waitUntil: "networkidle" }).catch(() => {
-        // Sometimes navigation might not occur if there's an error
-        console.log(
-          "[DEBUG_LOG] Navigation did not complete, continuing anyway",
-        );
-      }),
-      this.signInButton.click(),
-    ]);
+    await this.signInButton.click();
+    await this.page.waitForLoadState("networkidle").catch(() => {
+      // Sometimes navigation might not occur if there's an error
+      console.log("[DEBUG_LOG] Navigation did not complete, continuing anyway");
+    });
   }
 
   /**
@@ -115,8 +111,10 @@ export class HomePage {
           console.log(`[DEBUG_LOG] Still not logged in, URL: ${currentUrl}`);
         }
       } catch (error) {
+        const errorMessage =
+          error instanceof Error ? error.message : String(error);
         console.log(
-          `[DEBUG_LOG] Login attempt ${attempt + 1} failed: ${error.message}`,
+          `[DEBUG_LOG] Login attempt ${attempt + 1} failed: ${errorMessage}`,
         );
       }
 
@@ -146,17 +144,12 @@ export class HomePage {
     await link.waitFor({ state: "visible" });
 
     // Click and wait for navigation
-    await Promise.all([
-      this.page.waitForNavigation({ waitUntil: "networkidle" }).catch(() => {
-        console.log(
-          "[DEBUG_LOG] Navigation did not complete after clicking link",
-        );
-      }),
-      link.click(),
-    ]);
-
-    // Wait for the page to be fully loaded
-    await this.page.waitForLoadState("networkidle");
+    await link.click();
+    await this.page.waitForLoadState("networkidle").catch(() => {
+      console.log(
+        "[DEBUG_LOG] Navigation did not complete after clicking link",
+      );
+    });
   }
 
   /**

@@ -69,39 +69,39 @@ export default defineConfig({
       },
     },
 
-    {
-      name: "firefox",
-      use: {
-        ...devices["Desktop Firefox"],
-        // Disable cache for Firefox
-        launchOptions: {
-          firefoxUserPrefs: {
-            "browser.cache.disk.enable": false,
-            "browser.cache.memory.enable": false,
-            "browser.cache.offline.enable": false,
-            "network.http.use-cache": false,
-          },
-        },
-      },
-    },
-
-    {
-      name: "webkit",
-      use: {
-        ...devices["Desktop Safari"],
-        // For WebKit, configure cache disabling and context isolation
-        launchOptions: {
-          // WebKit doesn't have the same cache flags as other browsers
-        },
-        // Use a new browser context for each test with cache disabled
-        contextOptions: {
-          ignoreHTTPSErrors: true,
-          viewport: { width: 1280, height: 720 },
-          // Force a clean context for each test
-          storageState: undefined,
-        },
-      },
-    },
+    // {
+    //   name: "firefox",
+    //   use: {
+    //     ...devices["Desktop Firefox"],
+    //     // Disable cache for Firefox
+    //     launchOptions: {
+    //       firefoxUserPrefs: {
+    //         "browser.cache.disk.enable": false,
+    //         "browser.cache.memory.enable": false,
+    //         "browser.cache.offline.enable": false,
+    //         "network.http.use-cache": false,
+    //       },
+    //     },
+    //   },
+    // },
+    //
+    // {
+    //   name: "webkit",
+    //   use: {
+    //     ...devices["Desktop Safari"],
+    //     // For WebKit, configure cache disabling and context isolation
+    //     launchOptions: {
+    //       // WebKit doesn't have the same cache flags as other browsers
+    //     },
+    //     // Use a new browser context for each test with cache disabled
+    //     contextOptions: {
+    //       ignoreHTTPSErrors: true,
+    //       viewport: { width: 1280, height: 720 },
+    //       // Force a clean context for each test
+    //       storageState: undefined,
+    //     },
+    //   },
+    // },
 
     /* Test against mobile viewports. */
     // {

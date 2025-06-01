@@ -83,14 +83,12 @@ test.describe("Users Page Navigation", () => {
       const userId = userHref.split("/").pop();
 
       // Click the user link and wait for navigation
-      await Promise.all([
-        page.waitForNavigation({ waitUntil: "networkidle" }).catch(() => {
-          console.log(
-            "[DEBUG_LOG] Navigation did not complete after clicking user link",
-          );
-        }),
-        userLink.click(),
-      ]);
+      await userLink.click();
+      await page.waitForLoadState("networkidle").catch(() => {
+        console.log(
+          "[DEBUG_LOG] Navigation did not complete after clicking user link",
+        );
+      });
 
       // Step 4: Verify we navigated to the user details page
       const finalUrl = page.url();
@@ -99,8 +97,10 @@ test.describe("Users Page Navigation", () => {
       // Verify we're on the correct user page
       expect(finalUrl).toContain(`/portal/users/${userId}`);
     } catch (error) {
+      const errorMessage =
+        error instanceof Error ? error.message : String(error);
       console.log(
-        `[DEBUG_LOG] Error during user selection or navigation: ${error.message}`,
+        `[DEBUG_LOG] Error during user selection or navigation: ${errorMessage}`,
       );
       test.fail();
     }

@@ -19,6 +19,9 @@ shedlockVersion="6.8.0"
 jibVersion="3.4.4"
 caffeineVersion="3.2.0"
 redisHibernateVersion="3.45.0"
+benManesVersionsVersion="0.52.0"
+greenmailJunit5Version="2.1.3"
+testcontainersVersion="0.9.0"
 
 [libraries]
 caffeine = {module="com.github.ben-manes.caffeine:caffeine", version.ref="caffeineVersion"}
@@ -44,14 +47,18 @@ nohttp-plugin = { module = "io.spring.nohttp:nohttp-gradle", version = "0.0.11" 
 parsson = { module = "org.eclipse.parsson:parsson", version.ref = "parssonVersion" }
 shedlock = {module="net.javacrumbs.shedlock:shedlock-spring", version.ref="shedlockVersion"}
 shedlock-jdbc-provider = {module="net.javacrumbs.shedlock:shedlock-provider-jdbc-template", version.ref="shedlockVersion"}
-spring-boot-dependencies= {module="org.springframework.boot:spring-boot-dependencies", version.ref="springbootVersion"}
 splotless-plugin = { module = "com.diffplug.spotless:spotless-plugin-gradle", version = "7.0.3" }
 spring-ai-openai = {module = "org.springframework.ai:spring-ai-openai-spring-boot-starter", version.ref="springAiVersion"}
 spring-ai-ollama = {module = "org.springframework.ai:spring-ai-ollama-spring-boot-starter", version.ref="springAiVersion"}
+greenmail-junit5 = { module = "com.icegreen:greenmail-junit5", version.ref = "greenmailJunit5Version" }
+testcontainers-spring = { module = "io.flowinquiry.testcontainers:spring-testcontainers", version.ref = "testcontainersVersion" }
+testcontainers-postgresql = { module = "io.flowinquiry.testcontainers:postgresql", version.ref = "testcontainersVersion" }
+junit-bom-platform = { module = "org.junit:junit-bom", version.ref = "junitVersion" }
 
 [plugins]
 spring-boot = { id = "org.springframework.boot", version.ref = "springbootVersion" }
 spring-dependency-management = { id = "io.spring.dependency-management", version.ref="springDependencyManagementVersion" }
+ben = { id = "com.github.ben-manes.versions", version.ref = "benManesVersionsVersion" }
 
 [bundles]
 logback = ["logback-classic"]

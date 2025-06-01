@@ -1,5 +1,7 @@
 package io.flowinquiry.modules.teams.service.listener;
 
+import static io.flowinquiry.modules.teams.utils.TicketPathUtils.buildTicketPath;
+
 import io.flowinquiry.modules.collab.EmailContext;
 import io.flowinquiry.modules.collab.domain.EntityType;
 import io.flowinquiry.modules.collab.domain.EntityWatcher;
@@ -11,7 +13,6 @@ import io.flowinquiry.modules.teams.service.TicketService;
 import io.flowinquiry.modules.teams.service.dto.TicketDTO;
 import io.flowinquiry.modules.teams.service.event.TicketCommentCreatedEvent;
 import io.flowinquiry.modules.usermanagement.service.mapper.UserMapper;
-import io.flowinquiry.utils.Obfuscator;
 import java.util.List;
 import java.util.Locale;
 import org.springframework.context.event.EventListener;
@@ -58,11 +59,7 @@ public class TicketCommentCreatedMailEventListener {
                     continue;
                 }
 
-                String ticketPath =
-                        "/portal/teams/"
-                                + Obfuscator.obfuscate(ticketDTO.getTeamId())
-                                + "/tickets/"
-                                + Obfuscator.obfuscate(ticketDTO.getId());
+                String ticketPath = buildTicketPath(ticketDTO);
 
                 EmailContext emailContext =
                         new EmailContext(Locale.forLanguageTag("en"))

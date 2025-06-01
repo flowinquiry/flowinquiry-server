@@ -91,13 +91,13 @@ const EditableSection = ({
   );
 };
 
-type RequestDetailsProps = {
+type TicketDetailsProps = {
   open: boolean;
   onClose: () => void;
   initialTicket: TicketDTO;
 };
 
-const TicketDetailSheet: React.FC<RequestDetailsProps> = ({
+const TicketDetailSheet: React.FC<TicketDetailsProps> = ({
   open,
   onClose,
   initialTicket,
@@ -204,7 +204,7 @@ const TicketDetailSheet: React.FC<RequestDetailsProps> = ({
                           <Input
                             {...field}
                             className="text-xl"
-                            placeholder="Enter request title"
+                            placeholder="Enter ticket title"
                             autoFocus
                           />
                         )}

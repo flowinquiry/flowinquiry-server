@@ -67,7 +67,6 @@ dependencies {
     testImplementation(libs.assertJ)
     testImplementation("io.flowinquiry.testcontainers:spring-testcontainers:0.9.0")
     testImplementation("io.flowinquiry.testcontainers:postgresql:0.9.0")
-    testImplementation("org.wiremock.integrations:wiremock-spring-boot:3.10.0")
 }
 
 task cleanResources(type: Delete) {

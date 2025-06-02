@@ -9,5 +9,5 @@ ${AnsiColor.GREEN}                           ${AnsiColor.CYAN}        |_|       
 
 
 
-${AnsiColor.BRIGHT_BLUE}:: FlowInquiry 🤓  :: Running Spring Boot ${spring-boot.version} :: Startup profile(s) ${spring.profiles.active} ::
+${AnsiColor.BRIGHT_BLUE}:: FlowInquiry 🤓  :: Version ${flowinquiry.version} :: Running Spring Boot ${spring-boot.version} :: Startup profile(s) ${spring.profiles.active} ::
 :: https://www.flowinquiry.io ::${AnsiColor.DEFAULT}

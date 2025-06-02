@@ -1,5 +1,6 @@
 package io.flowinquiry.modules.teams.service.listener;
 
+import static io.flowinquiry.modules.teams.utils.TicketPathUtils.buildTicketPath;
 import static j2html.TagCreator.a;
 import static j2html.TagCreator.p;
 import static j2html.TagCreator.text;
@@ -12,9 +13,9 @@ import io.flowinquiry.modules.collab.domain.NotificationType;
 import io.flowinquiry.modules.collab.repository.ActivityLogRepository;
 import io.flowinquiry.modules.collab.repository.NotificationRepository;
 import io.flowinquiry.modules.collab.service.dto.CommentDTO;
-import io.flowinquiry.modules.teams.domain.Ticket;
 import io.flowinquiry.modules.teams.repository.TeamRepository;
-import io.flowinquiry.modules.teams.repository.TicketRepository;
+import io.flowinquiry.modules.teams.service.TicketService;
+import io.flowinquiry.modules.teams.service.dto.TicketDTO;
 import io.flowinquiry.modules.teams.service.event.TicketCommentCreatedEvent;
 import io.flowinquiry.modules.usermanagement.domain.User;
 import io.flowinquiry.modules.usermanagement.repository.UserRepository;
@@ -34,7 +35,7 @@ public class TicketCommentCreatedNotificationEventListener {
 
     private final SimpMessagingTemplate messageTemplate;
     private final UserRepository userRepository;
-    private final TicketRepository ticketRepository;
+    private final TicketService ticketService;
     private final TeamRepository teamRepository;
     private final NotificationRepository notificationRepository;
     private final ActivityLogRepository activityLogRepository;
@@ -42,13 +43,13 @@ public class TicketCommentCreatedNotificationEventListener {
     public TicketCommentCreatedNotificationEventListener(
             SimpMessagingTemplate messageTemplate,
             UserRepository userRepository,
-            TicketRepository ticketRepository,
+            TicketService ticketService,
             TeamRepository teamRepository,
             NotificationRepository notificationRepository,
             ActivityLogRepository activityLogRepository) {
         this.messageTemplate = messageTemplate;
         this.userRepository = userRepository;
-        this.ticketRepository = ticketRepository;
+        this.ticketService = ticketService;
         this.teamRepository = teamRepository;
         this.notificationRepository = notificationRepository;
         this.activityLogRepository = activityLogRepository;
@@ -67,13 +68,7 @@ public class TicketCommentCreatedNotificationEventListener {
                                 () ->
                                         new ResourceNotFoundException(
                                                 "User not found " + commentDTO.getCreatedById()));
-        Ticket ticket =
-                ticketRepository
-                        .findById(commentDTO.getEntityId())
-                        .orElseThrow(
-                                () ->
-                                        new ResourceNotFoundException(
-                                                "Ticket not found " + commentDTO.getEntityId()));
+        TicketDTO ticket = ticketService.getTicketById(commentDTO.getEntityId());
 
         String commentContent = StringUtils.polishedHtmlTagsMessage(commentDTO.getContent());
         String truncatedContent =
@@ -88,19 +83,13 @@ public class TicketCommentCreatedNotificationEventListener {
                                                 "/portal/users/"
                                                         + Obfuscator.obfuscate(
                                                                 createdUser.getId())),
-                                text(" has created a new comment for the request "),
-                                a(ticket.getRequestTitle())
-                                        .withHref(
-                                                "/portal/teams/"
-                                                        + Obfuscator.obfuscate(
-                                                                ticket.getTeam().getId())
-                                                        + "/tickets/"
-                                                        + Obfuscator.obfuscate(ticket.getId())),
+                                text(" has created a new comment for the ticket "),
+                                a(buildTicketPath(ticket)),
                                 text(": " + truncatedContent))
                         .render();
 
         List<UserWithTeamRoleDTO> usersInTeam =
-                teamRepository.findUsersByTeamId(ticket.getTeam().getId());
+                teamRepository.findUsersByTeamId(ticket.getTeamId());
 
         List<Notification> notifications = new ArrayList<>();
 
@@ -129,7 +118,7 @@ public class TicketCommentCreatedNotificationEventListener {
 
         ActivityLog activityLog =
                 ActivityLog.builder()
-                        .entityId(ticket.getTeam().getId())
+                        .entityId(ticket.getTeamId())
                         .entityType(EntityType.Team)
                         .content(html)
                         .build();

@@ -170,10 +170,12 @@ public interface TicketRepository
                     + "JOIN WorkflowTransitionHistory h ON h.ticket.id = r.id "
                     + "WHERE r.isDeleted = false "
                     + "AND r.isCompleted = false "
-                    + "AND h.slaDueDate IS NOT NULL "
-                    + "AND h.slaDueDate < CURRENT_TIMESTAMP "
                     + "AND h.status <> :status "
-                    + "AND r.team.id = :teamId")
+                    + "AND r.team.id = :teamId "
+                    + "AND ("
+                    + "  (h.slaDueDate IS NOT NULL AND h.slaDueDate < CURRENT_TIMESTAMP) "
+                    + "  OR (r.estimatedCompletionDate IS NOT NULL AND r.estimatedCompletionDate < CURRENT_TIMESTAMP)"
+                    + ")")
     Page<Ticket> findOverdueTicketsByTeamId(
             @Param("teamId") Long teamId,
             @Param("status") WorkflowTransitionHistoryStatus completedStatus,
@@ -186,10 +188,12 @@ public interface TicketRepository
                     + "JOIN UserTeam ut ON ut.team.id = r.team.id "
                     + "WHERE r.isDeleted = false "
                     + "AND r.isCompleted = false "
-                    + "AND h.slaDueDate IS NOT NULL "
-                    + "AND h.slaDueDate < CURRENT_TIMESTAMP "
                     + "AND h.status <> :status "
-                    + "AND ut.user.id = :userId")
+                    + "AND ut.user.id = :userId "
+                    + "AND ("
+                    + "  (h.slaDueDate IS NOT NULL AND h.slaDueDate < CURRENT_TIMESTAMP) "
+                    + "  OR (r.estimatedCompletionDate IS NOT NULL AND r.estimatedCompletionDate < CURRENT_TIMESTAMP)"
+                    + ")")
     Page<Ticket> findOverdueTicketsByUserId(
             @Param("userId") Long userId,
             @Param("status") WorkflowTransitionHistoryStatus completedStatus,
@@ -209,12 +213,18 @@ public interface TicketRepository
                 ORDER BY h2.transitionDate DESC
                 LIMIT 1
             )
-            AND h.slaDueDate IS NOT NULL
-            AND h.slaDueDate < CURRENT_TIMESTAMP
             AND h.status <> :status
             AND r.team.id = :teamId
-            AND (h.slaDueDate >= COALESCE(:fromDate, h.slaDueDate))
-            AND (h.slaDueDate <= COALESCE(:toDate, h.slaDueDate))
+            AND (
+                (h.slaDueDate IS NOT NULL AND h.slaDueDate < CURRENT_TIMESTAMP)
+                OR (r.estimatedCompletionDate IS NOT NULL AND r.estimatedCompletionDate < CURRENT_TIMESTAMP)
+            )
+            AND (
+                (h.slaDueDate >= COALESCE(:fromDate, h.slaDueDate) OR r.estimatedCompletionDate >= COALESCE(:fromDate, r.estimatedCompletionDate))
+            )
+            AND (
+                (h.slaDueDate <= COALESCE(:toDate, h.slaDueDate) OR r.estimatedCompletionDate <= COALESCE(:toDate, r.estimatedCompletionDate))
+            )
             """)
     Long countOverdueTicketsByTeamId(
             @Param("teamId") Long teamId,

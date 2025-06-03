@@ -7,24 +7,18 @@ const TruncatedHtmlLabel = ({
   htmlContent: string;
   wordLimit: number;
 }) => {
-  if (htmlContent.length <= wordLimit) {
-    return (
-      <div className="px-4">
-        <div
-          className="prose prose-blue dark:prose-invert max-w-none"
-          dangerouslySetInnerHTML={{ __html: htmlContent }}
-        />
-      </div>
-    );
-  }
+  const isTruncated = htmlContent.length > wordLimit;
 
-  const truncatedContent = htmlContent.substring(0, wordLimit) + " ...";
+  const content = isTruncated
+    ? htmlContent.substring(0, wordLimit) + " ..."
+    : htmlContent;
 
   return (
     <div className="px-4">
       <div
         className="prose prose-blue dark:prose-invert max-w-none"
-        dangerouslySetInnerHTML={{ __html: truncatedContent }}
+        dangerouslySetInnerHTML={{ __html: content }}
+        title={isTruncated ? htmlContent.replace(/<[^>]*>/g, "") : undefined}
       />
     </div>
   );

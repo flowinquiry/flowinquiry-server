@@ -43,6 +43,8 @@ const UnassignedTickets = ({ teamId }: { teamId: number }) => {
       currentPage,
       sortBy,
       sortDirection,
+      "modifiedAt", // Secondary sort field
+      "desc", // Secondary sort direction
       setError,
     );
   };
@@ -54,6 +56,8 @@ const UnassignedTickets = ({ teamId }: { teamId: number }) => {
       currentPage,
       sortBy,
       sortDirection,
+      "lastModifiedDate", // Include secondary sort in cache key
+      "desc",
     ],
     fetchTickets,
     {

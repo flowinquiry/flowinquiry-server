@@ -44,13 +44,22 @@ const TeamOverdueTickets = ({ teamId }: { teamId: number }) => {
       currentPage,
       sortBy,
       sortDirection,
+      "modifiedAt",
+      "desc",
       setError,
     );
   };
 
   // **Use SWR for Fetching**
   const { data, error, isLoading, mutate } = useSWR(
-    [`/api/team/${teamId}/overdue-tickets`, currentPage, sortBy, sortDirection],
+    [
+      `/api/team/${teamId}/overdue-tickets`,
+      currentPage,
+      sortBy,
+      sortDirection,
+      "modifiedAt",
+      "desc",
+    ],
     fetchTickets,
     {
       revalidateOnFocus: false,

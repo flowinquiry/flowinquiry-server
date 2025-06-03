@@ -20,7 +20,11 @@ const TruncatedHtmlLabel = ({
       <div
         className="prose prose-blue dark:prose-invert max-w-none"
         dangerouslySetInnerHTML={{ __html: content }}
-        title={isTruncated ? sanitizeHtml(htmlContent, { allowedTags: [] }) : undefined}
+        title={
+          isTruncated
+            ? sanitizeHtml(htmlContent, { allowedTags: [] })
+            : undefined
+        }
       />
     </div>
   );

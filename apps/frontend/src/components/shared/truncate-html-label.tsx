@@ -1,5 +1,7 @@
 "use client";
 
+import sanitizeHtml from "sanitize-html";
+
 const TruncatedHtmlLabel = ({
   htmlContent,
   wordLimit,
@@ -18,7 +20,7 @@ const TruncatedHtmlLabel = ({
       <div
         className="prose prose-blue dark:prose-invert max-w-none"
         dangerouslySetInnerHTML={{ __html: content }}
-        title={isTruncated ? htmlContent.replace(/<[^>]*>/g, "") : undefined}
+        title={isTruncated ? sanitizeHtml(htmlContent, { allowedTags: [] }) : undefined}
       />
     </div>
   );

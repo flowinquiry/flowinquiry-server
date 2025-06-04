@@ -8,6 +8,12 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { FormField, FormItem } from "@/components/ui/form";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 
 interface WorkflowStatesSelectProps {
   fieldName: string;
@@ -35,25 +41,42 @@ const WorkflowStatesSelectField = ({
           (option) => option.value === field.value,
         );
 
+        const displayText = selectedOption?.label || placeholder;
+        const isTextLong = displayText.length > 30; // Adjust threshold as needed
+
         return (
           <FormItem className="grid grid-cols-1">
             <label className="text-sm font-medium">{label}</label>
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button
-                  variant="outline"
-                  className="w-full text-left  justify-start"
-                >
-                  {selectedOption?.label || placeholder}
-                </Button>
+                <TooltipProvider>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <Button
+                        variant="outline"
+                        className="w-full text-left justify-start min-w-0"
+                      >
+                        <span className="truncate block">{displayText}</span>
+                      </Button>
+                    </TooltipTrigger>
+                    {isTextLong && (
+                      <TooltipContent>
+                        <p>{displayText}</p>
+                      </TooltipContent>
+                    )}
+                  </Tooltip>
+                </TooltipProvider>
               </DropdownMenuTrigger>
-              <DropdownMenuContent>
+              <DropdownMenuContent className="w-full min-w-[var(--radix-dropdown-menu-trigger-width)]">
                 {options.map((option) => (
                   <DropdownMenuItem
                     key={option.value}
                     onClick={() => field.onChange(option.value)}
+                    className="cursor-pointer"
                   >
-                    {option.label}
+                    <span className="truncate" title={option.label}>
+                      {option.label}
+                    </span>
                   </DropdownMenuItem>
                 ))}
               </DropdownMenuContent>

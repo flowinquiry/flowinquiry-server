@@ -44,28 +44,32 @@ const WorkflowStatesSelectField = ({
         const displayText = selectedOption?.label || placeholder;
         const isTextLong = displayText.length > 30; // Adjust threshold as needed
 
+        const DropdownButton = (
+          <Button
+            variant="outline"
+            className="w-full text-left justify-start min-w-0"
+          >
+            <span className="truncate block">{displayText}</span>
+          </Button>
+        );
+
         return (
           <FormItem className="grid grid-cols-1">
             <label className="text-sm font-medium">{label}</label>
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <TooltipProvider>
-                  <Tooltip>
-                    <TooltipTrigger asChild>
-                      <Button
-                        variant="outline"
-                        className="w-full text-left justify-start min-w-0"
-                      >
-                        <span className="truncate block">{displayText}</span>
-                      </Button>
-                    </TooltipTrigger>
-                    {isTextLong && (
+                {isTextLong ? (
+                  <TooltipProvider>
+                    <Tooltip>
+                      <TooltipTrigger asChild>{DropdownButton}</TooltipTrigger>
                       <TooltipContent>
                         <p>{displayText}</p>
                       </TooltipContent>
-                    )}
-                  </Tooltip>
-                </TooltipProvider>
+                    </Tooltip>
+                  </TooltipProvider>
+                ) : (
+                  DropdownButton
+                )}
               </DropdownMenuTrigger>
               <DropdownMenuContent className="w-full min-w-[var(--radix-dropdown-menu-trigger-width)]">
                 {options.map((option) => (

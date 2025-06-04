@@ -8,12 +8,6 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { FormField, FormItem } from "@/components/ui/form";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
 
 interface WorkflowStatesSelectProps {
   fieldName: string;
@@ -41,35 +35,19 @@ const WorkflowStatesSelectField = ({
           (option) => option.value === field.value,
         );
 
-        const displayText = selectedOption?.label || placeholder;
-        const isTextLong = displayText.length > 30; // Adjust threshold as needed
-
-        const DropdownButton = (
-          <Button
-            variant="outline"
-            className="w-full text-left justify-start min-w-0"
-          >
-            <span className="truncate block">{displayText}</span>
-          </Button>
-        );
-
         return (
           <FormItem className="grid grid-cols-1">
             <label className="text-sm font-medium">{label}</label>
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                {isTextLong ? (
-                  <TooltipProvider>
-                    <Tooltip>
-                      <TooltipTrigger asChild>{DropdownButton}</TooltipTrigger>
-                      <TooltipContent>
-                        <p>{displayText}</p>
-                      </TooltipContent>
-                    </Tooltip>
-                  </TooltipProvider>
-                ) : (
-                  DropdownButton
-                )}
+                <Button
+                  variant="outline"
+                  className="w-full text-left justify-start min-w-0"
+                >
+                  <span className="truncate block">
+                    {selectedOption?.label || placeholder}
+                  </span>
+                </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent className="w-full min-w-[var(--radix-dropdown-menu-trigger-width)]">
                 {options.map((option) => (

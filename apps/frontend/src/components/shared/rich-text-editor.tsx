@@ -524,10 +524,10 @@ const RichTextEditor = ({
     };
 
     const editorDom = editor.view.dom;
-    editorDom.addEventListener("blur-sm", handleBlur);
+    editorDom.addEventListener("blur", handleBlur);
 
     return () => {
-      editorDom.removeEventListener("blur-sm", handleBlur);
+      editorDom.removeEventListener("blur", handleBlur);
     };
   }, [editor, onBlur]);
 

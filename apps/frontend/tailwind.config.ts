@@ -1,4 +1,5 @@
 import type { Config } from "tailwindcss";
+import { ThemeConfig } from "tailwindcss/plugin";
 
 const config: Config = {
   darkMode: ["class"],
@@ -94,7 +95,7 @@ const config: Config = {
         "collapsible-down": "collapsible-down 0.2s ease-out",
         "collapsible-up": "collapsible-up 0.2s ease-out",
       },
-      typography: (theme) => ({
+      typography: (theme: ThemeConfig["theme"]) => ({
         DEFAULT: {
           css: {
             color: theme("colors.foreground"),

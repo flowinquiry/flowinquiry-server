@@ -123,7 +123,7 @@ const TeamWorkflowsView = () => {
             {workflows.map((workflow) => (
               <div
                 key={workflow.id}
-                className="relative w-[28rem] grid grid-cols-1 gap-4 border px-4 py-4 rounded-2xl"
+                className="relative w-md grid grid-cols-1 gap-4 border px-4 py-4 rounded-2xl"
               >
                 {workflow.ownerId === null && (
                   <div className="absolute bottom-0 right-0 bg-blue-600 text-white text-xs font-semibold px-2 py-1 rounded-bl-lg">
@@ -149,7 +149,7 @@ const TeamWorkflowsView = () => {
                       <DropdownMenuTrigger asChild>
                         <Ellipsis className="cursor-pointer absolute top-2 right-2 text-gray-400" />
                       </DropdownMenuTrigger>
-                      <DropdownMenuContent className="w-[14rem]">
+                      <DropdownMenuContent className="w-56">
                         <TooltipProvider>
                           <Tooltip>
                             <TooltipTrigger>

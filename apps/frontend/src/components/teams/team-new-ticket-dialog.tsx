@@ -105,7 +105,7 @@ const NewTicketToTeamDialog: React.FC<NewTicketToTeamDialogProps> = ({
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogContent className="sm:max-w-[56rem] max-h-[90vh] p-4 sm:p-6 flex flex-col overflow-y-auto">
+      <DialogContent className="sm:max-w-4xl max-h-[90vh] p-4 sm:p-6 flex flex-col overflow-y-auto">
         <DialogHeader>
           <DialogTitle>
             [{workflow?.requestName}]: {t.teams.tickets.new_dialog("title")}

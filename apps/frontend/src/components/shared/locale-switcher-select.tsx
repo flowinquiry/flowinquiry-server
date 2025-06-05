@@ -39,11 +39,7 @@ export default function LocaleSwitcherSelect({
 
   return (
     <Select defaultValue={defaultValue} onValueChange={onChange}>
-      <SelectTrigger
-        aria-label={label}
-        disabled={isPending}
-        className="w-[5rem]"
-      >
+      <SelectTrigger aria-label={label} disabled={isPending} className="w-20">
         <GlobeIcon className="h-4 w-4" />
         <SelectValue className="sr-only">{label}</SelectValue>
       </SelectTrigger>

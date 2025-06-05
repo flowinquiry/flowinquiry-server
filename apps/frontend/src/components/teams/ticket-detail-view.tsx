@@ -273,7 +273,7 @@ const TicketDetailView = ({ ticketId }: { ticketId: number }) => {
                   </span>
 
                   <Badge
-                    variant={ticket.isCompleted ? "secondary" : "outline"}
+                    variant={ticket.isCompleted ? "secondary" : "outline-solid"}
                     className="font-normal"
                   >
                     {currentRequestState}
@@ -619,21 +619,21 @@ const TicketDetailView = ({ ticketId }: { ticketId: number }) => {
                   <TabsList className="mx-6 mt-6 grid w-full grid-cols-3 bg-muted/50">
                     <TabsTrigger
                       value="comments"
-                      className="data-[state=active]:bg-background data-[state=active]:shadow-sm"
+                      className="data-[state=active]:bg-background data-[state=active]:shadow-xs"
                     >
                       <MessageSquarePlus className="mr-2 h-4 w-4" />{" "}
                       {t.teams.tickets.detail("comments")}
                     </TabsTrigger>
                     <TabsTrigger
                       value="changes-history"
-                      className="data-[state=active]:bg-background data-[state=active]:shadow-sm"
+                      className="data-[state=active]:bg-background data-[state=active]:shadow-xs"
                     >
                       <Clock className="mr-2 h-4 w-4" />{" "}
                       {t.teams.tickets.detail("changes_history")}
                     </TabsTrigger>
                     <TabsTrigger
                       value="timeline-history"
-                      className="data-[state=active]:bg-background data-[state=active]:shadow-sm"
+                      className="data-[state=active]:bg-background data-[state=active]:shadow-xs"
                     >
                       <FileText className="mr-2 h-4 w-4" />{" "}
                       {t.teams.tickets.detail("timeline")}

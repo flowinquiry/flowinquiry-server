@@ -104,7 +104,7 @@ const OrgChartContent = ({
   return (
     <div className="flex h-full">
       {/* Org Chart */}
-      <div className="relative flex-grow h-full">
+      <div className="relative grow h-full">
         <ReactFlow
           nodes={nodes}
           edges={edges}
@@ -293,11 +293,11 @@ const OrgChartDialog = ({
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-w-[100rem] w-full">
+      <DialogContent className="max-w-400 w-full">
         <DialogHeader>
           <DialogTitle>{t.users.common("org_chart")}</DialogTitle>
         </DialogHeader>
-        <div className="h-[50rem]">
+        <div className="h-200">
           {isOpen && (
             <ReactFlowProvider>
               <OrgChartContent

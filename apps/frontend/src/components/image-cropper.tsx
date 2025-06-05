@@ -146,7 +146,7 @@ export function ImageCropper({
               size={"sm"}
               type="reset"
               className="w-fit"
-              variant={"outline"}
+              variant={"outline-solid"}
               onClick={() => {
                 setSelectedFile(null);
               }}

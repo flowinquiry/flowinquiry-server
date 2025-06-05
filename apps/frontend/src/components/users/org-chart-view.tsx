@@ -98,7 +98,7 @@ const OrgChartContent = ({
   return (
     <div className="flex h-full">
       {/* Org Chart */}
-      <div className="relative flex-grow">
+      <div className="relative grow">
         <ReactFlow
           nodes={nodes}
           edges={edges}

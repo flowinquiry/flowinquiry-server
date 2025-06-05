@@ -153,7 +153,7 @@ const TeamOverdueTickets = ({ teamId }: { teamId: number }) => {
                 tickets.map((ticket, index) => (
                   <div
                     key={ticket.id}
-                    className={`py-4 px-4 rounded-md shadow-sm ${
+                    className={`py-4 px-4 rounded-md shadow-xs ${
                       index % 2 === 0
                         ? "bg-gray-50 dark:bg-gray-800"
                         : "bg-white dark:bg-gray-900"

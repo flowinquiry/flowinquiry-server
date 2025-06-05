@@ -344,11 +344,11 @@ const TicketAdvancedSearch: React.FC<TicketAdvancedSearchProps> = ({
   };
 
   return (
-    <div className="bg-gray-50 dark:bg-gray-900 rounded-lg border border-gray-200 dark:border-gray-700 shadow-sm">
+    <div className="bg-gray-50 dark:bg-gray-900 rounded-lg border border-gray-200 dark:border-gray-700 shadow-xs">
       <div className="p-4">
         <div className="flex flex-col gap-3 md:flex-row md:items-center">
           {/* Search input with icon */}
-          <div className="relative flex-grow">
+          <div className="relative grow">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-500 dark:text-gray-400" />
             <Input
               type="text"

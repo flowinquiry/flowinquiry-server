@@ -30,7 +30,7 @@ const FacetedFilterContent = React.forwardRef<
 >(({ className, children, ...props }, ref) => (
   <PopoverContent
     ref={ref}
-    className={cn("w-[12.5rem] p-0", className)}
+    className={cn("w-50 p-0", className)}
     align="start"
     {...props}
   >

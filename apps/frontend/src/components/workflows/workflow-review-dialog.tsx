@@ -67,9 +67,9 @@ export default function WorkflowReviewDialog({
         </DialogHeader>
 
         {/* Layout: Left -> Diagram | Right -> Transitions List */}
-        <div className="flex flex-grow h-full overflow-hidden">
+        <div className="flex grow h-full overflow-hidden">
           {/* Left: Workflow Diagram */}
-          <div className="flex-grow h-full overflow-hidden border-r">
+          <div className="grow h-full overflow-hidden border-r">
             {loading ? (
               <div className="flex items-center justify-center h-full">
                 <Loader2 className="h-8 w-8 animate-spin" />
@@ -89,7 +89,7 @@ export default function WorkflowReviewDialog({
             <div className="p-4 border-b">
               <h3 className="text-lg font-semibold">State Transitions</h3>
             </div>
-            <ScrollArea className="flex-grow p-4">
+            <ScrollArea className="grow p-4">
               <div className="space-y-2">
                 {workflowDetail?.transitions.length ? (
                   workflowDetail.transitions.map(

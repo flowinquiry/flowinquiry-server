@@ -265,7 +265,7 @@ export const WorkflowDiagram: React.FC<{
           <Controls position="top-right" showInteractive={false} />
           <Panel
             position="top-left"
-            className="bg-background/80 p-2 rounded-md shadow-sm backdrop-blur-sm"
+            className="bg-background/80 p-2 rounded-md shadow-xs backdrop-blur-xs"
           >
             <div className="flex flex-col gap-2">
               <div className="flex items-center gap-3 text-xs">

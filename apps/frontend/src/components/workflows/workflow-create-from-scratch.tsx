@@ -65,7 +65,7 @@ const NewWorkflowFromScratch = ({
   return (
     <div className="flex flex-col gap-6">
       {/* Workflow Form */}
-      <div className="border p-4 rounded shadow-sm">
+      <div className="border p-4 rounded shadow-xs">
         <WorkflowEditForm
           workflowDetail={workflowDetail}
           onCancel={handleCancel}
@@ -75,7 +75,7 @@ const NewWorkflowFromScratch = ({
       </div>
 
       {/* Workflow Preview */}
-      <div className="border p-4 rounded shadow-sm">
+      <div className="border p-4 rounded shadow-xs">
         <WorkflowDiagram workflowDetails={previewWorkflowDetail} />
       </div>
     </div>

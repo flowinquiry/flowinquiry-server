@@ -165,7 +165,7 @@ const TeamUsersView = () => {
                       {groupedUsers[role].map((user) => (
                         <div
                           key={user.id}
-                          className="w-[28rem] flex flex-row gap-4 border px-4 py-4 rounded-2xl relative"
+                          className="w-md flex flex-row gap-4 border px-4 py-4 rounded-2xl relative"
                         >
                           <div>
                             <UserAvatar
@@ -205,7 +205,7 @@ const TeamUsersView = () => {
                               <DropdownMenuTrigger asChild>
                                 <Ellipsis className="cursor-pointer absolute top-2 right-2 text-gray-400" />
                               </DropdownMenuTrigger>
-                              <DropdownMenuContent className="w-[14rem]">
+                              <DropdownMenuContent className="w-56">
                                 <TooltipProvider>
                                   <Tooltip>
                                     <DropdownMenuItem
@@ -213,7 +213,7 @@ const TeamUsersView = () => {
                                       onClick={() => removeUserOutTeam(user)}
                                     >
                                       <TooltipTrigger className="w-full flex items-center gap-2">
-                                        <Trash className="w-4 h-4 flex-shrink-0" />
+                                        <Trash className="w-4 h-4 shrink-0" />
                                         <span className="flex-1 text-left">
                                           {t.teams.users("remove_user")}
                                         </span>

@@ -16,7 +16,7 @@ const TimelineItem = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <li
     ref={ref}
-    className={cn("relative flex flex-col p-6 pt-0 [&>*]:mb-3", className)}
+    className={cn("relative flex flex-col p-6 pt-0 *:mb-3", className)}
     {...props}
   />
 ));

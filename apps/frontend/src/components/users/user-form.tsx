@@ -105,7 +105,7 @@ export const UserForm = ({ userId }: { userId?: number }) => {
       <Form {...form}>
         <form
           onSubmit={form.handleSubmit(onSubmit)}
-          className="grid grid-cols-1 gap-4 sm:grid-cols-2 max-w-[72rem]"
+          className="grid grid-cols-1 gap-4 sm:grid-cols-2 max-w-6xl"
         >
           {/* Email field spans the entire row */}
           <div className="sm:col-span-2">

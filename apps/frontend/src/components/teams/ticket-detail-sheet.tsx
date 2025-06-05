@@ -177,7 +177,7 @@ const TicketDetailSheet: React.FC<TicketDetailsProps> = ({
   return (
     <FormProvider {...form}>
       <Sheet open={open} onOpenChange={onClose}>
-        <SheetContent className="w-full sm:w-[64rem] h-full">
+        <SheetContent className="w-full sm:w-5xl h-full">
           <ScrollArea className="h-full px-4">
             <SheetHeader className="mb-6">
               <SheetTitle>
@@ -195,7 +195,7 @@ const TicketDetailSheet: React.FC<TicketDetailsProps> = ({
                   {isEditingTitle ? (
                     <form
                       onSubmit={form.handleSubmit(onSubmit)}
-                      className="flex items-center gap-2 flex-grow"
+                      className="flex items-center gap-2 grow"
                     >
                       <Controller
                         name="requestTitle"
@@ -232,10 +232,10 @@ const TicketDetailSheet: React.FC<TicketDetailsProps> = ({
                       </div>
                     </form>
                   ) : (
-                    <div className="flex-grow">
+                    <div className="grow">
                       <Button
                         variant="link"
-                        className={`px-0 text-xl flex-grow text-left ${initialTicket.isCompleted ? "line-through" : ""}`}
+                        className={`px-0 text-xl grow text-left ${initialTicket.isCompleted ? "line-through" : ""}`}
                         onClick={(e) => {
                           // Allow the link navigation to proceed (don't call preventDefault)
                         }}

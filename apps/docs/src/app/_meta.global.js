@@ -18,6 +18,7 @@ export default {
       getting_started: "Get started",
       workflow_management: "Workflow management",
       working_with_requests: "Working with requests",
+      project_management: "Project management",
       administrator: {
         title: "Administrator",
         items: {

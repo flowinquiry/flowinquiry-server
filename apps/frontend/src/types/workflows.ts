@@ -35,7 +35,7 @@ export const WorkflowTransitionSchema = z.object({
   sourceStateId: z.number().nullish(),
   targetStateId: z.number().nullish(),
   eventName: z.string().min(1),
-  slaDuration: z.number().nullish(),
+  slaDuration: z.coerce.number().nullish(),
   escalateOnViolation: z.boolean(),
 });
 

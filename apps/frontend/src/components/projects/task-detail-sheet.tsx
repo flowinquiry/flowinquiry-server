@@ -2,6 +2,7 @@
 
 import { formatDistanceToNow } from "date-fns";
 import { Edit2, MessageSquarePlus } from "lucide-react";
+import Link from "next/link";
 import React, { useEffect, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 
@@ -46,6 +47,7 @@ import {
   PRIORITIES_ORDERED,
   PRIORITY_CONFIG,
 } from "@/lib/constants/ticket-priorities";
+import { obfuscate } from "@/lib/endecode";
 import { UserWithTeamRoleDTO } from "@/types/teams";
 import { TicketDTO, TicketPriority } from "@/types/tickets";
 
@@ -438,28 +440,33 @@ const TaskDetailSheet: React.FC<TaskDetailSheetProps> = ({
         <SheetHeader>
           <SheetTitle>
             <div className="flex items-center justify-between">
-              <div className="flex-1">
+              <div className="flex items-center flex-1 gap-2 min-w-0">
+                <Button variant="link" className="gap-0 px-0 h-auto">
+                  <Link
+                    href={`/portal/teams/${obfuscate(task.teamId)}/projects/${task.projectShortName}/${task.projectTicketNumber}`}
+                    className="text-sm font-medium"
+                  >
+                    [{task.projectShortName}-{task.projectTicketNumber}]
+                  </Link>
+                </Button>
+
                 {isEditingTitle ? (
-                  <div>
-                    <Input
-                      ref={titleInputRef}
-                      value={editedTitle}
-                      onChange={(e) => setEditedTitle(e.target.value)}
-                      onBlur={handleTitleBlur}
-                      onKeyDown={(e) => {
-                        if (e.key === "Enter") {
-                          handleTitleBlur();
-                        }
-                      }}
-                      className="text-xl font-semibold"
-                    />
-                  </div>
+                  <Input
+                    ref={titleInputRef}
+                    value={editedTitle}
+                    onChange={(e) => setEditedTitle(e.target.value)}
+                    onBlur={handleTitleBlur}
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter") handleTitleBlur();
+                    }}
+                    className="text-xl font-semibold h-9"
+                  />
                 ) : (
                   <TooltipProvider>
                     <Tooltip>
                       <TooltipTrigger asChild>
                         <h2
-                          className={`text-xl font-semibold px-1 py-1 ${editableClass}`}
+                          className={`text-xl font-semibold px-1 py-1 truncate cursor-pointer ${editableClass}`}
                           onClick={canEdit ? handleEditTitle : undefined}
                         >
                           {task.requestTitle}
@@ -474,13 +481,14 @@ const TaskDetailSheet: React.FC<TaskDetailSheetProps> = ({
                   </TooltipProvider>
                 )}
               </div>
+
               <Button
                 variant="ghost"
                 size="sm"
                 className="flex items-center gap-1"
                 onClick={handleFocusComments}
               >
-                <MessageSquarePlus className="h-4 w-4" />{" "}
+                <MessageSquarePlus className="h-4 w-4" />
                 {t.common.buttons("add_comment")}
               </Button>
             </div>

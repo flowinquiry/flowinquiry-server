@@ -1,5 +1,7 @@
 package io.flowinquiry.modules.teams.service.listener;
 
+import static io.flowinquiry.modules.teams.utils.TicketPathUtils.buildTicketPath;
+
 import io.flowinquiry.modules.collab.EmailContext;
 import io.flowinquiry.modules.collab.domain.EntityType;
 import io.flowinquiry.modules.collab.domain.EntityWatcher;
@@ -11,7 +13,6 @@ import io.flowinquiry.modules.teams.service.TicketService;
 import io.flowinquiry.modules.teams.service.dto.TicketDTO;
 import io.flowinquiry.modules.teams.service.event.TicketCommentCreatedEvent;
 import io.flowinquiry.modules.usermanagement.service.mapper.UserMapper;
-import io.flowinquiry.utils.Obfuscator;
 import java.util.List;
 import java.util.Locale;
 import org.springframework.context.event.EventListener;
@@ -19,6 +20,11 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
+/**
+ * Event listener for ticket comment creation events. This listener is responsible for sending email
+ * notifications to watchers of a ticket when a new comment is added to the ticket. Emails are sent
+ * asynchronously to all watchers except the comment creator.
+ */
 @Component
 public class TicketCommentCreatedMailEventListener {
     private final CommentService commentService;
@@ -40,6 +46,13 @@ public class TicketCommentCreatedMailEventListener {
         this.mailService = mailService;
     }
 
+    /**
+     * Handles the ticket comment created event. This method is triggered when a new comment is
+     * added to a ticket. It retrieves the comment details, finds all watchers of the ticket, and
+     * sends email notifications to each watcher (except the comment creator).
+     *
+     * @param event The event containing information about the created comment
+     */
     @Async("asyncTaskExecutor")
     @Transactional
     @EventListener
@@ -58,6 +71,8 @@ public class TicketCommentCreatedMailEventListener {
                     continue;
                 }
 
+                String ticketPath = buildTicketPath(ticketDTO);
+
                 EmailContext emailContext =
                         new EmailContext(Locale.forLanguageTag("en"))
                                 .setToUser(userMapper.toDto(watcher.getWatchUser()))
@@ -66,12 +81,7 @@ public class TicketCommentCreatedMailEventListener {
                                         ticketDTO.getRequestTitle())
                                 .addVariable("ticket", ticketDTO)
                                 .addVariable("comment", commentDTO)
-                                .addVariable(
-                                        "obfuscatedTeamId",
-                                        Obfuscator.obfuscate(ticketDTO.getTeamId()))
-                                .addVariable(
-                                        "obfuscatedTicketId",
-                                        Obfuscator.obfuscate(ticketDTO.getId()))
+                                .addVariable("ticketPath", ticketPath)
                                 .setTemplate("mail/newTicketCommentEmail");
 
                 mailService.sendEmail(emailContext);

@@ -105,4 +105,6 @@ cd "$SCRIPTS_DIR"
 bash all.sh
 cd - > /dev/null  # Return to previous directory silently
 
+
+source "$SCRIPTS_DIR/shared.sh"
 start_flowinquiry "$INSTALL_DIR"

@@ -243,6 +243,9 @@ const ProjectListView = () => {
                   <TableHeader>
                     <TableRow>
                       <TableHead>{t.teams.projects.form("name")}</TableHead>
+                      <TableHead>
+                        {t.teams.projects.form("short_name")}
+                      </TableHead>
                       <TableHead>{t.teams.projects.form("status")}</TableHead>
                       <TableHead>
                         {t.teams.projects.form("start_date")}
@@ -265,6 +268,7 @@ const ProjectListView = () => {
                             {project.name}
                           </Link>
                         </TableCell>
+                        <TableCell>{project.shortName}</TableCell>
                         <TableCell>
                           <span
                             className={`px-2 py-1 rounded-full text-xs font-medium ${

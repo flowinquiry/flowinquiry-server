@@ -43,6 +43,8 @@ const UnassignedTickets = ({ teamId }: { teamId: number }) => {
       currentPage,
       sortBy,
       sortDirection,
+      "modifiedAt", // Secondary sort field
+      "desc", // Secondary sort direction
       setError,
     );
   };
@@ -54,6 +56,8 @@ const UnassignedTickets = ({ teamId }: { teamId: number }) => {
       currentPage,
       sortBy,
       sortDirection,
+      "lastModifiedDate", // Include secondary sort in cache key
+      "desc",
     ],
     fetchTickets,
     {
@@ -163,7 +167,7 @@ const UnassignedTickets = ({ teamId }: { teamId: number }) => {
                                 <Link
                                   href={
                                     ticket.projectId && ticket.projectId > 0
-                                      ? `/portal/teams/${obfuscate(ticket.teamId)}/projects/${obfuscate(ticket.projectId)}/${obfuscate(ticket.id)}`
+                                      ? `/portal/teams/${obfuscate(ticket.teamId)}/projects/${ticket.projectShortName}/${ticket.projectTicketNumber}`
                                       : `/portal/teams/${obfuscate(ticket.teamId)}/tickets/${obfuscate(ticket.id)}`
                                   }
                                   className="truncate max-w-xs"
@@ -184,7 +188,7 @@ const UnassignedTickets = ({ teamId }: { teamId: number }) => {
                                 {t.teams.common("project")}
                               </span>
                               <Link
-                                href={`/portal/teams/${obfuscate(ticket.teamId)}/projects/${obfuscate(ticket.projectId)}`}
+                                href={`/portal/teams/${obfuscate(ticket.teamId)}/projects/${ticket.projectShortName}`}
                                 className="text-xs font-medium text-blue-600 hover:underline"
                               >
                                 {ticket.projectName}

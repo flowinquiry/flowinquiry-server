@@ -10,6 +10,12 @@ import io.flowinquiry.modules.usermanagement.repository.UserRepository;
 import java.util.Optional;
 import org.springframework.stereotype.Component;
 
+/**
+ * Registry for ticket field handlers. This class is responsible for mapping ticket field names to
+ * their display names and providing formatters for displaying field values in a user-friendly way.
+ * It is used for audit logging, displaying field changes, and other scenarios where ticket field
+ * values need to be formatted for display.
+ */
 @Component
 public class TicketFieldHandlerRegistry extends AbstractEntityFieldHandlerRegistry {
 
@@ -17,12 +23,23 @@ public class TicketFieldHandlerRegistry extends AbstractEntityFieldHandlerRegist
 
     private final WorkflowStateRepository workflowStateRepository;
 
+    /**
+     * Constructs a new TicketFieldHandlerRegistry with the required repositories.
+     *
+     * @param userRepository Repository for looking up user information
+     * @param workflowStateRepository Repository for looking up workflow state information
+     */
     public TicketFieldHandlerRegistry(
             UserRepository userRepository, WorkflowStateRepository workflowStateRepository) {
         this.userRepository = userRepository;
         this.workflowStateRepository = workflowStateRepository;
     }
 
+    /**
+     * Initializes all field handlers for ticket entities. This method registers handlers for
+     * various ticket fields, mapping them to their display names and providing custom formatters
+     * for complex fields like channel, state, and assigned user.
+     */
     @Override
     protected void initializeFieldHandlers() {
         addFieldHandler("requestTitle", new EntityFieldHandler<TicketDTO>("Title"));
@@ -65,11 +82,21 @@ public class TicketFieldHandlerRegistry extends AbstractEntityFieldHandlerRegist
                                         .orElse("")));
     }
 
+    /**
+     * Returns the class of the entity this registry handles.
+     *
+     * @return The TicketDTO class
+     */
     @Override
     public Class<?> getEntityClass() {
         return TicketDTO.class;
     }
 
+    /**
+     * Returns the entity type this registry handles.
+     *
+     * @return The Ticket entity type
+     */
     @Override
     public EntityType getEntityType() {
         return EntityType.Ticket;

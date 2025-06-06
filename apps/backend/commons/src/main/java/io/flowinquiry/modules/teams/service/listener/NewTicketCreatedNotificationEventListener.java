@@ -1,5 +1,6 @@
 package io.flowinquiry.modules.teams.service.listener;
 
+import static io.flowinquiry.modules.teams.utils.TicketPathUtils.buildTicketPath;
 import static j2html.TagCreator.a;
 import static j2html.TagCreator.p;
 import static j2html.TagCreator.text;
@@ -12,6 +13,7 @@ import io.flowinquiry.modules.collab.domain.NotificationType;
 import io.flowinquiry.modules.collab.repository.ActivityLogRepository;
 import io.flowinquiry.modules.collab.repository.NotificationRepository;
 import io.flowinquiry.modules.teams.repository.TeamRepository;
+import io.flowinquiry.modules.teams.service.TicketService;
 import io.flowinquiry.modules.teams.service.dto.TicketDTO;
 import io.flowinquiry.modules.teams.service.event.NewTicketCreatedEvent;
 import io.flowinquiry.modules.usermanagement.domain.User;
@@ -28,6 +30,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Component
 public class NewTicketCreatedNotificationEventListener {
+    private final TicketService ticketService;
     private final SimpMessagingTemplate messageTemplate;
     private final NotificationRepository notificationRepository;
     private final TeamRepository teamRepository;
@@ -35,11 +38,13 @@ public class NewTicketCreatedNotificationEventListener {
     private final UserRepository userRepository;
 
     public NewTicketCreatedNotificationEventListener(
+            TicketService ticketService,
             SimpMessagingTemplate messageTemplate,
             NotificationRepository notificationRepository,
             TeamRepository teamRepository,
             ActivityLogRepository activityLogRepository,
             UserRepository userRepository) {
+        this.ticketService = ticketService;
         this.messageTemplate = messageTemplate;
         this.notificationRepository = notificationRepository;
         this.teamRepository = teamRepository;
@@ -51,7 +56,7 @@ public class NewTicketCreatedNotificationEventListener {
     @Transactional
     @EventListener
     public void onNewTicketCreated(NewTicketCreatedEvent event) {
-        TicketDTO ticketDTO = event.getTicket();
+        TicketDTO ticketDTO = ticketService.getTicketById(event.getTicket().getId());
         User requestUser =
                 userRepository
                         .findOneById(ticketDTO.getRequestUserId())
@@ -67,13 +72,7 @@ public class NewTicketCreatedNotificationEventListener {
                                                         + Obfuscator.obfuscate(
                                                                 ticketDTO.getRequestUserId())),
                                 text(" has created a new ticket "),
-                                a(ticketDTO.getRequestTitle())
-                                        .withHref(
-                                                "/portal/teams/"
-                                                        + Obfuscator.obfuscate(
-                                                                ticketDTO.getTeamId())
-                                                        + "/tickets/"
-                                                        + Obfuscator.obfuscate(ticketDTO.getId())))
+                                a(ticketDTO.getRequestTitle()).withHref(buildTicketPath(ticketDTO)))
                         .render();
 
         List<UserWithTeamRoleDTO> usersInTeam =

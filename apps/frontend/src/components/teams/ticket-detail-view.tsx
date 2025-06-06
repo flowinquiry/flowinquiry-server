@@ -217,7 +217,7 @@ const TicketDetailView = ({ ticketId }: { ticketId: number }) => {
           },
           {
             title: ticket.projectName!,
-            link: `/portal/teams/${obfuscate(ticket.teamId)}/projects/${obfuscate(ticket.projectId)}`,
+            link: `/portal/teams/${obfuscate(ticket.teamId)}/projects/${ticket.projectShortName}`,
           },
           {
             title: ticket.requestTitle!,

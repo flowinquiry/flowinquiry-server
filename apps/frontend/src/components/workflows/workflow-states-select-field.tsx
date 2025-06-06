@@ -42,18 +42,23 @@ const WorkflowStatesSelectField = ({
               <DropdownMenuTrigger asChild>
                 <Button
                   variant="outline"
-                  className="w-full text-left  justify-start"
+                  className="w-full text-left justify-start min-w-0"
                 >
-                  {selectedOption?.label || placeholder}
+                  <span className="truncate block">
+                    {selectedOption?.label || placeholder}
+                  </span>
                 </Button>
               </DropdownMenuTrigger>
-              <DropdownMenuContent>
+              <DropdownMenuContent className="w-full min-w-[var(--radix-dropdown-menu-trigger-width)]">
                 {options.map((option) => (
                   <DropdownMenuItem
                     key={option.value}
                     onClick={() => field.onChange(option.value)}
+                    className="cursor-pointer"
                   >
-                    {option.label}
+                    <span className="truncate" title={option.label}>
+                      {option.label}
+                    </span>
                   </DropdownMenuItem>
                 ))}
               </DropdownMenuContent>

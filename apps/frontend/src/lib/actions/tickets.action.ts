@@ -111,10 +111,12 @@ export const getUnassignedTickets = async (
   page: number,
   sortBy: string,
   sortDirection: string,
+  secondarySortBy: string,
+  secondarySortDirection: string,
   setError?: (error: HttpError | string | null) => void,
 ) => {
   return get<PageableResult<TicketDTO>>(
-    `/api/tickets/teams/${teamId}/unassigned-tickets?page=${page}&size=5&sort=${sortBy},${sortDirection}`,
+    `/api/tickets/teams/${teamId}/unassigned-tickets?page=${page}&size=5&sort=${sortBy},${sortDirection}&sort=${secondarySortBy},${secondarySortDirection}`,
     setError,
   );
 };
@@ -124,10 +126,12 @@ export const getOverdueTicketsByTeam = async (
   page: number,
   sortBy: string,
   sortDirection: string,
+  secondarySortBy: string,
+  secondarySortDirection: string,
   setError?: (error: HttpError | string | null) => void,
 ) => {
   return get<PageableResult<TicketDTO>>(
-    `/api/tickets/teams/${teamId}/overdue-tickets?page=${page}&size=5&sort=${sortBy},${sortDirection}`,
+    `/api/tickets/teams/${teamId}/overdue-tickets?page=${page}&size=5&sort=${sortBy},${sortDirection}&sort=${secondarySortBy},${secondarySortDirection}`,
     setError,
   );
 };

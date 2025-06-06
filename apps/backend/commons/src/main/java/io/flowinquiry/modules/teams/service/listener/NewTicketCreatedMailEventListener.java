@@ -1,5 +1,7 @@
 package io.flowinquiry.modules.teams.service.listener;
 
+import static io.flowinquiry.modules.teams.utils.TicketPathUtils.buildTicketPath;
+
 import io.flowinquiry.modules.collab.EmailContext;
 import io.flowinquiry.modules.collab.domain.EntityType;
 import io.flowinquiry.modules.collab.domain.EntityWatcher;
@@ -16,6 +18,11 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
+/**
+ * Event listener for new ticket creation events. This listener is responsible for sending email
+ * notifications to watchers of a ticket when a new ticket is created. Emails are sent
+ * asynchronously to all watchers of the ticket.
+ */
 @Component
 public class NewTicketCreatedMailEventListener {
 
@@ -35,6 +42,13 @@ public class NewTicketCreatedMailEventListener {
         this.userMapper = userMapper;
     }
 
+    /**
+     * Handles the new ticket created event. This method is triggered when a new ticket is created.
+     * It retrieves the ticket details, finds all watchers of the ticket, and sends email
+     * notifications to each watcher.
+     *
+     * @param event The event containing information about the created ticket
+     */
     @Async("asyncTaskExecutor")
     @Transactional
     @EventListener
@@ -47,6 +61,7 @@ public class NewTicketCreatedMailEventListener {
         if (!watchers.isEmpty()) {
             watchers.forEach(
                     watcher -> {
+                        String ticketPath = buildTicketPath(ticketDTO);
                         EmailContext emailContext =
                                 new EmailContext(Locale.forLanguageTag("en"))
                                         .setToUser(userMapper.toDto(watcher.getWatchUser()))
@@ -54,6 +69,7 @@ public class NewTicketCreatedMailEventListener {
                                                 "email.new.ticket.subject",
                                                 ticketDTO.getRequestTitle())
                                         .addVariable("ticket", ticketDTO)
+                                        .addVariable("ticketPath", ticketPath)
                                         .setTemplate("mail/newTicketEmail");
                         mailService.sendEmail(emailContext);
                     });

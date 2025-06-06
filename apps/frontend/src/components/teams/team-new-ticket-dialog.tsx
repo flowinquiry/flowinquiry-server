@@ -78,7 +78,7 @@ const NewTicketToTeamDialog: React.FC<NewTicketToTeamDialogProps> = ({
 
   /** ✅ Reset form values when the dialog opens with a new workflow */
   useEffect(() => {
-    if (open) {
+    if (open && !form.formState.isDirty) {
       form.reset({
         teamId: teamEntity.id!,
         priority: "Medium",

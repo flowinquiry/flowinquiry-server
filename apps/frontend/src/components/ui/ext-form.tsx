@@ -159,7 +159,7 @@ export const DatePickerField: React.FC<
               <PopoverTrigger asChild>
                 <FormControl>
                   <Button
-                    variant={"outline-solid"}
+                    variant={"outline"}
                     className={cn(
                       "w-[240px] pl-3 text-left font-normal",
                       !field.value && "text-muted-foreground",

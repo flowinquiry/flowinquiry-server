@@ -273,7 +273,7 @@ const TicketDetailView = ({ ticketId }: { ticketId: number }) => {
                   </span>
 
                   <Badge
-                    variant={ticket.isCompleted ? "secondary" : "outline-solid"}
+                    variant={ticket.isCompleted ? "secondary" : "outline"}
                     className="font-normal"
                   >
                     {currentRequestState}

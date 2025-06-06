@@ -57,6 +57,6 @@ public class FlowInquiryProperties {
     @Getter
     @Setter
     public static class Slack {
-        private String token = "";
+        private String token;
     }
 }

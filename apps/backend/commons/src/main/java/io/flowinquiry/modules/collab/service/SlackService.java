@@ -9,24 +9,27 @@ import io.flowinquiry.modules.collab.domain.SlackMessage;
 import java.io.IOException;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Service;
 
 @Slf4j
 @Service
+@ConditionalOnProperty("flowinquiry.slack.token")
 public class SlackService {
 
     private final FlowInquiryProperties flowInquiryProperties;
-
-    private Slack slack;
 
     public SlackService(FlowInquiryProperties flowInquiryProperties) {
         this.flowInquiryProperties = flowInquiryProperties;
     }
 
+    /**
+     * The message in {@link SlackMessage} can be formatted according to the <a href="https://docs.slack.dev/reference/methods/chat.postmessage">Slack docs</a>
+     */
     public ChatPostMessageResponse sendSlackMessage(SlackMessage slackMessage)
             throws IOException, SlackApiException {
 
-        slack = Slack.getInstance();
+        Slack slack = Slack.getInstance();
 
         String slackToken = flowInquiryProperties.getSlack().getToken();
         String message = slackMessage.getMessage();

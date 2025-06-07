@@ -436,7 +436,10 @@ const TaskDetailSheet: React.FC<TaskDetailSheetProps> = ({
 
   return (
     <Sheet open={isOpen} onOpenChange={setIsOpen}>
-      <SheetContent side="right" className="w-[90vw] sm:w-2xl lg:w-4xl">
+      <SheetContent
+        side="right"
+        className="w-full sm:max-w-[70rem] h-full px-4"
+      >
         <SheetHeader>
           <SheetTitle>
             <div className="flex items-center justify-between">

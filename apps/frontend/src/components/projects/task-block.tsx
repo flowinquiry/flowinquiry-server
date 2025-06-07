@@ -76,12 +76,12 @@ const TaskBlock: React.FC<TaskBlockProps> = ({ task, isDragging = false }) => {
         <div className="font-medium">{task.requestTitle}</div>
         {task.requestDescription && (
           <div
-            className="mt-1 text-xs text-gray-500 dark:text-gray-400 max-h-40 overflow-y-auto"
+            className="mt-1 text-xs max-h-40 overflow-y-auto"
             dangerouslySetInnerHTML={{ __html: task.requestDescription }}
           />
         )}
         <div className="mt-2 text-xs grid grid-cols-2 gap-x-4 gap-y-1">
-          <span className="text-gray-500 dark:text-gray-400">Priority:</span>
+          <span>Priority:</span>
           <span
             className={`font-medium ${getTextPriorityClass(task.priority)}`}
           >
@@ -90,18 +90,14 @@ const TaskBlock: React.FC<TaskBlockProps> = ({ task, isDragging = false }) => {
 
           {task.assignUserName && (
             <>
-              <span className="text-gray-500 dark:text-gray-400">
-                Assigned to:
-              </span>
+              <span>Assigned to:</span>
               <span>{task.assignUserName}</span>
             </>
           )}
 
           {task.requestUserName && (
             <>
-              <span className="text-gray-500 dark:text-gray-400">
-                Requester:
-              </span>
+              <span>Requester:</span>
               <span>{task.requestUserName}</span>
             </>
           )}

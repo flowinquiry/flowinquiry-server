@@ -177,7 +177,7 @@ const TicketDetailSheet: React.FC<TicketDetailsProps> = ({
   return (
     <FormProvider {...form}>
       <Sheet open={open} onOpenChange={onClose}>
-        <SheetContent className="w-full sm:w-5xl h-full">
+        <SheetContent className="w-full sm:max-w-[70rem] h-full">
           <ScrollArea className="h-full px-4">
             <SheetHeader className="mb-6">
               <SheetTitle>

@@ -12,6 +12,11 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Service;
 
+/**
+ * This service sends messages to a Slack Workspace.
+ * In order to add this component to your dependency container,
+ * the SLACK_TOKEN_ID environment variable needs to be set.
+ */
 @Slf4j
 @Service
 @ConditionalOnProperty("flowinquiry.slack.token")

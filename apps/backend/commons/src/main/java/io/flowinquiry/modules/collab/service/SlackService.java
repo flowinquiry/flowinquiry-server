@@ -49,6 +49,7 @@ public class SlackService {
 
         ChatPostMessageResponse messageResponse =
                 slack.methods(slackToken).chatPostMessage(request);
+
         if (messageResponse.isOk()) {
             log.debug(
                     "Slack message successfully sent. Message: {} channel: {}", message, channelId);

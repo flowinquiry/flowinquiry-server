@@ -122,5 +122,7 @@ server:
 # to have type-safe configuration
 # ===================================================================
 flowinquiry:
+  slack:
+    token: ${SLACK_TOKEN_ID}
   edition: community
   version: 1.2.2

@@ -126,7 +126,7 @@ const CommentsView: React.FC<CommentsViewProps> = ({
                       </a>
                     </Button>
 
-                    <div className="text-gray-500 dark:text-gray-400 text-xs">
+                    <div className=" text-xs">
                       <Tooltip>
                         <TooltipTrigger>
                           <span>

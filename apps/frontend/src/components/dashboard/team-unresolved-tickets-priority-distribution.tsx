@@ -107,7 +107,7 @@ const TeamUnresolvedTicketsPriorityDistributionChart = () => {
               </div>
             ) : chartData.length === 0 ? (
               <div className="flex justify-center items-center">
-                <p className="text-gray-500">{pageT("no_data")}</p>
+                <p>{pageT("no_data")}</p>
               </div>
             ) : (
               <BarChart

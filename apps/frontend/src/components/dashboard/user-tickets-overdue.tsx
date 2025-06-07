@@ -180,10 +180,10 @@ const UserTeamsOverdueTickets = () => {
                           </Button>
                         </>
                       ) : (
-                        <span className="text-gray-500">Unassigned</span>
+                        <span>Unassigned</span>
                       )}
                     </div>
-                    <p className="text-xs text-gray-500 dark:text-gray-400 mt-2">
+                    <p className="text-xs mt-2">
                       Modified at:{" "}
                       <Tooltip>
                         <TooltipTrigger asChild>
@@ -201,9 +201,7 @@ const UserTeamsOverdueTickets = () => {
                   </div>
                 ))
               ) : (
-                <p className="text-sm text-gray-500 dark:text-gray-400">
-                  {pageT("no_data")}
-                </p>
+                <p className="text-sm">{pageT("no_data")}</p>
               )}
             </div>
           )}

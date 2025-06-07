@@ -179,7 +179,7 @@ function ActivationContent() {
               <p>
                 <a
                   onClick={handleRedirectNow}
-                  className="text-blue-500 cursor-pointer underline"
+                  className="cursor-pointer underline"
                 >
                   Click here to go to the login page now
                 </a>

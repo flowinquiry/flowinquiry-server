@@ -170,7 +170,7 @@ const DynamicQueryBuilder = ({
     <Card className="w-[500px] flex flex-col h-full">
       <CardHeader>
         <h2 className="text-lg font-semibold">Build Your Search Query</h2>
-        <p className="text-sm text-gray-500">
+        <p className="text-sm ">
           Select fields, choose operators, and enter values to refine your
           search.
         </p>

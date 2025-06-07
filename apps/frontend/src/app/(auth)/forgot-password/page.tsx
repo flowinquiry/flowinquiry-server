@@ -59,7 +59,7 @@ const ForgotPasswordPage = () => {
             </CardDescription>
           </CardHeader>
           <CardContent>
-            <p className="text-sm text-gray-500 mb-4">
+            <p className="text-sm mb-4">
               Please check your inbox and follow the instructions in the email
               to reset your password. If you don't see it, check your spam or
               junk folder.
@@ -111,7 +111,7 @@ const ForgotPasswordPage = () => {
                   </FormItem>
                 )}
               />
-              <div className="text-sm text-gray-500">
+              <div className="text-sm">
                 If you remember your password, you can{" "}
                 <a href="/login" className="hover:underline text-primary">
                   log in

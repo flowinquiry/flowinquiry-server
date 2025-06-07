@@ -1,8 +1,7 @@
 "use client";
 
+import { toast } from "sonner";
 import { z } from "zod";
-
-import { toast } from "@/components/ui/use-toast";
 
 export const validateForm = <T>(
   formDataObject: T,
@@ -22,15 +21,13 @@ export const validateForm = <T>(
 
     // Show error toast
     setTimeout(() => {
-      toast({
-        variant: "destructive",
-        title: "Error",
+      toast.error("Error", {
         description: "Invalid values. Please fix them before submitting again.",
       });
     }, 2000);
 
-    return false; // Return false to indicate validation failure
+    return false;
   }
 
-  return validation.data; // Return the validated data if successful
+  return validation.data;
 };

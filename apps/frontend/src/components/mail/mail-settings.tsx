@@ -5,6 +5,7 @@ import { EyeIcon, EyeOffIcon } from "lucide-react";
 import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
+import { toast } from "sonner";
 import { z } from "zod";
 
 import { Heading } from "@/components/heading";
@@ -27,7 +28,6 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Separator } from "@/components/ui/separator";
-import { useToast } from "@/components/ui/use-toast";
 import { useAppClientTranslations } from "@/hooks/use-translations";
 import {
   findAppSettingsByGroup,
@@ -41,7 +41,6 @@ export function MailSettings() {
   const [loading, setLoading] = useState(true);
   const [showPassword, setShowPassword] = useState(false);
   const [submitAttempted, setSubmitAttempted] = useState(false);
-  const { toast } = useToast();
   const t = useAppClientTranslations();
   const router = useRouter();
 
@@ -255,7 +254,7 @@ export function MailSettings() {
       const payload = toAppSettings(formValues);
 
       await updateAppSettings(payload, setError);
-      toast({ description: t.mail("save_successfully") });
+      toast.info(t.mail("save_successfully"));
       router.push("/portal/settings");
     } else {
       // Clear all existing errors first

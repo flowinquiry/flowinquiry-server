@@ -12,6 +12,7 @@ import {
 import Link from "next/link";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import React, { useCallback, useEffect, useState } from "react";
+import { toast } from "sonner";
 
 import { Heading } from "@/components/heading";
 import { UserAvatar } from "@/components/shared/avatar-display";
@@ -41,7 +42,6 @@ import {
 import OrgChartDialog from "@/components/users/org-chart-dialog";
 import { useDebouncedCallback } from "@/hooks/use-debounced-callback";
 import { usePagePermission } from "@/hooks/use-page-permission";
-import { useToast } from "@/hooks/use-toast";
 import { useAppClientTranslations } from "@/hooks/use-translations";
 import {
   deleteUser,
@@ -56,7 +56,6 @@ import { PermissionUtils } from "@/types/resources";
 import { UserDTO } from "@/types/users";
 
 export const UserList = () => {
-  const { toast } = useToast();
   const [items, setItems] = useState<Array<UserDTO>>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(0);
@@ -160,11 +159,11 @@ export const UserList = () => {
 
   function onResendActivationEmail(user: UserDTO) {
     resendActivationEmail(user.email, setError).then(() => {
-      toast({
-        description: t.users.list("activation_email_sent", {
+      toast.info(
+        t.users.list("activation_email_sent", {
           email: user.email,
         }),
-      });
+      );
     });
   }
 

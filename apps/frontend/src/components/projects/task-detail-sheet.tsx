@@ -440,7 +440,7 @@ const TaskDetailSheet: React.FC<TaskDetailSheetProps> = ({
         side="right"
         className="w-full sm:max-w-[70rem] h-full px-4"
       >
-        <SheetHeader>
+        <SheetHeader className="pt-2 pl-0">
           <SheetTitle>
             <div className="flex items-center justify-between">
               <div className="flex items-center flex-1 gap-2 min-w-0">
@@ -498,7 +498,7 @@ const TaskDetailSheet: React.FC<TaskDetailSheetProps> = ({
           </SheetTitle>
         </SheetHeader>
 
-        <ScrollArea className="h-[calc(100vh-200px)] mt-6">
+        <ScrollArea className="h-[calc(100vh-200px)] mt-2">
           <div className="space-y-6 pr-4">
             {/* Status and Priority Section */}
             <div className="grid grid-cols-2 gap-4">

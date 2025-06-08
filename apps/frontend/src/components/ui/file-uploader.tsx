@@ -7,12 +7,12 @@ import Dropzone, {
   type DropzoneProps,
   type FileRejection,
 } from "react-dropzone";
+import { toast } from "sonner";
 
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { useControllableState } from "@/hooks/use-controllable-state";
-import { useToast } from "@/hooks/use-toast";
 import { useAppClientTranslations } from "@/hooks/use-translations";
 import { cn, formatBytes } from "@/lib/utils";
 
@@ -94,7 +94,6 @@ interface FileUploaderProps extends React.HTMLAttributes<HTMLDivElement> {
 }
 
 export function FileUploader(props: FileUploaderProps) {
-  const { toast } = useToast();
   const t = useAppClientTranslations();
 
   const {
@@ -121,20 +120,16 @@ export function FileUploader(props: FileUploaderProps) {
   const onDrop = React.useCallback(
     async (acceptedFiles: File[], rejectedFiles: FileRejection[]) => {
       if (!multiple && maxFileCount === 1 && acceptedFiles.length > 1) {
-        toast({
-          variant: "destructive",
-          description: t.common.upload("can_not_upload_more_than_1_file_desc"),
-        });
+        toast.error(t.common.upload("can_not_upload_more_than_1_file_desc"));
         return;
       }
 
       if ((files?.length ?? 0) + acceptedFiles.length > maxFileCount) {
-        toast({
-          variant: "destructive",
-          description: t.common.upload("file_upload_limit_error", {
+        toast.error(
+          t.common.upload("file_upload_limit_error", {
             maxFileCount,
           }),
-        });
+        );
         return;
       }
 
@@ -150,12 +145,11 @@ export function FileUploader(props: FileUploaderProps) {
 
       if (rejectedFiles.length > 0) {
         rejectedFiles.forEach(({ file }) => {
-          toast({
-            variant: "destructive",
-            description: t.common.upload("file_rejected_error", {
+          toast.error(
+            t.common.upload("file_rejected_error", {
               fileName: file.name,
             }),
-          });
+          );
         });
       }
 
@@ -167,9 +161,7 @@ export function FileUploader(props: FileUploaderProps) {
         const target =
           updatedFiles.length > 0 ? `${updatedFiles.length} files` : `file`;
 
-        const loadingToast = toast({
-          variant: "default",
-          title: `Uploading ${target}...`,
+        const loadingToast = toast.message(`Uploading ${target}...`, {
           description: t.common.upload("toast_uploading_description"),
         });
 
@@ -177,18 +169,14 @@ export function FileUploader(props: FileUploaderProps) {
           await onUpload(updatedFiles);
 
           // Update toast to success
-          toast({
-            variant: "default",
-            title: t.common.upload("toast_upload_success"),
+          toast.success(t.common.upload("toast_upload_success"), {
             description: `${target} uploaded`,
           });
 
           setFiles([]);
         } catch (error) {
-          toast({
-            title: "Upload Failed",
+          toast.error("Upload Failed", {
             description: `Failed to upload ${target}`,
-            variant: "destructive",
           });
         } finally {
           loadingToast.dismiss();
@@ -235,7 +223,7 @@ export function FileUploader(props: FileUploaderProps) {
             {...getRootProps()}
             className={cn(
               "group relative grid h-36 w-full cursor-pointer place-items-center rounded-lg border-2 border-dashed border-muted-foreground/25 px-2 py-2 text-center transition hover:bg-muted/25",
-              "ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
+              "ring-offset-background focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
               isDragActive && "border-muted-foreground/50",
               isDisabled && "pointer-events-none opacity-60",
               className,

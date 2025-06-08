@@ -468,7 +468,7 @@ const RichTextEditor = ({
     content: value || "",
     editorProps: {
       attributes: {
-        class: "focus:outline-none min-h-[300px] pl-4 pt-2",
+        class: "focus:outline-hidden min-h-[300px] pl-4 pt-2",
       },
       handleDOMEvents: {
         keydown: (view: EditorView, event: KeyboardEvent) => {
@@ -725,7 +725,7 @@ const RichTextEditor = ({
       <div className="bg-background">
         <EditorContent
           editor={editor}
-          className="prose dark:prose-invert max-w-none focus:outline-none [&_.ProseMirror_table]:border-collapse [&_.ProseMirror_table_td]:border [&_.ProseMirror_table_td]:border-input [&_.ProseMirror_table_td]:p-2 [&_.ProseMirror_table_th]:border [&_.ProseMirror_table_th]:border-input [&_.ProseMirror_table_th]:p-2 [&_.ProseMirror_table_th]:bg-muted"
+          className="prose dark:prose-invert max-w-none focus:outline-hidden [&_.ProseMirror_table]:border-collapse [&_.ProseMirror_table_td]:border [&_.ProseMirror_table_td]:border-input [&_.ProseMirror_table_td]:p-2 [&_.ProseMirror_table_th]:border [&_.ProseMirror_table_th]:border-input [&_.ProseMirror_table_th]:p-2 [&_.ProseMirror_table_th]:bg-muted"
         />
       </div>
     </div>

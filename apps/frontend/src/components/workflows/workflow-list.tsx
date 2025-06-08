@@ -184,7 +184,7 @@ const WorkflowsView = () => {
           {items?.map((workflow) => (
             <div
               key={workflow.id}
-              className="w-[28rem] flex flex-col gap-4 border px-4 py-4 rounded-2xl relative"
+              className="w-md flex flex-col gap-4 border px-4 py-4 rounded-2xl relative"
             >
               {/* Ribbon for visibility */}
               {workflow.visibility === "PUBLIC" && (
@@ -225,7 +225,7 @@ const WorkflowsView = () => {
                     <DropdownMenuTrigger asChild>
                       <Ellipsis className="cursor-pointer absolute top-2 right-2 text-gray-400" />
                     </DropdownMenuTrigger>
-                    <DropdownMenuContent className="w-[14rem]">
+                    <DropdownMenuContent className="w-56">
                       <TooltipProvider>
                         <Tooltip>
                           <TooltipTrigger>

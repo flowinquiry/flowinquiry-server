@@ -138,7 +138,7 @@ export function AuthoritiesView() {
                     <DropdownMenuTrigger asChild>
                       <Ellipsis className="cursor-pointer absolute top-2 right-2 text-gray-400" />
                     </DropdownMenuTrigger>
-                    <DropdownMenuContent className="w-[14rem]">
+                    <DropdownMenuContent className="w-56">
                       <TooltipProvider>
                         <Tooltip>
                           <TooltipTrigger>

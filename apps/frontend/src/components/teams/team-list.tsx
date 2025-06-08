@@ -255,7 +255,7 @@ export const TeamList = () => {
                       <DropdownMenuTrigger asChild>
                         <Ellipsis className="cursor-pointer absolute top-2 right-2 text-gray-400" />
                       </DropdownMenuTrigger>
-                      <DropdownMenuContent className="w-[14rem]">
+                      <DropdownMenuContent className="w-56">
                         <DropdownMenuItem
                           onClick={() =>
                             router.push(

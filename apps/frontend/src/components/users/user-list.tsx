@@ -223,7 +223,7 @@ export const UserList = () => {
           {items?.map((user) => (
             <div
               key={user.id}
-              className="relative w-[28rem] flex flex-row gap-4 border px-4 py-4 rounded-2xl bg-white dark:bg-gray-800"
+              className="relative w-md flex flex-row gap-4 border px-4 py-4 rounded-2xl bg-white dark:bg-gray-800"
             >
               {PermissionUtils.canAccess(permissionLevel) && (
                 <div className="absolute top-2 right-2">

@@ -54,7 +54,7 @@ const StateColumn: React.FC<ColumnProps> = ({
     <motion.div
       ref={setNodeRef}
       className={clsx(
-        "flex flex-col flex-grow min-w-[28rem] max-w-[36rem] p-4 rounded shadow border",
+        "flex flex-col grow min-w-md max-w-xl p-4 rounded shadow-sm border",
         columnColor,
         "min-h-[200px]",
         isOver ? "bg-green-50 dark:bg-green-900/20" : "",
@@ -74,7 +74,7 @@ const StateColumn: React.FC<ColumnProps> = ({
         strategy={verticalListSortingStrategy}
       >
         <motion.div
-          className="flex-grow overflow-y-auto min-h-[100px]"
+          className="grow overflow-y-auto min-h-[100px]"
           layout
           transition={{ type: "spring", stiffness: 300, damping: 30 }}
         >

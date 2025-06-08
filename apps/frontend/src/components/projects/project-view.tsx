@@ -925,7 +925,7 @@ export default function ProjectView({
                   />
                 ))}
               {/* Add an extra padding div that matches column width */}
-              <div className="min-w-[28rem] flex-shrink-0 opacity-0 pointer-events-none">
+              <div className="min-w-md shrink-0 opacity-0 pointer-events-none">
                 {/* This invisible column ensures there's enough space at the end */}
               </div>
             </div>

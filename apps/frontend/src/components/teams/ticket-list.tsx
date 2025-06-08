@@ -106,7 +106,7 @@ const TicketList = ({ tickets, instantView = true }: TicketListProps) => {
               <div
                 key={request.id}
                 className={cn(
-                  "relative rounded-lg shadow-sm overflow-hidden",
+                  "relative rounded-lg shadow-xs overflow-hidden",
                   "border",
                   "bg-white dark:bg-gray-900",
                   "hover:shadow-md transition-all duration-300",
@@ -183,7 +183,7 @@ const TicketList = ({ tickets, instantView = true }: TicketListProps) => {
                           </div>
 
                           {/* Priority */}
-                          <div className="flex-shrink-0">
+                          <div className="shrink-0">
                             <TicketPriorityDisplay
                               priority={request.priority}
                             />

@@ -192,7 +192,7 @@ export const AuthorityView = ({ authorityId }: { authorityId: string }) => {
                       <DropdownMenuTrigger asChild>
                         <Ellipsis className="cursor-pointer absolute top-2 right-2 text-gray-400" />
                       </DropdownMenuTrigger>
-                      <DropdownMenuContent className="w-[14rem]">
+                      <DropdownMenuContent className="w-56">
                         <TooltipProvider>
                           <Tooltip>
                             <TooltipTrigger>
@@ -230,7 +230,7 @@ export const AuthorityView = ({ authorityId }: { authorityId: string }) => {
             )}
           </div>
         </div>
-        <Card className="w-full md:w-[28rem] mt-4 md:mt-0">
+        <Card className="w-full md:w-md mt-4 md:mt-0">
           <CardHeader>{t.authorities.detail("permissions_title")}</CardHeader>
           <CardContent>
             <div>
@@ -238,7 +238,7 @@ export const AuthorityView = ({ authorityId }: { authorityId: string }) => {
                 <Spinner size="large" />
               ) : resourcePermissions ? (
                 resourcePermissions.map((perm, index) => (
-                  <div key={index} className="p-4 rounded shadow">
+                  <div key={index} className="p-4 rounded shadow-sm">
                     <p>
                       <strong>{t.authorities.detail("resource")}:</strong>{" "}
                       {t.common.navigation(perm.resourceName!)}

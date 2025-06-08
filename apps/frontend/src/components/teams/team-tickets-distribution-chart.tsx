@@ -104,7 +104,7 @@ const TicketDistributionChart: React.FC<TicketDistributionChartProps> = ({
   const CustomTooltip = ({ active, payload }: any) => {
     if (active && payload && payload.length) {
       return (
-        <div className="bg-white dark:bg-gray-800 p-2 border rounded shadow">
+        <div className="bg-white dark:bg-gray-800 p-2 border rounded shadow-sm">
           <p className="font-medium">{payload[0].payload.name}</p>
           <p>
             <span className="font-semibold">{payload[0].value}</span> tickets

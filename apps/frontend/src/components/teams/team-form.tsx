@@ -194,7 +194,7 @@ export const TeamForm = ({ teamId }: { teamId: number | undefined }) => {
         </div>
         <Form {...form}>
           <form
-            className="grid grid-cols-1 gap-4 w-[28rem]"
+            className="grid grid-cols-1 gap-4 w-md"
             onSubmit={form.handleSubmit(onSubmit)}
           >
             <ExtInputField

@@ -49,7 +49,7 @@ const WorkflowStatesSelectField = ({
                   </span>
                 </Button>
               </DropdownMenuTrigger>
-              <DropdownMenuContent className="w-full min-w-[var(--radix-dropdown-menu-trigger-width)]">
+              <DropdownMenuContent className="w-full min-w-(--radix-dropdown-menu-trigger-width)">
                 {options.map((option) => (
                   <DropdownMenuItem
                     key={option.value}

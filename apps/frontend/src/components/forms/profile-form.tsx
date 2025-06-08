@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
 import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
+import { toast } from "sonner";
 import { z } from "zod";
 
 import { Heading } from "@/components/heading";
@@ -33,7 +34,6 @@ import {
 import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
 import { useImageCropper } from "@/hooks/use-image-cropper";
-import { useToast } from "@/hooks/use-toast";
 import { useAppClientTranslations } from "@/hooks/use-translations";
 import {
   changePassword,
@@ -60,7 +60,6 @@ export const ProfileForm = () => {
   const router = useRouter();
   const { data: session, update } = useSession();
   const t = useAppClientTranslations();
-  const { toast } = useToast();
   const {
     selectedFile,
     setSelectedFile,
@@ -146,7 +145,7 @@ export const ProfileForm = () => {
     // Reset file selection state
     setSelectedFile(null);
 
-    toast({ description: t.users.profile("save_success") });
+    toast.success(t.users.profile("save_success"));
   };
 
   const handleChangePassword = async (data: z.infer<typeof passwordSchema>) => {
@@ -155,10 +154,7 @@ export const ProfileForm = () => {
       setPasswordDialogOpen(false);
       setConfirmationOpen(true);
     } catch (error) {
-      toast({
-        variant: "destructive",
-        description: "Can not change the password",
-      });
+      toast.error("Can not change the password");
     }
   };
 

@@ -45,7 +45,7 @@ export const VersionUpgradeBanner = () => {
   if (!updateInfo || !visible) return null;
 
   return (
-    <div className="w-full bg-amber-100 border-b border-amber-200 text-amber-900 text-sm py-2 px-4 flex justify-between items-center shadow-sm">
+    <div className="w-full bg-amber-100 border-b border-amber-200 text-amber-900 text-sm py-2 px-4 flex justify-between items-center shadow-xs">
       <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-3">
         <span>
           🚀 New version <strong>{updateInfo.latestVersion}</strong> released on{" "}

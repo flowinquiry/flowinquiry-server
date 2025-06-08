@@ -108,7 +108,7 @@ export function ProjectEpicDialog({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-[60rem]">
+      <DialogContent className="sm:max-w-240">
         <DialogHeader>
           <DialogTitle>
             {isEditMode

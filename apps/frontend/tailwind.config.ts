@@ -1,6 +1,7 @@
 import type { Config } from "tailwindcss";
+import { ThemeConfig } from "tailwindcss/plugin";
 
-const config = {
+const config: Config = {
   darkMode: ["class"],
   content: [
     "./pages/**/*.{ts,tsx}",
@@ -72,36 +73,20 @@ const config = {
       },
       keyframes: {
         "accordion-down": {
-          from: {
-            height: "0",
-          },
-          to: {
-            height: "var(--radix-accordion-content-height)",
-          },
+          from: { height: "0" },
+          to: { height: "var(--radix-accordion-content-height)" },
         },
         "accordion-up": {
-          from: {
-            height: "var(--radix-accordion-content-height)",
-          },
-          to: {
-            height: "0",
-          },
+          from: { height: "var(--radix-accordion-content-height)" },
+          to: { height: "0" },
         },
         "collapsible-down": {
-          from: {
-            height: "0",
-          },
-          to: {
-            height: "var(--radix-collapsible-content-height)",
-          },
+          from: { height: "0" },
+          to: { height: "var(--radix-collapsible-content-height)" },
         },
         "collapsible-up": {
-          from: {
-            height: "var(--radix-collapsible-content-height)",
-          },
-          to: {
-            height: "0",
-          },
+          from: { height: "var(--radix-collapsible-content-height)" },
+          to: { height: "0" },
         },
       },
       animation: {
@@ -110,14 +95,73 @@ const config = {
         "collapsible-down": "collapsible-down 0.2s ease-out",
         "collapsible-up": "collapsible-up 0.2s ease-out",
       },
-      typography:
-        '(theme: (path: string) => string | undefined) => ({\\\\n        DEFAULT: {\\\\n          css: {\\\\n            color: theme("colors.foreground"),\\\\n            a: {\\\\n              color: theme("colors.primary.DEFAULT"),\\\\n              "&:hover": {\\\\n                color: theme("colors.primary.DEFAULT"),\\\\n              },\\\\n            },\\\\n            table: {\\\\n              width: "100%",\\\\n              borderCollapse: "collapse",\\\\n              thead: {\\\\n                borderBottom: `1px solid ${theme("colors.border")}`,\\\\n              },\\\\n              th: {\\\\n                color: theme("colors.foreground"),\\\\n                fontWeight: "600",\\\\n                padding: "0.5rem",\\\\n              },\\\\n              td: {\\\\n                color: theme("colors.foreground"),\\\\n                padding: "0.5rem",\\\\n              },\\\\n            },\\\\n            ".table-consistent-width table": {\\\\n              tableLayout: "fixed",\\\\n              width: "100%",\\\\n            },\\\\n            ".table-consistent-width th, .table-consistent-width td": {\\\\n              width: "33.33%",\\\\n              textAlign: "left",\\\\n              padding: "8px",\\\\n            },\\\\n          },\\\\n        },\\\\n        dark: {\\\\n          css: {\\\\n            color: theme("colors.foreground"),\\\\n            a: {\\\\n              color: theme("colors.primary.DEFAULT"),\\\\n              "&:hover": {\\\\n                color: theme("colors.primary.foreground"),\\\\n              },\\\\n            },\\\\n            table: {\\\\n              thead: {\\\\n                borderBottom: `1px solid ${theme("colors.border")}`,\\\\n              },\\\\n              th: {\\\\n                color: theme("colors.foreground"),\\\\n                fontWeight: "600",\\\\n              },\\\\n              td: {\\\\n                color: theme("colors.foreground"),\\\\n              },\\\\n            },\\\\n          },\\\\n        },\\\\n      })',
+      typography: (theme: ThemeConfig["theme"]) => ({
+        DEFAULT: {
+          css: {
+            color: theme("colors.foreground"),
+            a: {
+              color: theme("colors.primary.DEFAULT"),
+              "&:hover": {
+                color: theme("colors.primary.DEFAULT"),
+              },
+            },
+            table: {
+              width: "100%",
+              borderCollapse: "collapse",
+              thead: {
+                borderBottom: `1px solid ${theme("colors.border")}`,
+              },
+              th: {
+                color: theme("colors.foreground"),
+                fontWeight: "600",
+                padding: "0.5rem",
+              },
+              td: {
+                color: theme("colors.foreground"),
+                padding: "0.5rem",
+              },
+            },
+            ".table-consistent-width table": {
+              tableLayout: "fixed",
+              width: "100%",
+            },
+            ".table-consistent-width th, .table-consistent-width td": {
+              width: "33.33%",
+              textAlign: "left",
+              padding: "8px",
+            },
+          },
+        },
+        dark: {
+          css: {
+            color: theme("colors.foreground"),
+            a: {
+              color: theme("colors.primary.DEFAULT"),
+              "&:hover": {
+                color: theme("colors.primary.foreground"),
+              },
+            },
+            table: {
+              thead: {
+                borderBottom: `1px solid ${theme("colors.border")}`,
+              },
+              th: {
+                color: theme("colors.foreground"),
+                fontWeight: "600",
+              },
+              td: {
+                color: theme("colors.foreground"),
+              },
+            },
+          },
+        },
+      }),
     },
   },
   corePlugins: {
     preflight: true,
   },
   plugins: [require("tailwindcss-animate"), require("@tailwindcss/typography")],
-} satisfies Config;
+};
 
 export default config;

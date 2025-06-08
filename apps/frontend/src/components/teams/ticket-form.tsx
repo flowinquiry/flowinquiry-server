@@ -151,7 +151,7 @@ export const TicketForm = ({ ticketId }: { ticketId: number }) => {
 
       <Form {...form}>
         <form
-          className="grid grid-cols-1 gap-4 sm:grid-cols-2 max-w-[72rem]"
+          className="grid grid-cols-1 gap-4 sm:grid-cols-2 max-w-6xl"
           onSubmit={form.handleSubmit(onSubmit)}
         >
           <div className="col-span-1 sm:col-span-2">

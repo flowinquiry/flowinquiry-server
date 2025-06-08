@@ -161,7 +161,7 @@ const TaskEditorSheet = ({
     <Sheet open={isOpen} onOpenChange={setIsOpen}>
       <SheetContent
         side="right"
-        className="w-[90vw] sm:w-[42rem] lg:w-[56rem] p-0 overflow-hidden"
+        className="w-[90vw] sm:w-2xl lg:w-4xl p-0 overflow-hidden"
       >
         <div className="flex flex-col h-full max-h-screen">
           <div className="p-6 border-b">

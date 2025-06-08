@@ -47,14 +47,14 @@ const IdInputSelect: React.FC<IdInputSelectProps> = ({
                 readOnly={readOnly}
                 className={`mt-1 block w-full px-3 py-2 ${
                   readOnly ? "bg-gray-200" : "bg-white"
-                } border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm`}
+                } border border-gray-300 rounded-md shadow-xs focus:outline-hidden focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm`}
               />
             </FormControl>
 
             <button
               type="button"
               onClick={onButtonClick}
-              className="px-4 py-2 border text-sm font-medium focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+              className="px-4 py-2 border text-sm font-medium focus:outline-hidden focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
             >
               {buttonLabel}
             </button>

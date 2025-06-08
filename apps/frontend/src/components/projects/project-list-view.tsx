@@ -232,7 +232,7 @@ const ProjectListView = () => {
             </ToggleGroup>
           </div>
 
-          <div className="bg-white dark:bg-gray-900 p-4 rounded-lg shadow">
+          <div className="bg-white dark:bg-gray-900 p-4 rounded-lg shadow-sm">
             {loading ? (
               <div className="flex items-center justify-center p-6">
                 <Loader className="w-6 h-6 animate-spin" />

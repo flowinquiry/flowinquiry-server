@@ -7,7 +7,7 @@ import { NextIntlClientProvider } from "next-intl";
 import { getLocale } from "next-intl/server";
 import { PublicEnvScript } from "next-runtime-env";
 
-import { Toaster } from "@/components/ui/toaster";
+import { Toaster } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { ErrorProvider } from "@/providers/error-provider";
 import ReactQueryProvider from "@/providers/react-query-provider";

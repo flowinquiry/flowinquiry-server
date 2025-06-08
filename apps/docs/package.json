@@ -15,7 +15,7 @@
     "nextra-theme-docs": "^4.2.17",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
-    "sharp": "^0.33.5",
+    "sharp": "^0.34.2",
     "swiper": "^11.2.8"
   },
   "type": "module",

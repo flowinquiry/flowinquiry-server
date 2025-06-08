@@ -12,6 +12,7 @@ import {
 } from "lucide-react";
 import { useSession } from "next-auth/react";
 import React, { useEffect, useState } from "react";
+import { toast } from "sonner";
 
 import TruncatedHtmlLabel from "@/components/shared/truncate-html-label";
 import { Button } from "@/components/ui/button";
@@ -27,7 +28,6 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import { useToast } from "@/components/ui/use-toast";
 import { useAppClientTranslations } from "@/hooks/use-translations";
 import useWebSocket from "@/hooks/use-websocket";
 import {
@@ -43,7 +43,6 @@ const LOCAL_STORAGE_KEY = "notifications";
 const NotificationsDropdown = () => {
   const { data: session } = useSession();
   const { setError } = useError();
-  const { toast } = useToast();
   const t = useAppClientTranslations();
 
   const [notifications, setNotifications] = useState<NotificationDTO[]>(() => {
@@ -82,7 +81,7 @@ const NotificationsDropdown = () => {
   useEffect(() => {
     if (notificationsSocket.length > 0) {
       notificationsSocket.forEach((notification) => {
-        toast({ title: notification.content });
+        toast.info(notification.content);
       });
 
       setNotifications((prev) => {
@@ -236,7 +235,7 @@ const NotificationsDropdown = () => {
 
       <DropdownMenuContent
         align="end"
-        className="z-[999] w-80 md:w-96 p-0 shadow-lg border dark:border-gray-700"
+        className="z-999 w-80 md:w-96 p-0 shadow-lg border dark:border-gray-700"
       >
         <div className="flex items-center justify-between px-4 py-3 border-b dark:border-gray-700">
           <h3 className="font-semibold text-sm text-gray-800 dark:text-gray-200">

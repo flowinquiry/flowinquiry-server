@@ -108,11 +108,11 @@ const CommentsView: React.FC<CommentsViewProps> = ({
                 </div>
 
                 <div
-                  className="relative bg-gray-100 dark:bg-gray-800 p-4 rounded-lg shadow-sm flex-1
+                  className="relative bg-gray-100 dark:bg-gray-800 p-4 rounded-lg shadow-xs flex-1
                                 before:absolute before:-left-3 before:top-6 before:w-0 before:h-0
-                                before:border-t-[6px] before:border-b-[6px] before:border-r-[12px]
+                                before:border-t-[6px] before:border-b-[6px] before:border-r-12
                                 before:border-t-transparent before:border-b-transparent
-                                before:border-r-gray-100 before:dark:border-r-gray-800"
+                                before:border-r-gray-100 dark:before:border-r-gray-800"
                 >
                   <div className="flex items-baseline gap-2 mb-2 pb-2">
                     <Button

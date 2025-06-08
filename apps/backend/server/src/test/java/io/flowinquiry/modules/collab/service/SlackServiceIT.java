@@ -1,15 +1,16 @@
 package io.flowinquiry.modules.collab.service;
 
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.*;
+
 import com.slack.api.Slack;
 import com.slack.api.methods.MethodsClient;
 import com.slack.api.methods.SlackApiException;
-
-import java.io.IOException;
-
 import com.slack.api.methods.request.chat.ChatPostMessageRequest;
 import com.slack.api.methods.response.chat.ChatPostMessageResponse;
 import io.flowinquiry.IntegrationTest;
 import io.flowinquiry.modules.collab.domain.SlackMessage;
+import java.io.IOException;
 import org.junit.jupiter.api.*;
 import org.mockito.ArgumentCaptor;
 import org.mockito.MockedStatic;
@@ -17,21 +18,17 @@ import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.TestPropertySource;
 
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.*;
-
 @IntegrationTest
 @TestPropertySource(properties = "flowinquiry.slack.token=xoxb-your-test-token")
 public class SlackServiceIT {
     private static MockedStatic<Slack> mockedStaticSlack;
     private static Slack slack;
     private static MethodsClient methods;
-    private final static String TOKEN = "xoxb-your-test-token";
-    private final static String EXPECTED_CHAN_ID = "ChannelID";
-    private final static String EXPECTED_MESSAGE = "MESSAGE";
+    private static final String TOKEN = "xoxb-your-test-token";
+    private static final String EXPECTED_CHAN_ID = "ChannelID";
+    private static final String EXPECTED_MESSAGE = "MESSAGE";
 
-    @Autowired
-    private SlackService slackService;
+    @Autowired private SlackService slackService;
 
     @BeforeAll
     static void setup() {
@@ -52,7 +49,7 @@ public class SlackServiceIT {
     @Test
     void shouldSendSlackMessageSuccessfully() throws IOException, SlackApiException {
 
-        //Arrange (Prepare mocks)
+        // Arrange (Prepare mocks)
         final ChatPostMessageRequest EXPECTED_SLACK_REQUEST =
                 ChatPostMessageRequest.builder()
                         .channel(EXPECTED_CHAN_ID) // Use a channel ID `C1234567` is preferable
@@ -61,7 +58,8 @@ public class SlackServiceIT {
         final ChatPostMessageResponse messageResponse = mock(ChatPostMessageResponse.class);
 
         when(messageResponse.isOk()).thenReturn(true);
-        when(methods.chatPostMessage(any(ChatPostMessageRequest.class))).thenReturn(messageResponse);
+        when(methods.chatPostMessage(any(ChatPostMessageRequest.class)))
+                .thenReturn(messageResponse);
 
         final ArgumentCaptor<ChatPostMessageRequest> messageRequestArgCaptor =
                 ArgumentCaptor.forClass(ChatPostMessageRequest.class);
@@ -77,13 +75,12 @@ public class SlackServiceIT {
         ChatPostMessageRequest actualMessageRequest = messageRequestArgCaptor.getValue();
         Assertions.assertEquals(EXPECTED_SLACK_REQUEST, actualMessageRequest);
         Assertions.assertTrue(actualMessageResponse.isOk());
-
     }
 
     @Test
     void shouldFailToSendSlackMessage() throws IOException, SlackApiException {
 
-        //Arrange (Prepare mocks)
+        // Arrange (Prepare mocks)
         final String EXPECTED_CHAN_ID = "ChannelID";
         final String EXPECTED_MESSAGE = "MESSAGE";
         final ChatPostMessageRequest EXPECTED_SLACK_REQUEST =
@@ -93,7 +90,8 @@ public class SlackServiceIT {
                         .build();
         final ChatPostMessageResponse messageResponse = mock(ChatPostMessageResponse.class);
         when(messageResponse.isOk()).thenReturn(false);
-        when(methods.chatPostMessage(any(ChatPostMessageRequest.class))).thenReturn(messageResponse);
+        when(methods.chatPostMessage(any(ChatPostMessageRequest.class)))
+                .thenReturn(messageResponse);
 
         final ArgumentCaptor<ChatPostMessageRequest> messageRequestArgCaptor =
                 ArgumentCaptor.forClass(ChatPostMessageRequest.class);
@@ -109,13 +107,13 @@ public class SlackServiceIT {
         ChatPostMessageRequest actualMessageRequest = messageRequestArgCaptor.getValue();
         Assertions.assertEquals(EXPECTED_SLACK_REQUEST, actualMessageRequest);
         Assertions.assertFalse(actualMessageResponse.isOk());
-
     }
 
     @Test
-    void whenIOExceptionOccurs_thenSendSlackMessageThrowsIOException() throws IOException, SlackApiException {
+    void whenIOExceptionOccurs_thenSendSlackMessageThrowsIOException()
+            throws IOException, SlackApiException {
 
-        //Arrange (Prepare mocks)
+        // Arrange (Prepare mocks)
         final String EXPECTED_CHAN_ID = "ChannelID";
         final String EXPECTED_MESSAGE = "MESSAGE";
         final ChatPostMessageRequest EXPECTED_SLACK_REQUEST =
@@ -125,27 +123,29 @@ public class SlackServiceIT {
                         .build();
         final ChatPostMessageResponse messageResponse = mock(ChatPostMessageResponse.class);
         when(messageResponse.isOk()).thenReturn(false);
-        when(methods.chatPostMessage(any(ChatPostMessageRequest.class))).thenThrow(IOException.class);
+        when(methods.chatPostMessage(any(ChatPostMessageRequest.class)))
+                .thenThrow(IOException.class);
 
         final ArgumentCaptor<ChatPostMessageRequest> messageRequestArgCaptor =
                 ArgumentCaptor.forClass(ChatPostMessageRequest.class);
         SlackMessage slackMessage = new SlackMessage(EXPECTED_MESSAGE, EXPECTED_CHAN_ID);
 
         // Act & Assert
-        Assertions.assertThrows(IOException.class, () -> slackService.sendSlackMessage(slackMessage));
+        Assertions.assertThrows(
+                IOException.class, () -> slackService.sendSlackMessage(slackMessage));
 
         verify(slack).methods(any());
         verify(methods).chatPostMessage(messageRequestArgCaptor.capture());
 
         ChatPostMessageRequest actualMessageRequest = messageRequestArgCaptor.getValue();
         Assertions.assertEquals(EXPECTED_SLACK_REQUEST, actualMessageRequest);
-
     }
 
     @Test
-    void whenSlackApiExceptionOccurs_thenSendSlackMessageSlackApiException() throws IOException, SlackApiException {
+    void whenSlackApiExceptionOccurs_thenSendSlackMessageSlackApiException()
+            throws IOException, SlackApiException {
 
-        //Arrange (Prepare mocks)
+        // Arrange (Prepare mocks)
         final String EXPECTED_CHAN_ID = "ChannelID";
         final String EXPECTED_MESSAGE = "MESSAGE";
         final ChatPostMessageRequest EXPECTED_SLACK_REQUEST =
@@ -155,14 +155,16 @@ public class SlackServiceIT {
                         .build();
         final ChatPostMessageResponse messageResponse = mock(ChatPostMessageResponse.class);
         when(messageResponse.isOk()).thenReturn(false);
-        when(methods.chatPostMessage(any(ChatPostMessageRequest.class))).thenThrow(SlackApiException.class);
+        when(methods.chatPostMessage(any(ChatPostMessageRequest.class)))
+                .thenThrow(SlackApiException.class);
 
         final ArgumentCaptor<ChatPostMessageRequest> messageRequestArgCaptor =
                 ArgumentCaptor.forClass(ChatPostMessageRequest.class);
         SlackMessage slackMessage = new SlackMessage(EXPECTED_MESSAGE, EXPECTED_CHAN_ID);
 
         // Act & Assert
-        Assertions.assertThrows(SlackApiException.class, () -> slackService.sendSlackMessage(slackMessage));
+        Assertions.assertThrows(
+                SlackApiException.class, () -> slackService.sendSlackMessage(slackMessage));
 
         verify(slack).methods(any());
         verify(methods).chatPostMessage(messageRequestArgCaptor.capture());

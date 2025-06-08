@@ -7,15 +7,14 @@ import com.slack.api.methods.response.chat.ChatPostMessageResponse;
 import io.flowinquiry.config.FlowInquiryProperties;
 import io.flowinquiry.modules.collab.domain.SlackMessage;
 import java.io.IOException;
-
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Service;
 
 /**
- * This service sends messages to a Slack Workspace.
- * In order to add this component to your dependency container,
- * the SLACK_TOKEN_ID environment variable needs to be set.
+ * This service sends messages to a Slack Workspace. In order to add this component to your
+ * dependency container,the FLOWINQUIRY_SLACK_TOKEN environment variable needs to be set to your
+ * workspace token.
  */
 @Slf4j
 @Service
@@ -29,7 +28,8 @@ public class SlackService {
     }
 
     /**
-     * The message in {@link SlackMessage} can be formatted according to the <a href="https://docs.slack.dev/reference/methods/chat.postmessage">Slack docs</a>
+     * The message in {@link SlackMessage} can be formatted according to the <a
+     * href="https://docs.slack.dev/reference/methods/chat.postmessage">Slack docs</a>
      */
     public ChatPostMessageResponse sendSlackMessage(SlackMessage slackMessage)
             throws IOException, SlackApiException {

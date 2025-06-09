@@ -159,28 +159,20 @@ export function FileUploader(props: FileUploaderProps) {
         updatedFiles.length <= maxFileCount
       ) {
         const target =
-          updatedFiles.length > 0 ? `${updatedFiles.length} files` : `file`;
+          updatedFiles.length > 0 ? `${updatedFiles.length} files` : "file";
 
-        const loadingToast = toast.message(`Uploading ${target}...`, {
-          description: t.common.upload("toast_uploading_description"),
+        const uploadPromise = onUpload(updatedFiles);
+
+        toast.promise(uploadPromise, {
+          loading: `Uploading ${target}…`,
+          success: `Uploaded ${target}!`,
+          error: `Failed to upload ${target}`,
         });
 
-        try {
-          await onUpload(updatedFiles);
-
-          // Update toast to success
-          toast.success(t.common.upload("toast_upload_success"), {
-            description: `${target} uploaded`,
-          });
-
+        // After it resolves successfully, clear the files
+        uploadPromise.then(() => {
           setFiles([]);
-        } catch (error) {
-          toast.error("Upload Failed", {
-            description: `Failed to upload ${target}`,
-          });
-        } finally {
-          loadingToast.dismiss();
-        }
+        });
       }
     },
 

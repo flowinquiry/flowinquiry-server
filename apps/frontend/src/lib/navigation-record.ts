@@ -1,4 +1,5 @@
-import { toast } from "@/components/ui/use-toast";
+import { toast } from "sonner";
+
 import { HttpError } from "@/lib/errors";
 
 export async function navigateToRecord<T, Args extends any[]>(
@@ -11,9 +12,7 @@ export async function navigateToRecord<T, Args extends any[]>(
   } catch (error) {
     if (error instanceof HttpError) {
       if (error.status === HttpError.NOT_FOUND) {
-        toast({
-          description: notFoundMessage,
-        });
+        toast.error(notFoundMessage);
         return Promise.reject("Resource not found"); // Ensure a return after 404 handling
       } else {
         // Rethrow other HttpErrors for higher-level handling
@@ -23,9 +22,7 @@ export async function navigateToRecord<T, Args extends any[]>(
       error instanceof Error &&
       (error.name === "Not Found" || error.message.includes("Not Found"))
     ) {
-      toast({
-        description: notFoundMessage,
-      });
+      toast.error(notFoundMessage);
       return Promise.reject("Resource not found");
     } else {
       // Rethrow any unexpected errors for higher-level handling

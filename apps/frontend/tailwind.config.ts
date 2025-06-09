@@ -1,8 +1,7 @@
 import type { Config } from "tailwindcss";
-import { ThemeConfig } from "tailwindcss/plugin";
 
 const config: Config = {
-  darkMode: ["class"],
+  darkMode: "class",
   content: [
     "./pages/**/*.{ts,tsx}",
     "./components/**/*.{ts,tsx}",
@@ -95,7 +94,7 @@ const config: Config = {
         "collapsible-down": "collapsible-down 0.2s ease-out",
         "collapsible-up": "collapsible-up 0.2s ease-out",
       },
-      typography: (theme: ThemeConfig["theme"]) => ({
+      typography: ({ theme }) => ({
         DEFAULT: {
           css: {
             color: theme("colors.foreground"),
@@ -157,9 +156,6 @@ const config: Config = {
         },
       }),
     },
-  },
-  corePlugins: {
-    preflight: true,
   },
   plugins: [require("tailwindcss-animate"), require("@tailwindcss/typography")],
 };

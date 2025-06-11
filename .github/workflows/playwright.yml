@@ -90,7 +90,7 @@ jobs:
 
       # Conditionally start backend
       - name: Start backend
-        if: inputs.run_backend == true
+        if: inputs.run_backend == 'true'
         run: |
           ./gradlew :apps:backend:server:bootRun > backend.log 2>&1 &
           echo "Waiting for backend..."
@@ -103,7 +103,7 @@ jobs:
 
       # Conditionally start frontend
       - name: Start frontend
-        if: inputs.run_frontend == true
+        if: inputs.run_frontend == 'true'
         run: |
           pnpm dev:frontend > frontend.log 2>&1 &
           echo "Waiting for frontend..."

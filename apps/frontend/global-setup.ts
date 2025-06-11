@@ -57,6 +57,7 @@ async function authenticateUser(
     );
   } catch (error) {
     console.error(`[ERROR] Failed to authenticate user ${email}:`, error);
+    process.exit(1); // 🔥 Fail CI early
   } finally {
     await browser.close();
   }

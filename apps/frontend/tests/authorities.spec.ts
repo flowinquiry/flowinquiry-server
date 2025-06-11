@@ -1,19 +1,19 @@
 import { expect, test } from "@playwright/test";
 
+import { assertAuthenticated } from "./helpers/login-check";
 import { HomePage } from "./pages/home-page";
 
 test.describe("Authorities Management", () => {
+  test.use({ storageState: "playwright/.auth/admin.json" });
+
   test("should verify Administrator authority and its users", async ({
     page,
   }) => {
+    // Check if the user is authenticated
+    await assertAuthenticated(page);
+
     // Initialize page objects
     const homePage = new HomePage(page);
-
-    // Step 1: Go to home page and login with retries built into the method
-    console.log("[DEBUG_LOG] Navigating to home page and logging in");
-    await homePage.navigateAndLogin();
-
-    await expect(page).toHaveURL(/\/portal/);
 
     // Step 2: Navigate to authorities page using the improved navigation method
     console.log("[DEBUG_LOG] Navigating to authorities page");

@@ -68,10 +68,8 @@ test.describe("Authorities Management", () => {
       console.log("[DEBUG_LOG] Checking for users in Administrator role");
 
       // Find all user elements in the authority details page
-      // Using a more reliable selector for user elements - looking for rows with user names
-      const userElements = page.getByRole("row").filter({
-        hasText: /[A-Za-z]+, [A-Za-z]+/,
-      });
+      // Using data-testid attributes for user elements
+      const userElements = page.getByTestId(/^authority-view-user-card-/);
 
       // Check if there are any user elements before waiting
       const userCount = await userElements.count();
@@ -98,7 +96,7 @@ test.describe("Authorities Management", () => {
       );
 
       // Verify at least one user exists in the Administrator role
-      expect(finalUserCount).toBeGreaterThan(-1);
+      expect(finalUserCount).toBeGreaterThan(0);
     } catch (error) {
       const errorMessage =
         error instanceof Error ? error.message : String(error);

@@ -82,15 +82,20 @@ export function AuthoritiesView() {
   }
 
   return (
-    <div className="grid grid-cols-1 gap-4">
+    <div
+      className="grid grid-cols-1 gap-4"
+      data-testid="authority-list-container"
+    >
       <div className="flex flex-row justify-between">
         <Heading
           title={t.authorities.list("title", { totalElements })}
           description={t.authorities.list("description")}
+          data-testid="authority-list-heading"
         />
         {PermissionUtils.canWrite(permissionLevel) && (
           <Button
             onClick={() => router.push("/portal/settings/authorities/new/edit")}
+            testId="authority-list-new-button"
           >
             <Plus />
             {t.authorities.list("new_authority")}
@@ -98,8 +103,14 @@ export function AuthoritiesView() {
         )}
       </div>
       <Separator />
-      <div className="flex flex-col md:flex-row md:space-x-4 items-start">
-        <div className="md:flex-1 flex flex-row flex-wrap w-full gap-4 pt-2">
+      <div
+        className="flex flex-col md:flex-row md:space-x-4 items-start"
+        data-testid="authority-list-content"
+      >
+        <div
+          className="md:flex-1 flex flex-row flex-wrap w-full gap-4 pt-2"
+          data-testid="authority-list-items"
+        >
           {authorities?.map((authority) => (
             <div
               className={`w-full md:w-[24rem] flex flex-row gap-4 px-4 py-4 rounded-2xl relative 
@@ -109,10 +120,21 @@ export function AuthoritiesView() {
         : "bg-gray-50 border-gray-200 dark:bg-gray-900 dark:border-gray-600"
     }`}
               key={authority.name}
+              data-testid={`authority-list-item-${authority.name}`}
             >
-              <div className="flex flex-col">
-                <div className="flex items-center gap-2">
-                  <Button variant="link" className="px-0 text-xl">
+              <div
+                className="flex flex-col"
+                data-testid={`authority-list-item-content-${authority.name}`}
+              >
+                <div
+                  className="flex items-center gap-2"
+                  data-testid={`authority-list-item-header-${authority.name}`}
+                >
+                  <Button
+                    variant="link"
+                    className="px-0 text-xl"
+                    testId={`authority-list-item-link-${authority.name}`}
+                  >
                     <Link
                       href={`/portal/settings/authorities/${obfuscate(authority.name)}`}
                     >
@@ -123,20 +145,28 @@ export function AuthoritiesView() {
                     <Badge
                       variant="outline"
                       className="text-blue-500 border-blue-500 dark:text-blue-300 dark:border-blue-600"
+                      data-testid={`authority-list-item-system-badge-${authority.name}`}
                     >
                       <Shield className="w-4 h-4 mr-1" />
                       {t.authorities.common("system_role")}
                     </Badge>
                   )}
                 </div>
-                <div>{authority.description}</div>
+                <div
+                  data-testid={`authority-list-item-description-${authority.name}`}
+                >
+                  {authority.description}
+                </div>
               </div>
 
               {PermissionUtils.canAccess(permissionLevel) &&
                 !authority.systemRole && (
                   <DropdownMenu>
                     <DropdownMenuTrigger asChild>
-                      <Ellipsis className="cursor-pointer absolute top-2 right-2 text-gray-400" />
+                      <Ellipsis
+                        className="cursor-pointer absolute top-2 right-2 text-gray-400"
+                        data-testid={`authority-list-item-actions-${authority.name}`}
+                      />
                     </DropdownMenuTrigger>
                     <DropdownMenuContent className="w-56">
                       <TooltipProvider>
@@ -145,6 +175,7 @@ export function AuthoritiesView() {
                             <DropdownMenuItem
                               className="cursor-pointer"
                               onClick={() => handleDeleteClick(authority)}
+                              data-testid={`authority-list-item-delete-${authority.name}`}
                             >
                               <Trash /> {t.authorities.list("remove_authority")}
                             </DropdownMenuItem>
@@ -161,39 +192,48 @@ export function AuthoritiesView() {
                 )}
             </div>
           ))}
-          <PaginationExt
-            currentPage={currentPage}
-            totalPages={totalPages}
-            onPageChange={(page) => setCurrentPage(page)}
-          />
+          <div data-testid="authority-list-pagination">
+            <PaginationExt
+              currentPage={currentPage}
+              totalPages={totalPages}
+              onPageChange={(page) => setCurrentPage(page)}
+            />
+          </div>
         </div>
 
-        <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-          <DialogContent>
-            <DialogHeader>
-              <DialogTitle>
-                {t.authorities.list("remove_dialog_title")}
-              </DialogTitle>
-            </DialogHeader>
-            <p>
-              {t.authorities.list.rich("remove_dialog_content", {
-                name: selectedAuthority?.descriptiveName ?? "",
-                strong: (chunks) => <strong>{chunks}</strong>,
-              })}
-            </p>
-            <DialogFooter>
-              <Button
-                variant="secondary"
-                onClick={() => setIsDialogOpen(false)}
-              >
-                {t.common.buttons("cancel")}
-              </Button>
-              <Button variant="destructive" onClick={confirmDeleteAuthority}>
-                {t.common.buttons("delete")}
-              </Button>
-            </DialogFooter>
-          </DialogContent>
-        </Dialog>
+        <div data-testid="authority-list-delete-dialog">
+          <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+            <DialogContent>
+              <DialogHeader>
+                <DialogTitle data-testid="authority-list-delete-dialog-title">
+                  {t.authorities.list("remove_dialog_title")}
+                </DialogTitle>
+              </DialogHeader>
+              <p data-testid="authority-list-delete-dialog-content">
+                {t.authorities.list.rich("remove_dialog_content", {
+                  name: selectedAuthority?.descriptiveName ?? "",
+                  strong: (chunks) => <strong>{chunks}</strong>,
+                })}
+              </p>
+              <DialogFooter>
+                <Button
+                  variant="secondary"
+                  onClick={() => setIsDialogOpen(false)}
+                  testId="authority-list-delete-dialog-cancel"
+                >
+                  {t.common.buttons("cancel")}
+                </Button>
+                <Button
+                  variant="destructive"
+                  onClick={confirmDeleteAuthority}
+                  testId="authority-list-delete-dialog-confirm"
+                >
+                  {t.common.buttons("delete")}
+                </Button>
+              </DialogFooter>
+            </DialogContent>
+          </Dialog>
+        </div>
       </div>
     </div>
   );

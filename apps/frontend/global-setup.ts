@@ -68,7 +68,7 @@ async function authenticateUser(
  */
 export default async function globalSetup() {
   await authenticateUser("admin@flowinquiry.io", "admin", "admin.json");
-  await authenticateUser("user@flowinquiry.io", "user1234", "user.json");
+  // await authenticateUser("user@flowinquiry.io", "user1234", "user.json");
 
   // Create an unauthenticated session state
   const authDir = path.resolve("playwright/.auth");

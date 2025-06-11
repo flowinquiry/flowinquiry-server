@@ -12,10 +12,10 @@ export class HomePage {
 
   constructor(page: Page) {
     this.page = page;
-    this.emailInput = page.getByLabel("Email");
-    this.passwordInput = page.getByLabel("Password");
-    this.signInButton = page.getByRole("button", { name: /sign in/i });
-    this.errorMessage = page.locator(".text-red-700");
+    this.emailInput = page.getByTestId("login-form-email");
+    this.passwordInput = page.getByTestId("login-form-password");
+    this.signInButton = page.getByTestId("login-form-submit");
+    this.errorMessage = page.getByTestId("login-form-error");
   }
 
   async goto() {

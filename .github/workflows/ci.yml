@@ -116,7 +116,5 @@ jobs:
     needs: [ detect-changes ]
     if: needs.detect-changes.outputs.backend == 'true' || needs.detect-changes.outputs.frontend == 'true'
     uses: ./.github/workflows/playwright.yml
-    with:
-      run_backend: ${{ needs.detect-changes.outputs.backend == 'true' }}
-      run_frontend: ${{ needs.detect-changes.outputs.frontend == 'true' }}
+
 

@@ -2,13 +2,6 @@ name: Playwright Tests
 
 on:
   workflow_call:
-    inputs:
-      run_frontend:
-        required: true
-        type: boolean
-      run_backend:
-        required: true
-        type: boolean
 
 jobs:
   test:
@@ -90,7 +83,6 @@ jobs:
 
       # Conditionally start backend
       - name: Start backend
-        if: inputs.run_backend == 'true'
         run: |
           ./gradlew :apps:backend:server:bootRun > backend.log 2>&1 &
           echo "Waiting for backend..."
@@ -103,7 +95,6 @@ jobs:
 
       # Conditionally start frontend
       - name: Start frontend
-        if: inputs.run_frontend == 'true'
         run: |
           pnpm dev:frontend > frontend.log 2>&1 &
           echo "Waiting for frontend..."

@@ -150,10 +150,15 @@ export const TeamList = () => {
             placeholder={t.teams.list("search_place_holder")}
             onChange={(e) => handleSearchTeams(e.target.value)}
             defaultValue={searchParams.get("name")?.toString()}
+            testId="team-list-search"
           />
           <Tooltip>
             <TooltipTrigger asChild>
-              <Button variant="outline" onClick={toggleSortDirection}>
+              <Button
+                variant="outline"
+                onClick={toggleSortDirection}
+                testId="team-list-sort"
+              >
                 {sortDirection === "asc" ? <ArrowDownAZ /> : <ArrowUpAZ />}
               </Button>
             </TooltipTrigger>
@@ -170,6 +175,7 @@ export const TeamList = () => {
               id="user-teams-only"
               checked={filterUserTeamsOnly}
               onCheckedChange={(checked) => setFilterUserTeamsOnly(!!checked)}
+              data-testid="team-list-my-teams-only"
             />
             <label htmlFor="user-teams-only" className="text-sm">
               {t.teams.list("my_teams_only")}
@@ -179,6 +185,7 @@ export const TeamList = () => {
             <Link
               href="/portal/teams/new/edit"
               className={cn(buttonVariants({ variant: "default" }))}
+              data-testid="team-list-new-team"
             >
               <Plus className="mr-2 h-4 w-4" /> {t.teams.list("new_team")}
             </Link>
@@ -203,6 +210,7 @@ export const TeamList = () => {
                 <div
                   key={team.id}
                   className="relative w-[24rem] flex flex-row gap-4 border rounded-2xl"
+                  data-testid={`team-list-card-${team.id}`}
                 >
                   <div className="px-4 py-4">
                     <TooltipProvider>
@@ -228,7 +236,12 @@ export const TeamList = () => {
                     </TooltipProvider>
                   </div>
                   <div>
-                    <Button variant="link" asChild className="px-0">
+                    <Button
+                      variant="link"
+                      asChild
+                      className="px-0"
+                      testId={`team-list-name-${team.id}`}
+                    >
                       <Link href={`/portal/teams/${obfuscate(team.id)}`}>
                         {team.name} ({team.usersCount})
                       </Link>
@@ -237,7 +250,10 @@ export const TeamList = () => {
                     <TooltipProvider>
                       <Tooltip>
                         <TooltipTrigger asChild>
-                          <div className="mt-1 text-muted-foreground cursor-pointer">
+                          <div
+                            className="mt-1 text-muted-foreground cursor-pointer"
+                            data-testid={`team-list-description-${team.id}`}
+                          >
                             {shortDescription}
                           </div>
                         </TooltipTrigger>
@@ -260,11 +276,13 @@ export const TeamList = () => {
                               `/portal/teams/${obfuscate(team.id)}/edit`,
                             )
                           }
+                          data-testid={`team-list-edit-${team.id}`}
                         >
                           <Pencil /> {t.common.buttons("edit")}
                         </DropdownMenuItem>
                         <DropdownMenuItem
                           onClick={() => showDeleteTeamConfirmationDialog(team)}
+                          data-testid={`team-list-delete-${team.id}`}
                         >
                           <Trash /> {t.common.buttons("delete")}
                         </DropdownMenuItem>
@@ -275,21 +293,25 @@ export const TeamList = () => {
               );
             })}
           </div>
-          <PaginationExt
-            currentPage={currentPage}
-            totalPages={totalPages}
-            onPageChange={setCurrentPage}
-          />
+          <div data-testid="team-list-pagination">
+            <PaginationExt
+              currentPage={currentPage}
+              totalPages={totalPages}
+              onPageChange={setCurrentPage}
+            />
+          </div>
         </>
       )}
       {isDialogOpen && selectedTeam && (
-        <EntitiesDeleteDialog
-          entities={[selectedTeam]}
-          entityName="Team"
-          deleteEntitiesFn={deleteTeam}
-          isOpen={isDialogOpen}
-          onOpenChange={setDialogOpen}
-        />
+        <div data-testid="team-list-delete-dialog">
+          <EntitiesDeleteDialog
+            entities={[selectedTeam]}
+            entityName="Team"
+            deleteEntitiesFn={deleteTeam}
+            isOpen={isDialogOpen}
+            onOpenChange={setDialogOpen}
+          />
+        </div>
       )}
     </div>
   );

@@ -3,7 +3,9 @@
 import { useTheme } from "next-themes";
 import { Toaster as Sonner, ToasterProps } from "sonner";
 
-const Toaster = ({ ...props }: ToasterProps) => {
+import { withTestId } from "@/lib/testIds";
+
+const Toaster = ({ testId, ...props }: ToasterProps & { testId?: string }) => {
   const { theme = "system" } = useTheme();
 
   return (
@@ -17,7 +19,7 @@ const Toaster = ({ ...props }: ToasterProps) => {
           "--normal-border": "var(--border)",
         } as React.CSSProperties
       }
-      {...props}
+      {...withTestId(props, testId)}
     />
   );
 };

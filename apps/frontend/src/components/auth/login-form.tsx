@@ -96,7 +96,10 @@ const LoginForm = () => {
         <CardContent className="space-y-4">
           {/* Show error message */}
           {errorMessage && (
-            <div className="p-4 mb-4 text-sm text-red-700 bg-red-100 rounded">
+            <div
+              className="p-4 mb-4 text-sm text-red-700 bg-red-100 rounded"
+              data-testid="login-form-error"
+            >
               {errorMessage}
             </div>
           )}
@@ -104,6 +107,7 @@ const LoginForm = () => {
             <form
               onSubmit={form.handleSubmit(handleSubmit)}
               className="space-y-6"
+              data-testid="login-form"
             >
               <FormField
                 control={form.control}
@@ -118,6 +122,7 @@ const LoginForm = () => {
                         autoComplete="email"
                         className="bg-slate-100 dark:bg-slate-300 border-0 focus-visible:ring-0 text-black focus-visible:ring-offset-0"
                         placeholder="Enter email"
+                        testId="login-form-email"
                         {...field}
                       />
                     </FormControl>
@@ -139,6 +144,7 @@ const LoginForm = () => {
                         type="password"
                         className="bg-slate-100 dark:bg-slate-300 border-0 focus-visible:ring-0 text-black focus-visible:ring-offset-0"
                         placeholder="Enter password"
+                        testId="login-form-password"
                         {...field}
                       />
                     </FormControl>
@@ -147,13 +153,19 @@ const LoginForm = () => {
                 )}
               />
               <div className="flex flex-row justify-items-center">
-                <Button variant="link" className="py-0 h-auto">
+                <Button
+                  variant="link"
+                  className="py-0 h-auto"
+                  testId="login-form-forgot-password"
+                >
                   <Link href="/forgot-password">
                     {t.login.form("forgot_password_cta")}
                   </Link>
                 </Button>
               </div>
-              <Button className="w-full">{t.login.form("signin")}</Button>
+              <Button className="w-full" testId="login-form-submit">
+                {t.login.form("signin")}
+              </Button>
             </form>
           </Form>
 
@@ -171,6 +183,7 @@ const LoginForm = () => {
                   variant="outline"
                   className="w-full flex items-center justify-center space-x-2"
                   onClick={handleGoogleSignIn}
+                  testId="login-form-google-signin"
                 >
                   <img
                     src="/google-logo.svg"

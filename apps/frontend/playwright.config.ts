@@ -13,6 +13,7 @@ import { defineConfig, devices } from "@playwright/test";
  */
 export default defineConfig({
   testDir: "./tests",
+  globalSetup: "./global-setup.ts",
   /* Run tests sequentially to avoid race conditions */
   fullyParallel: false,
   /* Fail the build on CI if you accidentally left test.only in the source code. */
@@ -70,60 +71,6 @@ export default defineConfig({
         },
       },
     },
-
-    // {
-    //   name: "firefox",
-    //   use: {
-    //     ...devices["Desktop Firefox"],
-    //     // Disable cache for Firefox
-    //     launchOptions: {
-    //       firefoxUserPrefs: {
-    //         "browser.cache.disk.enable": false,
-    //         "browser.cache.memory.enable": false,
-    //         "browser.cache.offline.enable": false,
-    //         "network.http.use-cache": false,
-    //       },
-    //     },
-    //   },
-    // },
-    //
-    // {
-    //   name: "webkit",
-    //   use: {
-    //     ...devices["Desktop Safari"],
-    //     // For WebKit, configure cache disabling and context isolation
-    //     launchOptions: {
-    //       // WebKit doesn't have the same cache flags as other browsers
-    //     },
-    //     // Use a new browser context for each test with cache disabled
-    //     contextOptions: {
-    //       ignoreHTTPSErrors: true,
-    //       viewport: { width: 1280, height: 720 },
-    //       // Force a clean context for each test
-    //       storageState: undefined,
-    //     },
-    //   },
-    // },
-
-    /* Test against mobile viewports. */
-    // {
-    //   name: 'Mobile Chrome',
-    //   use: { ...devices['Pixel 5'] },
-    // },
-    // {
-    //   name: 'Mobile Safari',
-    //   use: { ...devices['iPhone 12'] },
-    // },
-
-    /* Test against branded browsers. */
-    // {
-    //   name: 'Microsoft Edge',
-    //   use: { ...devices['Desktop Edge'], channel: 'msedge' },
-    // },
-    // {
-    //   name: 'Google Chrome',
-    //   use: { ...devices['Desktop Chrome'], channel: 'chrome' },
-    // },
   ],
 
   /* Run your local dev server before starting the tests */

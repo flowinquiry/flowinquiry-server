@@ -87,6 +87,7 @@ export const ExtTextAreaField = ({
   label,
   placeholder,
   required,
+  testId,
 }: ExtInputProps & UiAttributes) => {
   return (
     <div className="md:col-span-2">
@@ -100,11 +101,7 @@ export const ExtTextAreaField = ({
               {required && <span className="text-destructive"> *</span>}
             </FormLabel>
             <FormControl>
-              <Textarea
-                placeholder={placeholder}
-                {...field}
-                testId={props.testId}
-              />
+              <Textarea placeholder={placeholder} {...field} testId={testId} />
             </FormControl>
             <FormMessage />
           </FormItem>

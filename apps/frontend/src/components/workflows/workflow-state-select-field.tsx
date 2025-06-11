@@ -33,6 +33,7 @@ type WorkflowStateSelectProps = {
   workflowStateId?: number;
   includeSelf?: boolean;
   required?: boolean;
+  testId?: string;
 };
 
 const WorkflowStateSelectField = ({
@@ -43,6 +44,7 @@ const WorkflowStateSelectField = ({
   workflowStateId,
   includeSelf = false,
   required = false,
+  testId,
 }: WorkflowStateSelectProps) => {
   const [workflowStates, setWorkflowStates] = useState<WorkflowStateDTO[]>([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -122,6 +124,7 @@ const WorkflowStateSelectField = ({
                   field.onChange(value ? Number(value) : null)
                 }
                 disabled={isLoading || workflowStates.length === 0}
+                testId={testId}
               >
                 <SelectTrigger className={cn("w-[16rem]")}>
                   <SelectValue

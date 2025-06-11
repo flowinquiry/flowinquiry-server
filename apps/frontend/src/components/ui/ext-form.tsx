@@ -136,6 +136,7 @@ type DatePickerFieldProps = {
   description?: string;
   placeholder?: string;
   dateSelectionMode?: DateSelectionMode;
+  testId?: string;
 };
 
 type DateSelectionMode = "past" | "future" | "any";
@@ -150,6 +151,7 @@ export const DatePickerField: React.FC<
   placeholder = "Pick a date",
   dateSelectionMode = "any",
   required = false,
+  testId,
 }) => {
   const clearText = useAppClientTranslations().common.buttons("clear");
   return (
@@ -172,6 +174,7 @@ export const DatePickerField: React.FC<
                       "w-[240px] pl-3 text-left font-normal",
                       !field.value && "text-muted-foreground",
                     )}
+                    testId={testId}
                   >
                     {field.value ? (
                       format(field.value, "PPP")

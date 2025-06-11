@@ -21,6 +21,7 @@ import { TicketChannel } from "@/types/tickets";
 
 type TicketChannelSelectFieldProps = {
   form: any;
+  testId?: string;
 };
 
 const ticketChannels: TicketChannel[] = [
@@ -38,6 +39,7 @@ const ticketChannels: TicketChannel[] = [
 
 const TicketChannelSelectField: React.FC<TicketChannelSelectFieldProps> = ({
   form,
+  testId,
 }) => {
   const t = useAppClientTranslations();
   useEffect(() => {
@@ -58,6 +60,7 @@ const TicketChannelSelectField: React.FC<TicketChannelSelectFieldProps> = ({
             <Select
               onValueChange={field.onChange}
               value={field.value || "internal"} // Use "internal" as fallback
+              testId={testId}
             >
               <SelectTrigger className="w-[16rem]">
                 <SelectValue

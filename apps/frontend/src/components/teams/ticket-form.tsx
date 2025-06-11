@@ -83,7 +83,10 @@ export const TicketForm = ({ ticketId }: { ticketId: number }) => {
 
   if (loading) {
     return (
-      <div className="py-4 flex justify-center items-center">
+      <div
+        className="py-4 flex justify-center items-center"
+        data-testid="ticket-form-loading"
+      >
         <Spinner>{t.common.misc("loading_data")}</Spinner>
       </div>
     );
@@ -91,11 +94,15 @@ export const TicketForm = ({ ticketId }: { ticketId: number }) => {
 
   if (!ticket) {
     return (
-      <div className="py-4">
+      <div className="py-4" data-testid="ticket-form-error">
         <h1 className="text-2xl font-bold">{t.common.misc("error")}</h1>
         <p className="text-red-500 mt-4">Ticket does not exist.</p>
         <div className="mt-4">
-          <Button variant="secondary" onClick={() => router.back()}>
+          <Button
+            variant="secondary"
+            onClick={() => router.back()}
+            testId="ticket-form-back"
+          >
             Go Back
           </Button>
         </div>
@@ -140,7 +147,7 @@ export const TicketForm = ({ ticketId }: { ticketId: number }) => {
   ];
 
   return (
-    <div className="py-4">
+    <div className="py-4" data-testid="ticket-form-container">
       <Breadcrumbs items={breadcrumbItems} />
       <div className="flex items-center justify-between mb-4 mt-4">
         <Heading
@@ -153,6 +160,7 @@ export const TicketForm = ({ ticketId }: { ticketId: number }) => {
         <form
           className="grid grid-cols-1 gap-4 sm:grid-cols-2 max-w-6xl"
           onSubmit={form.handleSubmit(onSubmit)}
+          data-testid="ticket-form"
         >
           <div className="col-span-1 sm:col-span-2">
             <ExtInputField
@@ -160,10 +168,14 @@ export const TicketForm = ({ ticketId }: { ticketId: number }) => {
               fieldName="requestTitle"
               label={t.teams.tickets.form.base("name")}
               required
+              testId="ticket-form-title"
             />
           </div>
 
-          <div className="col-span-1 sm:col-span-2">
+          <div
+            className="col-span-1 sm:col-span-2"
+            data-testid="ticket-form-description-container"
+          >
             <FormField
               control={form.control}
               name="requestDescription"
@@ -190,13 +202,14 @@ export const TicketForm = ({ ticketId }: { ticketId: number }) => {
             fieldName="assignUserId"
             label={t.teams.tickets.form.base("assignee")}
             teamId={ticket.teamId!}
+            testId="ticket-form-assignee"
           />
 
           <FormField
             control={form.control}
             name="priority"
             render={({ field }) => (
-              <FormItem>
+              <FormItem data-testid="ticket-form-priority">
                 <FormLabel>{t.teams.tickets.form.base("priority")}</FormLabel>
                 <FormControl>
                   <TicketPrioritySelect
@@ -214,6 +227,7 @@ export const TicketForm = ({ ticketId }: { ticketId: number }) => {
             fieldName="estimatedCompletionDate"
             label={t.teams.tickets.form.base("target_completion_date")}
             placeholder={t.common.misc("date_select_place_holder")}
+            testId="ticket-form-target-date"
           />
 
           <DatePickerField
@@ -221,9 +235,10 @@ export const TicketForm = ({ ticketId }: { ticketId: number }) => {
             fieldName="actualCompletionDate"
             label={t.teams.tickets.form.base("actual_completion_date")}
             placeholder={t.common.misc("date_select_place_holder")}
+            testId="ticket-form-actual-date"
           />
 
-          <TicketChannelSelectField form={form} />
+          <TicketChannelSelectField form={form} testId="ticket-form-channel" />
           <WorkflowStateSelectField
             form={form}
             name="currentStateId"
@@ -232,14 +247,20 @@ export const TicketForm = ({ ticketId }: { ticketId: number }) => {
             workflowId={ticket.workflowId!}
             workflowStateId={ticket.currentStateId!}
             includeSelf
+            testId="ticket-form-state"
           />
 
           <div className="col-span-1 sm:col-span-2 flex flex-row gap-4">
             <SubmitButton
               label={t.common.buttons("save")}
               labelWhileLoading={t.common.buttons("saving")}
+              testId="ticket-form-submit"
             />
-            <Button variant="secondary" onClick={() => router.back()}>
+            <Button
+              variant="secondary"
+              onClick={() => router.back()}
+              testId="ticket-form-cancel"
+            >
               {t.common.buttons("discard")}
             </Button>
           </div>

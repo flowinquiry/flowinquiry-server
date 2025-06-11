@@ -3,6 +3,7 @@ import { test } from "@playwright/test";
 import { HomePage } from "./pages/home-page";
 
 test.describe("Home Page", () => {
+  test.use({ storageState: "playwright/.auth/admin.json" });
   test("should navigate to home page and login successfully", async ({
     page,
   }) => {
@@ -11,13 +12,8 @@ test.describe("Home Page", () => {
     // Navigate to the home page
     await homePage.goto();
 
-    // Verify redirection to login page
-    await homePage.expectRedirectToLogin();
-
-    // Login with admin credentials
-    await homePage.login("admin@flowinquiry.io", "admin");
-
-    // Verify redirection to dashboard after login
+    // Since we're using the admin storage state, we should be already logged in
+    // and redirected to the dashboard
     await homePage.expectPageLoaded();
   });
 

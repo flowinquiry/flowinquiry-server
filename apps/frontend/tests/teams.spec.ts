@@ -9,7 +9,6 @@ test.describe("Teams Page", () => {
     page,
     context,
   }) => {
-    const cookies = await context.cookies();
     // Check if the user is authenticated
     await assertAuthenticated(page);
 

@@ -10,7 +10,9 @@ export class UsersPage {
 
   constructor(page: Page) {
     this.page = page;
-    this.userLinks = page.getByRole("link", { name: /user-/i });
+    // First find the user name containers, then find the link elements inside them
+    const userNameContainers = page.getByTestId(/^user-list-name-/);
+    this.userLinks = userNameContainers.locator("a");
   }
 
   /**

@@ -183,10 +183,15 @@ export const UserList = () => {
               handleSearchTeams(e.target.value);
             }}
             defaultValue={searchParams.get("name")?.toString()}
+            testId="user-list-search"
           />
           <Tooltip>
             <TooltipTrigger asChild>
-              <Button variant="ghost" onClick={toggleSortDirection}>
+              <Button
+                variant="ghost"
+                onClick={toggleSortDirection}
+                testId="user-list-sort"
+              >
                 {sortDirection === "asc" ? <ArrowDownAZ /> : <ArrowUpAZ />}
               </Button>
             </TooltipTrigger>
@@ -200,11 +205,15 @@ export const UserList = () => {
             <Link
               href={"/portal/users/new/edit"}
               className={cn(buttonVariants({ variant: "default" }))}
+              data-testid="user-list-new-user"
             >
               <Plus className="mr-2 h-4 w-4" /> {t.users.list("invite_user")}
             </Link>
           )}
-          <Button onClick={() => setIsOrgChartOpen(true)}>
+          <Button
+            onClick={() => setIsOrgChartOpen(true)}
+            testId="user-list-org-chart"
+          >
             <Network />
             {t.users.common("org_chart")}
           </Button>
@@ -212,17 +221,20 @@ export const UserList = () => {
       </div>
       <Separator />
       {loading ? (
-        <LoadingPlaceholder
-          message={t.common.misc("loading_data")}
-          skeletonCount={3}
-          skeletonWidth="28rem"
-        />
+        <div data-testid="user-list-loading">
+          <LoadingPlaceholder
+            message={t.common.misc("loading_data")}
+            skeletonCount={3}
+            skeletonWidth="28rem"
+          />
+        </div>
       ) : (
         <div className="flex flex-row flex-wrap gap-4 content-around">
           {items?.map((user) => (
             <div
               key={user.id}
               className="relative w-md flex flex-row gap-4 border px-4 py-4 rounded-2xl bg-white dark:bg-gray-800"
+              data-testid={`user-list-card-${user.id}`}
             >
               {PermissionUtils.canAccess(permissionLevel) && (
                 <div className="absolute top-2 right-2">
@@ -235,6 +247,7 @@ export const UserList = () => {
                         <DropdownMenuItem
                           className="cursor-pointer"
                           onClick={() => onResendActivationEmail(user)}
+                          data-testid={`user-list-resend-activation-${user.id}`}
                         >
                           <RotateCw />
                           {t.users.list("resend_activation_email")}
@@ -243,6 +256,7 @@ export const UserList = () => {
                       <DropdownMenuItem
                         className="cursor-pointer"
                         onClick={() => onDeleteUser(user)}
+                        data-testid={`user-list-delete-${user.id}`}
                       >
                         <Trash />
                         {t.common.buttons("delete")}
@@ -252,10 +266,16 @@ export const UserList = () => {
                 </div>
               )}
 
-              <div className="relative w-24 h-24">
+              <div
+                className="relative w-24 h-24"
+                data-testid={`user-list-avatar-${user.id}`}
+              >
                 <UserAvatar imageUrl={user.imageUrl} size="w-24 h-24" />
                 {user.status !== "ACTIVE" && (
-                  <div className="absolute inset-0 bg-black bg-opacity-50 rounded-full flex items-center justify-center">
+                  <div
+                    className="absolute inset-0 bg-black bg-opacity-50 rounded-full flex items-center justify-center"
+                    data-testid={`user-list-inactive-${user.id}`}
+                  >
                     <span className="text-white text-xs font-bold">
                       {t.users.common("not_activated")}
                     </span>
@@ -265,26 +285,37 @@ export const UserList = () => {
 
               {/* User Info */}
               <div className="grid grid-cols-1">
-                <div className="text-2xl">
-                  <Button variant="link" className="px-0">
+                <div
+                  className="text-2xl"
+                  data-testid={`user-list-name-${user.id}`}
+                >
+                  <Button
+                    variant="link"
+                    className="px-0"
+                    testId={`user-list-name-button-${user.id}`}
+                  >
                     <Link href={`/portal/users/${obfuscate(user.id)}`}>
                       {user.firstName}, {user.lastName}
                     </Link>
                   </Button>
                 </div>
-                <div>
+                <div data-testid={`user-list-email-${user.id}`}>
                   {t.users.form("email")}:{" "}
-                  <Button variant="link" className="px-0 py-0 h-0">
+                  <Button
+                    variant="link"
+                    className="px-0 py-0 h-0"
+                    testId={`user-list-email-button-${user.id}`}
+                  >
                     <Link href={`mailto:${user.email}`}>{user.email}</Link>
                   </Button>
                 </div>
-                <div>
+                <div data-testid={`user-list-title-${user.id}`}>
                   {t.users.form("title")}: {user.title}
                 </div>
-                <div>
+                <div data-testid={`user-list-timezone-${user.id}`}>
                   {t.users.form("timezone")}: {user.timezone}
                 </div>
-                <div>
+                <div data-testid={`user-list-last-login-${user.id}`}>
                   {t.users.form("last_login_time")}:{" "}
                   {user.lastLoginTime
                     ? safeFormatDistanceToNow(user.lastLoginTime, {
@@ -297,39 +328,53 @@ export const UserList = () => {
           ))}
         </div>
       )}
-      <PaginationExt
-        currentPage={currentPage}
-        totalPages={totalPages}
-        onPageChange={(page) => setCurrentPage(page)}
-      />
+      <div data-testid="user-list-pagination">
+        <PaginationExt
+          currentPage={currentPage}
+          totalPages={totalPages}
+          onPageChange={(page) => setCurrentPage(page)}
+        />
+      </div>
 
-      <OrgChartDialog
-        userId={undefined} // Pass undefined to load the top-level org chart
-        isOpen={isOrgChartOpen}
-        onClose={() => setIsOrgChartOpen(false)}
-      />
+      <div data-testid="user-list-org-chart-dialog">
+        <OrgChartDialog
+          userId={undefined} // Pass undefined to load the top-level org chart
+          isOpen={isOrgChartOpen}
+          onClose={() => setIsOrgChartOpen(false)}
+        />
+      </div>
 
-      <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>{t.users.list("delete_dialog_title")}</DialogTitle>
-          </DialogHeader>
-          <p>
-            {t.users.list.rich("delete_confirmation", {
-              name: `${selectedUser?.firstName} ${selectedUser?.lastName}`,
-              strong: (chunks) => <strong>{chunks}</strong>,
-            })}
-          </p>
-          <DialogFooter>
-            <Button variant="secondary" onClick={() => setIsDialogOpen(false)}>
-              {t.common.buttons("cancel")}
-            </Button>
-            <Button variant="destructive" onClick={confirmDeleteUser}>
-              {t.common.buttons("delete")}
-            </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
+      <div data-testid="user-list-delete-dialog">
+        <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle>{t.users.list("delete_dialog_title")}</DialogTitle>
+            </DialogHeader>
+            <p>
+              {t.users.list.rich("delete_confirmation", {
+                name: `${selectedUser?.firstName} ${selectedUser?.lastName}`,
+                strong: (chunks) => <strong>{chunks}</strong>,
+              })}
+            </p>
+            <DialogFooter>
+              <Button
+                variant="secondary"
+                onClick={() => setIsDialogOpen(false)}
+                testId="user-list-cancel-delete"
+              >
+                {t.common.buttons("cancel")}
+              </Button>
+              <Button
+                variant="destructive"
+                onClick={confirmDeleteUser}
+                testId="user-list-confirm-delete"
+              >
+                {t.common.buttons("delete")}
+              </Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
+      </div>
     </div>
   );
 };

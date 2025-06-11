@@ -23,9 +23,9 @@
   "devDependencies": {
     "@eslint/compat": "^1.2.9",
     "@svgr/webpack": "^8.1.0",
-    "@types/node": "^22.15.30",
-    "@types/react": "^19.1.6",
-    "@typescript-eslint/parser": "^8.33.1",
+    "@types/node": "^22.15.31",
+    "@types/react": "^19.1.7",
+    "@typescript-eslint/parser": "^8.34.0",
     "autoprefixer": "^10.4.21",
     "eslint-plugin-react-hooks": "^5.2.0",
     "eslint-plugin-simple-import-sort": "^12.1.1",

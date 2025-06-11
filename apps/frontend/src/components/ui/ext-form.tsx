@@ -70,6 +70,7 @@ export const ExtInputField = ({
                 placeholder={placeholder}
                 {...field}
                 className={className} // Apply custom classes here
+                testId={props.testId}
               />
             }
           </FormControl>
@@ -99,7 +100,11 @@ export const ExtTextAreaField = ({
               {required && <span className="text-destructive"> *</span>}
             </FormLabel>
             <FormControl>
-              <Textarea placeholder={placeholder} {...field} />
+              <Textarea
+                placeholder={placeholder}
+                {...field}
+                testId={props.testId}
+              />
             </FormControl>
             <FormMessage />
           </FormItem>
@@ -112,13 +117,19 @@ export const ExtTextAreaField = ({
 interface SubmitButtonProps {
   label: string;
   labelWhileLoading: string;
+  testId?: string;
 }
 
 export const SubmitButton = ({
   label,
   labelWhileLoading,
+  testId,
 }: SubmitButtonProps) => {
-  return <Button type="submit">{label}</Button>;
+  return (
+    <Button type="submit" testId={testId}>
+      {label}
+    </Button>
+  );
 };
 
 type DatePickerFieldProps = {

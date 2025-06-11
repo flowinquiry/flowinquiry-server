@@ -1,6 +1,7 @@
 export interface UiAttributes {
   required?: boolean;
   className?: string;
+  testId?: string;
 }
 
 export type FilterOption = {

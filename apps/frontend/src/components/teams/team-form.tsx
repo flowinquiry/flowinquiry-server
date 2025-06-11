@@ -149,33 +149,41 @@ export const TeamForm = ({ teamId }: { teamId: number | undefined }) => {
 
   if (loading) {
     return (
-      <div className="py-4 flex justify-center items-center">
+      <div
+        className="py-4 flex justify-center items-center"
+        data-testid="team-form-loading"
+      >
         <Loader2 className="h-8 w-8 animate-spin" />
       </div>
     );
   }
 
   return (
-    <div className="grid grid-cols-1 gap-4">
+    <div className="grid grid-cols-1 gap-4" data-testid="team-form-container">
       <Breadcrumbs items={breadcrumbItems} />
       <div className="flex items-center justify-between">
         <Heading title={title} description={description} />
       </div>
       <Separator />
-      <div className="flex gap-4 py-4 flex-col md:flex-row">
+      <div
+        className="flex gap-4 py-4 flex-col md:flex-row"
+        data-testid="team-form-content"
+      >
         <div>
           <TooltipProvider>
             <Tooltip>
               <TooltipTrigger asChild>
                 {selectedFile ? (
-                  <ImageCropper
-                    dialogOpen={isDialogOpen}
-                    setDialogOpen={setDialogOpen}
-                    selectedFile={selectedFile}
-                    setSelectedFile={setSelectedFile}
-                  />
+                  <div data-testid="team-form-logo-cropper">
+                    <ImageCropper
+                      dialogOpen={isDialogOpen}
+                      setDialogOpen={setDialogOpen}
+                      selectedFile={selectedFile}
+                      setSelectedFile={setSelectedFile}
+                    />
+                  </div>
                 ) : (
-                  <div>
+                  <div data-testid="team-form-logo-upload">
                     <input {...getInputProps()} />
                     <TeamAvatar
                       {...getRootProps()}
@@ -196,32 +204,38 @@ export const TeamForm = ({ teamId }: { teamId: number | undefined }) => {
           <form
             className="grid grid-cols-1 gap-4 w-md"
             onSubmit={form.handleSubmit(onSubmit)}
+            data-testid="team-form"
           >
             <ExtInputField
               form={form}
               required
               fieldName="name"
               label={t.teams.form("name")}
+              testId="team-form-name"
             />
             <ExtTextAreaField
               form={form}
               fieldName="slogan"
               label={t.teams.form("slogan")}
+              testId="team-form-slogan"
             />
             <ExtTextAreaField
               form={form}
               fieldName="description"
               label={t.teams.form("description")}
+              testId="team-form-description"
             />
             <div className="md:col-span-2 flex flex-row gap-4">
               <SubmitButton
                 label={submitText}
                 labelWhileLoading={submitTextWhileLoading}
+                testId="team-form-submit"
               />
               <Button
                 variant="secondary"
                 type="button"
                 onClick={() => router.back()}
+                testId="team-form-discard"
               >
                 {t.common.buttons("discard")}
               </Button>

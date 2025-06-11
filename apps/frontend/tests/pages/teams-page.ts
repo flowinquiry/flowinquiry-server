@@ -15,19 +15,19 @@ export class TeamsPage {
 
   constructor(page: Page) {
     this.page = page;
-    // Try multiple selectors for the "New team" button
-    this.newTeamButton = page
-      .locator("button, a")
-      .filter({ hasText: /new team|create team|add team/i })
-      .first();
+    // Use data-testid for the "New team" button
+    this.newTeamButton = page.getByTestId("team-list-new-team");
+    // Keep using label selectors for form inputs as they don't have data-testid attributes
     this.teamNameInput = page.getByLabel("Name");
     this.teamDescriptionInput = page.getByLabel("Description");
-    // Try multiple selectors for the "Save" button
+    // Keep using text filtering for the "Save" button as it doesn't have a data-testid attribute
     this.saveButton = page
       .locator('button, input[type="submit"]')
       .filter({ hasText: /save|create|submit|confirm/i })
       .first();
+    // Keep using role-based selector for the manager dialog as it's not the delete dialog
     this.managerDialog = page.locator("div[role='dialog']");
+    // Keep using role and text filtering for the close button as it doesn't have a data-testid attribute
     this.closeDialogButton = page
       .getByRole("button", { name: /close|cancel|ok/i })
       .filter({ hasText: /close|cancel|ok/i });

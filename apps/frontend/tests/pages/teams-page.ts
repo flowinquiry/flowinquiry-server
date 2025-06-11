@@ -143,7 +143,9 @@ export class TeamsPage {
         );
       });
     } catch (error) {
-      console.log(`[DEBUG_LOG] Error filling form: ${error.message}`);
+      console.log(
+        `[DEBUG_LOG] Error filling form: ${error instanceof Error ? error.message : String(error)}`,
+      );
 
       // Since we couldn't fill the form, let's simulate a successful form submission
       console.log("[DEBUG_LOG] Simulating successful form submission");

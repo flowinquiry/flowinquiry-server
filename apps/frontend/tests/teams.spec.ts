@@ -1,27 +1,24 @@
 import { test } from "@playwright/test";
 
+import { assertAuthenticated } from "./helpers/login-check";
 import { TeamsPage } from "./pages/teams-page";
 
 test.describe("Teams Page", () => {
-  test.use({ storageState: "playwright/.auth/admin.json" });
+  test.use({ storageState: "./playwright/.auth/admin.json" });
   test("should create a new team and handle manager dialog", async ({
     page,
+    context,
   }) => {
+    const cookies = await context.cookies();
+    // Check if the user is authenticated
+    await assertAuthenticated(page);
+
     // Initialize page objects
     const teamsPage = new TeamsPage(page);
 
     // Step 2: Navigate to teams page
     console.log("[DEBUG_LOG] Navigating to teams page");
     await teamsPage.goto();
-
-    // Check if we're on the login page, and if so, skip the test
-    if (page.url().includes("/login")) {
-      console.log(
-        "[DEBUG_LOG] Redirected to login page, skipping test as we only test authenticated actions",
-      );
-      test.skip();
-      return;
-    }
 
     await teamsPage.expectPageLoaded();
     console.log(`[DEBUG_LOG] Current URL after navigation: ${page.url()}`);

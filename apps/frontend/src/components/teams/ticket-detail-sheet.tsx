@@ -176,18 +176,32 @@ const TicketDetailSheet: React.FC<TicketDetailsProps> = ({
 
   return (
     <FormProvider {...form}>
-      <Sheet open={open} onOpenChange={onClose}>
-        <SheetContent className="w-full sm:max-w-[70rem] h-full">
-          <ScrollArea className="h-full px-4">
-            <SheetHeader className="mb-6">
-              <SheetTitle>
-                <div className="flex items-center gap-4 mb-2">
+      <Sheet
+        open={open}
+        onOpenChange={onClose}
+        data-testid="ticket-detail-sheet"
+      >
+        <SheetContent
+          className="w-full sm:max-w-[70rem] h-full"
+          data-testid="ticket-detail-sheet-content"
+        >
+          <ScrollArea
+            className="h-full px-4"
+            data-testid="ticket-detail-scroll-area"
+          >
+            <SheetHeader className="mb-6" data-testid="ticket-detail-header">
+              <SheetTitle data-testid="ticket-detail-title">
+                <div
+                  className="flex items-center gap-4 mb-2"
+                  data-testid="ticket-workflow-container"
+                >
                   <span
                     className="inline-block px-2 py-1 text-xs font-semibold rounded-md"
                     style={{
                       backgroundColor: workflowColor.background,
                       color: workflowColor.text,
                     }}
+                    data-testid="ticket-workflow-badge"
                   >
                     {initialTicket.workflowRequestName}
                   </span>
@@ -196,6 +210,7 @@ const TicketDetailSheet: React.FC<TicketDetailsProps> = ({
                     <form
                       onSubmit={form.handleSubmit(onSubmit)}
                       className="flex items-center gap-2 grow"
+                      data-testid="edit-title-form"
                     >
                       <Controller
                         name="requestTitle"
@@ -206,10 +221,14 @@ const TicketDetailSheet: React.FC<TicketDetailsProps> = ({
                             className="text-xl"
                             placeholder="Enter ticket title"
                             autoFocus
+                            data-testid="title-input"
                           />
                         )}
                       />
-                      <div className="flex gap-2">
+                      <div
+                        className="flex gap-2"
+                        data-testid="title-edit-buttons"
+                      >
                         <Button
                           type="button"
                           variant="ghost"
@@ -218,6 +237,7 @@ const TicketDetailSheet: React.FC<TicketDetailsProps> = ({
                             form.handleSubmit(onSubmit)();
                             setIsEditingTitle(false);
                           }}
+                          data-testid="save-title-button"
                         >
                           {t.common.buttons("save")}
                         </Button>
@@ -226,13 +246,14 @@ const TicketDetailSheet: React.FC<TicketDetailsProps> = ({
                           variant="ghost"
                           size="sm"
                           onClick={() => setIsEditingTitle(false)}
+                          data-testid="cancel-title-button"
                         >
                           Cancel
                         </Button>
                       </div>
                     </form>
                   ) : (
-                    <div className="grow">
+                    <div className="grow" data-testid="ticket-title-container">
                       <Button
                         variant="link"
                         className={`px-0 text-xl grow text-left ${initialTicket.isCompleted ? "line-through" : ""}`}
@@ -243,12 +264,14 @@ const TicketDetailSheet: React.FC<TicketDetailsProps> = ({
                           e.preventDefault();
                           setIsEditingTitle(true);
                         }}
+                        data-testid="ticket-title-button"
                       >
                         <Link
                           href={`/portal/teams/${obfuscate(ticket.teamId)}/tickets/${obfuscate(
                             ticket.id,
                           )}`}
                           className="break-words whitespace-normal text-left"
+                          data-testid="ticket-title-link"
                         >
                           {ticket.requestTitle || initialTicket.requestTitle}
                         </Link>
@@ -260,21 +283,32 @@ const TicketDetailSheet: React.FC<TicketDetailsProps> = ({
                 {initialTicket.conversationHealth?.healthLevel && (
                   <TicketHealthLevelDisplay
                     currentLevel={initialTicket.conversationHealth.healthLevel}
+                    data-testid="ticket-health-level"
                   />
                 )}
               </SheetTitle>
             </SheetHeader>
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              <div className="md:col-span-2 space-y-6">
+            <div
+              className="grid grid-cols-1 md:grid-cols-3 gap-6"
+              data-testid="ticket-detail-grid"
+            >
+              <div
+                className="md:col-span-2 space-y-6"
+                data-testid="ticket-main-content"
+              >
                 <div
                   className={cn(
                     "p-4 rounded-lg border",
                     "bg-white dark:bg-gray-900",
                     "border-gray-200 dark:border-gray-700",
                   )}
+                  data-testid="ticket-description-section"
                 >
-                  <div className="flex items-center gap-3 mb-3">
+                  <div
+                    className="flex items-center gap-3 mb-3"
+                    data-testid="description-header"
+                  >
                     <FileText className="w-5 h-5 text-gray-600 dark:text-gray-300" />
                     <h3 className="text-sm font-semibold text-gray-700 dark:text-gray-200">
                       {t.teams.tickets.form.base("description")}
@@ -288,6 +322,7 @@ const TicketDetailSheet: React.FC<TicketDetailsProps> = ({
                         // Prevent the click from bubbling up and potentially closing the editor
                         e.stopPropagation();
                       }}
+                      data-testid="description-editor-container"
                     >
                       <RichTextEditor
                         key="description-editor"
@@ -302,17 +337,20 @@ const TicketDetailSheet: React.FC<TicketDetailsProps> = ({
                           form.handleSubmit(onSubmit)();
                           setIsEditingDescription(false);
                         }}
+                        data-testid="description-rich-editor"
                       />
                     </div>
                   ) : (
                     <EditableSection
                       onEdit={() => setIsEditingDescription(true)}
+                      data-testid="description-editable-section"
                     >
                       <div
                         className="prose dark:prose-invert max-w-none"
                         dangerouslySetInnerHTML={{
                           __html: ticket.requestDescription!,
                         }}
+                        data-testid="description-content"
                       />
                     </EditableSection>
                   )}
@@ -324,15 +362,24 @@ const TicketDetailSheet: React.FC<TicketDetailsProps> = ({
                     "bg-white dark:bg-gray-900",
                     "border-gray-200 dark:border-gray-700",
                   )}
+                  data-testid="ticket-state-priority-section"
                 >
-                  <div className="flex items-center gap-3 mb-3">
-                    <div>{getRequestStatusIcon()}</div>
+                  <div
+                    className="flex items-center gap-3 mb-3"
+                    data-testid="state-priority-header"
+                  >
+                    <div data-testid="request-status-icon">
+                      {getRequestStatusIcon()}
+                    </div>
                     <h3 className="text-sm font-semibold text-gray-700 dark:text-gray-200">
                       {t.teams.tickets.detail("state_priority")}
                     </h3>
                   </div>
-                  <div className="grid grid-cols-2 gap-4">
-                    <div>
+                  <div
+                    className="grid grid-cols-2 gap-4"
+                    data-testid="state-priority-grid"
+                  >
+                    <div data-testid="state-container">
                       <span className="text-xs text-gray-500 dark:text-gray-400 block mb-1">
                         {t.teams.tickets.form.base("state")}
                       </span>
@@ -340,6 +387,7 @@ const TicketDetailSheet: React.FC<TicketDetailsProps> = ({
                         <div
                           onClick={(e) => e.stopPropagation()}
                           className="py-2"
+                          data-testid="state-edit-container"
                         >
                           <div className="w-[16rem]">
                             <WorkflowStateSelectField
@@ -350,9 +398,13 @@ const TicketDetailSheet: React.FC<TicketDetailsProps> = ({
                               workflowStateId={initialTicket.currentStateId!}
                               includeSelf={true}
                               required={false}
+                              data-testid="state-select-field"
                             />
                           </div>
-                          <div className="flex justify-end gap-2 mt-2">
+                          <div
+                            className="flex justify-end gap-2 mt-2"
+                            data-testid="state-edit-buttons"
+                          >
                             <Button
                               type="button"
                               variant="ghost"
@@ -361,6 +413,7 @@ const TicketDetailSheet: React.FC<TicketDetailsProps> = ({
                                 form.handleSubmit(onSubmit)();
                                 setIsEditingStatus(false);
                               }}
+                              data-testid="save-state-button"
                             >
                               {t.common.buttons("save")}
                             </Button>
@@ -369,6 +422,7 @@ const TicketDetailSheet: React.FC<TicketDetailsProps> = ({
                               variant="ghost"
                               size="sm"
                               onClick={() => setIsEditingStatus(false)}
+                              data-testid="cancel-state-button"
                             >
                               {t.common.buttons("cancel")}
                             </Button>
@@ -377,8 +431,9 @@ const TicketDetailSheet: React.FC<TicketDetailsProps> = ({
                       ) : (
                         <EditableSection
                           onEdit={() => setIsEditingStatus(true)}
+                          data-testid="state-editable-section"
                         >
-                          <Badge variant="outline">
+                          <Badge variant="outline" data-testid="state-badge">
                             {ticket.currentStateName ||
                               initialTicket.currentStateName}
                           </Badge>
@@ -386,7 +441,7 @@ const TicketDetailSheet: React.FC<TicketDetailsProps> = ({
                       )}
                     </div>
 
-                    <div>
+                    <div data-testid="priority-container">
                       <span className="text-xs text-gray-500 dark:text-gray-400 block mb-1">
                         Priority
                       </span>
@@ -394,6 +449,7 @@ const TicketDetailSheet: React.FC<TicketDetailsProps> = ({
                         <div
                           onClick={(e) => e.stopPropagation()}
                           className="py-2"
+                          data-testid="priority-edit-container"
                         >
                           <Controller
                             name="priority"
@@ -404,10 +460,14 @@ const TicketDetailSheet: React.FC<TicketDetailsProps> = ({
                                 onChange={(value) => {
                                   field.onChange(value);
                                 }}
+                                data-testid="priority-select"
                               />
                             )}
                           />
-                          <div className="flex justify-end gap-2 mt-2">
+                          <div
+                            className="flex justify-end gap-2 mt-2"
+                            data-testid="priority-edit-buttons"
+                          >
                             <Button
                               type="button"
                               variant="ghost"
@@ -416,6 +476,7 @@ const TicketDetailSheet: React.FC<TicketDetailsProps> = ({
                                 form.handleSubmit(onSubmit)();
                                 setIsEditingPriority(false);
                               }}
+                              data-testid="save-priority-button"
                             >
                               Save
                             </Button>
@@ -424,6 +485,7 @@ const TicketDetailSheet: React.FC<TicketDetailsProps> = ({
                               variant="ghost"
                               size="sm"
                               onClick={() => setIsEditingPriority(false)}
+                              data-testid="cancel-priority-button"
                             >
                               {t.common.buttons("cancel")}
                             </Button>
@@ -432,16 +494,18 @@ const TicketDetailSheet: React.FC<TicketDetailsProps> = ({
                       ) : (
                         <EditableSection
                           onEdit={() => setIsEditingPriority(true)}
+                          data-testid="priority-editable-section"
                         >
                           <TicketPriorityDisplay
                             priority={ticket.priority || initialTicket.priority}
+                            data-testid="priority-display"
                           />
                         </EditableSection>
                       )}
                     </div>
 
                     {/* Channel - Editable */}
-                    <div>
+                    <div data-testid="channel-container">
                       <span className="text-xs text-gray-500 dark:text-gray-400 block mb-1">
                         Channel
                       </span>
@@ -449,11 +513,18 @@ const TicketDetailSheet: React.FC<TicketDetailsProps> = ({
                         <div
                           onClick={(e) => e.stopPropagation()}
                           className="py-2"
+                          data-testid="channel-edit-container"
                         >
                           <div className="w-[16rem]">
-                            <TicketChannelSelectField form={form} />
+                            <TicketChannelSelectField
+                              form={form}
+                              data-testid="channel-select-field"
+                            />
                           </div>
-                          <div className="flex justify-end gap-2 mt-2">
+                          <div
+                            className="flex justify-end gap-2 mt-2"
+                            data-testid="channel-edit-buttons"
+                          >
                             <Button
                               type="button"
                               variant="ghost"
@@ -462,6 +533,7 @@ const TicketDetailSheet: React.FC<TicketDetailsProps> = ({
                                 form.handleSubmit(onSubmit)();
                                 setIsEditingChannel(false);
                               }}
+                              data-testid="save-channel-button"
                             >
                               {t.common.buttons("save")}
                             </Button>
@@ -470,6 +542,7 @@ const TicketDetailSheet: React.FC<TicketDetailsProps> = ({
                               variant="ghost"
                               size="sm"
                               onClick={() => setIsEditingChannel(false)}
+                              data-testid="cancel-channel-button"
                             >
                               {t.common.buttons("cancel")}
                             </Button>
@@ -478,8 +551,9 @@ const TicketDetailSheet: React.FC<TicketDetailsProps> = ({
                       ) : (
                         <EditableSection
                           onEdit={() => setIsEditingChannel(true)}
+                          data-testid="channel-editable-section"
                         >
-                          <Badge variant="outline">
+                          <Badge variant="outline" data-testid="channel-badge">
                             {ticket?.channel
                               ? t.teams.tickets.form.channels(ticket.channel)
                               : initialTicket?.channel
@@ -493,7 +567,7 @@ const TicketDetailSheet: React.FC<TicketDetailsProps> = ({
                     </div>
 
                     {/* Target Completion - Editable */}
-                    <div>
+                    <div data-testid="completion-date-container">
                       <span className="text-xs text-gray-500 dark:text-gray-400 block mb-1">
                         {t.teams.tickets.form.base("target_completion_date")}
                       </span>
@@ -501,6 +575,7 @@ const TicketDetailSheet: React.FC<TicketDetailsProps> = ({
                         <div
                           onClick={(e) => e.stopPropagation()}
                           className="py-2"
+                          data-testid="completion-date-edit-container"
                         >
                           <Controller
                             name="estimatedCompletionDate"
@@ -519,6 +594,7 @@ const TicketDetailSheet: React.FC<TicketDetailsProps> = ({
                                   form.handleSubmit(onSubmit)();
                                   setIsEditingCompletionDate(false);
                                 }}
+                                data-testid="completion-date-input"
                               />
                             )}
                           />
@@ -526,8 +602,12 @@ const TicketDetailSheet: React.FC<TicketDetailsProps> = ({
                       ) : (
                         <EditableSection
                           onEdit={() => setIsEditingCompletionDate(true)}
+                          data-testid="completion-date-editable-section"
                         >
-                          <p className="text-sm p-1">
+                          <p
+                            className="text-sm p-1"
+                            data-testid="completion-date-display"
+                          >
                             {ticket.estimatedCompletionDate
                               ? new Date(
                                   ticket.estimatedCompletionDate,
@@ -546,51 +626,71 @@ const TicketDetailSheet: React.FC<TicketDetailsProps> = ({
                     "bg-white dark:bg-gray-900",
                     "border-gray-200 dark:border-gray-700",
                   )}
+                  data-testid="attachments-section"
                 >
-                  <div className="flex items-center gap-3 mb-3">
+                  <div
+                    className="flex items-center gap-3 mb-3"
+                    data-testid="attachments-header"
+                  >
                     <Paperclip className="w-5 h-5 text-gray-600 dark:text-gray-300" />
                     <h3 className="text-sm font-semibold text-gray-700 dark:text-gray-200">
                       {t.teams.tickets.detail("attachments")}
                     </h3>
                   </div>
-                  <AttachmentView entityType="Ticket" entityId={ticket.id!} />
+                  <AttachmentView
+                    entityType="Ticket"
+                    entityId={ticket.id!}
+                    data-testid="attachment-view"
+                  />
                 </div>
               </div>
 
-              <div className="space-y-6">
+              <div className="space-y-6" data-testid="ticket-sidebar">
                 <div
                   className={cn(
                     "p-4 rounded-lg border",
                     "bg-white dark:bg-gray-900",
                     "border-gray-200 dark:border-gray-700",
                   )}
+                  data-testid="people-assignment-section"
                 >
-                  <div className="flex items-center gap-3 mb-3">
+                  <div
+                    className="flex items-center gap-3 mb-3"
+                    data-testid="people-assignment-header"
+                  >
                     <User className="w-5 h-5 text-gray-600 dark:text-gray-300" />
                     <h3 className="text-sm font-semibold text-gray-700 dark:text-gray-200">
                       {t.teams.tickets.detail("people_assignment")}
                     </h3>
                   </div>
-                  <div className="space-y-4">
-                    <div>
+                  <div
+                    className="space-y-4"
+                    data-testid="people-assignment-content"
+                  >
+                    <div data-testid="requester-container">
                       <span className="text-xs text-gray-500 dark:text-gray-400 block mb-1">
                         {t.teams.tickets.form.base("requester")}
                       </span>
-                      <div className="flex items-center gap-2">
+                      <div
+                        className="flex items-center gap-2"
+                        data-testid="requester-info"
+                      >
                         <UserAvatar
                           imageUrl={ticket.requestUserImageUrl}
                           size="w-8 h-8"
+                          data-testid="requester-avatar"
                         />
                         <Link
                           href={`/portal/users/${obfuscate(ticket.requestUserId)}`}
                           className="text-sm hover:underline"
+                          data-testid="requester-link"
                         >
                           {ticket.requestUserName}
                         </Link>
                       </div>
                     </div>
 
-                    <div>
+                    <div data-testid="assignee-container">
                       <span className="text-xs text-gray-500 dark:text-gray-400 block mb-1">
                         {t.teams.tickets.form.base("assignee")}
                       </span>
@@ -598,14 +698,19 @@ const TicketDetailSheet: React.FC<TicketDetailsProps> = ({
                         <div
                           onClick={(e) => e.stopPropagation()}
                           className="py-2"
+                          data-testid="assignment-edit-container"
                         >
                           <TeamUserSelectField
                             form={form}
                             fieldName="assignUserId"
                             label=""
                             teamId={ticket.teamId!}
+                            data-testid="assignee-select-field"
                           />
-                          <div className="flex justify-end gap-2 mt-2">
+                          <div
+                            className="flex justify-end gap-2 mt-2"
+                            data-testid="assignment-edit-buttons"
+                          >
                             <Button
                               type="button"
                               variant="ghost"
@@ -614,6 +719,7 @@ const TicketDetailSheet: React.FC<TicketDetailsProps> = ({
                                 form.handleSubmit(onSubmit)();
                                 setIsEditingAssignment(false);
                               }}
+                              data-testid="save-assignment-button"
                             >
                               {t.common.buttons("save")}
                             </Button>
@@ -622,6 +728,7 @@ const TicketDetailSheet: React.FC<TicketDetailsProps> = ({
                               variant="ghost"
                               size="sm"
                               onClick={() => setIsEditingAssignment(false)}
+                              data-testid="cancel-assignment-button"
                             >
                               {t.common.buttons("cancel")}
                             </Button>
@@ -630,8 +737,12 @@ const TicketDetailSheet: React.FC<TicketDetailsProps> = ({
                       ) : (
                         <EditableSection
                           onEdit={() => setIsEditingAssignment(true)}
+                          data-testid="assignment-editable-section"
                         >
-                          <div className="flex items-center gap-2">
+                          <div
+                            className="flex items-center gap-2"
+                            data-testid="assignee-info"
+                          >
                             {ticket.assignUserId ||
                             initialTicket.assignUserId ? (
                               <>
@@ -641,17 +752,22 @@ const TicketDetailSheet: React.FC<TicketDetailsProps> = ({
                                     initialTicket.assignUserImageUrl
                                   }
                                   size="w-8 h-8"
+                                  data-testid="assignee-avatar"
                                 />
                                 <Link
                                   href={`/portal/users/${obfuscate(ticket.assignUserId || initialTicket.assignUserId!)}`}
                                   className="text-sm hover:underline"
+                                  data-testid="assignee-link"
                                 >
                                   {ticket.assignUserName ||
                                     initialTicket.assignUserName}
                                 </Link>
                               </>
                             ) : (
-                              <span className="text-sm text-gray-500">
+                              <span
+                                className="text-sm text-gray-500"
+                                data-testid="unassigned-message"
+                              >
                                 {t.teams.tickets.detail("unassigned")}
                               </span>
                             )}
@@ -669,25 +785,43 @@ const TicketDetailSheet: React.FC<TicketDetailsProps> = ({
                     "bg-white dark:bg-gray-900",
                     "border-gray-200 dark:border-gray-700",
                   )}
+                  data-testid="watchers-section"
                 >
-                  <div className="flex items-center gap-3 mb-3">
+                  <div
+                    className="flex items-center gap-3 mb-3"
+                    data-testid="watchers-header"
+                  >
                     <Eye className="w-5 h-5 text-gray-600 dark:text-gray-300" />
                     <h3 className="text-sm font-semibold text-gray-700 dark:text-gray-200">
                       {t.teams.tickets.detail("watchers")}
                     </h3>
                   </div>
-                  <EntityWatchers entityType="Ticket" entityId={ticket.id!} />
+                  <EntityWatchers
+                    entityType="Ticket"
+                    entityId={ticket.id!}
+                    data-testid="entity-watchers"
+                  />
                 </div>
               </div>
-              <div className="md:col-span-3 mt-2">
-                <div className="space-y-3">
-                  <div className="flex items-center gap-3">
+              <div
+                className="md:col-span-3 mt-2"
+                data-testid="comments-container"
+              >
+                <div className="space-y-3" data-testid="comments-section">
+                  <div
+                    className="flex items-center gap-3"
+                    data-testid="comments-header"
+                  >
                     <User className="w-5 h-5 text-gray-600 dark:text-gray-300" />
                     <h3 className="text-sm font-semibold text-gray-700 dark:text-gray-200">
                       {t.teams.tickets.detail("comments")}
                     </h3>
                   </div>
-                  <CommentsView entityType="Ticket" entityId={ticket.id!} />
+                  <CommentsView
+                    entityType="Ticket"
+                    entityId={ticket.id!}
+                    data-testid="comments-view"
+                  />
                 </div>
               </div>
             </div>

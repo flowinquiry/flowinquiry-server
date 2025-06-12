@@ -80,29 +80,36 @@ const AddUserToTeamDialog: React.FC<AddUserToTeamDialogProps> = ({
   };
 
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
-      <DialogContent className="sm:max-w-[425px]">
+    <Dialog open={open} onOpenChange={setOpen} data-testid="add-user-dialog">
+      <DialogContent
+        className="sm:max-w-[425px]"
+        data-testid="add-user-dialog-content"
+      >
         <DialogHeader>
-          <DialogTitle>
+          <DialogTitle data-testid="add-user-dialog-title">
             {forceManagerAssignment
               ? t.teams.dashboard("add_user_dialog.title1")
               : t.teams.dashboard("add_user_dialog.title2", {
                   teamName: teamEntity.name,
                 })}
           </DialogTitle>
-          <DialogDescription>
+          <DialogDescription data-testid="add-user-dialog-description">
             {forceManagerAssignment
               ? t.teams.dashboard("add_user_dialog.description1")
               : t.teams.dashboard("add_user_dialog.description2")}
           </DialogDescription>
         </DialogHeader>
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+          <form
+            onSubmit={form.handleSubmit(onSubmit)}
+            className="space-y-6"
+            data-testid="add-user-form"
+          >
             <FormField
               control={form.control}
               name="users"
               render={({ field }) => (
-                <FormItem>
+                <FormItem data-testid="users-form-item">
                   <FormLabel>
                     {t.teams.dashboard("add_user_dialog.users")}
                   </FormLabel>
@@ -114,10 +121,14 @@ const AddUserToTeamDialog: React.FC<AddUserToTeamDialogProps> = ({
                         "add_user_dialog.user_select_place_holder",
                       )}
                       emptyIndicator={
-                        <p className="text-center text-lg leading-10 text-gray-600 dark:text-gray-400">
+                        <p
+                          className="text-center text-lg leading-10 text-gray-600 dark:text-gray-400"
+                          data-testid="no-results-indicator"
+                        >
                           {t.common.misc("no_results_found")}
                         </p>
                       }
+                      data-testid="users-selector"
                     />
                   </FormControl>
                   <FormMessage />
@@ -128,6 +139,7 @@ const AddUserToTeamDialog: React.FC<AddUserToTeamDialogProps> = ({
             <SubmitButton
               label={t.common.buttons("save")}
               labelWhileLoading={t.common.buttons("saving")}
+              data-testid="submit-button"
             />
           </form>
         </Form>

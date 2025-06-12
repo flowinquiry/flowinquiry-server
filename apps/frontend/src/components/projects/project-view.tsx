@@ -557,21 +557,32 @@ export default function ProjectView({
   };
 
   return (
-    <div className="p-6">
+    <div className="p-6" data-testid="project-view-container">
       {loading ? (
-        <p className="text-lg font-semibold">{t.common.misc("loading_data")}</p>
+        <p className="text-lg font-semibold" data-testid="project-view-loading">
+          {t.common.misc("loading_data")}
+        </p>
       ) : project ? (
         <>
           {/* Project Header - Collapsible but keeping original styling */}
-          <div className={`mb-4 transition-all duration-300`}>
+          <div
+            className={`mb-4 transition-all duration-300`}
+            data-testid="project-view-header"
+          >
             <div className="flex items-center justify-between mb-2">
               <div className="flex items-center">
-                <h1 className="text-3xl font-bold">{project.name}</h1>
+                <h1
+                  className="text-3xl font-bold"
+                  data-testid="project-view-title"
+                >
+                  {project.name}
+                </h1>
                 <Button
                   variant="ghost"
                   size="sm"
                   onClick={() => setIsHeaderCollapsed(!isHeaderCollapsed)}
                   className="ml-2 h-8 w-8 p-0"
+                  testId="project-view-collapse-button"
                 >
                   {isHeaderCollapsed ? (
                     <ChevronDown className="h-4 w-4" />
@@ -586,6 +597,7 @@ export default function ProjectView({
                   onClick={() => setIsProjectEditDialogOpen(true)}
                   variant="default"
                   className="flex items-center gap-2"
+                  testId="project-view-edit-button"
                 >
                   <Edit className="w-4 h-4" />
                   {t.teams.projects.view("edit_project")}
@@ -593,19 +605,25 @@ export default function ProjectView({
               )}
             </div>
 
-            <Breadcrumbs items={breadcrumbItems} />
+            <div data-testid="project-view-breadcrumbs">
+              <Breadcrumbs items={breadcrumbItems} />
+            </div>
 
             {/* Collapsible content */}
             {!isHeaderCollapsed && (
-              <div className="mt-4">
+              <div className="mt-4" data-testid="project-view-details">
                 <div
                   className="text-gray-600 dark:text-gray-300 text-sm mb-4"
                   dangerouslySetInnerHTML={{
                     __html: project.description ?? "",
                   }}
+                  data-testid="project-view-description"
                 />
 
-                <div className="flex flex-wrap items-center gap-4 mb-6">
+                <div
+                  className="flex flex-wrap items-center gap-4 mb-6"
+                  data-testid="project-view-metadata"
+                >
                   {project.status && (
                     <div className="flex items-center">
                       <span className="text-sm font-medium text-gray-500 dark:text-gray-400 mr-2">

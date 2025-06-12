@@ -45,10 +45,10 @@ test.describe("Users Page Navigation", () => {
 
       // Click the user link and wait for the correct URL
       await Promise.all([
+        userLink.click(),
         page.waitForURL(new RegExp(`/portal/users/${userId}$`), {
           timeout: 10000,
         }),
-        userLink.click(),
       ]);
 
       const finalUrl = page.url();

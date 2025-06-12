@@ -162,6 +162,7 @@ const TaskEditorSheet = ({
       <SheetContent
         side="right"
         className="w-[90vw] sm:w-2xl lg:w-4xl p-0 overflow-hidden"
+        data-testid="task-editor-sheet"
       >
         <div className="flex flex-col h-full max-h-screen">
           <div className="p-6 border-b">
@@ -178,6 +179,7 @@ const TaskEditorSheet = ({
             <form
               onSubmit={form.handleSubmit(onSubmit)}
               className="flex flex-col h-full"
+              data-testid="task-editor-form"
             >
               {/* Scrollable form content - fixed height calculations */}
               <div
@@ -199,6 +201,7 @@ const TaskEditorSheet = ({
                         fieldName="requestTitle"
                         label={t.teams.tickets.form.base("name")}
                         required
+                        testId="task-title-input"
                       />
                     </div>
 
@@ -217,6 +220,7 @@ const TaskEditorSheet = ({
                               <RichTextEditor
                                 value={field.value}
                                 onChange={field.onChange}
+                                data-testid="task-description-editor"
                               />
                             </FormControl>
                             <FormMessage />
@@ -240,6 +244,7 @@ const TaskEditorSheet = ({
                           "image/webp": [],
                         }}
                         onValueChange={setFiles}
+                        data-testid="task-file-uploader"
                       />
                     </div>
 
@@ -258,6 +263,7 @@ const TaskEditorSheet = ({
                               onChange={(value: TicketPriority) =>
                                 field.onChange(value)
                               }
+                              data-testid="task-priority-select"
                             />
                           </FormControl>
                           <FormMessage />
@@ -270,6 +276,7 @@ const TaskEditorSheet = ({
                       fieldName="assignUserId"
                       label={t.teams.tickets.form.base("assignee")}
                       teamId={teamId}
+                      testId="task-assignee-select"
                     />
 
                     <DatePickerField
@@ -279,6 +286,7 @@ const TaskEditorSheet = ({
                         "target_completion_date",
                       )}
                       placeholder={t.common.misc("date_select_place_holder")}
+                      testId="task-estimated-completion-date"
                     />
 
                     <DatePickerField
@@ -288,9 +296,13 @@ const TaskEditorSheet = ({
                         "actual_completion_date",
                       )}
                       placeholder={t.common.misc("date_select_place_holder")}
+                      testId="task-actual-completion-date"
                     />
 
-                    <TicketChannelSelectField form={form} />
+                    <TicketChannelSelectField
+                      form={form}
+                      testId="task-channel-select"
+                    />
 
                     {/* Modified workflow state field to capture state name changes */}
                     <FormItem>
@@ -303,6 +315,7 @@ const TaskEditorSheet = ({
                           workflowId={projectWorkflowId}
                           currentStateId={form.getValues("currentStateId") || 0}
                           onChange={handleWorkflowStateChange}
+                          data-testid="task-workflow-state-select"
                         />
                       </FormControl>
                       <FormMessage />
@@ -315,6 +328,7 @@ const TaskEditorSheet = ({
                         projectId={projectId}
                         name="iterationId"
                         label={t.teams.tickets.form.base("iteration")}
+                        testId="task-iteration-select"
                       />
                     </div>
 
@@ -325,6 +339,7 @@ const TaskEditorSheet = ({
                         projectId={projectId}
                         name="epicId"
                         label={t.teams.tickets.form.base("epic")}
+                        testId="task-epic-select"
                       />
                     </div>
                   </div>
@@ -336,11 +351,13 @@ const TaskEditorSheet = ({
                 <SubmitButton
                   label={t.common.buttons("save")}
                   labelWhileLoading={t.common.buttons("saving")}
+                  data-testid="task-save-button"
                 />
                 <button
                   type="button"
                   className="px-4 py-2 border rounded-md bg-gray-200 hover:bg-gray-300 dark:bg-gray-800 dark:hover:bg-gray-700"
                   onClick={() => setIsOpen(false)}
+                  data-testid="task-discard-button"
                 >
                   {t.common.buttons("discard")}
                 </button>

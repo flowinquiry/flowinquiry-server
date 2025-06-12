@@ -30,15 +30,19 @@ const TaskBlock: React.FC<TaskBlockProps> = ({ task, isDragging = false }) => {
           transition={{ type: "spring", stiffness: 300, damping: 20 }}
           whileHover={{ scale: 1.02 }}
           whileTap={{ scale: 0.97 }}
+          data-testid="task-block"
         >
           <div className="flex flex-col gap-1">
-            <h3 className="font-medium truncate">{task.requestTitle}</h3>
+            <h3 className="font-medium truncate" data-testid="task-title">
+              {task.requestTitle}
+            </h3>
 
             {/* Task description - limited to 2 lines */}
             {task.requestDescription && (
               <div
                 className="text-xs text-gray-600 dark:text-gray-400 line-clamp-2 mt-1"
                 dangerouslySetInnerHTML={{ __html: task.requestDescription }}
+                data-testid="task-description"
               />
             )}
 
@@ -47,13 +51,17 @@ const TaskBlock: React.FC<TaskBlockProps> = ({ task, isDragging = false }) => {
               {task.priority && (
                 <span
                   className={`px-2 py-0.5 rounded-full text-xs font-medium ${getPriorityClass(task.priority)}`}
+                  data-testid="task-priority-badge"
                 >
                   {task.priority}
                 </span>
               )}
 
               {task.assignUserName && (
-                <span className="flex items-center gap-1 text-gray-500 dark:text-gray-400">
+                <span
+                  className="flex items-center gap-1 text-gray-500 dark:text-gray-400"
+                  data-testid="task-assignee"
+                >
                   <span className="w-8 h-8 rounded-full bg-gray-200 dark:bg-gray-700 flex items-center justify-center overflow-hidden">
                     <UserAvatar imageUrl={task.assignUserImageUrl} />
                   </span>
@@ -64,7 +72,10 @@ const TaskBlock: React.FC<TaskBlockProps> = ({ task, isDragging = false }) => {
               )}
 
               {task.modifiedAt && (
-                <span className="text-gray-500 dark:text-gray-400 ml-auto">
+                <span
+                  className="text-gray-500 dark:text-gray-400 ml-auto"
+                  data-testid="task-timestamp"
+                >
                   {formatDistanceToNow(task.modifiedAt, { addSuffix: true })}
                 </span>
               )}
@@ -72,18 +83,27 @@ const TaskBlock: React.FC<TaskBlockProps> = ({ task, isDragging = false }) => {
           </div>
         </motion.div>
       </TooltipTrigger>
-      <TooltipContent side="top" align="center" className="text-sm max-w-xs">
-        <div className="font-medium">{task.requestTitle}</div>
+      <TooltipContent
+        side="top"
+        align="center"
+        className="text-sm max-w-xs"
+        data-testid="task-tooltip"
+      >
+        <div className="font-medium" data-testid="task-tooltip-title">
+          {task.requestTitle}
+        </div>
         {task.requestDescription && (
           <div
             className="mt-1 text-xs max-h-40 overflow-y-auto"
             dangerouslySetInnerHTML={{ __html: task.requestDescription }}
+            data-testid="task-tooltip-description"
           />
         )}
         <div className="mt-2 text-xs grid grid-cols-2 gap-x-4 gap-y-1">
           <span>Priority:</span>
           <span
             className={`font-medium ${getTextPriorityClass(task.priority)}`}
+            data-testid="task-tooltip-priority"
           >
             {task.priority}
           </span>
@@ -91,14 +111,18 @@ const TaskBlock: React.FC<TaskBlockProps> = ({ task, isDragging = false }) => {
           {task.assignUserName && (
             <>
               <span>Assigned to:</span>
-              <span>{task.assignUserName}</span>
+              <span data-testid="task-tooltip-assignee">
+                {task.assignUserName}
+              </span>
             </>
           )}
 
           {task.requestUserName && (
             <>
               <span>Requester:</span>
-              <span>{task.requestUserName}</span>
+              <span data-testid="task-tooltip-requester">
+                {task.requestUserName}
+              </span>
             </>
           )}
         </div>

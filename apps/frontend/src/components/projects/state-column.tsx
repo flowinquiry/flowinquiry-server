@@ -63,8 +63,12 @@ const StateColumn: React.FC<ColumnProps> = ({
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: -20 }}
       transition={{ duration: 0.3, ease: "easeInOut" }}
+      data-testid={`state-column-${workflowState.id}`}
     >
-      <h2 className="text-lg font-bold mb-4 capitalize">
+      <h2
+        className="text-lg font-bold mb-4 capitalize"
+        data-testid={`state-column-title-${workflowState.id}`}
+      >
         {workflowState.stateName}
       </h2>
 
@@ -77,6 +81,7 @@ const StateColumn: React.FC<ColumnProps> = ({
           className="grow overflow-y-auto min-h-[100px]"
           layout
           transition={{ type: "spring", stiffness: 300, damping: 30 }}
+          data-testid={`state-column-tasks-${workflowState.id}`}
         >
           {tasks.map((task) => (
             <DraggableTaskWrapper
@@ -101,6 +106,7 @@ const StateColumn: React.FC<ColumnProps> = ({
           )}
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.95 }}
+          data-testid={`new-task-button-${workflowState.id}`}
         >
           <Plus className="w-5 h-5" /> {t.teams.projects.view("new_task")}
         </motion.button>

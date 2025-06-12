@@ -111,7 +111,7 @@ export function ProjectIterationDialog({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-240">
+      <DialogContent className="sm:max-w-240" data-testid="iteration-dialog">
         <DialogHeader>
           <DialogTitle>
             {isEditMode
@@ -129,6 +129,7 @@ export function ProjectIterationDialog({
           <form
             onSubmit={form.handleSubmit(handleSubmit)}
             className="space-y-6"
+            data-testid="iteration-form"
           >
             <FormField
               control={form.control}
@@ -144,6 +145,7 @@ export function ProjectIterationDialog({
                         "form.name_place_holder",
                       )}
                       {...field}
+                      data-testid="iteration-name-input"
                     />
                   </FormControl>
                   <FormMessage />
@@ -157,6 +159,7 @@ export function ProjectIterationDialog({
                 fieldName="startDate"
                 label={t.teams.projects.iteration("form.start_date")}
                 placeholder={t.common.misc("date_select_place_holder")}
+                testId="iteration-start-date"
               />
 
               <DatePickerField
@@ -164,6 +167,7 @@ export function ProjectIterationDialog({
                 fieldName="endDate"
                 label={t.teams.projects.iteration("form.end_date")}
                 placeholder={t.common.misc("date_select_place_holder")}
+                testId="iteration-end-date"
               />
             </div>
 
@@ -182,6 +186,7 @@ export function ProjectIterationDialog({
                       )}
                       {...field}
                       rows={3}
+                      data-testid="iteration-description-textarea"
                     />
                   </FormControl>
                   <FormMessage />
@@ -195,10 +200,15 @@ export function ProjectIterationDialog({
                 variant="outline"
                 onClick={onCancel}
                 disabled={isSubmitting}
+                data-testid="iteration-cancel-button"
               >
                 {t.common.buttons("cancel")}
               </Button>
-              <Button type="submit" disabled={isSubmitting}>
+              <Button
+                type="submit"
+                disabled={isSubmitting}
+                data-testid="iteration-submit-button"
+              >
                 {isSubmitting
                   ? isEditMode
                     ? t.common.buttons("saving")

@@ -157,23 +157,32 @@ const AuthorityForm = ({
 
   if (loading) {
     return (
-      <div className="flex justify-center items-center h-full">
-        <Spinner>{t.common.misc("loading_data")}</Spinner>
+      <div
+        className="flex justify-center items-center h-full"
+        data-testid="authority-form-loading"
+      >
+        <Spinner data-testid="authority-form-spinner">
+          {t.common.misc("loading_data")}
+        </Spinner>
       </div>
     );
   }
 
   return (
-    <div className="flex flex-col gap-4">
+    <div className="flex flex-col gap-4" data-testid="authority-form-container">
       <Breadcrumbs items={breadcrumbItems} />
       <Form {...form}>
-        <div>
+        <div data-testid="authority-form-content">
           <form
             className="grid grid-cols-1 gap-4"
             onSubmit={form.handleSubmit(onSubmit)}
+            data-testid="authority-form"
           >
             {/* Authority Section */}
-            <div className="space-y-4">
+            <div
+              className="space-y-4"
+              data-testid="authority-form-details-section"
+            >
               <h2 className="text-xl font-bold">
                 {t.authorities.form("title")}
               </h2>
@@ -184,7 +193,11 @@ const AuthorityForm = ({
                   <FormItem>
                     <FormLabel>{t.authorities.form("name")}</FormLabel>
                     <FormControl>
-                      <Input {...field} disabled={isSystemRole} />
+                      <Input
+                        {...field}
+                        disabled={isSystemRole}
+                        testId="authority-form-name"
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -197,7 +210,11 @@ const AuthorityForm = ({
                   <FormItem>
                     <FormLabel>{t.authorities.form("description")}</FormLabel>
                     <FormControl>
-                      <Textarea {...field} value={field.value ?? ""} />
+                      <Textarea
+                        {...field}
+                        value={field.value ?? ""}
+                        testId="authority-form-description"
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -206,7 +223,10 @@ const AuthorityForm = ({
             </div>
 
             {authorityResourcePermissions.length > 0 && (
-              <div className="space-y-4 mt-6">
+              <div
+                className="space-y-4 mt-6"
+                data-testid="authority-form-permissions-section"
+              >
                 <h2 className="text-xl font-bold">
                   {t.authorities.form("permissions_section")}
                 </h2>
@@ -224,6 +244,7 @@ const AuthorityForm = ({
                               onValueChange={field.onChange}
                               value={field.value ?? "NONE"}
                               disabled={isSystemRole}
+                              testId={`authority-form-permission-${index}`}
                             >
                               <SelectTrigger>
                                 <SelectValue
@@ -250,12 +271,20 @@ const AuthorityForm = ({
               </div>
             )}
 
-            <div className="flex items-center gap-4 pt-4">
+            <div
+              className="flex items-center gap-4 pt-4"
+              data-testid="authority-form-buttons"
+            >
               <SubmitButton
                 label={t.common.buttons("save")}
                 labelWhileLoading="Save changes ..."
+                testId="authority-form-submit"
               />
-              <Button variant="secondary" onClick={() => router.back()}>
+              <Button
+                variant="secondary"
+                onClick={() => router.back()}
+                testId="authority-form-discard"
+              >
                 {t.common.buttons("discard")}
               </Button>
             </div>

@@ -34,36 +34,9 @@ test.describe("Teams Page", () => {
     console.log(`[DEBUG_LOG] Page title: ${await page.title()}`);
     console.log(`[DEBUG_LOG] Page URL: ${page.url()}`);
 
-    // Check if there are any buttons on the page
-    const buttonCount = await page.locator("button").count();
-    console.log(`[DEBUG_LOG] Number of buttons on page: ${buttonCount}`);
-
-    // Check for elements with text containing "team"
-    const teamElements = await page
-      .locator("*:visible")
-      .filter({ hasText: /team/i })
-      .count();
-    console.log(`[DEBUG_LOG] Elements containing 'team': ${teamElements}`);
-
-    // Try to find the specific button we're looking for
-    const newTeamButtonCount = await page
-      .locator("button, a")
-      .filter({ hasText: /new team|create team|add team/i })
-      .count();
-    console.log(
-      `[DEBUG_LOG] Found ${newTeamButtonCount} potential New team buttons`,
-    );
-
-    // If we found potential buttons, log their text content
-    if (newTeamButtonCount > 0) {
-      const buttons = page
-        .locator("button, a")
-        .filter({ hasText: /new team|create team|add team/i });
-      for (let i = 0; i < newTeamButtonCount; i++) {
-        const buttonText = await buttons.nth(i).textContent();
-        console.log(`[DEBUG_LOG] Button ${i} text: ${buttonText}`);
-      }
-    }
+    // Check if the "New team" button is visible
+    const newTeamButtonVisible = await teamsPage.newTeamButton.isVisible();
+    console.log(`[DEBUG_LOG] New team button visible: ${newTeamButtonVisible}`);
 
     // Debug screenshots are now only captured on test failures
 
@@ -88,35 +61,21 @@ test.describe("Teams Page", () => {
     console.log(`[DEBUG_LOG] Page title: ${await page.title()}`);
     console.log(`[DEBUG_LOG] Page URL: ${page.url()}`);
 
-    // Check if the input fields are visible
-    const nameInputVisible = await page.getByLabel("Name").isVisible();
-    const descInputVisible = await page.getByLabel("Description").isVisible();
+    // Check if the form inputs are visible
+    const nameInputVisible = await teamsPage.teamNameInput
+      .isVisible()
+      .catch(() => false);
+    const descInputVisible = await teamsPage.teamDescriptionInput
+      .isVisible()
+      .catch(() => false);
     console.log(`[DEBUG_LOG] Name input visible: ${nameInputVisible}`);
     console.log(`[DEBUG_LOG] Description input visible: ${descInputVisible}`);
 
-    // Check if there are any buttons on the page
-    const editPageButtonCount = await page.locator("button").count();
-    console.log(
-      `[DEBUG_LOG] Number of buttons on page: ${editPageButtonCount}`,
-    );
-
-    // Try to find the specific button we're looking for
-    const saveButtonCount = await page
-      .locator('button, input[type="submit"]')
-      .filter({ hasText: /save|create|submit|confirm/i })
-      .count();
-    console.log(`[DEBUG_LOG] Found ${saveButtonCount} potential Save buttons`);
-
-    // If we found potential buttons, log their text content
-    if (saveButtonCount > 0) {
-      const buttons = page
-        .locator('button, input[type="submit"]')
-        .filter({ hasText: /save|create|submit|confirm/i });
-      for (let i = 0; i < saveButtonCount; i++) {
-        const buttonText = await buttons.nth(i).textContent();
-        console.log(`[DEBUG_LOG] Save button ${i} text: ${buttonText}`);
-      }
-    }
+    // Check if the save button is visible
+    const saveButtonVisible = await teamsPage.saveButton
+      .isVisible()
+      .catch(() => false);
+    console.log(`[DEBUG_LOG] Save button visible: ${saveButtonVisible}`);
 
     // Debug screenshots are now only captured on test failures
 

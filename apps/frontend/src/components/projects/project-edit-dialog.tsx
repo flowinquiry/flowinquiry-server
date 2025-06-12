@@ -300,6 +300,7 @@ const ProjectEditDialog: React.FC<ProjectDialogProps> = ({
                         fieldName="startDate"
                         label={t.teams.projects.form("start_date")}
                         placeholder={t.common.misc("date_select_place_holder")}
+                        testId="project-edit-start-date"
                       />
                     </div>
                     <div className="col-span-1">
@@ -308,6 +309,7 @@ const ProjectEditDialog: React.FC<ProjectDialogProps> = ({
                         fieldName="endDate"
                         label={t.teams.projects.form("end_date")}
                         placeholder={t.common.misc("date_select_place_holder")}
+                        testId="project-edit-end-date"
                       />
                     </div>
                   </div>

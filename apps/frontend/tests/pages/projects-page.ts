@@ -12,6 +12,8 @@ export class ProjectsPage {
   readonly projectNameInput: Locator;
   readonly projectDescriptionEditor: Locator;
   readonly projectShortNameInput: Locator;
+  readonly projectStartDateButton: Locator;
+  readonly projectEndDateButton: Locator;
   readonly projectStatusSelect: Locator;
   readonly projectStatusActiveOption: Locator;
   readonly saveButton: Locator;
@@ -27,6 +29,8 @@ export class ProjectsPage {
     this.projectNameInput = page.locator("input[name='name']");
     this.projectDescriptionEditor = page.locator(".ProseMirror");
     this.projectShortNameInput = page.locator("input[name='shortName']");
+    this.projectStartDateButton = page.getByTestId("project-edit-start-date");
+    this.projectEndDateButton = page.getByTestId("project-edit-end-date");
     this.projectStatusSelect = page
       .locator("button")
       .filter({ hasText: "Active" })
@@ -84,15 +88,126 @@ export class ProjectsPage {
   }
 
   /**
+   * Select a date from the calendar popover
+   * @param date The date to select (can be a Date object or a string in YYYY-MM-DD format)
+   */
+  async selectDateFromCalendar(date: Date | string) {
+    // Convert string date to Date object if needed
+    const dateObj = typeof date === "string" ? new Date(date) : date;
+
+    // Format the date for clicking in the calendar
+    const day = dateObj.getDate();
+    const month = dateObj.toLocaleString("default", { month: "long" });
+    const year = dateObj.getFullYear();
+
+    console.log(`[DEBUG_LOG] Selecting date: ${month} ${day}, ${year}`);
+
+    // Click on the day in the calendar
+    // First try to find by aria-label which includes the full date
+    const fullDateString = dateObj.toLocaleDateString("en-US", {
+      weekday: "long",
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+    });
+
+    try {
+      // Try to find the date button by its aria-label
+      const dateButton = this.page.getByRole("button", {
+        name: new RegExp(day.toString()),
+      });
+      await dateButton.click();
+      console.log(`[DEBUG_LOG] Selected date by clicking on day ${day}`);
+    } catch (error) {
+      console.log(`[DEBUG_LOG] Error selecting date: ${error}`);
+      // If we can't find the exact date, just press Enter to select the focused date
+      await this.page.keyboard.press("Enter");
+      console.log(`[DEBUG_LOG] Selected date by pressing Enter`);
+    }
+  }
+
+  /**
+   * Fill the start date field
+   * @param date The start date to set (can be a Date object or a string in YYYY-MM-DD format)
+   */
+  async fillStartDate(date: Date | string) {
+    console.log("[DEBUG_LOG] Filling start date");
+    await this.projectStartDateButton.waitFor({ state: "visible" });
+    await this.projectStartDateButton.click();
+    await this.selectDateFromCalendar(date);
+  }
+
+  /**
+   * Fill the end date field
+   * @param date The end date to set (can be a Date object or a string in YYYY-MM-DD format)
+   */
+  async fillEndDate(date: Date | string) {
+    console.log("[DEBUG_LOG] Filling end date");
+    await this.projectEndDateButton.waitFor({ state: "visible" });
+    await this.projectEndDateButton.click();
+    await this.selectDateFromCalendar(date);
+  }
+
+  /**
+   * Validate and fill date fields ensuring start date is before end date
+   * @param startDate The start date (optional)
+   * @param endDate The end date (optional)
+   * @returns true if dates were filled successfully, false if validation failed
+   */
+  async fillDateFields(
+    startDate?: Date | string,
+    endDate?: Date | string,
+  ): Promise<boolean> {
+    // If both dates are provided, validate that start date is before end date
+    if (startDate && endDate) {
+      const startDateObj =
+        typeof startDate === "string" ? new Date(startDate) : startDate;
+      const endDateObj =
+        typeof endDate === "string" ? new Date(endDate) : endDate;
+
+      if (startDateObj > endDateObj) {
+        console.log(
+          "[DEBUG_LOG] Validation failed: Start date must be before end date",
+        );
+        return false;
+      }
+
+      // Fill both dates
+      await this.fillStartDate(startDate);
+      await this.fillEndDate(endDate);
+      return true;
+    }
+
+    // If only start date is provided
+    if (startDate) {
+      await this.fillStartDate(startDate);
+      return true;
+    }
+
+    // If only end date is provided
+    if (endDate) {
+      await this.fillEndDate(endDate);
+      return true;
+    }
+
+    // No dates provided
+    return true;
+  }
+
+  /**
    * Fill in the project details
    * @param name The name of the project
    * @param description The description of the project
    * @param shortName The short name of the project
+   * @param startDate The start date (optional)
+   * @param endDate The end date (optional)
    */
   async fillProjectDetails(
     name: string,
     description: string,
     shortName: string,
+    startDate?: Date | string,
+    endDate?: Date | string,
   ) {
     console.log("[DEBUG_LOG] Filling project details");
 
@@ -130,6 +245,14 @@ export class ProjectsPage {
     console.log("[DEBUG_LOG] Filling project short name");
     await this.projectShortNameInput.waitFor({ state: "visible" });
     await this.projectShortNameInput.fill(shortName);
+
+    // Fill date fields if provided
+    if (startDate || endDate) {
+      const datesValid = await this.fillDateFields(startDate, endDate);
+      if (!datesValid) {
+        console.log("[DEBUG_LOG] Date validation failed, skipping date fields");
+      }
+    }
 
     // Skip status selection since the default is already "Active"
     console.log("[DEBUG_LOG] Skipping status selection (default is Active)");

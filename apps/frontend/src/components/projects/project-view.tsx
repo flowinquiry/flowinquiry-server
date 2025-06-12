@@ -671,16 +671,27 @@ export default function ProjectView({
           </div>
 
           {/* Keep the original filter section, just adding a bit more space efficiency */}
-          <div className="mb-4">
+          <div className="mb-4" data-testid="project-view-filters">
             {/* Epic and Iteration Filters - Original design */}
-            <div className="flex flex-wrap items-center gap-4 mb-4 p-3 bg-muted rounded-md">
-              <div className="flex items-center">
+            <div
+              className="flex flex-wrap items-center gap-4 mb-4 p-3 bg-muted rounded-md"
+              data-testid="project-view-filter-bar"
+            >
+              <div
+                className="flex items-center"
+                data-testid="project-view-iteration-filter"
+              >
                 <span className="text-sm font-medium mr-2">
                   {t.teams.projects.view("iteration")}:
                 </span>
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
-                    <Button variant="outline" size="sm" className="h-8">
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      className="h-8"
+                      testId="project-view-iteration-dropdown"
+                    >
                       {selectedIteration
                         ? iterations.find((i) => i.id === selectedIteration)
                             ?.name
@@ -747,13 +758,21 @@ export default function ProjectView({
                 </DropdownMenu>
               </div>
 
-              <div className="flex items-center">
+              <div
+                className="flex items-center"
+                data-testid="project-view-epic-filter"
+              >
                 <span className="text-sm font-medium mr-2">
                   {t.teams.projects.view("epic")}:
                 </span>
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
-                    <Button variant="outline" size="sm" className="h-8">
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      className="h-8"
+                      testId="project-view-epic-dropdown"
+                    >
                       {selectedEpic
                         ? epics.find((e) => e.id === selectedEpic)?.name
                         : t.teams.projects.view("all_epics")}
@@ -813,6 +832,7 @@ export default function ProjectView({
                   size="sm"
                   onClick={handleClearFilters}
                   className="ml-auto"
+                  testId="project-view-clear-filters"
                 >
                   {t.common.buttons("clear_filters")}
                 </Button>
@@ -821,20 +841,35 @@ export default function ProjectView({
 
             {/* Selected Filters Summary with Edit Options */}
             {(selectedIteration !== null || selectedEpic !== null) && (
-              <div className="mb-4 p-3 border rounded-md bg-background">
+              <div
+                className="mb-4 p-3 border rounded-md bg-background"
+                data-testid="project-view-active-filters"
+              >
                 <h3 className="text-sm font-medium mb-2">Active Filters:</h3>
-                <div className="space-y-3">
+                <div
+                  className="space-y-3"
+                  data-testid="project-view-filter-list"
+                >
                   {selectedIteration !== null && (
-                    <div className="flex flex-col sm:flex-row sm:items-center gap-2 p-2 bg-secondary/20 rounded-md">
+                    <div
+                      className="flex flex-col sm:flex-row sm:items-center gap-2 p-2 bg-secondary/20 rounded-md"
+                      data-testid="project-view-iteration-details"
+                    >
                       <div className="flex-1">
-                        <div className="font-medium">
+                        <div
+                          className="font-medium"
+                          data-testid="project-view-iteration-name"
+                        >
                           {t.teams.projects.view("iteration")}:{" "}
                           {
                             iterations.find((i) => i.id === selectedIteration)
                               ?.name
                           }
                         </div>
-                        <div className="text-xs text-muted-foreground mt-1">
+                        <div
+                          className="text-xs text-muted-foreground mt-1"
+                          data-testid="project-view-iteration-dates"
+                        >
                           {new Date(
                             iterations.find((i) => i.id === selectedIteration)
                               ?.startDate || "",
@@ -851,6 +886,7 @@ export default function ProjectView({
                         size="sm"
                         className="h-8 gap-1 self-start"
                         onClick={() => handleEditIteration(selectedIteration)}
+                        testId="project-view-edit-iteration"
                       >
                         <Edit className="h-4 w-4" />
                         {t.teams.projects.view("edit_iteration")}
@@ -864,6 +900,7 @@ export default function ProjectView({
                       style={{
                         backgroundColor: `${getEpicColor(selectedEpic)}20`,
                       }}
+                      data-testid="project-view-epic-details"
                     >
                       <div className="flex-1">
                         <div
@@ -871,11 +908,15 @@ export default function ProjectView({
                           style={{
                             color: getEpicColor(selectedEpic),
                           }}
+                          data-testid="project-view-epic-name"
                         >
                           {t.teams.projects.view("epic")}:{" "}
                           {epics.find((e) => e.id === selectedEpic)?.name}
                         </div>
-                        <div className="text-xs text-muted-foreground mt-1">
+                        <div
+                          className="text-xs text-muted-foreground mt-1"
+                          data-testid="project-view-epic-description"
+                        >
                           {
                             epics.find((e) => e.id === selectedEpic)
                               ?.description
@@ -891,6 +932,7 @@ export default function ProjectView({
                           color: getEpicColor(selectedEpic),
                         }}
                         onClick={() => handleEditEpic(selectedEpic)}
+                        testId="project-view-edit-epic"
                       >
                         <Edit className="h-4 w-4" />
                         {t.teams.projects.view("edit_epic")}
@@ -907,6 +949,7 @@ export default function ProjectView({
             collisionDetection={closestCorners}
             onDragStart={handleDragStart}
             onDragEnd={handleDragEnd}
+            data-testid="project-view-kanban"
           >
             {/* Set a fixed height for the Kanban board container */}
             <div
@@ -921,6 +964,7 @@ export default function ProjectView({
                 WebkitOverflowScrolling: "touch",
                 msOverflowStyle: "-ms-autohiding-scrollbar",
               }}
+              data-testid="project-view-board"
             >
               {workflow?.states
                 .sort((a, b) => {
@@ -954,65 +998,67 @@ export default function ProjectView({
           </DndContext>
         </>
       ) : (
-        <p className="text-red-500">
+        <p className="text-red-500" data-testid="project-view-not-found">
           {t.teams.projects.view("project_not_found")}.
         </p>
       )}
 
       {/* Dialogs and sheets */}
-      <TaskEditorSheet
-        isOpen={isSheetOpen}
-        setIsOpen={setIsSheetOpen}
-        selectedWorkflowState={selectedWorkflowState}
-        setTasks={setTasks}
-        teamId={project?.teamId!}
-        projectId={projectId!}
-        projectWorkflowId={workflow?.id!}
-        onTaskCreated={fetchProjectData} // Pass the fetchProjectData function as a callback
-      />
-      <TaskDetailSheet
-        isOpen={isTaskDetailOpen}
-        setIsOpen={setIsTaskDetailOpen}
-        task={selectedTask}
-        onTaskUpdate={handleTaskUpdate}
-      />
+      <div data-testid="project-view-dialogs">
+        <TaskEditorSheet
+          isOpen={isSheetOpen}
+          setIsOpen={setIsSheetOpen}
+          selectedWorkflowState={selectedWorkflowState}
+          setTasks={setTasks}
+          teamId={project?.teamId!}
+          projectId={projectId!}
+          projectWorkflowId={workflow?.id!}
+          onTaskCreated={fetchProjectData} // Pass the fetchProjectData function as a callback
+        />
+        <TaskDetailSheet
+          isOpen={isTaskDetailOpen}
+          setIsOpen={setIsTaskDetailOpen}
+          task={selectedTask}
+          onTaskUpdate={handleTaskUpdate}
+        />
 
-      <ProjectEditDialog
-        open={isProjectEditDialogOpen}
-        setOpen={setIsProjectEditDialogOpen}
-        teamEntity={team}
-        project={project}
-        onSaveSuccess={async () => {
-          setIsProjectEditDialogOpen(false);
-          await fetchProjectData();
-        }}
-      />
+        <ProjectEditDialog
+          open={isProjectEditDialogOpen}
+          setOpen={setIsProjectEditDialogOpen}
+          teamEntity={team}
+          project={project}
+          onSaveSuccess={async () => {
+            setIsProjectEditDialogOpen(false);
+            await fetchProjectData();
+          }}
+        />
 
-      {/* Iteration Dialog (Create/Edit) */}
-      <ProjectIterationDialog
-        open={isIterationDialogOpen}
-        onOpenChange={setIsIterationDialogOpen}
-        onSave={handleSaveIteration}
-        onCancel={() => {
-          setIsIterationDialogOpen(false);
-          setSelectedIterationForEdit(null);
-        }}
-        projectId={projectId!}
-        iteration={selectedIterationForEdit}
-      />
+        {/* Iteration Dialog (Create/Edit) */}
+        <ProjectIterationDialog
+          open={isIterationDialogOpen}
+          onOpenChange={setIsIterationDialogOpen}
+          onSave={handleSaveIteration}
+          onCancel={() => {
+            setIsIterationDialogOpen(false);
+            setSelectedIterationForEdit(null);
+          }}
+          projectId={projectId!}
+          iteration={selectedIterationForEdit}
+        />
 
-      {/* Epic Dialog (Create/Edit) */}
-      <ProjectEpicDialog
-        open={isEpicDialogOpen}
-        onOpenChange={setIsEpicDialogOpen}
-        onSave={handleSaveEpic}
-        onCancel={() => {
-          setIsEpicDialogOpen(false);
-          setSelectedEpicForEdit(null);
-        }}
-        projectId={projectId!}
-        epic={selectedEpicForEdit}
-      />
+        {/* Epic Dialog (Create/Edit) */}
+        <ProjectEpicDialog
+          open={isEpicDialogOpen}
+          onOpenChange={setIsEpicDialogOpen}
+          onSave={handleSaveEpic}
+          onCancel={() => {
+            setIsEpicDialogOpen(false);
+            setSelectedEpicForEdit(null);
+          }}
+          projectId={projectId!}
+          epic={selectedEpicForEdit}
+        />
+      </div>
     </div>
   );
 }

@@ -97,7 +97,7 @@ export const UserForm = ({ userId }: { userId?: number }) => {
   }
 
   return (
-    <div className="grid grid-cols-1 gap-4">
+    <div className="grid grid-cols-1 gap-4" data-testid="user-form-container">
       <div className="flex items-center justify-between">
         <Heading title={title} description={description} />
       </div>
@@ -106,6 +106,7 @@ export const UserForm = ({ userId }: { userId?: number }) => {
         <form
           onSubmit={form.handleSubmit(onSubmit)}
           className="grid grid-cols-1 gap-4 sm:grid-cols-2 max-w-6xl"
+          data-testid="user-form"
         >
           {/* Email field spans the entire row */}
           <div className="sm:col-span-2">
@@ -116,15 +117,22 @@ export const UserForm = ({ userId }: { userId?: number }) => {
               label={t.users.form("email")}
               placeholder={t.users.form("email")}
               className="w-[20rem]"
+              data-testid="user-email-input"
             />
           </div>
 
-          <UserSelectField form={form} fieldName="managerId" label="Manager" />
+          <UserSelectField
+            form={form}
+            fieldName="managerId"
+            label="Manager"
+            data-testid="user-manager-select"
+          />
           <AuthoritiesSelect
             form={form}
             label={t.users.form("authorities")}
             fieldName="authorities"
             required={true}
+            data-testid="user-authorities-select"
           />
           <ExtInputField
             form={form}
@@ -132,6 +140,7 @@ export const UserForm = ({ userId }: { userId?: number }) => {
             fieldName="firstName"
             label={t.users.form("first_name")}
             placeholder={t.users.form("first_name")}
+            data-testid="user-first-name-input"
           />
           <ExtInputField
             form={form}
@@ -139,18 +148,21 @@ export const UserForm = ({ userId }: { userId?: number }) => {
             fieldName="lastName"
             label={t.users.form("last_name")}
             placeholder={t.users.form("last_name")}
+            data-testid="user-last-name-input"
           />
           <ExtTextAreaField
             form={form}
             fieldName="about"
             label={t.users.form("about")}
             placeholder={t.users.form("about")}
+            data-testid="user-about-textarea"
           />
           <ExtInputField
             form={form}
             fieldName="title"
             label={t.users.form("title")}
             placeholder={t.users.form("title")}
+            data-testid="user-title-input"
           />
           <TimezoneSelect
             form={form}
@@ -158,29 +170,34 @@ export const UserForm = ({ userId }: { userId?: number }) => {
             label={t.users.form("timezone")}
             placeholder={t.users.form("timezone")}
             required={true}
+            data-testid="user-timezone-select"
           />
           <ExtInputField
             form={form}
             fieldName="address"
             label={t.users.form("address")}
             placeholder={t.users.form("address")}
+            data-testid="user-address-input"
           />
           <ExtInputField
             form={form}
             fieldName="city"
             label={t.users.form("city")}
             placeholder={t.users.form("city")}
+            data-testid="user-city-input"
           />
           <ExtInputField
             form={form}
             fieldName="state"
             label={t.users.form("state")}
             placeholder={t.users.form("state")}
+            data-testid="user-state-input"
           />
           <CountrySelectField
             form={form}
             fieldName="country"
             label={t.users.form("country")}
+            data-testid="user-country-select"
           />
 
           {/* Buttons section spans the entire row */}
@@ -192,8 +209,13 @@ export const UserForm = ({ userId }: { userId?: number }) => {
               labelWhileLoading={
                 isEdit ? t.users.form("updating") : t.users.form("inviting")
               }
+              data-testid="user-submit-button"
             />
-            <Button variant="secondary" onClick={() => router.back()}>
+            <Button
+              variant="secondary"
+              onClick={() => router.back()}
+              data-testid="user-discard-button"
+            >
               {t.common.buttons("discard")}
             </Button>
           </div>

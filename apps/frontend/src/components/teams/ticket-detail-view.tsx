@@ -173,7 +173,10 @@ const TicketDetailView = ({ ticketId }: { ticketId: number }) => {
 
   if (loading) {
     return (
-      <div className="flex h-64 items-center justify-center">
+      <div
+        className="flex h-64 items-center justify-center"
+        data-testid="ticket-loading"
+      >
         <Loader2 className="h-8 w-8 animate-spin text-primary" />
         <span className="ml-2 text-lg font-medium">
           {t.common.misc("loading_data")}
@@ -184,7 +187,7 @@ const TicketDetailView = ({ ticketId }: { ticketId: number }) => {
 
   if (!ticket) {
     return (
-      <Card className="my-4">
+      <Card className="my-4" data-testid="ticket-not-found">
         <CardHeader>
           <CardTitle className="text-2xl font-bold text-red-500">
             {t.teams.tickets.detail("ticket_not_found_title")}
@@ -194,7 +197,11 @@ const TicketDetailView = ({ ticketId }: { ticketId: number }) => {
           <p className="mb-4">
             {t.teams.tickets.detail("ticket_not_found_description")}
           </p>
-          <Button variant="secondary" onClick={() => router.back()}>
+          <Button
+            variant="secondary"
+            onClick={() => router.back()}
+            data-testid="go-back-button"
+          >
             <ArrowLeft className="mr-2 h-4 w-4" /> {t.common.buttons("go_back")}
           </Button>
         </CardContent>
@@ -238,9 +245,12 @@ const TicketDetailView = ({ ticketId }: { ticketId: number }) => {
   return (
     <BreadcrumbProvider items={breadcrumbItems}>
       <TeamNavLayout teamId={ticket.teamId!}>
-        <div className="space-y-4">
+        <div className="space-y-4" data-testid="ticket-detail-container">
           {/* Header with Title and Navigation */}
-          <div className="flex items-start justify-between gap-4">
+          <div
+            className="flex items-start justify-between gap-4"
+            data-testid="ticket-header"
+          >
             <div className="flex items-center">
               <TooltipProvider>
                 <Tooltip>
@@ -250,6 +260,7 @@ const TicketDetailView = ({ ticketId }: { ticketId: number }) => {
                       size="icon"
                       onClick={navigateToPreviousRecord}
                       className="mr-1"
+                      data-testid="previous-ticket-button"
                     >
                       <ArrowLeft className="h-5 w-5" />
                     </Button>
@@ -268,6 +279,7 @@ const TicketDetailView = ({ ticketId }: { ticketId: number }) => {
                       backgroundColor: workflowColor.background,
                       color: workflowColor.text,
                     }}
+                    data-testid="ticket-workflow-name"
                   >
                     {ticket.workflowRequestName}
                   </span>
@@ -275,11 +287,15 @@ const TicketDetailView = ({ ticketId }: { ticketId: number }) => {
                   <Badge
                     variant={ticket.isCompleted ? "secondary" : "outline"}
                     className="font-normal"
+                    data-testid="ticket-state"
                   >
                     {currentRequestState}
                   </Badge>
 
-                  <TicketPriorityDisplay priority={ticket.priority} />
+                  <TicketPriorityDisplay
+                    priority={ticket.priority}
+                    data-testid="ticket-priority"
+                  />
                 </div>
 
                 <h1
@@ -288,6 +304,7 @@ const TicketDetailView = ({ ticketId }: { ticketId: number }) => {
                       ? "line-through text-muted-foreground"
                       : ""
                   }`}
+                  data-testid="ticket-title"
                 >
                   {ticket.requestTitle}
                 </h1>
@@ -303,6 +320,7 @@ const TicketDetailView = ({ ticketId }: { ticketId: number }) => {
                       size="icon"
                       onClick={navigateToNextRecord}
                       className="ml-1"
+                      data-testid="next-ticket-button"
                     >
                       <ArrowRight className="h-5 w-5" />
                     </Button>
@@ -315,7 +333,10 @@ const TicketDetailView = ({ ticketId }: { ticketId: number }) => {
             </div>
           </div>
 
-          <div className="flex flex-wrap items-center justify-end gap-3">
+          <div
+            className="flex flex-wrap items-center justify-end gap-3"
+            data-testid="ticket-actions"
+          >
             {canEdit && (
               <Button
                 variant="outline"
@@ -324,6 +345,7 @@ const TicketDetailView = ({ ticketId }: { ticketId: number }) => {
                     `/portal/teams/${obfuscate(ticket.teamId)}/tickets/${obfuscate(ticket.id)}/edit?${randomPair()}`,
                   )
                 }
+                data-testid="edit-ticket-button"
               >
                 <Edit className="mr-2 h-4 w-4" />{" "}
                 {t.teams.tickets.detail("edit_ticket")}
@@ -331,7 +353,11 @@ const TicketDetailView = ({ ticketId }: { ticketId: number }) => {
             )}
 
             {canComment && (
-              <Button variant="outline" onClick={handleFocusComments}>
+              <Button
+                variant="outline"
+                onClick={handleFocusComments}
+                data-testid="add-comment-button"
+              >
                 <MessageSquarePlus className="mr-2 h-4 w-4" />{" "}
                 {t.teams.tickets.detail("add_comment")}
               </Button>
@@ -340,12 +366,18 @@ const TicketDetailView = ({ ticketId }: { ticketId: number }) => {
             {canEdit && (
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                  <Button className="flex items-center gap-2">
+                  <Button
+                    className="flex items-center gap-2"
+                    data-testid="change-status-button"
+                  >
                     {t.teams.tickets.detail("change_status")}{" "}
                     <ArrowRight className="ml-1 h-4 w-4" />
                   </Button>
                 </DropdownMenuTrigger>
-                <DropdownMenuContent className="w-56">
+                <DropdownMenuContent
+                  className="w-56"
+                  data-testid="status-dropdown"
+                >
                   <DropdownMenuGroup>
                     {workflowStates
                       .filter((state) => state.id !== ticket.currentStateId)
@@ -354,6 +386,7 @@ const TicketDetailView = ({ ticketId }: { ticketId: number }) => {
                           key={state.id}
                           onClick={() => handleStateChangeRequest(state)}
                           className="cursor-pointer"
+                          data-testid={`status-option-${state.id}`}
                         >
                           {state.stateName}
                         </DropdownMenuItem>
@@ -362,7 +395,10 @@ const TicketDetailView = ({ ticketId }: { ticketId: number }) => {
                     {workflowStates.filter(
                       (state) => state.id !== ticket.currentStateId,
                     ).length === 0 && (
-                      <DropdownMenuItem disabled>
+                      <DropdownMenuItem
+                        disabled
+                        data-testid="no-available-states"
+                      >
                         {t.teams.tickets.detail("no_available_states")}
                       </DropdownMenuItem>
                     )}
@@ -371,6 +407,7 @@ const TicketDetailView = ({ ticketId }: { ticketId: number }) => {
                     <DropdownMenuItem
                       onClick={handleViewWorkflow}
                       className="cursor-pointer"
+                      data-testid="view-workflow-option"
                     >
                       <Eye className="mr-2 h-4 w-4" />{" "}
                       {t.teams.tickets.detail("view_workflow")}
@@ -381,7 +418,11 @@ const TicketDetailView = ({ ticketId }: { ticketId: number }) => {
             )}
 
             {!canEdit && canComment && (
-              <Button variant="outline" onClick={handleViewWorkflow}>
+              <Button
+                variant="outline"
+                onClick={handleViewWorkflow}
+                data-testid="view-workflow-button"
+              >
                 <Eye className="mr-2 h-4 w-4" />{" "}
                 {t.teams.tickets.detail("view_workflow")}
               </Button>
@@ -392,13 +433,14 @@ const TicketDetailView = ({ ticketId }: { ticketId: number }) => {
           {ticket.conversationHealth?.healthLevel && (
             <TicketHealthLevelDisplay
               currentLevel={ticket.conversationHealth.healthLevel}
+              data-testid="ticket-health-level"
             />
           )}
 
-          <Card className="overflow-hidden">
+          <Card className="overflow-hidden" data-testid="ticket-details-card">
             <CardContent className="p-0">
-              <div className="p-6 space-y-6">
-                <div>
+              <div className="p-6 space-y-6" data-testid="ticket-content">
+                <div data-testid="ticket-description-section">
                   <h3 className="text-lg font-medium mb-2 flex items-center">
                     <FileText className="mr-2 h-5 w-5" />{" "}
                     {t.teams.tickets.form.base("description")}
@@ -408,20 +450,24 @@ const TicketDetailView = ({ ticketId }: { ticketId: number }) => {
                     dangerouslySetInnerHTML={{
                       __html: ticket.requestDescription!,
                     }}
+                    data-testid="ticket-description-content"
                   />
                 </div>
 
                 <Separator />
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  <div className="space-y-4">
+                  <div
+                    className="space-y-4"
+                    data-testid="ticket-people-section"
+                  >
                     <h3 className="text-sm font-medium mb-2 flex items-center">
                       <Users className="mr-2 h-4 w-4" />{" "}
                       {t.teams.tickets.detail("people")}
                     </h3>
 
                     <div className="space-y-3">
-                      <div>
+                      <div data-testid="ticket-requester">
                         <p className="text-xs text-muted-foreground mb-1">
                           {t.teams.tickets.form.base("requester")}
                         </p>
@@ -429,17 +475,19 @@ const TicketDetailView = ({ ticketId }: { ticketId: number }) => {
                           <UserAvatar
                             imageUrl={ticket.requestUserImageUrl}
                             size="w-6 h-6"
+                            data-testid="requester-avatar"
                           />
                           <Link
                             href={`/portal/users/${obfuscate(ticket.requestUserId)}`}
                             className="text-sm hover:underline"
+                            data-testid="requester-link"
                           >
                             {ticket.requestUserName}
                           </Link>
                         </div>
                       </div>
 
-                      <div>
+                      <div data-testid="ticket-assignee">
                         <p className="text-xs text-muted-foreground mb-1">
                           {t.teams.tickets.form.base("assignee")}
                         </p>
@@ -448,16 +496,21 @@ const TicketDetailView = ({ ticketId }: { ticketId: number }) => {
                             <UserAvatar
                               imageUrl={ticket.assignUserImageUrl}
                               size="w-6 h-6"
+                              data-testid="assignee-avatar"
                             />
                             <Link
                               href={`/portal/users/${obfuscate(ticket.assignUserId)}`}
                               className="text-sm hover:underline"
+                              data-testid="assignee-link"
                             >
                               {ticket.assignUserName}
                             </Link>
                           </div>
                         ) : (
-                          <span className="text-sm text-muted-foreground">
+                          <span
+                            className="text-sm text-muted-foreground"
+                            data-testid="unassigned-message"
+                          >
                             {t.teams.tickets.detail("unassigned")}
                           </span>
                         )}
@@ -465,27 +518,38 @@ const TicketDetailView = ({ ticketId }: { ticketId: number }) => {
                     </div>
                   </div>
 
-                  <div className="space-y-4">
+                  <div
+                    className="space-y-4"
+                    data-testid="ticket-details-section"
+                  >
                     <h3 className="text-sm font-medium mb-2 flex items-center">
                       <FileText className="mr-2 h-4 w-4" />{" "}
                       {t.teams.tickets.detail("ticker_detail")}
                     </h3>
 
                     <div className="grid grid-cols-2 gap-3">
-                      <div>
+                      <div data-testid="ticket-type">
                         <p className="text-xs text-muted-foreground mb-1">
                           {t.teams.tickets.form.base("type")}
                         </p>
-                        <Badge variant="outline" className="font-normal">
+                        <Badge
+                          variant="outline"
+                          className="font-normal"
+                          data-testid="ticket-type-badge"
+                        >
                           {ticket.workflowRequestName}
                         </Badge>
                       </div>
 
-                      <div>
+                      <div data-testid="ticket-state-detail">
                         <p className="text-xs text-muted-foreground mb-1">
                           {t.teams.tickets.form.base("state")}
                         </p>
-                        <Badge variant="outline" className="font-normal">
+                        <Badge
+                          variant="outline"
+                          className="font-normal"
+                          data-testid="ticket-state-badge"
+                        >
                           {ticket.currentStateName}
                         </Badge>
                       </div>

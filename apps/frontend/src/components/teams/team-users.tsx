@@ -109,12 +109,19 @@ const TeamUsersView = () => {
   return (
     <BreadcrumbProvider items={breadcrumbItems}>
       <TeamNavLayout teamId={team.id!}>
-        <div className="grid grid-cols-1 gap-4">
+        <div
+          className="grid grid-cols-1 gap-4"
+          data-testid="team-users-container"
+        >
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-4">
               <Tooltip>
                 <TooltipTrigger>
-                  <TeamAvatar imageUrl={team.logoUrl} size="w-20 h-20" />
+                  <TeamAvatar
+                    imageUrl={team.logoUrl}
+                    size="w-20 h-20"
+                    data-testid="team-avatar"
+                  />
                 </TooltipTrigger>
                 <TooltipContent className="max-w-xs whitespace-pre-wrap break-words">
                   <div className="text-left">
@@ -138,7 +145,10 @@ const TeamUsersView = () => {
             {(PermissionUtils.canWrite(permissionLevel) ||
               teamRole === "manager") && (
               <div>
-                <Button onClick={() => setOpen(true)}>
+                <Button
+                  onClick={() => setOpen(true)}
+                  data-testid="add-user-button"
+                >
                   <Plus /> {t.teams.users("add_user")}
                 </Button>
                 <AddUserToTeamDialog
@@ -152,26 +162,41 @@ const TeamUsersView = () => {
           </div>
 
           {isLoading ? (
-            <LoadingPlaceHolder message={t.common.misc("loading_data")} />
+            <LoadingPlaceHolder
+              message={t.common.misc("loading_data")}
+              data-testid="team-users-loading"
+            />
           ) : (
             roleOrder.map(
               (role) =>
                 groupedUsers[role] && (
-                  <div key={role} className="mb-6">
-                    <h2 className="text-lg font-bold mb-4">
+                  <div
+                    key={role}
+                    className="mb-6"
+                    data-testid={`team-users-role-${role}`}
+                  >
+                    <h2
+                      className="text-lg font-bold mb-4"
+                      data-testid={`team-users-role-title-${role}`}
+                    >
                       {t.teams.roles(role)}
                     </h2>
-                    <div className="flex flex-row flex-wrap gap-4 content-around">
+                    <div
+                      className="flex flex-row flex-wrap gap-4 content-around"
+                      data-testid={`team-users-role-list-${role}`}
+                    >
                       {groupedUsers[role].map((user) => (
                         <div
                           key={user.id}
                           className="w-md flex flex-row gap-4 border px-4 py-4 rounded-2xl relative"
+                          data-testid={`team-user-card-${user.id}`}
                         >
                           <div>
                             <UserAvatar
                               imageUrl={user.imageUrl}
                               size="w-24 h-24"
                               className="cursor-pointer"
+                              data-testid={`team-user-avatar-${user.id}`}
                             />
                           </div>
                           <div>
@@ -179,12 +204,13 @@ const TeamUsersView = () => {
                               <Button variant="link" asChild className="px-0">
                                 <Link
                                   href={`/portal/users/${obfuscate(user.id)}`}
+                                  data-testid={`team-user-name-link-${user.id}`}
                                 >
                                   {user.firstName}, {user.lastName}
                                 </Link>
                               </Button>
                             </div>
-                            <div>
+                            <div data-testid={`team-user-email-${user.id}`}>
                               {t.users.form("email")}:{" "}
                               <Button variant="link" className="px-0 py-0 h-0">
                                 <Link href={`mailto:${user.email}`}>
@@ -192,10 +218,10 @@ const TeamUsersView = () => {
                                 </Link>
                               </Button>
                             </div>
-                            <div>
+                            <div data-testid={`team-user-timezone-${user.id}`}>
                               {t.users.form("timezone")}: {user.timezone}
                             </div>
-                            <div>
+                            <div data-testid={`team-user-title-${user.id}`}>
                               {t.users.form("title")}: {user.title}
                             </div>
                           </div>
@@ -203,7 +229,10 @@ const TeamUsersView = () => {
                             teamRole === "manager") && (
                             <DropdownMenu>
                               <DropdownMenuTrigger asChild>
-                                <Ellipsis className="cursor-pointer absolute top-2 right-2 text-gray-400" />
+                                <Ellipsis
+                                  className="cursor-pointer absolute top-2 right-2 text-gray-400"
+                                  data-testid={`team-user-actions-${user.id}`}
+                                />
                               </DropdownMenuTrigger>
                               <DropdownMenuContent className="w-56">
                                 <TooltipProvider>
@@ -211,6 +240,7 @@ const TeamUsersView = () => {
                                     <DropdownMenuItem
                                       className="w-full flex items-center gap-2 cursor-pointer px-4 py-2"
                                       onClick={() => removeUserOutTeam(user)}
+                                      data-testid={`team-user-remove-${user.id}`}
                                     >
                                       <TooltipTrigger className="w-full flex items-center gap-2">
                                         <Trash className="w-4 h-4 shrink-0" />
@@ -249,7 +279,7 @@ const TeamUsersView = () => {
             )
           )}
           <AlertDialog open={notDeleteOnlyManagerDialogOpen}>
-            <AlertDialogContent>
+            <AlertDialogContent data-testid="cannot-remove-manager-dialog">
               <AlertDialogHeader>
                 <AlertDialogTitle>
                   {t.teams.users("remove_only_manager_dialog_error_title")}
@@ -263,6 +293,7 @@ const TeamUsersView = () => {
               <AlertDialogFooter>
                 <AlertDialogAction
                   onClick={() => setNotDeleteOnlyManagerDialogOpen(false)}
+                  data-testid="close-manager-error-dialog"
                 >
                   {t.common.buttons("close")}
                 </AlertDialogAction>

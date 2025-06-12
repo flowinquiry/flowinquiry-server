@@ -161,12 +161,19 @@ const ProjectListView = () => {
   return (
     <BreadcrumbProvider items={breadcrumbItems}>
       <TeamNavLayout teamId={team.id!}>
-        <div className="grid grid-cols-1 gap-4">
+        <div
+          className="grid grid-cols-1 gap-4"
+          data-testid="project-list-container"
+        >
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-4">
               <Tooltip>
                 <TooltipTrigger>
-                  <TeamAvatar imageUrl={team.logoUrl} size="w-20 h-20" />
+                  <TeamAvatar
+                    imageUrl={team.logoUrl}
+                    size="w-20 h-20"
+                    data-testid="team-avatar"
+                  />
                 </TooltipTrigger>
                 <TooltipContent className="max-w-xs whitespace-pre-wrap break-words">
                   <div className="text-left">
@@ -191,6 +198,7 @@ const ProjectListView = () => {
               teamRole === "manager") && (
               <div className="flex items-center">
                 <Button
+                  data-testid="new-project-button"
                   onClick={() => {
                     setSelectedProject(null);
                     setOpenDialog(true);
@@ -210,13 +218,17 @@ const ProjectListView = () => {
           </div>
 
           {/* Search & Status Filter Row */}
-          <div className="flex items-center gap-4 p-4 bg-gray-50 dark:bg-gray-900 rounded-lg shadow-md border border-gray-300 dark:border-gray-700">
+          <div
+            className="flex items-center gap-4 p-4 bg-gray-50 dark:bg-gray-900 rounded-lg shadow-md border border-gray-300 dark:border-gray-700"
+            data-testid="project-search-filter"
+          >
             <Input
               type="text"
               placeholder={t.teams.projects.list("search_place_holder")}
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               className="flex-1"
+              data-testid="project-search-input"
             />
             <ToggleGroup
               type="single"
@@ -226,20 +238,37 @@ const ProjectListView = () => {
                   setStatusFilter(value as ProjectStatus);
                 }
               }}
+              data-testid="project-status-filter"
             >
-              <ToggleGroupItem value="Active">Active</ToggleGroupItem>
-              <ToggleGroupItem value="Closed">Closed</ToggleGroupItem>
+              <ToggleGroupItem
+                value="Active"
+                data-testid="project-status-active"
+              >
+                Active
+              </ToggleGroupItem>
+              <ToggleGroupItem
+                value="Closed"
+                data-testid="project-status-closed"
+              >
+                Closed
+              </ToggleGroupItem>
             </ToggleGroup>
           </div>
 
-          <div className="bg-white dark:bg-gray-900 p-4 rounded-lg shadow-sm">
+          <div
+            className="bg-white dark:bg-gray-900 p-4 rounded-lg shadow-sm"
+            data-testid="project-table-container"
+          >
             {loading ? (
-              <div className="flex items-center justify-center p-6">
+              <div
+                className="flex items-center justify-center p-6"
+                data-testid="project-loading"
+              >
                 <Loader className="w-6 h-6 animate-spin" />
               </div>
             ) : projects.length > 0 ? (
               <>
-                <Table>
+                <Table data-testid="project-table">
                   <TableHeader>
                     <TableRow>
                       <TableHead>{t.teams.projects.form("name")}</TableHead>
@@ -259,16 +288,24 @@ const ProjectListView = () => {
                   </TableHeader>
                   <TableBody>
                     {projects.map((project) => (
-                      <TableRow key={project.id}>
+                      <TableRow
+                        key={project.id}
+                        data-testid={`project-row-${project.id}`}
+                      >
                         <TableCell>
                           <Link
                             href={`/portal/teams/${obfuscate(team.id)}/projects/${project.shortName}`}
                             className="text-blue-500 hover:underline"
+                            data-testid={`project-name-link-${project.id}`}
                           >
                             {project.name}
                           </Link>
                         </TableCell>
-                        <TableCell>{project.shortName}</TableCell>
+                        <TableCell
+                          data-testid={`project-short-name-${project.id}`}
+                        >
+                          {project.shortName}
+                        </TableCell>
                         <TableCell>
                           <span
                             className={`px-2 py-1 rounded-full text-xs font-medium ${
@@ -276,21 +313,28 @@ const ProjectListView = () => {
                                 ? "bg-green-100 text-green-800"
                                 : "bg-gray-100 text-gray-800"
                             }`}
+                            data-testid={`project-status-${project.id}`}
                           >
                             {project.status}
                           </span>
                         </TableCell>
-                        <TableCell>
+                        <TableCell
+                          data-testid={`project-start-date-${project.id}`}
+                        >
                           {project.startDate
                             ? new Date(project.startDate).toLocaleDateString()
                             : "N/A"}
                         </TableCell>
-                        <TableCell>
+                        <TableCell
+                          data-testid={`project-end-date-${project.id}`}
+                        >
                           {project.endDate
                             ? new Date(project.endDate).toLocaleDateString()
                             : "N/A"}
                         </TableCell>
-                        <TableCell>
+                        <TableCell
+                          data-testid={`project-created-at-${project.id}`}
+                        >
                           {project.createdAt
                             ? new Date(project.createdAt).toLocaleDateString()
                             : "N/A"}
@@ -298,13 +342,18 @@ const ProjectListView = () => {
                         <TableCell>
                           <DropdownMenu>
                             <DropdownMenuTrigger asChild>
-                              <Button variant="ghost" size="icon">
+                              <Button
+                                variant="ghost"
+                                size="icon"
+                                data-testid={`project-actions-${project.id}`}
+                              >
                                 <MoreHorizontal className="w-5 h-5" />
                               </Button>
                             </DropdownMenuTrigger>
                             <DropdownMenuContent>
                               <DropdownMenuItem
                                 className="cursor-pointer"
+                                data-testid={`project-edit-${project.id}`}
                                 onClick={() => {
                                   setSelectedProject(project);
                                   setOpenDialog(true);
@@ -316,6 +365,7 @@ const ProjectListView = () => {
                               {project.status === "Active" ? (
                                 <DropdownMenuItem
                                   className="cursor-pointer"
+                                  data-testid={`project-close-${project.id}`}
                                   onClick={() =>
                                     handleStatusChange(project, "Closed")
                                   }
@@ -326,6 +376,7 @@ const ProjectListView = () => {
                               ) : (
                                 <DropdownMenuItem
                                   className="cursor-pointer"
+                                  data-testid={`project-reopen-${project.id}`}
                                   onClick={() =>
                                     handleStatusChange(project, "Active")
                                   }
@@ -336,6 +387,7 @@ const ProjectListView = () => {
                               )}
                               <DropdownMenuItem
                                 className="cursor-pointer text-red-600"
+                                data-testid={`project-delete-${project.id}`}
                                 onClick={() => confirmDelete(project)}
                               >
                                 <Trash className="w-4 h-4 mr-2" />{" "}
@@ -352,10 +404,14 @@ const ProjectListView = () => {
                   currentPage={currentPage}
                   totalPages={totalPages}
                   onPageChange={setCurrentPage}
+                  data-testid="project-pagination"
                 />
               </>
             ) : (
-              <p className="text-gray-500 text-center">
+              <p
+                className="text-gray-500 text-center"
+                data-testid="no-projects-message"
+              >
                 {t.teams.projects.list("no_projects_found")}
               </p>
             )}
@@ -364,7 +420,7 @@ const ProjectListView = () => {
 
         {/* Delete Confirmation Dialog */}
         <AlertDialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
-          <AlertDialogContent>
+          <AlertDialogContent data-testid="delete-project-dialog">
             <AlertDialogHeader>
               <AlertDialogTitle>
                 {t.teams.projects.list("delete_project_dialog_title")}
@@ -376,10 +432,13 @@ const ProjectListView = () => {
               </AlertDialogDescription>
             </AlertDialogHeader>
             <AlertDialogFooter>
-              <AlertDialogCancel>Cancel</AlertDialogCancel>
+              <AlertDialogCancel data-testid="cancel-delete-project">
+                Cancel
+              </AlertDialogCancel>
               <AlertDialogAction
                 onClick={handleDelete}
                 className="bg-red-600 hover:bg-red-700 text-white"
+                data-testid="confirm-delete-project"
               >
                 {t.common.buttons("delete")}
               </AlertDialogAction>

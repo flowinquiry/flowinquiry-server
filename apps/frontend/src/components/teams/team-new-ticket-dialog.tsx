@@ -105,12 +105,15 @@ const NewTicketToTeamDialog: React.FC<NewTicketToTeamDialogProps> = ({
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogContent className="sm:max-w-4xl max-h-[90vh] p-4 sm:p-6 flex flex-col overflow-y-auto">
+      <DialogContent
+        className="sm:max-w-4xl max-h-[90vh] p-4 sm:p-6 flex flex-col overflow-y-auto"
+        data-testid="new-ticket-dialog"
+      >
         <DialogHeader>
-          <DialogTitle>
+          <DialogTitle data-testid="new-ticket-dialog-title">
             [{workflow?.requestName}]: {t.teams.tickets.new_dialog("title")}
           </DialogTitle>
-          <DialogDescription>
+          <DialogDescription data-testid="new-ticket-dialog-description">
             {t.teams.tickets.new_dialog("description")}
           </DialogDescription>
         </DialogHeader>
@@ -119,6 +122,7 @@ const NewTicketToTeamDialog: React.FC<NewTicketToTeamDialogProps> = ({
           <form
             onSubmit={form.handleSubmit(onSubmit)}
             className="flex flex-col flex-1"
+            data-testid="new-ticket-form"
           >
             <div className="flex-1 overflow-y-auto space-y-6">
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
@@ -128,6 +132,7 @@ const NewTicketToTeamDialog: React.FC<NewTicketToTeamDialogProps> = ({
                     fieldName="requestTitle"
                     label={t.teams.tickets.form.base("name")}
                     required={true}
+                    data-testid="ticket-title-input"
                   />
                 </div>
 
@@ -145,6 +150,7 @@ const NewTicketToTeamDialog: React.FC<NewTicketToTeamDialogProps> = ({
                           <RichTextEditor
                             value={field.value}
                             onChange={field.onChange}
+                            data-testid="ticket-description-editor"
                           />
                         </FormControl>
                         <FormMessage />
@@ -159,6 +165,7 @@ const NewTicketToTeamDialog: React.FC<NewTicketToTeamDialogProps> = ({
                     maxSize={8 * 1024 * 1024}
                     accept={{ "*/*": [] }}
                     onValueChange={setFiles}
+                    data-testid="ticket-file-uploader"
                   />
                 </div>
 
@@ -176,6 +183,7 @@ const NewTicketToTeamDialog: React.FC<NewTicketToTeamDialogProps> = ({
                           onChange={(value: TicketPriority) =>
                             field.onChange(value)
                           }
+                          data-testid="ticket-priority-select"
                         />
                       </FormControl>
                       <FormMessage />
@@ -188,6 +196,7 @@ const NewTicketToTeamDialog: React.FC<NewTicketToTeamDialogProps> = ({
                   fieldName="assignUserId"
                   label={t.teams.tickets.form.base("assignee")}
                   teamId={teamEntity.id!}
+                  data-testid="ticket-assignee-select"
                 />
 
                 <DatePickerField
@@ -195,6 +204,7 @@ const NewTicketToTeamDialog: React.FC<NewTicketToTeamDialogProps> = ({
                   fieldName="estimatedCompletionDate"
                   label={t.teams.tickets.form.base("target_completion_date")}
                   placeholder={t.common.misc("date_select_place_holder")}
+                  data-testid="ticket-estimated-completion-date"
                 />
 
                 <DatePickerField
@@ -202,8 +212,12 @@ const NewTicketToTeamDialog: React.FC<NewTicketToTeamDialogProps> = ({
                   fieldName="actualCompletionDate"
                   label={t.teams.tickets.form.base("actual_completion_date")}
                   placeholder={t.common.misc("date_select_place_holder")}
+                  data-testid="ticket-actual-completion-date"
                 />
-                <TicketChannelSelectField form={form} />
+                <TicketChannelSelectField
+                  form={form}
+                  data-testid="ticket-channel-select"
+                />
                 <WorkflowStateSelectField
                   form={form}
                   name="currentStateId"
@@ -211,6 +225,7 @@ const NewTicketToTeamDialog: React.FC<NewTicketToTeamDialogProps> = ({
                   required
                   workflowId={workflow?.id!}
                   includeSelf
+                  data-testid="ticket-state-select"
                 />
               </div>
             </div>
@@ -219,11 +234,13 @@ const NewTicketToTeamDialog: React.FC<NewTicketToTeamDialogProps> = ({
               <SubmitButton
                 label={t.common.buttons("save")}
                 labelWhileLoading={t.common.buttons("saving")}
+                data-testid="ticket-submit-button"
               />
               <Button
                 type="button"
                 variant="outline"
                 onClick={() => setOpen(false)}
+                data-testid="ticket-discard-button"
               >
                 Discard
               </Button>

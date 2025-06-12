@@ -86,16 +86,16 @@ const TicketList = ({ tickets, instantView = true }: TicketListProps) => {
   };
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-4" data-testid="ticket-list-container">
       {tickets.length === 0 ? (
-        <Alert variant="default">
+        <Alert variant="default" data-testid="no-tickets-alert">
           <AlertTitle>{t.teams.tickets.list("no_ticket_title")}</AlertTitle>
           <AlertDescription>
             {t.teams.tickets.list("no_ticket_description")}
           </AlertDescription>
         </Alert>
       ) : (
-        <div className="space-y-4">
+        <div className="space-y-4" data-testid="tickets-list">
           {tickets.map((request) => {
             const workflowColor = getSpecifiedColor(
               request.workflowRequestName!,
@@ -112,12 +112,16 @@ const TicketList = ({ tickets, instantView = true }: TicketListProps) => {
                   "hover:shadow-md transition-all duration-300",
                   request.isCompleted ? "opacity-70" : "",
                 )}
+                data-testid={`ticket-item-${request.id}`}
               >
                 <div className="p-4">
                   {/* Two columns: Status icon and Content */}
                   <div className="flex">
                     {/* Status icon column */}
-                    <div className="mr-4 pt-1">
+                    <div
+                      className="mr-4 pt-1"
+                      data-testid={`ticket-status-icon-${request.id}`}
+                    >
                       <TooltipProvider>
                         <Tooltip>
                           <TooltipTrigger asChild>
@@ -131,11 +135,17 @@ const TicketList = ({ tickets, instantView = true }: TicketListProps) => {
                     </div>
 
                     {/* Content column */}
-                    <div className="flex-1 min-w-0">
+                    <div
+                      className="flex-1 min-w-0"
+                      data-testid={`ticket-content-${request.id}`}
+                    >
                       {/* Top section */}
                       <div className="mb-8">
                         {/* Workflow badge */}
-                        <div className="mb-2">
+                        <div
+                          className="mb-2"
+                          data-testid={`ticket-workflow-badge-${request.id}`}
+                        >
                           <Badge
                             style={{
                               backgroundColor: workflowColor.background,
@@ -161,6 +171,7 @@ const TicketList = ({ tickets, instantView = true }: TicketListProps) => {
                                 handleRequestClick(request);
                               }
                             }}
+                            data-testid={`ticket-title-${request.id}`}
                           >
                             <TooltipProvider>
                               <Tooltip>
@@ -183,7 +194,10 @@ const TicketList = ({ tickets, instantView = true }: TicketListProps) => {
                           </div>
 
                           {/* Priority */}
-                          <div className="shrink-0">
+                          <div
+                            className="shrink-0"
+                            data-testid={`ticket-priority-${request.id}`}
+                          >
                             <TicketPriorityDisplay
                               priority={request.priority}
                             />
@@ -193,7 +207,10 @@ const TicketList = ({ tickets, instantView = true }: TicketListProps) => {
 
                       {/* Health section */}
                       {request.conversationHealth?.healthLevel && (
-                        <div className="mb-4">
+                        <div
+                          className="mb-4"
+                          data-testid={`ticket-health-${request.id}`}
+                        >
                           <TicketHealthLevelDisplay
                             currentLevel={
                               request.conversationHealth.healthLevel
@@ -203,7 +220,10 @@ const TicketList = ({ tickets, instantView = true }: TicketListProps) => {
                       )}
 
                       {/* Description section */}
-                      <div className="mb-6">
+                      <div
+                        className="mb-6"
+                        data-testid={`ticket-description-${request.id}`}
+                      >
                         <div className="text-xs font-medium text-gray-500 mb-1">
                           {t.teams.tickets.form.base("description")}
                         </div>
@@ -214,9 +234,12 @@ const TicketList = ({ tickets, instantView = true }: TicketListProps) => {
                       </div>
 
                       {/* Metadata grid */}
-                      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
+                      <div
+                        className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3"
+                        data-testid={`ticket-metadata-${request.id}`}
+                      >
                         {/* Requester */}
-                        <div>
+                        <div data-testid={`ticket-requester-${request.id}`}>
                           <div className="text-xs font-medium text-gray-500 mb-1">
                             {t.teams.tickets.form.base("requester")}
                           </div>
@@ -224,10 +247,12 @@ const TicketList = ({ tickets, instantView = true }: TicketListProps) => {
                             <UserAvatar
                               imageUrl={request.requestUserImageUrl}
                               size="w-6 h-6"
+                              data-testid={`requester-avatar-${request.id}`}
                             />
                             <Link
                               href={`/portal/users/${obfuscate(request.requestUserId)}`}
                               className="text-sm hover:underline truncate"
+                              data-testid={`requester-link-${request.id}`}
                             >
                               {request.requestUserName}
                             </Link>
@@ -235,7 +260,7 @@ const TicketList = ({ tickets, instantView = true }: TicketListProps) => {
                         </div>
 
                         {/* Assigned User */}
-                        <div>
+                        <div data-testid={`ticket-assignee-info-${request.id}`}>
                           <div className="text-xs font-medium text-gray-500 mb-1">
                             {t.teams.tickets.form.base("assignee")}
                           </div>
@@ -245,16 +270,21 @@ const TicketList = ({ tickets, instantView = true }: TicketListProps) => {
                                 <UserAvatar
                                   imageUrl={request.assignUserImageUrl}
                                   size="w-6 h-6"
+                                  data-testid={`assignee-avatar-${request.id}`}
                                 />
                                 <Link
                                   href={`/portal/users/${obfuscate(request.assignUserId)}`}
                                   className="text-sm hover:underline truncate"
+                                  data-testid={`assignee-link-${request.id}`}
                                 >
                                   {request.assignUserName}
                                 </Link>
                               </>
                             ) : (
-                              <span className="text-sm text-gray-500">
+                              <span
+                                className="text-sm text-gray-500"
+                                data-testid={`unassigned-message-${request.id}`}
+                              >
                                 {t.teams.tickets.detail("unassigned")}
                               </span>
                             )}
@@ -263,18 +293,21 @@ const TicketList = ({ tickets, instantView = true }: TicketListProps) => {
 
                         {/* Channel */}
                         {request.channel && (
-                          <div>
+                          <div data-testid={`ticket-channel-${request.id}`}>
                             <div className="text-xs font-medium text-gray-500 mb-1">
                               {t.teams.tickets.form.base("channel")}
                             </div>
-                            <Badge variant="outline">
+                            <Badge
+                              variant="outline"
+                              data-testid={`channel-badge-${request.id}`}
+                            >
                               {t.teams.tickets.form.channels(request.channel)}
                             </Badge>
                           </div>
                         )}
 
                         {/* Due Date */}
-                        <div>
+                        <div data-testid={`ticket-due-date-${request.id}`}>
                           <div className="text-xs font-medium text-gray-500 mb-1">
                             {t.teams.tickets.form.base(
                               "target_completion_date",
@@ -290,23 +323,31 @@ const TicketList = ({ tickets, instantView = true }: TicketListProps) => {
                         </div>
 
                         {/* State */}
-                        <div>
+                        <div data-testid={`ticket-state-info-${request.id}`}>
                           <div className="text-xs font-medium text-gray-500 mb-1">
                             {t.teams.tickets.form.base("state")}
                           </div>
-                          <Badge variant="outline">
+                          <Badge
+                            variant="outline"
+                            data-testid={`state-badge-${request.id}`}
+                          >
                             {request.currentStateName}
                           </Badge>
                         </div>
 
                         {request.projectId !== null && (
-                          <div>
+                          <div data-testid={`ticket-project-${request.id}`}>
                             <div className="text-xs font-medium text-gray-500 mb-1">
                               {t.teams.tickets.form.base("project")}
                             </div>
-                            <Button variant="link" className="p-0">
+                            <Button
+                              variant="link"
+                              className="p-0"
+                              data-testid={`project-link-button-${request.id}`}
+                            >
                               <Link
                                 href={`/portal/teams/${obfuscate(request.teamId)}/projects/${obfuscate(request.projectId)}`}
+                                data-testid={`project-link-${request.id}`}
                               >
                                 {request.projectName}
                               </Link>
@@ -327,6 +368,7 @@ const TicketList = ({ tickets, instantView = true }: TicketListProps) => {
               open={!!selectedRequest}
               onClose={closeSheet}
               initialTicket={selectedRequest}
+              data-testid="ticket-detail-sheet"
             />
           )}
         </div>

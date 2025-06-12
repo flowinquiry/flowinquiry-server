@@ -16,6 +16,7 @@ interface WorkflowStatesSelectProps {
   options: { label: string; value: string | number }[];
   placeholder?: string;
   required?: boolean;
+  testId?: string;
 }
 
 const WorkflowStatesSelectField = ({
@@ -25,6 +26,7 @@ const WorkflowStatesSelectField = ({
   options,
   placeholder = "Select a state",
   required = false,
+  testId,
 }: WorkflowStatesSelectProps) => {
   return (
     <FormField
@@ -43,6 +45,7 @@ const WorkflowStatesSelectField = ({
                 <Button
                   variant="outline"
                   className="w-full text-left justify-start min-w-0"
+                  testId={testId}
                 >
                   <span className="truncate block">
                     {selectedOption?.label || placeholder}

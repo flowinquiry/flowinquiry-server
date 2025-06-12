@@ -179,10 +179,14 @@ export const ProfileForm = () => {
   });
 
   return (
-    <div className="grid grid-cols-1 gap-4">
+    <div
+      className="grid grid-cols-1 gap-4"
+      data-testid="profile-form-container"
+    >
       <Heading
         title={t.users.profile("title")}
         description={t.users.profile("description")}
+        data-testid="profile-form-heading"
       />
       <Separator />
 
@@ -190,38 +194,52 @@ export const ProfileForm = () => {
         <form
           onSubmit={form.handleSubmit(onSubmit)}
           className="flex flex-row gap-4"
+          data-testid="profile-form"
         >
-          <div className="flex flex-col items-center space-y-2">
+          <div
+            className="flex flex-col items-center space-y-2"
+            data-testid="profile-avatar-container"
+          >
             {selectedFile ? (
               <ImageCropper
                 dialogOpen={isDialogOpen}
                 setDialogOpen={setDialogOpen}
                 selectedFile={selectedFile}
                 setSelectedFile={setSelectedFile}
+                data-testid="profile-image-cropper"
               />
             ) : (
               <>
-                <input {...getInputProps()} />
+                <input
+                  {...getInputProps()}
+                  data-testid="profile-avatar-input"
+                />
                 <UserAvatar
                   {...getRootProps()}
                   size="w-36 h-36"
                   className="cursor-pointer ring-offset-2 ring-2 ring-slate-200"
                   imageUrl={avatarUrl}
+                  data-testid="profile-avatar"
                 />
               </>
             )}
             <Dialog
               open={isPasswordDialogOpen}
               onOpenChange={setPasswordDialogOpen}
+              data-testid="change-password-dialog"
             >
               <DialogTrigger asChild>
-                <Button variant="link" className="mt-2">
+                <Button
+                  variant="link"
+                  className="mt-2"
+                  data-testid="change-password-button"
+                >
                   {t.users.profile("change_password")}
                 </Button>
               </DialogTrigger>
-              <DialogContent>
+              <DialogContent data-testid="change-password-dialog-content">
                 <DialogHeader>
-                  <DialogTitle>
+                  <DialogTitle data-testid="change-password-dialog-title">
                     {t.users.profile("change_password")}
                   </DialogTitle>
                 </DialogHeader>
@@ -229,6 +247,7 @@ export const ProfileForm = () => {
                   <form
                     onSubmit={passwordForm.handleSubmit(handleChangePassword)}
                     className="grid grid-cols-1 gap-4"
+                    data-testid="change-password-form"
                   >
                     {/* Current Password Field */}
                     <FormField
@@ -248,6 +267,7 @@ export const ProfileForm = () => {
                                     ? "text"
                                     : "password"
                                 }
+                                data-testid="current-password-input"
                               />
                               <button
                                 type="button"
@@ -258,6 +278,7 @@ export const ProfileForm = () => {
                                     currentPassword: !prev.currentPassword,
                                   }))
                                 }
+                                data-testid="toggle-current-password-visibility"
                               >
                                 {showPasswords.currentPassword ? (
                                   <EyeOff size={20} />
@@ -290,6 +311,7 @@ export const ProfileForm = () => {
                                     ? "text"
                                     : "password"
                                 }
+                                data-testid="new-password-input"
                               />
                               <button
                                 type="button"
@@ -300,6 +322,7 @@ export const ProfileForm = () => {
                                     newPassword: !prev.newPassword,
                                   }))
                                 }
+                                data-testid="toggle-new-password-visibility"
                               >
                                 {showPasswords.newPassword ? (
                                   <EyeOff size={20} />
@@ -316,11 +339,14 @@ export const ProfileForm = () => {
 
                     {/* Submit and Cancel Buttons */}
                     <div className="flex flex-row gap-4">
-                      <Button type="submit">{t.common.buttons("save")}</Button>
+                      <Button type="submit" data-testid="save-password-button">
+                        {t.common.buttons("save")}
+                      </Button>
                       <Button
                         variant="secondary"
                         type="button"
                         onClick={() => setPasswordDialogOpen(false)}
+                        data-testid="cancel-password-button"
                       >
                         {t.common.buttons("cancel")}
                       </Button>
@@ -331,7 +357,10 @@ export const ProfileForm = () => {
             </Dialog>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div
+            className="grid grid-cols-1 md:grid-cols-2 gap-4"
+            data-testid="profile-form-fields"
+          >
             <FormField
               control={form.control}
               name="email"
@@ -339,7 +368,11 @@ export const ProfileForm = () => {
                 <FormItem>
                   <FormLabel>{t.users.form("email")}</FormLabel>
                   <FormControl>
-                    <Input {...field} readOnly />
+                    <Input
+                      {...field}
+                      readOnly
+                      data-testid="profile-email-input"
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -350,43 +383,64 @@ export const ProfileForm = () => {
               required={true}
               fieldName="timezone"
               label={t.users.form("timezone")}
+              data-testid="profile-timezone-select"
             />
             <ExtInputField
               form={form}
               required={true}
               fieldName="firstName"
               label={t.users.form("first_name")}
+              data-testid="profile-first-name-input"
             />
             <ExtInputField
               form={form}
               required={true}
               fieldName="lastName"
               label={t.users.form("last_name")}
+              data-testid="profile-last-name-input"
             />
-            <ExtTextAreaField form={form} fieldName="about" label="About" />
+            <ExtTextAreaField
+              form={form}
+              fieldName="about"
+              label="About"
+              data-testid="profile-about-textarea"
+            />
             <ExtInputField
               form={form}
               fieldName="address"
               label={t.users.form("address")}
+              data-testid="profile-address-input"
             />
             <ExtInputField
               form={form}
               fieldName="city"
               label={t.users.form("city")}
+              data-testid="profile-city-input"
             />
             <ExtInputField
               form={form}
               fieldName="state"
               label={t.users.form("city")}
+              data-testid="profile-state-input"
             />
             <CountrySelectField
               form={form}
               fieldName="country"
               label={t.users.form("country")}
+              data-testid="profile-country-select"
             />
-            <div className="md:col-span-2 flex flex-row gap-4">
-              <Button type="submit">{t.common.buttons("submit")}</Button>
-              <Button variant="secondary" onClick={() => router.back()}>
+            <div
+              className="md:col-span-2 flex flex-row gap-4"
+              data-testid="profile-form-buttons"
+            >
+              <Button type="submit" data-testid="profile-submit-button">
+                {t.common.buttons("submit")}
+              </Button>
+              <Button
+                variant="secondary"
+                onClick={() => router.back()}
+                data-testid="profile-discard-button"
+              >
                 {t.common.buttons("discard")}
               </Button>
             </div>
@@ -394,14 +448,27 @@ export const ProfileForm = () => {
         </form>
       </Form>
 
-      <Dialog open={isConfirmationOpen} onOpenChange={setConfirmationOpen}>
-        <DialogContent>
+      <Dialog
+        open={isConfirmationOpen}
+        onOpenChange={setConfirmationOpen}
+        data-testid="password-confirmation-dialog"
+      >
+        <DialogContent data-testid="password-confirmation-dialog-content">
           <DialogHeader>
-            <DialogTitle>Password Updated</DialogTitle>
+            <DialogTitle data-testid="password-confirmation-dialog-title">
+              Password Updated
+            </DialogTitle>
           </DialogHeader>
-          <p>Your password has been updated successfully!</p>
+          <p data-testid="password-confirmation-message">
+            Your password has been updated successfully!
+          </p>
           <div className="mt-4">
-            <Button onClick={() => setConfirmationOpen(false)}>Close</Button>
+            <Button
+              onClick={() => setConfirmationOpen(false)}
+              data-testid="password-confirmation-close-button"
+            >
+              Close
+            </Button>
           </div>
         </DialogContent>
       </Dialog>

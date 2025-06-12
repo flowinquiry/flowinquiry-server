@@ -175,12 +175,19 @@ const TicketListView = () => {
   return (
     <BreadcrumbProvider items={breadcrumbItems}>
       <TeamNavLayout teamId={team.id!}>
-        <div className="grid grid-cols-1 gap-4">
+        <div
+          className="grid grid-cols-1 gap-4"
+          data-testid="ticket-list-view-container"
+        >
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-4">
               <Tooltip>
                 <TooltipTrigger>
-                  <TeamAvatar imageUrl={team.logoUrl} size="w-20 h-20" />
+                  <TeamAvatar
+                    imageUrl={team.logoUrl}
+                    size="w-20 h-20"
+                    data-testid="team-avatar"
+                  />
                 </TooltipTrigger>
                 <TooltipContent className="max-w-xs whitespace-pre-wrap break-words">
                   <div className="text-left">
@@ -199,15 +206,19 @@ const TicketListView = () => {
               <Heading
                 title={t.teams.tickets.list("title", { count: totalElements })}
                 description={t.teams.tickets.list("description")}
+                data-testid="ticket-list-heading"
               />
             </div>
             {(PermissionUtils.canWrite(permissionLevel) ||
               teamRole === "manager" ||
               teamRole === "member" ||
               teamRole === "guest") && (
-              <div>
+              <div data-testid="new-ticket-container">
                 <div className="flex items-center">
-                  <Button className={"rounded-r-none"}>
+                  <Button
+                    className={"rounded-r-none"}
+                    data-testid="new-ticket-button"
+                  >
                     {t.common.buttons("new")}
                   </Button>
                   <DropdownMenu>
@@ -216,12 +227,13 @@ const TicketListView = () => {
                         className={
                           "rounded-l-none border-l-2 border-l-current px-2"
                         }
+                        data-testid="new-ticket-dropdown-trigger"
                       >
                         <CaretDownIcon />
                       </Button>
                     </DropdownMenuTrigger>
                     {Array.isArray(workflows) && workflows.length > 0 ? (
-                      <DropdownMenuContent>
+                      <DropdownMenuContent data-testid="workflow-dropdown-content">
                         {workflows.map((workflow) => (
                           <DropdownMenuItem
                             key={workflow.id}
@@ -230,26 +242,32 @@ const TicketListView = () => {
                               setSelectedWorkflow(workflow);
                               setOpen(true);
                             }}
+                            data-testid={`workflow-item-${workflow.id}`}
                           >
                             {workflow.requestName}
                           </DropdownMenuItem>
                         ))}
                       </DropdownMenuContent>
                     ) : (
-                      <DropdownMenuContent>
+                      <DropdownMenuContent data-testid="no-workflow-dropdown-content">
                         {t.teams.tickets.list("no_workflow_available")}{" "}
                         {PermissionUtils.canWrite(permissionLevel) ||
                         teamRole === "manager" ? (
-                          <span>
+                          <span data-testid="create-workflow-cta">
                             {t.teams.tickets.list.rich("create_workflow_cta", {
                               button: (chunks) => (
-                                <Button variant="link" className="px-0">
+                                <Button
+                                  variant="link"
+                                  className="px-0"
+                                  data-testid="create-workflow-button"
+                                >
                                   {chunks}
                                 </Button>
                               ),
                               link: (chunks) => (
                                 <Link
                                   href={`/portal/teams/${obfuscate(team.id)}/workflows`}
+                                  data-testid="create-workflow-link"
                                 >
                                   {chunks}
                                 </Link>
@@ -257,7 +275,7 @@ const TicketListView = () => {
                             })}
                           </span>
                         ) : (
-                          <span>
+                          <span data-testid="contact-manager-message">
                             {t.teams.tickets.list(
                               "contact_manager_to_create_workflow",
                             )}
@@ -273,6 +291,7 @@ const TicketListView = () => {
                   teamEntity={team}
                   workflow={selectedWorkflow!}
                   onSaveSuccess={onCreatedTicketSuccess}
+                  data-testid="new-ticket-dialog"
                 />
               </div>
             )}
@@ -286,21 +305,26 @@ const TicketListView = () => {
             isAscending={isAscending}
             setIsAscending={setIsAscending}
             onFilterChange={handleFilterChange}
+            data-testid="ticket-advanced-search"
           />
 
           {loading ? (
-            <div className="flex justify-center py-4">
+            <div
+              className="flex justify-center py-4"
+              data-testid="ticket-list-loading"
+            >
               <LoadingPlaceHolder message={t.common.misc("loading_data")} />
             </div>
           ) : (
             <>
-              <TicketList tickets={requests} />
+              <TicketList tickets={requests} data-testid="ticket-list" />
               <PaginationExt
                 currentPage={currentPage}
                 totalPages={totalPages}
                 onPageChange={(page) => {
                   setCurrentPage(page);
                 }}
+                data-testid="ticket-list-pagination"
               />
             </>
           )}

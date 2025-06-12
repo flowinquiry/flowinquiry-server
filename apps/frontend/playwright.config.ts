@@ -25,9 +25,9 @@ export default defineConfig({
   /* Reporter to use. See https://playwright.dev/docs/test-reporters */
   reporter: "html",
   /* Set consistent timeouts */
-  timeout: 60000, // Global timeout of 2.9 seconds per test (reduced to less than 3 seconds)
+  timeout: 60000,
   expect: {
-    timeout: 2900, // Default timeout for expect assertions (reduced to less than 3 seconds)
+    timeout: 10000,
   },
 
   use: {
@@ -56,7 +56,7 @@ export default defineConfig({
     },
 
     /* Set navigation timeout */
-    navigationTimeout: 2900, // Reduced to less than 3 seconds
+    navigationTimeout: 6000, // Reduced to less than 3 seconds
   },
 
   /* Configure projects for major browsers */

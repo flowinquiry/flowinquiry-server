@@ -65,7 +65,7 @@ jobs:
         with:
           reports: apps/backend/server/build/reports/jacoco/test/jacocoTestReport.xml
           targetdir: coverage-report
-          reporttypes: MarkdownSummary;Html
+          reporttypes: MarkdownSummary
 
       - name: Upload JaCoCo HTML Report
         uses: actions/upload-artifact@v4

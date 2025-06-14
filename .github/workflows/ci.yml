@@ -54,25 +54,29 @@ jobs:
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v4
 
-      - name: Run Tests and Coverage
+      - name: Run Tests and Generate Coverage
         run: |
           ./gradlew :apps:backend:server:test
           ./gradlew :apps:backend:server:integrationTest
           ./gradlew :apps:backend:server:jacocoTestReport
 
-      - name: Generate Coverage Summary
-        uses: danielpalme/reportgenerator-action@5.1.26
-        with:
-          reports: apps/backend/server/build/reports/jacoco/test/jacocoTestReport.xml
-          targetdir: coverage-report
-          reporttypes: HtmlInline;MarkdownSummary
-          historydir: coverage-history
+      - name: Install ReportGenerator (dotnet global tool)
+        run: |
+          wget https://github.com/danielpalme/ReportGenerator/releases/latest/download/ReportGenerator.zip
+          unzip ReportGenerator.zip -d reportgenerator
+
+      - name: Generate Coverage Markdown Summary
+        run: |
+          ./reportgenerator/ReportGenerator \
+            -reports:apps/backend/server/build/reports/jacoco/test/jacocoTestReport.xml \
+            -targetdir:coverage-report \
+            -reporttypes:MarkdownSummary
 
       - name: Upload JaCoCo HTML Report as Artifact
         uses: actions/upload-artifact@v4
         with:
           name: jacoco-html-report
-          path: coverage-report
+          path: apps/backend/server/build/reports/jacoco/test/html
 
       - name: Post Coverage Report to PR
         if: github.event_name == 'pull_request'

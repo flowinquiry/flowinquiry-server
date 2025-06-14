@@ -63,7 +63,7 @@ jobs:
       - name: Install ReportGenerator (dotnet global tool)
         run: |
           wget https://github.com/danielpalme/ReportGenerator/releases/download/v5.4.7/ReportGenerator_5.4.7.zip
-          unzip ReportGenerator.zip -d reportgenerator
+          unzip ReportGenerator_5.4.7.zip -d reportgenerator
 
       - name: Generate Coverage Markdown Summary
         run: |

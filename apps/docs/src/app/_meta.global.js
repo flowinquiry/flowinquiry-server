@@ -10,7 +10,7 @@ export default {
     items: {
       introduction: "Introduction",
       setup: {
-        title: "Settup Overview",
+        title: "Setup Overview",
         items: {
           basic_installation: "Basic Installation",
         },
@@ -23,6 +23,7 @@ export default {
         title: "Administrator",
         items: {
           smtp_server: "Email Setup Guide (SMTP Configuration)",
+          upgrade: "Upgrade",
         },
       },
     },

@@ -53,6 +53,14 @@ task integrationTest(type: Test) {
     systemProperty('java.security.egd', 'file:/dev/./urandom')
     // ignoreFailures true
     reports.html.required = false
+
+    // Configure JaCoCo for integration tests
+    jacoco {
+        destinationFile = file("${buildDir}/jacoco/integrationTest.exec")
+    }
+
+    // Run the JaCoCo integration test report after integration tests
+    finalizedBy 'jacocoIntegrationTestReport'
 }
 integrationTest.dependsOn test
 

@@ -4,6 +4,7 @@ plugins {
     alias(libs.plugins.spring.boot)
     alias(libs.plugins.spring.dependency.management)
     id "flowinquiry.docker-conventions"
+    id "jacoco"
 }
 
 description = ""
@@ -47,6 +48,119 @@ task integrationTestReport(type: TestReport) {
     destinationDirectory = file("$buildDir/reports/tests")
     testResults.from(integrationTest)
 }
+
+// JaCoCo configuration
+jacoco {
+    toolVersion = "0.8.11"
+}
+
+// Configure JaCoCo for the test task
+test {
+    jacoco {
+        destinationFile = file("${buildDir}/jacoco/test.exec")
+    }
+    finalizedBy jacocoTestReport
+}
+
+// Configure JaCoCo for the integrationTest task
+// This is defined in profile_dev.gradle
+tasks.register('jacocoIntegrationTestReport', JacocoReport) {
+    dependsOn integrationTest
+
+    executionData.from = files("${buildDir}/jacoco/integrationTest.exec")
+
+    sourceDirectories.from = files(
+        project.sourceSets.main.java.srcDirs,
+        project(":apps:backend:commons").sourceSets.main.java.srcDirs
+    )
+
+    classDirectories.from = files(
+        project.sourceSets.main.output.classesDirs,
+        project(":apps:backend:commons").sourceSets.main.output.classesDirs
+    )
+
+    reports {
+        xml.required = true
+        html.required = true
+        csv.required = false
+    }
+
+    finalizedBy jacocoCombinedReport
+}
+
+// Configure the main JaCoCo report task to include both test and integrationTest data
+jacocoTestReport {
+    dependsOn test
+
+    sourceDirectories.from = files(
+        project.sourceSets.main.java.srcDirs,
+        project(":apps:backend:commons").sourceSets.main.java.srcDirs
+    )
+
+    classDirectories.from = files(
+        project.sourceSets.main.output.classesDirs,
+        project(":apps:backend:commons").sourceSets.main.output.classesDirs
+    )
+
+    reports {
+        xml.required = true
+        html.required = true
+        csv.required = false
+    }
+}
+
+// Add a task to generate a combined report for both test and integrationTest
+tasks.register('jacocoCombinedReport', JacocoReport) {
+    description = 'Generates an aggregate JaCoCo report from both unit tests and integration tests'
+    group = 'Verification'
+
+    // Create a directory to store copies of the execution data files
+    def jacocoMergeDir = "${buildDir}/jacoco/merge"
+    doFirst {
+        // Create the directory if it doesn't exist
+        file(jacocoMergeDir).mkdirs()
+
+        // Copy the test.exec file if it exists
+        def testExec = file("${buildDir}/jacoco/test.exec")
+        if (testExec.exists()) {
+            copy {
+                from testExec
+                into jacocoMergeDir
+            }
+        }
+
+        // Copy the integrationTest.exec file if it exists
+        def integrationTestExec = file("${buildDir}/jacoco/integrationTest.exec")
+        if (integrationTestExec.exists()) {
+            copy {
+                from integrationTestExec
+                into jacocoMergeDir
+            }
+        }
+    }
+
+    // Only include execution data files from the merge directory
+    executionData.setFrom(fileTree(jacocoMergeDir).include("*.exec"))
+
+    sourceDirectories.from = files(
+        project.sourceSets.main.java.srcDirs,
+        project(":apps:backend:commons").sourceSets.main.java.srcDirs
+    )
+
+    classDirectories.from = files(
+        project.sourceSets.main.output.classesDirs,
+        project(":apps:backend:commons").sourceSets.main.output.classesDirs
+    )
+
+    reports {
+        xml.required = true
+        html.required = true
+        csv.required = false
+    }
+}
+
+// Make the check task depend on the jacocoCombinedReport task
+check.dependsOn jacocoCombinedReport
 
 configurations {
     providedRuntime

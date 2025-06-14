@@ -27,6 +27,7 @@ interface EpicFormFieldProps {
   label?: string;
   description?: string;
   required?: boolean;
+  testId?: string;
 }
 
 export function EpicFormField({
@@ -36,6 +37,7 @@ export function EpicFormField({
   label = "Epic",
   description,
   required = false,
+  testId,
 }: EpicFormFieldProps) {
   const t = useAppClientTranslations();
   const [epics, setEpics] = useState<ProjectEpicDTO[]>([]);
@@ -86,6 +88,7 @@ export function EpicFormField({
                   ? field.value.toString()
                   : "none"
               }
+              data-testid={testId}
             >
               <SelectTrigger className="w-full">
                 <SelectValue

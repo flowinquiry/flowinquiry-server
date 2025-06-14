@@ -27,6 +27,7 @@ interface IterationFormFieldProps {
   label?: string;
   description?: string;
   required?: boolean;
+  testId?: string;
 }
 
 export function IterationFormField({
@@ -36,6 +37,7 @@ export function IterationFormField({
   label = "Iteration",
   description,
   required = false,
+  testId,
 }: IterationFormFieldProps) {
   const t = useAppClientTranslations();
   const [iterations, setIterations] = useState<ProjectIterationDTO[]>([]);
@@ -89,6 +91,7 @@ export function IterationFormField({
                   ? field.value.toString()
                   : "none"
               }
+              data-testid={testId}
             >
               <SelectTrigger className="w-full">
                 <SelectValue

@@ -124,12 +124,41 @@ jobs:
           retention-days: 30
 
       # Summarize test result in GitHub Actions UI
-      - name: Summarize Playwright Results
+      - name: Summarize Playwright Results for PR
         if: always()
         run: |
-          echo "### ✅ Playwright Test Report" >> $GITHUB_STEP_SUMMARY
-          echo "The HTML report is available as an artifact:" >> $GITHUB_STEP_SUMMARY
-          echo "- 📦 [Download Playwright Report Artifact](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }})" >> $GITHUB_STEP_SUMMARY
+            REPORT_JSON="apps/frontend/playwright-report/index.json"
+            if [ -f "$REPORT_JSON" ]; then
+              TOTAL=$(jq '.suites[].specs | map(.tests | length) | add' $REPORT_JSON)
+              PASSED=$(jq '[.suites[].specs[].tests[] | select(.results[].status=="passed")] | length' $REPORT_JSON)
+              FAILED=$(jq '[.suites[].specs[].tests[] | select(.results[].status=="failed")] | length' $REPORT_JSON)
+              SKIPPED=$(jq '[.suites[].specs[].tests[] | select(.results[].status=="skipped")] | length' $REPORT_JSON)
+            
+              {
+                echo "### 🎭 Playwright Test Results"
+                if [[ $FAILED -eq 0 ]]; then
+                  echo "- ✅ **All tests passed!**"
+                else
+                  echo "- ❌ **Some tests failed.**"
+                fi
+                echo ""
+                echo "- 🧪 Total: **$TOTAL**"
+                echo "- ✅ Passed: **$PASSED**"
+                echo "- ❌ Failed: **$FAILED**"
+                echo "- ⏭️ Skipped: **$SKIPPED**"
+                echo ""
+                echo "- 📄 [Download Playwright HTML Report Artifact](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }})"
+              } > playwright-summary.md
+            else
+              echo "### ⚠️ Playwright report not found" > playwright-summary.md
+            fi
+
+      - name: Comment Playwright Summary on PR
+        if: github.event_name == 'pull_request'
+        uses: marocchino/sticky-pull-request-comment@v2
+        with:
+          header: playwright
+          path: playwright-summary.md
 
       # Graceful shutdown of all services
       - name: Shutdown services

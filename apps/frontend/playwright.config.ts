@@ -23,7 +23,10 @@ export default defineConfig({
   /* Run tests sequentially with a single worker to prevent navigation interference */
   workers: 1,
   /* Reporter to use. See https://playwright.dev/docs/test-reporters */
-  reporter: "html",
+  reporter: [
+    ["html", { outputFolder: "playwright-report", open: "never" }],
+    ["json", { outputFile: "playwright-report/report.json" }],
+  ],
   /* Set consistent timeouts */
   timeout: 60000,
   expect: {

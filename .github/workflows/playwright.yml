@@ -127,7 +127,7 @@ jobs:
       - name: Summarize Playwright Results for PR
         if: always()
         run: |
-            REPORT_JSON="apps/frontend/playwright-report/index.json"
+            REPORT_JSON="apps/frontend/playwright-report/report.json"
             if [ -f "$REPORT_JSON" ]; then
               TOTAL=$(jq '.suites[].specs | map(.tests | length) | add' $REPORT_JSON)
               PASSED=$(jq '[.suites[].specs[].tests[] | select(.results[].status=="passed")] | length' $REPORT_JSON)

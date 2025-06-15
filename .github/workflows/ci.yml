@@ -82,7 +82,7 @@ jobs:
         run: |
           awk '
             BEGIN { inSummary = 0 }
-            /^# Summary/ { inSummary = 1; print; next }
+            /^# Summary/ { inSummary = 1; print "# ✅ JaCoCo Backend Test Coverage Summary"; next }
             inSummary && /^$/ { print; exit }
             inSummary { print }
           ' coveragereport/Summary.md > coveragereport/TrimmedSummary.md

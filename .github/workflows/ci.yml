@@ -68,12 +68,20 @@ jobs:
           reporttypes: MarkdownSummary
           classfilters: "-*.*"
           assemblyfilters: "+*"
+      - name: Extract Only Coverage Summary Table
+        run: |
+          awk '
+          BEGIN { print "### 📊 Code Coverage Summary\n" }
+          # copy header + separator + table lines
+          /^|/ { print; in_table = 1; next }
+          in_table && NF == 0 { exit }
+          ' coverage-report/Summary.md > coverage-report/SummaryTrimmed.md
       - name: Comment Coverage Summary on PR
         if: github.event_name == 'pull_request'
         uses: marocchino/sticky-pull-request-comment@v2.9.2
         with:
           header: coverage
-          path: coverage-report/Summary.md
+          path: coverage-report/SummaryTrimmed.md
         env:
           GITHUB_TOKEN: ${{ secrets.GH_PR_COMMENT_PAT }}
 

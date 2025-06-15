@@ -69,18 +69,28 @@ jobs:
       - name: Format Coverage Summary with Emojis
         run: |
           awk '
-          BEGIN { print "### 📊 Code Coverage Summary\n" }
-          /Module/ { print "| Module | Line | Branch |" ; print "|--------|------|--------|" ; next }
-          {
-            if ($0 ~ /Total/) {
-              emoji = ($2+0 >= 80) ? "✅" : "❌"
-              print "| **Total** | **" $2 "** | **" $3 "** | " emoji
-            } else if (NF == 3) {
-              emoji = ($2+0 >= 80) ? "✅" : "❌"
-              print "| " $1 " | " $2 " | " $3 " | " emoji
-            }
+          BEGIN {
+            print "### 📊 Code Coverage Summary\n"
+            print "| Module | Line | Branch | Status |"
+            print "|--------|------|--------|--------|"
           }
-          ' coverage-report/Summary.md > coverage-report/SummaryFormatted.md    
+          /^|/ && $0 !~ /Module/ && $0 !~ /---/ {
+            gsub(/[%|]/,"")
+            module = $1
+            line = $2 + 0
+            branch = $3 + 0
+            emoji = (line >= 80 && branch >= 80) ? "✅" : "❌"
+            if (module == "Total") {
+              module = "**Total**"
+              line = "**" line "%**"
+              branch = "**" branch "%**"
+            } else {
+              line = line "%"
+              branch = branch "%"
+            }
+            printf("| %s | %s | %s | %s |\n", module, line, branch, emoji)
+          }
+          ' coverage-report/Summary.md > coverage-report/SummaryFormatted.md  
 
       - name: Comment Coverage Summary on PR
         if: github.event_name == 'pull_request'

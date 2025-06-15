@@ -164,7 +164,7 @@ jobs:
         with:
           header: playwright
           path: playwright-summary.md
-          token: ${{ secrets.PAT_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.PAT_TOKEN }}
 
       # Graceful shutdown of all services
       - name: Shutdown services

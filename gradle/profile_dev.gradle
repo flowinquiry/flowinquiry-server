@@ -8,8 +8,6 @@ configurations {
 
 dependencies {
     developmentOnly "org.springframework.boot:spring-boot-devtools"
-    implementation "org.postgresql:postgresql"
-    testImplementation "org.testcontainers:postgresql"
 }
 
 ext {

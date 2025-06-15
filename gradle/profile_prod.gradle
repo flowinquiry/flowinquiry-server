@@ -6,11 +6,6 @@ configurations {
   }
 }
 
-dependencies {
-    implementation "org.postgresql:postgresql"
-    testImplementation "org.testcontainers:postgresql"
-}
-
 ext {
     springProfiles = "prod"
 }

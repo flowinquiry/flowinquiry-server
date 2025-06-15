@@ -21,6 +21,7 @@ redisHibernateVersion="3.45.0"
 benManesVersionsVersion="0.52.0"
 greenmailJunit5Version="2.1.3"
 testcontainersVersion="0.9.1"
+postgres="42.7.7"
 
 [libraries]
 caffeine = {module="com.github.ben-manes.caffeine:caffeine", version.ref="caffeineVersion"}
@@ -52,6 +53,7 @@ greenmail-junit5 = { module = "com.icegreen:greenmail-junit5", version.ref = "gr
 testcontainers-spring = { module = "io.flowinquiry.testcontainers:spring-testcontainers", version.ref = "testcontainersVersion" }
 testcontainers-postgresql = { module = "io.flowinquiry.testcontainers:postgresql", version.ref = "testcontainersVersion" }
 junit-bom-platform = { module = "org.junit:junit-bom", version.ref = "junitVersion" }
+postgres = { module = "org.postgresql:postgresql", version.ref = "postgres" }
 
 [plugins]
 spring-boot = { id = "org.springframework.boot", version.ref = "springbootVersion" }

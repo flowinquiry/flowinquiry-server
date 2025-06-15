@@ -66,40 +66,14 @@ jobs:
           reports: apps/backend/server/build/reports/jacoco/test/jacocoTestReport.xml
           targetdir: coverage-report
           reporttypes: MarkdownSummary
-      - name: Format Coverage Summary with Emojis
-        run: |
-          awk '
-          BEGIN {
-            print "### 📊 Code Coverage Summary\n"
-            print "| Module | Line | Branch | Status |"
-            print "|--------|------|--------|--------|"
-          }
-          /^|/ && $0 !~ /Module/ && $0 !~ /---/ {
-            gsub(/[%|]/,"")
-            module = $1
-            line = $2 + 0
-            branch = $3 + 0
-            emoji = (line >= 80 && branch >= 80) ? "✅" : "❌"
-            if (module == "Total") {
-              module = "**Total**"
-              line = "**" line "%**"
-              branch = "**" branch "%**"
-            } else {
-              line = line "%"
-              branch = branch "%"
-            }
-            printf("| %s | %s | %s | %s |\n", module, line, branch, emoji)
-          }
-          ' coverage-report/Summary.md > coverage-report/SummaryFormatted.md  
-
       - name: Comment Coverage Summary on PR
         if: github.event_name == 'pull_request'
         uses: marocchino/sticky-pull-request-comment@v2.9.2
         with:
           header: coverage
-          path: coverage-report/SummaryFormatted.md
+          path: coverage-report/Summary.md
         env:
-          GITHUB_TOKEN: ${{ secrets.GH_PR_COMMENT_PAT }}
+          GITHUB_TOKEN: ${{ secrets.PAT_TOKEN }}
 
       - name: Publish to GitHub Packages
         if: github.event.pull_request.head.repo.full_name == github.repository
@@ -163,6 +137,6 @@ jobs:
     if: needs.detect-changes.outputs.backend == 'true' || needs.detect-changes.outputs.frontend == 'true'
     uses: ./.github/workflows/playwright.yml
     secrets:
-      pr_comment_pat: ${{ secrets.GH_PR_COMMENT_PAT }}
+      pr_comment_pat: ${{ secrets.PAT_TOKEN }}
 
 

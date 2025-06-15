@@ -160,7 +160,7 @@ jobs:
 
       - name: Comment Playwright Summary on PR
         if: github.event_name == 'pull_request'
-        uses: marocchino/sticky-pull-request-comment@v2
+        uses: marocchino/sticky-pull-request-comment@v2.9.2
         with:
           header: playwright
           path: playwright-summary.md

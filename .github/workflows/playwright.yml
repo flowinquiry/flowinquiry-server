@@ -1,15 +1,7 @@
 name: Playwright Tests
 
-permissions:
-  contents: write
-  pages: write
-  id-token: write
-
 on:
   workflow_call:
-    secrets:
-      GITHUB_TOKEN:
-        required: true
 
 jobs:
   test:

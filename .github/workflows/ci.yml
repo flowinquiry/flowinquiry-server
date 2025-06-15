@@ -9,6 +9,7 @@ on:
 
 permissions:
   contents: write
+  pull-requests: write
   pages: write
   id-token: write
 
@@ -75,19 +76,27 @@ jobs:
           name: CoverageReport
           path: coveragereport
       - name: Show contents of coverage report folder
-        run: ls -la coveragereport      
+        run: ls -la coveragereport
+
+      - name: Trim summary (remove class/package breakdown)
+        run: |
+          awk '
+            /^# Summary/ { inSummary=1; print; next }
+            inSummary && /^|/ { print; next }
+            inSummary && NF == 0 { print; exit }
+          ' coveragereport/MarkdownSummary.md > coveragereport/TrimmedSummary.md
 
       - name: Add or update PR comment
         run: |
           gh pr comment ${{ github.event.pull_request.number }} \
-            --body-file coveragereport/Summary.md \
+            --body-file coveragereport/TrimmedSummary.md \
             --edit-last || \
           gh pr comment ${{ github.event.pull_request.number }} \
-            --body-file coveragereport/Summary.md
+            --body-file coveragereport/TrimmedSummary.md
         env:
           GH_TOKEN: ${{ secrets.GH_PR_COMMENT_PAT }}
       - name: Publish coverage in build summary
-        run: cat coveragereport/Summary.md >> $GITHUB_STEP_SUMMARY
+        run: cat coveragereport/TrimmedSummary.md >> $GITHUB_STEP_SUMMARY
         shell: bash
 
   frontend:

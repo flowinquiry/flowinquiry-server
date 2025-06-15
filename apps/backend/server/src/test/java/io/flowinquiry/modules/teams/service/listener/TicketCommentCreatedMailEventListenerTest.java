@@ -95,6 +95,7 @@ public class TicketCommentCreatedMailEventListenerTest {
         // Given
         Long commentId = 1L;
         Long ticketId = 10L;
+        Long teamId = 20L;
         Long commenterId = 100L;
         Long watcher1Id = 101L;
         Long watcher2Id = 102L;
@@ -106,7 +107,8 @@ public class TicketCommentCreatedMailEventListenerTest {
         commentDTO.setEntityType(EntityType.Ticket);
         commentDTO.setContent("Test comment");
 
-        TicketDTO ticketDTO = TicketDTO.builder().id(ticketId).requestTitle("Test Ticket").build();
+        TicketDTO ticketDTO =
+                TicketDTO.builder().id(ticketId).teamId(teamId).requestTitle("Test Ticket").build();
 
         User watcher1User = User.builder().id(watcher1Id).build();
         User watcher2User = User.builder().id(watcher2Id).build();

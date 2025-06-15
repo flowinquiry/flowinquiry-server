@@ -7,6 +7,9 @@ permissions:
 
 on:
   workflow_call:
+    secrets:
+      pr_comment_pat:
+        required: true
 
 jobs:
   test:

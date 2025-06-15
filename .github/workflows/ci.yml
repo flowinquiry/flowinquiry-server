@@ -74,6 +74,9 @@ jobs:
         with:
           name: CoverageReport
           path: coveragereport
+          
+      - name: Show contents of coverage report folder
+        run: ls -la coveragereport
 
       - name: Add or update coverage comment
         if: github.event_name == 'pull_request'

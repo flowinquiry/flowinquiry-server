@@ -74,20 +74,19 @@ jobs:
         with:
           name: CoverageReport
           path: coveragereport
-          
       - name: Show contents of coverage report folder
-        run: ls -la coveragereport
-
+        run: ls -la coveragereport      
+      
       - name: Add or update coverage comment
         if: github.event_name == 'pull_request'
         env:
           GH_TOKEN: ${{ secrets.GH_PR_COMMENT_PAT }}
         run: |
           gh pr comment ${{ github.event.pull_request.number }} \
-            --body-file coveragereport/SummaryGithub.md \
+            --body-file coveragereport/Summary.md \
             --edit-last
       - name: Publish coverage in build summary
-        run: cat coveragereport/SummaryGithub.md >> $GITHUB_STEP_SUMMARY
+        run: cat coveragereport/Summary.md >> $GITHUB_STEP_SUMMARY
         shell: bash
 
   frontend:

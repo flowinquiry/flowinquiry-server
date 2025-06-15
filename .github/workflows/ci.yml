@@ -64,20 +64,21 @@ jobs:
         uses: danielpalme/ReportGenerator-GitHub-Action@5.4.7
         with:
           reports: apps/backend/server/build/reports/jacoco/test/jacocoTestReport.xml
-          targetdir: coverage-report
-          reporttypes: MarkdownSummaryGithub
+          targetdir: coveragereport
+          reporttypes: Html;MarkdownDeltaSummary
+          historydir: hist
+
       - name: Upload coverage report artifact
         uses: actions/upload-artifact@v4
         with:
-          name: CoverageReport # Artifact name
-          path: coveragereport # Directory containing files to upload
+          name: CoverageReport
+          path: coveragereport
 
       - name: Add comment to PR
         if: github.event_name == 'pull_request'
-        run: gh pr comment $PR_NUMBER --body-file coveragereport/MarkdownSummaryGithub.md
+        run: gh pr comment ${{ github.event.pull_request.number }} --body-file coveragereport/MarkdownSummaryGithub.md
         env:
           GH_TOKEN: ${{ secrets.GH_PR_COMMENT_PAT }}
-          PR_NUMBER: ${{ github.event.number }}
 
       - name: Publish coverage in build summary
         run: cat coveragereport/MarkdownSummaryGithub.md >> $GITHUB_STEP_SUMMARY

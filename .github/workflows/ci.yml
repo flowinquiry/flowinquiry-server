@@ -65,7 +65,7 @@ jobs:
         with:
           reports: apps/backend/server/build/reports/jacoco/test/jacocoTestReport.xml
           targetdir: coveragereport
-          reporttypes: Html;MarkdownDeltaSummary
+          reporttypes: MarkdownDeltaSummary
           historydir: hist
 
       - name: Upload coverage report artifact

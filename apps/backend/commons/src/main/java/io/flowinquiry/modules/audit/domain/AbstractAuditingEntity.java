@@ -1,4 +1,4 @@
-package io.flowinquiry.modules.audit;
+package io.flowinquiry.modules.audit.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import io.flowinquiry.modules.usermanagement.domain.User;

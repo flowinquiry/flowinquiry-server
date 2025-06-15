@@ -1,7 +1,7 @@
 package io.flowinquiry.modules.usermanagement.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import io.flowinquiry.modules.audit.AbstractAuditingEntity;
+import io.flowinquiry.modules.audit.domain.AbstractAuditingEntity;
 import io.flowinquiry.modules.collab.domain.EntityWatcher;
 import io.flowinquiry.modules.teams.domain.Team;
 import jakarta.persistence.CascadeType;

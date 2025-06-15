@@ -4,7 +4,7 @@ import static io.flowinquiry.modules.teams.domain.WorkflowTransitionHistoryStatu
 import static io.flowinquiry.query.QueryUtils.createSpecification;
 
 import io.flowinquiry.exceptions.ResourceNotFoundException;
-import io.flowinquiry.modules.audit.AuditLogUpdateEvent;
+import io.flowinquiry.modules.audit.service.event.AuditLogUpdateEvent;
 import io.flowinquiry.modules.collab.domain.EntityType;
 import io.flowinquiry.modules.collab.domain.EntityWatcher;
 import io.flowinquiry.modules.collab.repository.EntityWatcherRepository;

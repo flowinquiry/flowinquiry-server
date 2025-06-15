@@ -1,5 +1,7 @@
-package io.flowinquiry.modules.audit;
+package io.flowinquiry.modules.audit.utils;
 
+import io.flowinquiry.modules.audit.service.EntityFieldHandler;
+import io.flowinquiry.modules.audit.service.EntityFieldHandlerRegistry;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;

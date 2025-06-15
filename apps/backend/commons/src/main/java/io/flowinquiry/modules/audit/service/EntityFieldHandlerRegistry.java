@@ -1,4 +1,4 @@
-package io.flowinquiry.modules.audit;
+package io.flowinquiry.modules.audit.service;
 
 import io.flowinquiry.modules.collab.domain.EntityType;
 

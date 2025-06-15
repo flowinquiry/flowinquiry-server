@@ -1,6 +1,7 @@
 package io.flowinquiry.modules.teams.service.dto;
 
 import io.flowinquiry.modules.teams.domain.ProjectStatus;
+import jakarta.validation.constraints.NotNull;
 import java.time.Instant;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -13,11 +14,11 @@ import lombok.experimental.SuperBuilder;
 @SuperBuilder
 public class ProjectDTO {
     private Long id;
-    private String name;
+    @NotNull private String name;
     private String description;
-    private String shortName;
-    private Long teamId;
-    private ProjectStatus status;
+    @NotNull private String shortName;
+    @NotNull private Long teamId;
+    @NotNull private ProjectStatus status;
     private Instant startDate;
     private Instant endDate;
     private Long createdBy;

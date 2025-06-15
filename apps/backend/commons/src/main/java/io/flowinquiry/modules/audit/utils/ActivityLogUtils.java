@@ -1,4 +1,4 @@
-package io.flowinquiry.modules.audit;
+package io.flowinquiry.modules.audit.utils;
 
 import static j2html.TagCreator.each;
 import static j2html.TagCreator.table;

@@ -1,6 +1,6 @@
 package io.flowinquiry.modules.teams.service.dto;
 
-import io.flowinquiry.modules.audit.AuditEntityDTO;
+import io.flowinquiry.modules.audit.service.dto.AuditEntityDTO;
 import io.flowinquiry.modules.teams.domain.WorkflowVisibility;
 import lombok.AllArgsConstructor;
 import lombok.Data;

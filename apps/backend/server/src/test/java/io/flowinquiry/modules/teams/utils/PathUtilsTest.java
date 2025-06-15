@@ -6,7 +6,7 @@ import io.flowinquiry.modules.teams.service.dto.TicketDTO;
 import io.flowinquiry.utils.Obfuscator;
 import org.junit.jupiter.api.Test;
 
-public class TicketPathUtilsTest {
+public class PathUtilsTest {
 
     @Test
     public void testBuildTicketPathWithProjectId() {
@@ -26,7 +26,7 @@ public class TicketPathUtilsTest {
                         .build();
 
         // When
-        String path = TicketPathUtils.buildTicketPath(ticketDTO);
+        String path = PathUtils.buildTicketPath(ticketDTO);
 
         // Then
         String expectedPath =
@@ -50,7 +50,7 @@ public class TicketPathUtilsTest {
                         .build();
 
         // When
-        String path = TicketPathUtils.buildTicketPath(ticketDTO);
+        String path = PathUtils.buildTicketPath(ticketDTO);
 
         // Then
         String expectedPath =

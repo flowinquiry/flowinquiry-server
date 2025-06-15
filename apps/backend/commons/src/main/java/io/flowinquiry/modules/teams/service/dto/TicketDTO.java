@@ -30,7 +30,8 @@ public class TicketDTO {
     private Long projectId;
     private String projectName;
     private String projectShortName;
-    private Long projectTicketNumber;
+
+    @NotNull(message = "Project Ticket Number cannot be null") private Long projectTicketNumber;
 
     @NotNull(message = "Request User ID cannot be null") private Long requestUserId;
 
@@ -41,7 +42,9 @@ public class TicketDTO {
     private String assignUserImageUrl;
     private String requestTitle;
     private String requestDescription;
-    private String priority;
+
+    @NotNull(message = "Priority cannot be null") private String priority;
+
     private LocalDate estimatedCompletionDate;
     private LocalDate actualCompletionDate;
 
@@ -55,8 +58,11 @@ public class TicketDTO {
 
     private String currentStateName;
     private TicketChannel channel;
-    private Boolean isNew;
-    private Boolean isCompleted;
+
+    @NotNull(message = "isNew flag cannot be null") private Boolean isNew;
+
+    @NotNull(message = "isCompleted flag cannot be null") private Boolean isCompleted;
+
     private Instant createdAt;
     private Instant modifiedAt;
     private int numberAttachments;

@@ -1,6 +1,6 @@
 package io.flowinquiry.modules.teams.domain;
 
-import io.flowinquiry.modules.audit.AbstractAuditingEntity;
+import io.flowinquiry.modules.audit.domain.AbstractAuditingEntity;
 import jakarta.persistence.*;
 import java.time.Instant;
 import lombok.Getter;

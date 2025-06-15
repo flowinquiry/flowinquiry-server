@@ -7,7 +7,7 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
 import io.flowinquiry.IntegrationTest;
-import io.flowinquiry.modules.audit.AuditLogUpdateEvent;
+import io.flowinquiry.modules.audit.service.event.AuditLogUpdateEvent;
 import io.flowinquiry.modules.collab.domain.EntityType;
 import io.flowinquiry.modules.collab.domain.EntityWatcher;
 import io.flowinquiry.modules.collab.repository.EntityWatcherRepository;

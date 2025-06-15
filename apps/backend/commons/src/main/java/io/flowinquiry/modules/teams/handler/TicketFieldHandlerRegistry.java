@@ -1,7 +1,7 @@
 package io.flowinquiry.modules.teams.handler;
 
-import io.flowinquiry.modules.audit.AbstractEntityFieldHandlerRegistry;
-import io.flowinquiry.modules.audit.EntityFieldHandler;
+import io.flowinquiry.modules.audit.service.AbstractEntityFieldHandlerRegistry;
+import io.flowinquiry.modules.audit.service.EntityFieldHandler;
 import io.flowinquiry.modules.collab.domain.EntityType;
 import io.flowinquiry.modules.teams.domain.TicketChannel;
 import io.flowinquiry.modules.teams.repository.WorkflowStateRepository;

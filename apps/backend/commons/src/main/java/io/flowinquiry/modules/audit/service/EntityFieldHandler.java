@@ -1,4 +1,4 @@
-package io.flowinquiry.modules.audit;
+package io.flowinquiry.modules.audit.service;
 
 import java.util.function.BiFunction;
 import lombok.Getter;

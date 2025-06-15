@@ -1,6 +1,6 @@
 package io.flowinquiry.modules.teams.service.listener;
 
-import static io.flowinquiry.modules.teams.utils.TicketPathUtils.buildTicketPath;
+import static io.flowinquiry.modules.teams.utils.PathUtils.buildTicketPath;
 import static j2html.TagCreator.a;
 import static j2html.TagCreator.p;
 import static j2html.TagCreator.text;

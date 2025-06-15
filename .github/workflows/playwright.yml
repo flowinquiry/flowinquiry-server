@@ -91,7 +91,7 @@ jobs:
         run: |
           ./gradlew :apps:backend:server:bootRun > backend.log 2>&1 &
           echo "Waiting for backend..."
-          timeout 120s bash -c '
+          timeout 300s bash -c '
             until curl -sf http://localhost:8080/actuator/health; do
               echo "Waiting for backend..."
               sleep 2

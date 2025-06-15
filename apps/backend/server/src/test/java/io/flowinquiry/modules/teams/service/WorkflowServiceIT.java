@@ -186,4 +186,15 @@ public class WorkflowServiceIT {
         workflowService.deleteWorkflowByTeam(1L, 2L);
         assertThat(workflowService.getWorkflowsForTeam(1L, false).size()).isEqualTo(1);
     }
+
+    @Test
+    public void shouldGetGlobalWorkflowUsedForProject() {
+        // When: Retrieving a global workflow used for projects
+        WorkflowDTO workflowDTO = workflowService.getGlobalWorkflowUsedForProject();
+
+        // Then: Verify the workflow is returned and has expected properties
+        assertThat(workflowDTO).isNotNull();
+        assertThat(workflowDTO.getVisibility()).isEqualTo(WorkflowVisibility.PUBLIC);
+        assertThat(workflowDTO.isUseForProject()).isTrue();
+    }
 }

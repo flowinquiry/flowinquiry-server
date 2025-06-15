@@ -152,5 +152,7 @@ jobs:
     needs: [ detect-changes ]
     if: needs.detect-changes.outputs.backend == 'true' || needs.detect-changes.outputs.frontend == 'true'
     uses: ./.github/workflows/playwright.yml
+    secrets:
+      pr_comment_pat: ${{ secrets.GH_PR_COMMENT_PAT }}
 
 

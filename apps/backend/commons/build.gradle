@@ -19,6 +19,7 @@ dependencyManagement {
 
 dependencies {
     compileOnly(libs.lombok)
+    api(libs.bundles.slack)
     api(libs.bundles.caffeine.cache)
     api(libs.bundles.json)
     api(libs.bundles.shedlock)

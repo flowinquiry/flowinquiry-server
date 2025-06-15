@@ -8,7 +8,7 @@ permissions:
 on:
   workflow_call:
     secrets:
-      pr_comment_pat:
+      GITHUB_TOKEN:
         required: true
 
 jobs:
@@ -168,7 +168,7 @@ jobs:
           header: playwright
           path: playwright-summary.md
         env:
-          GITHUB_TOKEN: ${{ secrets.pr_comment_pat }}
+          GITHUB_TOKEN: ${{ github.token }}
 
       # Graceful shutdown of all services
       - name: Shutdown services

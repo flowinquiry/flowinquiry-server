@@ -81,9 +81,10 @@ jobs:
       - name: Trim summary (remove class/package breakdown)
         run: |
           awk '
-            /^# Summary/ { inSummary=1; print; next }
-            inSummary && /^|/ { print; next }
-            inSummary && NF == 0 { print; exit }
+            BEGIN { inSummary = 0 }
+            /^# Summary/ { inSummary = 1; print; next }
+            inSummary && /^$/ { print; exit }
+            inSummary { print }
           ' coveragereport/Summary.md > coveragereport/TrimmedSummary.md
 
       - name: Add or update PR comment

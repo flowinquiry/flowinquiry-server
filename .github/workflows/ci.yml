@@ -75,7 +75,7 @@ jobs:
           header: coverage
           path: coverage-report/Summary.md
         env:
-          GITHUB_TOKEN: ${{ secrets.PAT_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GH_PR_COMMENT_PAT }}
 
       - name: Publish to GitHub Packages
         if: github.event.pull_request.head.repo.full_name == github.repository
@@ -139,6 +139,6 @@ jobs:
     if: needs.detect-changes.outputs.backend == 'true' || needs.detect-changes.outputs.frontend == 'true'
     uses: ./.github/workflows/playwright.yml
     secrets:
-      pr_comment_pat: ${{ secrets.PAT_TOKEN }}
+      pr_comment_pat: ${{ secrets.GH_PR_COMMENT_PAT }}
 
 

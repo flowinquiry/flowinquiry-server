@@ -80,7 +80,7 @@ jobs:
           GH_TOKEN: ${{ secrets.GH_PR_COMMENT_PAT }}
 
       - name: Publish coverage in build summary
-        run: cat coveragereport/MarkdownSummaryGithub.md >> $GITHUB_STEP_SUMMARY
+        run: cat coveragereport/SummaryGithub.md >> $GITHUB_STEP_SUMMARY
         shell: bash
 
   frontend:

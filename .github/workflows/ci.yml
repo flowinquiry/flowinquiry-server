@@ -65,7 +65,7 @@ jobs:
         with:
           reports: apps/backend/server/build/reports/jacoco/test/jacocoTestReport.xml
           targetdir: coveragereport
-          reporttypes: Html;MarkdownSummaryGithub
+          reporttypes: Html;MarkdownSummary
           classfilters: '+*'
           filefilters: '+*'
 
@@ -75,12 +75,14 @@ jobs:
           name: CoverageReport
           path: coveragereport
 
-      - name: Add comment to PR
+      - name: Add or update coverage comment
         if: github.event_name == 'pull_request'
-        run: gh pr comment ${{ github.event.pull_request.number }} --body-file coveragereport/SummaryGithub.md
         env:
           GH_TOKEN: ${{ secrets.GH_PR_COMMENT_PAT }}
-
+        run: |
+          gh pr comment ${{ github.event.pull_request.number }} \
+            --body-file coveragereport/SummaryGithub.md \
+            --edit-last
       - name: Publish coverage in build summary
         run: cat coveragereport/SummaryGithub.md >> $GITHUB_STEP_SUMMARY
         shell: bash

@@ -164,7 +164,7 @@ jobs:
         with:
           header: playwright
           path: playwright-summary.md
-          GITHUB_TOKEN: ${{ secrets.GH_PR_COMMENT_PAT }}
+          github_token: ${{ secrets.GH_PR_COMMENT_PAT }}
 
       # Graceful shutdown of all services
       - name: Shutdown services

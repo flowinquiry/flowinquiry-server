@@ -84,7 +84,7 @@ jobs:
             /^# Summary/ { inSummary=1; print; next }
             inSummary && /^|/ { print; next }
             inSummary && NF == 0 { print; exit }
-          ' coveragereport/MarkdownSummary.md > coveragereport/TrimmedSummary.md
+          ' coveragereport/Summary.md > coveragereport/TrimmedSummary.md
 
       - name: Add or update PR comment
         run: |

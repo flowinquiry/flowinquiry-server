@@ -66,6 +66,8 @@ jobs:
           reports: apps/backend/server/build/reports/jacoco/test/jacocoTestReport.xml
           targetdir: coveragereport
           reporttypes: Html;MarkdownSummaryGithub
+          classfilters: '+*'
+          filefilters: '+*'
 
       - name: Upload coverage report artifact
         uses: actions/upload-artifact@v4

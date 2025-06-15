@@ -72,12 +72,10 @@ jobs:
         with:
           name: CoverageReport
           path: coveragereport
-      - name: Show contents of coverage report folder
-        run: ls -la coveragereport
 
       - name: Add comment to PR
         if: github.event_name == 'pull_request'
-        run: gh pr comment ${{ github.event.pull_request.number }} --body-file coveragereport/MarkdownSummaryGithub.md
+        run: gh pr comment ${{ github.event.pull_request.number }} --body-file coveragereport/SummaryGithub.md
         env:
           GH_TOKEN: ${{ secrets.GH_PR_COMMENT_PAT }}
 

@@ -88,7 +88,8 @@ jobs:
         with:
           header: coverage
           path: coverage-report/SummaryFormatted.md
-          github_token: ${{ secrets.GH_PR_COMMENT_PAT }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GH_PR_COMMENT_PAT }}
 
       - name: Publish to GitHub Packages
         if: github.event.pull_request.head.repo.full_name == github.repository

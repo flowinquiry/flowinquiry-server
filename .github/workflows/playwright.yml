@@ -1,10 +1,5 @@
 name: Playwright Tests
 
-permissions:
-  contents: write
-  pages: write
-  id-token: write
-
 on:
   workflow_call:
     secrets:
@@ -161,14 +156,14 @@ jobs:
               echo "### ⚠️ Playwright report not found" > playwright-summary.md
             fi
 
-      - name: Comment Playwright Summary on PR
-        if: github.event_name == 'pull_request'
-        uses: marocchino/sticky-pull-request-comment@v2.9.2
-        with:
-          header: playwright
-          path: playwright-summary.md
-        env:
-          GITHUB_TOKEN: ${{ secrets.pr_comment_pat }}
+#      - name: Comment Playwright Summary on PR
+#        if: github.event_name == 'pull_request'
+#        uses: marocchino/sticky-pull-request-comment@v2.9.2
+#        with:
+#          header: playwright
+#          path: playwright-summary.md
+#        env:
+#          GITHUB_TOKEN: ${{ secrets.pr_comment_pat }}
 
       # Graceful shutdown of all services
       - name: Shutdown services

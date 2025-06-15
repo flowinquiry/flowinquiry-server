@@ -65,32 +65,23 @@ jobs:
         with:
           reports: apps/backend/server/build/reports/jacoco/test/jacocoTestReport.xml
           targetdir: coverage-report
-          reporttypes: MarkdownSummary
-          classfilters: "-*.*"
-          assemblyfilters: "+*"
-      - name: Extract Only Coverage Summary Table
-        run: |
-          awk '
-          BEGIN { print "### 📊 Code Coverage Summary\n" }
-          # copy header + separator + table lines
-          /^|/ { print; in_table = 1; next }
-          in_table && NF == 0 { exit }
-          ' coverage-report/Summary.md > coverage-report/SummaryTrimmed.md
-      - name: Comment Coverage Summary on PR
-        if: github.event_name == 'pull_request'
-        uses: marocchino/sticky-pull-request-comment@v2.9.2
+          reporttypes: MarkdownSummaryGithub
+      - name: Upload coverage report artifact
+        uses: actions/upload-artifact@v4
         with:
-          header: coverage
-          path: coverage-report/SummaryTrimmed.md
-        env:
-          GITHUB_TOKEN: ${{ secrets.GH_PR_COMMENT_PAT }}
+          name: CoverageReport # Artifact name
+          path: coveragereport # Directory containing files to upload
 
-      - name: Publish to GitHub Packages
-        if: github.event.pull_request.head.repo.full_name == github.repository
-        run: ./gradlew publish
+      - name: Add comment to PR
+        if: github.event_name == 'pull_request'
+        run: gh pr comment $PR_NUMBER --body-file coveragereport/SummaryGithub.md
         env:
-          GITHUB_ACTOR: ${{ github.actor }}
-          GITHUB_TOKEN: ${{ secrets.PAT_TOKEN }}
+          GH_TOKEN: ${{ secrets.GH_PR_COMMENT_PAT }}
+          PR_NUMBER: ${{ github.event.number }}
+
+      - name: Publish coverage in build summary
+        run: cat coveragereport/SummaryGithub.md >> $GITHUB_STEP_SUMMARY
+        shell: bash
 
   frontend:
     needs: detect-changes

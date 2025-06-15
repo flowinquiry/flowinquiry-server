@@ -87,15 +87,14 @@ jobs:
             inSummary { print }
           ' coveragereport/Summary.md > coveragereport/TrimmedSummary.md
 
-      - name: Add or update PR comment
-        run: |
-          gh pr comment ${{ github.event.pull_request.number }} \
-            --body-file coveragereport/TrimmedSummary.md \
-            --edit-last || \
-          gh pr comment ${{ github.event.pull_request.number }} \
-            --body-file coveragereport/TrimmedSummary.md
+      - name: Add or update PR comment (Coverage Report)
+        if: github.event_name == 'pull_request'
+        uses: marocchino/sticky-pull-request-comment@v2.9.2
+        with:
+          header: coverage-report
+          path: coveragereport/TrimmedSummary.md
         env:
-          GH_TOKEN: ${{ secrets.GH_PR_COMMENT_PAT }}
+          GITHUB_TOKEN: ${{ secrets.GH_PR_COMMENT_PAT }}
       - name: Publish coverage in build summary
         run: cat coveragereport/TrimmedSummary.md >> $GITHUB_STEP_SUMMARY
         shell: bash

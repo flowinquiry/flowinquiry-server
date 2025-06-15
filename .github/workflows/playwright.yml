@@ -127,31 +127,34 @@ jobs:
       - name: Summarize Playwright Results for PR
         if: always()
         run: |
-            REPORT_JSON="apps/frontend/playwright-report/report.json"
-            if [ -f "$REPORT_JSON" ]; then
-              TOTAL=$(jq '.suites[].specs | map(.tests | length) | add' $REPORT_JSON)
-              PASSED=$(jq '[.suites[].specs[].tests[] | select(.results[].status=="passed")] | length' $REPORT_JSON)
-              FAILED=$(jq '[.suites[].specs[].tests[] | select(.results[].status=="failed")] | length' $REPORT_JSON)
-              SKIPPED=$(jq '[.suites[].specs[].tests[] | select(.results[].status=="skipped")] | length' $REPORT_JSON)
-            
-              {
-                echo "### 🎭 Playwright Test Results"
-                if [[ $FAILED -eq 0 ]]; then
-                  echo "- ✅ **All tests passed!**"
-                else
-                  echo "- ❌ **Some tests failed.**"
-                fi
-                echo ""
-                echo "- 🧪 Total: **$TOTAL**"
-                echo "- ✅ Passed: **$PASSED**"
-                echo "- ❌ Failed: **$FAILED**"
-                echo "- ⏭️ Skipped: **$SKIPPED**"
-                echo ""
-                echo "- 📄 [Download Playwright HTML Report Artifact](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }})"
-              } > playwright-summary.md
-            else
-              echo "### ⚠️ Playwright report not found" > playwright-summary.md
-            fi
+          REPORT_JSON="apps/frontend/playwright-report/report.json"
+          if [ -f "$REPORT_JSON" ]; then
+            TOTAL=$(jq '.stats.expected' "$REPORT_JSON")
+            PASSED=$(jq '.stats.expected - .stats.unexpected - .stats.flaky' "$REPORT_JSON")
+            FAILED=$(jq '.stats.unexpected' "$REPORT_JSON")
+            FLAKY=$(jq '.stats.flaky' "$REPORT_JSON")
+            SKIPPED=$(jq '.stats.skipped' "$REPORT_JSON")
+
+            {
+              echo "### 🎭 Playwright Test Results"
+              if [[ $FAILED -eq 0 ]]; then
+                echo "- ✅ **All tests passed!**"
+              else
+                echo "- ❌ **Some tests failed.**"
+              fi
+              echo ""
+              echo "- 🧪 Total: **$TOTAL**"
+              echo "- ✅ Passed: **$PASSED**"
+              echo "- ❌ Failed: **$FAILED**"
+              echo "- 🌀 Flaky: **$FLAKY**"
+              echo "- ⏭️ Skipped: **$SKIPPED**"
+              echo ""
+              echo "- 📄 [View Playwright Report Artifact](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }})"
+            } > playwright-summary.md
+          else
+            echo "### ⚠️ Playwright report not found" > playwright-summary.md
+          fi
+      
 
       - name: Comment Playwright Summary on PR
         if: github.event_name == 'pull_request'

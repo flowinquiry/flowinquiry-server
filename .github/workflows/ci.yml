@@ -66,19 +66,29 @@ jobs:
           reports: apps/backend/server/build/reports/jacoco/test/jacocoTestReport.xml
           targetdir: coverage-report
           reporttypes: MarkdownSummary
+      - name: Format Coverage Summary with Emojis
+        run: |
+          awk '
+          BEGIN { print "### 📊 Code Coverage Summary\n" }
+          /Module/ { print "| Module | Line | Branch |" ; print "|--------|------|--------|" ; next }
+          {
+            if ($0 ~ /Total/) {
+              emoji = ($2+0 >= 80) ? "✅" : "❌"
+              print "| **Total** | **" $2 "** | **" $3 "** | " emoji
+            } else if (NF == 3) {
+              emoji = ($2+0 >= 80) ? "✅" : "❌"
+              print "| " $1 " | " $2 " | " $3 " | " emoji
+            }
+          }
+          ' coverage-report/Summary.md > coverage-report/SummaryFormatted.md    
 
-      - name: Upload JaCoCo HTML Report
-        uses: actions/upload-artifact@v4
-        with:
-          name: jacoco-html-report
-          path: coverage-report
-
-      - name: Comment Coverage on PR
+      - name: Comment Coverage Summary on PR
         if: github.event_name == 'pull_request'
-        uses: marocchino/sticky-pull-request-comment@v2
+        uses: marocchino/sticky-pull-request-comment@v2.9.2
         with:
           header: coverage
-          path: coverage-report/Summary.md
+          path: coverage-report/SummaryFormatted.md
+          GITHUB_TOKEN: ${{ secrets.GH_PR_COMMENT_PAT }}
 
       - name: Publish to GitHub Packages
         if: github.event.pull_request.head.repo.full_name == github.repository

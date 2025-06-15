@@ -74,13 +74,13 @@ jobs:
 
       - name: Add comment to PR
         if: github.event_name == 'pull_request'
-        run: gh pr comment $PR_NUMBER --body-file coveragereport/SummaryGithub.md
+        run: gh pr comment $PR_NUMBER --body-file coveragereport/MarkdownSummaryGithub.md
         env:
           GH_TOKEN: ${{ secrets.GH_PR_COMMENT_PAT }}
           PR_NUMBER: ${{ github.event.number }}
 
       - name: Publish coverage in build summary
-        run: cat coveragereport/SummaryGithub.md >> $GITHUB_STEP_SUMMARY
+        run: cat coveragereport/MarkdownSummaryGithub.md >> $GITHUB_STEP_SUMMARY
         shell: bash
 
   frontend:

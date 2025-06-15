@@ -66,6 +66,8 @@ jobs:
           reports: apps/backend/server/build/reports/jacoco/test/jacocoTestReport.xml
           targetdir: coverage-report
           reporttypes: MarkdownSummary
+          classfilters: "-*.*"
+          assemblyfilters: "+*"
       - name: Comment Coverage Summary on PR
         if: github.event_name == 'pull_request'
         uses: marocchino/sticky-pull-request-comment@v2.9.2

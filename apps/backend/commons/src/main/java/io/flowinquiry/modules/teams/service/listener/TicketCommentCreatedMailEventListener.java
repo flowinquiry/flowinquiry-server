@@ -15,6 +15,7 @@ import io.flowinquiry.modules.teams.service.event.TicketCommentCreatedEvent;
 import io.flowinquiry.modules.usermanagement.service.mapper.UserMapper;
 import java.util.List;
 import java.util.Locale;
+import org.springframework.context.MessageSource;
 import org.springframework.context.event.EventListener;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
@@ -32,18 +33,21 @@ public class TicketCommentCreatedMailEventListener {
     private final EntityWatcherRepository entityWatcherRepository;
     private final TicketService ticketService;
     private final MailService mailService;
+    private final MessageSource messageSource;
 
     public TicketCommentCreatedMailEventListener(
             CommentService commentService,
             UserMapper userMapper,
             EntityWatcherRepository entityWatcherRepository,
             TicketService ticketService,
-            MailService mailService) {
+            MailService mailService,
+            MessageSource messageSource) {
         this.commentService = commentService;
         this.userMapper = userMapper;
         this.entityWatcherRepository = entityWatcherRepository;
         this.ticketService = ticketService;
         this.mailService = mailService;
+        this.messageSource = messageSource;
     }
 
     /**
@@ -74,7 +78,10 @@ public class TicketCommentCreatedMailEventListener {
                 String ticketPath = buildTicketPath(ticketDTO);
 
                 EmailContext emailContext =
-                        new EmailContext(Locale.forLanguageTag("en"))
+                        new EmailContext(
+                                        Locale.forLanguageTag("en"),
+                                        mailService.getBaseUrl(),
+                                        messageSource)
                                 .setToUser(userMapper.toDto(watcher.getWatchUser()))
                                 .setSubject(
                                         "email.new.ticket.comment.subject",

@@ -28,6 +28,7 @@ import java.util.Locale;
 import java.util.Set;
 import lombok.extern.slf4j.Slf4j;
 import net.javacrumbs.shedlock.spring.annotation.SchedulerLock;
+import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Profile;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -53,19 +54,23 @@ public class SendNotificationForTicketsViolateSlaJob {
 
     private final UserMapper userMapper;
 
+    private final MessageSource messageSource;
+
     public SendNotificationForTicketsViolateSlaJob(
             SimpMessagingTemplate messageTemplate,
             TeamService teamService,
             WorkflowTransitionHistoryService workflowTransitionHistoryService,
             MailService mailService,
             DeduplicationCacheService deduplicationCacheService,
-            UserMapper userMapper) {
+            UserMapper userMapper,
+            MessageSource messageSource) {
         this.messageTemplate = messageTemplate;
         this.teamService = teamService;
         this.workflowTransitionHistoryService = workflowTransitionHistoryService;
         this.mailService = mailService;
         this.deduplicationCacheService = deduplicationCacheService;
         this.userMapper = userMapper;
+        this.messageSource = messageSource;
     }
 
     @Scheduled(cron = "0 0/1 * * * ?")
@@ -143,7 +148,10 @@ public class SendNotificationForTicketsViolateSlaJob {
                         String.valueOf(recipient.getId()), "/queue/notifications", notification);
 
                 EmailContext emailContext =
-                        new EmailContext(Locale.forLanguageTag("en"))
+                        new EmailContext(
+                                        Locale.forLanguageTag("en"),
+                                        mailService.getBaseUrl(),
+                                        messageSource)
                                 .setToUser(userMapper.toDto(recipient))
                                 .setSubject(
                                         "email.ticket.sla.violation.subject",

@@ -1,7 +1,5 @@
 package io.flowinquiry.modules.collab;
 
-import io.flowinquiry.config.SpringContextProvider;
-import io.flowinquiry.modules.collab.service.MailService;
 import io.flowinquiry.modules.usermanagement.service.dto.UserDTO;
 import java.util.Locale;
 import org.springframework.context.MessageSource;
@@ -17,13 +15,11 @@ public class EmailContext {
     private String subject;
     private String templateName;
 
-    public EmailContext(Locale locale) {
+    public EmailContext(Locale locale, String baseUrl, MessageSource messageSource) {
         this.locale = locale;
         thymeleafContext = new Context(locale);
-
-        MailService mailService = SpringContextProvider.getContext().getBean(MailService.class);
-        messageSource = SpringContextProvider.getContext().getBean(MessageSource.class);
-        thymeleafContext.setVariable(BASE_URL, mailService.getBaseUrl());
+        thymeleafContext.setVariable(BASE_URL, baseUrl);
+        this.messageSource = messageSource;
     }
 
     public EmailContext setToUser(UserDTO toUser) {

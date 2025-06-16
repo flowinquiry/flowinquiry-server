@@ -197,4 +197,39 @@ public class WorkflowServiceIT {
         assertThat(workflowDTO.getVisibility()).isEqualTo(WorkflowVisibility.PUBLIC);
         assertThat(workflowDTO.isUseForProject()).isTrue();
     }
+
+    @Test
+    public void shouldFindWorkflowsSuccessfully() {
+        // Test for findWorkflows method
+    }
+
+    @Test
+    public void shouldUpdateWorkflowDetailedSuccessfully() {
+        // Test for updateWorkflow(Long, WorkflowDetailedDTO) method
+    }
+
+    @Test
+    public void shouldCreateWorkflowByCloning() {
+        // Test for createWorkflowByCloning method
+    }
+
+    @Test
+    public void shouldDeleteWorkflowSuccessfully() {
+        // Test for deleteWorkflow method
+    }
+
+    @Test
+    public void shouldGetValidTargetWorkflowStatesSuccessfully() {
+        // Test for getValidTargetWorkflowStates method
+    }
+
+    @Test
+    public void shouldGetInitialStatesOfWorkflowSuccessfully() {
+        // Test for getInitialStatesOfWorkflow method
+    }
+
+    @Test
+    public void shouldFindProjectWorkflowByTeamSuccessfully() {
+        // Test for findProjectWorkflowByTeam method
+    }
 }

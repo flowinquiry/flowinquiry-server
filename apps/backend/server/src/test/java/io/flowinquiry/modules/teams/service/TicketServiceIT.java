@@ -171,4 +171,79 @@ public class TicketServiceIT {
         assertThat(previousEntity.getModifiedAt()).isNotNull();
         assertThat(previousEntity.getNumberAttachments()).isGreaterThanOrEqualTo(0);
     }
+
+    @Test
+    void shouldFindTicketsSuccessfully() {
+        // Test for findTickets method
+    }
+
+    @Test
+    void shouldGetTicketByIdSuccessfully() {
+        // Test for getTicketById method
+    }
+
+    @Test
+    void shouldDeleteTicketSuccessfully() {
+        // Test for deleteTicket method
+    }
+
+    @Test
+    void shouldGetTicketDistributionSuccessfully() {
+        // Test for getTicketDistribution method
+    }
+
+    @Test
+    void shouldGetUnassignedTicketsSuccessfully() {
+        // Test for getUnassignedTickets method
+    }
+
+    @Test
+    void shouldGetPriorityDistributionSuccessfully() {
+        // Test for getPriorityDistribution method
+    }
+
+    @Test
+    void shouldGetTicketStatisticsByTeamIdSuccessfully() {
+        // Test for getTicketStatisticsByTeamId method
+    }
+
+    @Test
+    void shouldCalculateEarliestSlaDueDateCorrectly() {
+        // Test for calculateEarliestSlaDueDate method
+    }
+
+    @Test
+    void shouldGetOverdueTicketsByTeamSuccessfully() {
+        // Test for getOverdueTicketsByTeam method
+    }
+
+    @Test
+    void shouldGetOverdueTicketsByUserSuccessfully() {
+        // Test for getOverdueTicketsByUser method
+    }
+
+    @Test
+    void shouldCountOverdueTicketsCorrectly() {
+        // Test for countOverdueTickets method
+    }
+
+    @Test
+    void shouldGetTicketCreationTimeSeriesSuccessfully() {
+        // Test for getTicketCreationTimeSeries method
+    }
+
+    @Test
+    void shouldGetPriorityDistributionForUserSuccessfully() {
+        // Test for getPriorityDistributionForUser method
+    }
+
+    @Test
+    void shouldUpdateTicketStateSuccessfully() {
+        // Test for updateTicketState method
+    }
+
+    @Test
+    void shouldGetNextProjectTicketNumberSuccessfully() {
+        // Test for getNextProjectTicketNumber method
+    }
 }

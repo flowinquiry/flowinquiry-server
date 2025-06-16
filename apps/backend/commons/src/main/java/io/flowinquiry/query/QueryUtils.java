@@ -70,14 +70,17 @@ public class QueryUtils {
         }
 
         // Combine predicates based on the logical operator
-        if ("AND".equalsIgnoreCase(groupFilter.getLogicalOperator())) {
-            return cb.and(predicates.toArray(new Predicate[0]));
-        } else if ("OR".equalsIgnoreCase(groupFilter.getLogicalOperator())) {
-            return cb.or(predicates.toArray(new Predicate[0]));
-        } else {
-            throw new IllegalArgumentException(
-                    "Invalid logical operator: " + groupFilter.getLogicalOperator());
+        if (groupFilter.getLogicalOperator() == null) {
+            throw new IllegalArgumentException("Logical operator cannot be null");
         }
+
+        return switch (groupFilter.getLogicalOperator()) {
+            case AND -> cb.and(predicates.toArray(new Predicate[0]));
+            case OR -> cb.or(predicates.toArray(new Predicate[0]));
+            default ->
+                    throw new IllegalArgumentException(
+                            "Invalid logical operator: " + groupFilter.getLogicalOperator());
+        };
     }
 
     private static <Entity> Predicate createPredicate(
@@ -111,16 +114,16 @@ public class QueryUtils {
             String joinEntity = pathParts[0];
             String targetField = pathParts[1];
 
-            // Perform the join dynamically - use LEFT JOIN to include nulls
-            Join<Object, Object> join = root.join(joinEntity, JoinType.LEFT);
+            // Perform the join dynamically - use INNER JOIN to exclude nulls
+            Join<Object, Object> join = root.join(joinEntity, JoinType.INNER);
 
             // Create the predicate based on the operator
             switch (filter.getOperator()) {
-                case "gt":
+                case GT:
                     return cb.greaterThan(join.get(targetField), (Comparable) value);
-                case "lt":
+                case LT:
                     return cb.lessThan(join.get(targetField), (Comparable) value);
-                case "eq":
+                case EQ:
                     if (value == null) {
                         return cb.isNull(join.get(targetField));
                     } else {
@@ -140,7 +143,7 @@ public class QueryUtils {
 
                         return cb.equal(join.get(targetField), value);
                     }
-                case "ne":
+                case NE:
                     if (value == null) {
                         return cb.isNotNull(join.get(targetField));
                     } else {
@@ -160,9 +163,9 @@ public class QueryUtils {
 
                         return cb.notEqual(join.get(targetField), value);
                     }
-                case "lk":
+                case LK:
                     return cb.like(join.get(targetField), "%" + value + "%");
-                case "in":
+                case IN:
                     return join.get(targetField).in((List<?>) value);
                 default:
                     throw new IllegalArgumentException("Invalid operator: " + filter.getOperator());
@@ -173,11 +176,11 @@ public class QueryUtils {
             Class<?> fieldType = path.getJavaType();
 
             switch (filter.getOperator()) {
-                case "gt":
+                case GT:
                     return cb.greaterThan(root.get(field), (Comparable) value);
-                case "lt":
+                case LT:
                     return cb.lessThan(root.get(field), (Comparable) value);
-                case "eq":
+                case EQ:
                     // Handle null values and type conversions for direct fields
                     if (value == null) {
                         return cb.isNull(path);
@@ -198,7 +201,7 @@ public class QueryUtils {
                         }
                         return cb.equal(path, value);
                     }
-                case "ne":
+                case NE:
                     // Handle null values and type conversions for direct fields
                     if (value == null) {
                         return cb.isNotNull(path);
@@ -219,10 +222,10 @@ public class QueryUtils {
                         }
                         return cb.notEqual(path, value);
                     }
-                case "lk":
+                case LK:
                     return cb.like(
                             cb.lower(root.get(field)), "%" + value.toString().toLowerCase() + "%");
-                case "in":
+                case IN:
                     // Handle enum type for IN operator
                     if (fieldType.isEnum() && value instanceof List<?>) {
                         List<?> valueList = (List<?>) value;

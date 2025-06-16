@@ -7,9 +7,15 @@ import io.flowinquiry.IntegrationTest;
 import io.flowinquiry.exceptions.ResourceNotFoundException;
 import io.flowinquiry.modules.teams.domain.ProjectStatus;
 import io.flowinquiry.modules.teams.service.dto.ProjectDTO;
+import io.flowinquiry.query.Filter;
+import io.flowinquiry.query.FilterOperator;
+import io.flowinquiry.query.QueryDTO;
+import java.util.Collections;
 import java.util.Optional;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.transaction.annotation.Transactional;
 
 @IntegrationTest
@@ -90,5 +96,94 @@ public class ProjectServiceIT {
         assertThat(savedProject)
                 .extracting(ProjectDTO::getName, ProjectDTO::getStatus)
                 .containsExactly("New Project", ProjectStatus.Closed);
+    }
+
+    @Test
+    public void shouldFindProjectsSuccessfully() {
+        // Using teamId 1 as specified in the requirements
+        Long teamId = 1L;
+
+        // Create a test project with teamId 1
+        ProjectDTO projectDTO =
+                ProjectDTO.builder()
+                        .name("Test Project for Query")
+                        .description("Project for testing queries")
+                        .shortName("TPQ")
+                        .status(ProjectStatus.Active)
+                        .teamId(teamId)
+                        .createdBy(1L)
+                        .build();
+        projectService.createProject(projectDTO);
+
+        // Create a query to find projects for team with ID 1
+        QueryDTO queryDTO = new QueryDTO();
+
+        // Create a filter for team = 1
+        Filter teamIdFilter = new Filter("team.id", FilterOperator.EQ, teamId);
+        queryDTO.setFilters(Collections.singletonList(teamIdFilter));
+
+        // Get the first page with 10 items
+        Pageable pageable = Pageable.ofSize(10);
+
+        // Execute the findProjects method
+        Page<ProjectDTO> projectsPage =
+                projectService.findProjects(Optional.of(queryDTO), pageable);
+
+        // Verify that we found at least one project
+        assertThat(projectsPage).isNotEmpty();
+
+        // Verify that all projects belong to the specified team
+        assertThat(projectsPage.getContent())
+                .allMatch(project -> project.getTeamId().equals(teamId));
+    }
+
+    @Test
+    public void shouldGetProjectByShortNameSuccessfully() {
+        // Create a project with a specific short name
+        String shortName =
+                "SP"
+                        + System.currentTimeMillis()
+                                % 10000; // Ensure unique short name within 10 chars
+        String projectName = "Sample Project";
+        String projectDescription = "Project description";
+
+        ProjectDTO projectDTO =
+                ProjectDTO.builder()
+                        .name(projectName)
+                        .description(projectDescription)
+                        .shortName(shortName)
+                        .status(ProjectStatus.Active)
+                        .teamId(1L) // Using teamId 1 as specified in the requirements
+                        .createdBy(1L)
+                        .build();
+
+        // Save the project
+        ProjectDTO savedProject = projectService.createProject(projectDTO);
+
+        // Execute the getByShortName method
+        ProjectDTO retrievedProject = projectService.getByShortName(shortName);
+
+        // Verify that the project was found
+        assertThat(retrievedProject).isNotNull();
+
+        // Verify that the project has the correct short name and team ID
+        assertThat(retrievedProject.getShortName()).isEqualTo(shortName);
+        assertThat(retrievedProject.getTeamId()).isEqualTo(1L);
+
+        // Verify other properties
+        assertThat(retrievedProject.getName()).isEqualTo(projectName);
+        assertThat(retrievedProject.getDescription()).isEqualTo(projectDescription);
+    }
+
+    @Test
+    public void shouldThrowExceptionWhenProjectShortNameNotFound() {
+        // Using a non-existent short name
+        String nonExistentShortName = "nonexistent";
+
+        // Execute the getByShortName method and expect an exception
+        assertThatThrownBy(() -> projectService.getByShortName(nonExistentShortName))
+                .isInstanceOf(ResourceNotFoundException.class)
+                .hasMessageContaining(
+                        "Cannot find project with short name '" + nonExistentShortName + "'");
     }
 }

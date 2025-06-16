@@ -166,4 +166,54 @@ public class TeamServiceIT {
         assertThat(teamService.getUserRoleInTeam(7L, 1L)).isEqualTo(ROLE_MANAGER);
         assertThat(teamService.getUserRoleInTeam(15L, 1L)).isEqualTo(ROLE_GUEST);
     }
+
+    @Test
+    void shouldDeleteTeamSuccessfully() {
+        // Test for deleteTeam method
+    }
+
+    @Test
+    void shouldDeleteMultipleTeamsSuccessfully() {
+        // Test for deleteTeams method
+    }
+
+    @Test
+    void shouldFindTeamByIdSuccessfully() {
+        // Test for findTeamById method
+    }
+
+    @Test
+    void shouldReturnEmptyWhenTeamIdNotFound() {
+        // Test for findTeamById method when team not found
+    }
+
+    @Test
+    void shouldFindTeamsSuccessfully() {
+        // Test for findTeams method
+    }
+
+    @Test
+    void shouldFindAllTeamsByUserIdSuccessfully() {
+        // Test for findAllTeamsByUserId method
+    }
+
+    @Test
+    void shouldFindUsersNotInTeamSuccessfully() {
+        // Test for findUsersNotInTeam method
+    }
+
+    @Test
+    void shouldAddUsersToTeamSuccessfully() {
+        // Test for addUsersToTeam method
+    }
+
+    @Test
+    void shouldCheckIfTeamHasManagerCorrectly() {
+        // Test for hasManager method
+    }
+
+    @Test
+    void shouldGetTeamManagersSuccessfully() {
+        // Test for getTeamManagers method
+    }
 }

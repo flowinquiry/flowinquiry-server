@@ -13,6 +13,7 @@ import io.flowinquiry.modules.usermanagement.service.dto.UserDTO;
 import io.flowinquiry.modules.usermanagement.service.dto.UserHierarchyDTO;
 import io.flowinquiry.modules.usermanagement.service.mapper.UserMapper;
 import io.flowinquiry.query.Filter;
+import io.flowinquiry.query.FilterOperator;
 import io.flowinquiry.query.QueryDTO;
 import jakarta.validation.Valid;
 import java.net.URI;
@@ -101,10 +102,13 @@ public class PublicUserController {
             if (existingQuery.getFilters() == null) {
                 existingQuery.setFilters(new ArrayList<>());
             }
-            existingQuery.getFilters().add(new Filter("isDeleted", "eq", Boolean.FALSE));
+            existingQuery
+                    .getFilters()
+                    .add(new Filter("isDeleted", FilterOperator.EQ, Boolean.FALSE));
         } else {
             QueryDTO defaultQuery = new QueryDTO();
-            List<Filter> filters = List.of(new Filter("isDeleted", "eq", Boolean.FALSE));
+            List<Filter> filters =
+                    List.of(new Filter("isDeleted", FilterOperator.EQ, Boolean.FALSE));
             defaultQuery.setFilters(filters);
             queryDTO = Optional.of(defaultQuery);
         }
